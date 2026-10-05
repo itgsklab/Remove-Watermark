@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "audit": "wmrm-mobile-selection-real-background-corpus",
+  "manifest": "manifest.json",
+  "thresholds": {
+    "low_contrast": 0.04,
+    "large_selection": 0.1
+  },
+  "summary": {
+    "sample_count": 3,
+    "low_contrast_count": 1,
+    "large_selection_count": 1,
+    "mismatch_count": 0,
+    "status": "pass"
+  },
+  "samples": [
+    {
+      "id": "real-horizon-corner",
+      "file": "real-horizon-corner.png",
+      "sha256": "c7de34cfbe7cd0e75a4c950f35f6ba33ce16d54939908614b11d1c279ccfd70d",
+      "source_file": "image_complexity/nasa-earth-iss074e0089803.jpg",
+      "source_sha256": "d88909464177af39f24ed97ae28f4eab383c2b477f4a7e00e716812252227d11",
+      "source_record": "https://images.nasa.gov/details/iss074e0089803",
+      "usage_terms_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution": "NASA source photograph with repository-generated overlay.",
+      "provenance_note": "The underlying photograph is a pinned NASA source already stored in the repository. The portrait crop and watermark overlay are deterministic.",
+      "transformation": "Center portrait crop, 540x720 resize, opaque corner badge overlay.",
+      "coverage_ratio": 0.0136,
+      "mean_luma_delta": 0.0788,
+      "expected_low_contrast": false,
+      "actual_low_contrast": false,
+      "expected_large_selection": false,
+      "actual_large_selection": false,
+      "mismatches": []
+    },
+    {
+      "id": "real-horizon-translucent",
+      "file": "real-horizon-translucent.png",
+      "sha256": "c7efb2a9356ae1366b5b3cec5477ccf890ba95d085aa537731a9caf0d2eeca33",
+      "source_file": "image_complexity/nasa-earth-iss074e0089803.jpg",
+      "source_sha256": "d88909464177af39f24ed97ae28f4eab383c2b477f4a7e00e716812252227d11",
+      "source_record": "https://images.nasa.gov/details/iss074e0089803",
+      "usage_terms_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution": "NASA source photograph with repository-generated overlay.",
+      "provenance_note": "The underlying photograph is a pinned NASA source already stored in the repository. The portrait crop and watermark overlay are deterministic.",
+      "transformation": "Center portrait crop, 540x720 resize, translucent center text overlay.",
+      "coverage_ratio": 0.0926,
+      "mean_luma_delta": 0.0158,
+      "expected_low_contrast": true,
+      "actual_low_contrast": true,
+      "expected_large_selection": false,
+      "actual_large_selection": false,
+      "mismatches": []
+    },
+    {
+      "id": "real-night-multiline",
+      "file": "real-night-multiline.png",
+      "sha256": "3faadbe5cfdbe46c6f6dbbbe270f83bdfd035c4afc7e3bd5cc71f9aca8fd1bd3",
+      "source_file": "image_complexity/nasa-earth-iss045e013851.jpg",
+      "source_sha256": "cf7b480745b578ced3c8913761228fbff6660caf35b8301f7c232791ff504169",
+      "source_record": "https://images.nasa.gov/details/iss045e013851",
+      "usage_terms_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution": "NASA source photograph with repository-generated overlay.",
+      "provenance_note": "The underlying photograph is a pinned NASA source already stored in the repository. The portrait crop and watermark overlay are deterministic.",
+      "transformation": "Portrait crop, 540x720 resize, opaque multi-line lower panel overlay.",
+      "coverage_ratio": 0.1924,
+      "mean_luma_delta": 0.0465,
+      "expected_low_contrast": false,
+      "actual_low_contrast": false,
+      "expected_large_selection": true,
+      "actual_large_selection": true,
+      "mismatches": []
+    }
+  ]
+}

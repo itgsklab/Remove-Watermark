@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "calibration": "wmrm-image-complexity-real-sample-audit",
+  "manifest": "manifest.json",
+  "labeling_protocol": "Expected risk is justified from visible background semantics rather than derived from numeric thresholds: low for locally smooth fill, review for irregular texture without a dominant crossing boundary, and high for repeated patterns or long structural edges likely to break during inpainting.",
+  "versions": {
+    "opencv": "5.0.0",
+    "numpy": "2.5.3",
+    "pillow": "12.3.0"
+  },
+  "thresholds": {
+    "max_sample_dimension": 768,
+    "texture_score_normalizer": 30.0,
+    "structure_score_normalizer": 0.04,
+    "periodicity_high": 0.8,
+    "periodicity_min_texture": 0.1,
+    "structure_high": 0.3,
+    "edge_high": 0.2,
+    "texture_review": 0.35,
+    "edge_review": 0.08
+  },
+  "summary": {
+    "sample_count": 3,
+    "photo_count": 2,
+    "screenshot_count": 1,
+    "region_count": 18,
+    "matched_regions": 18,
+    "mismatched_regions": 0,
+    "match_rate": 1.0,
+    "expected_counts": {
+      "low": 6,
+      "review": 6,
+      "high": 6
+    },
+    "actual_counts": {
+      "low": 6,
+      "review": 6,
+      "high": 6
+    },
+    "status": "pass"
+  },
+  "samples": [
+    {
+      "id": "nasa-earth-horizon-2026",
+      "kind": "photo",
+      "file": "nasa-earth-iss074e0089803.jpg",
+      "sha256": "d88909464177af39f24ed97ae28f4eab383c2b477f4a7e00e716812252227d11",
+      "width": 1279,
+      "height": 718,
+      "source_url": "https://images-assets.nasa.gov/image/iss074e0089803/iss074e0089803~medium.jpg",
+      "source_record": "https://images.nasa.gov/details/iss074e0089803",
+      "usage_terms_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution": "NASA, image iss074e0089803",
+      "provenance_note": "Downloaded from NASA's official image service. The record contains no third-party copyright notice, identifiable person, or NASA logo.",
+      "region_count": 6,
+      "matched_regions": 6
+    },
+    {
+      "id": "nasa-earth-night-2015",
+      "kind": "photo",
+      "file": "nasa-earth-iss045e013851.jpg",
+      "sha256": "cf7b480745b578ced3c8913761228fbff6660caf35b8301f7c232791ff504169",
+      "width": 1279,
+      "height": 851,
+      "source_url": "https://images-assets.nasa.gov/image/iss045e013851/iss045e013851~medium.jpg",
+      "source_record": "https://images.nasa.gov/details/iss045e013851",
+      "usage_terms_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution": "NASA, image iss045e013851",
+      "provenance_note": "Downloaded from NASA's official image service. The record contains no third-party copyright notice, identifiable person, or NASA logo.",
+      "region_count": 6,
+      "matched_regions": 6
+    },
+    {
+      "id": "wmrm-home-desktop",
+      "kind": "screenshot",
+      "file": "project-home-desktop.png",
+      "sha256": "0639a998f0dfacac68eb9c6067348ea706b363bd5860d97e3041b89ee8ceafa2",
+      "width": 1265,
+      "height": 889,
+      "source_url": null,
+      "source_record": null,
+      "usage_terms_url": null,
+      "attribution": "Generated from this repository's Vue application at 1280 × 900 browser viewport.",
+      "provenance_note": "Captured locally from commit f18747a with an empty local data directory; contains no user data or third-party media.",
+      "region_count": 6,
+      "matched_regions": 6
+    }
+  ],
+  "regions": [
+    {
+      "sample_id": "nasa-earth-horizon-2026",
+      "kind": "photo",
+      "region_id": "smooth-space",
+      "label": "平滑太空背景",
+      "label_rationale": "The selected area and its surrounding ring are visually uniform black space without a crossing boundary.",
+      "expected": "low",
+      "actual": "low",
+      "matched": true,
+      "scores": {
+        "texture": 0.0,
+        "edge_density": 0.0,
+        "periodicity": 0.512,
+        "structure": 0.0
+      },
+      "reasons": [
+        "周围背景较平滑，适合使用轻量 OpenCV 修复。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-horizon-2026",
+      "kind": "photo",
+      "region_id": "earth-horizon",
+      "label": "地球弧线与大气层",
+      "label_rationale": "The curved atmospheric boundary is a long structure whose continuity must be reconstructed.",
+      "expected": "high",
+      "actual": "high",
+      "matched": true,
+      "scores": {
+        "texture": 0.3,
+        "edge_density": 0.0666,
+        "periodicity": 0.8029,
+        "structure": 0.0985
+      },
+      "reasons": [
+        "周围存在重复条纹或周期纹理，修复后可能出现断裂。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-horizon-2026",
+      "kind": "photo",
+      "region_id": "cloud-texture",
+      "label": "云层与海面纹理",
+      "label_rationale": "Irregular cloud and ocean detail requires review but has no single dominant crossing edge.",
+      "expected": "review",
+      "actual": "review",
+      "matched": true,
+      "scores": {
+        "texture": 0.3667,
+        "edge_density": 0.1099,
+        "periodicity": 0.7583,
+        "structure": 0.2091
+      },
+      "reasons": [
+        "周围包含一定纹理，建议处理后放大检查边界。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-horizon-2026",
+      "kind": "photo",
+      "region_id": "upper-lens-flare",
+      "label": "暗空中的柔和光斑",
+      "label_rationale": "The surrounding black sky is smooth; the soft flare stays inside the selected area and does not create a crossing boundary.",
+      "expected": "low",
+      "actual": "low",
+      "matched": true,
+      "scores": {
+        "texture": 0.0,
+        "edge_density": 0.0,
+        "periodicity": 0.7066,
+        "structure": 0.0
+      },
+      "reasons": [
+        "周围背景较平滑，适合使用轻量 OpenCV 修复。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-horizon-2026",
+      "kind": "photo",
+      "region_id": "sun-glint",
+      "label": "海面反光与云纹",
+      "label_rationale": "Irregular reflected light and cloud texture can expose fill artifacts but do not form one dominant crossing line.",
+      "expected": "review",
+      "actual": "review",
+      "matched": true,
+      "scores": {
+        "texture": 0.4,
+        "edge_density": 0.1034,
+        "periodicity": 0.6277,
+        "structure": 0.2402
+      },
+      "reasons": [
+        "周围包含一定纹理，建议处理后放大检查边界。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-horizon-2026",
+      "kind": "photo",
+      "region_id": "cloud-ocean-boundary",
+      "label": "云海长边界",
+      "label_rationale": "Several elongated cloud and ocean boundaries cross the context and should remain continuous after filling.",
+      "expected": "high",
+      "actual": "high",
+      "matched": true,
+      "scores": {
+        "texture": 0.3333,
+        "edge_density": 0.1109,
+        "periodicity": 0.6586,
+        "structure": 0.3065
+      },
+      "reasons": [
+        "周围检测到较长结构边缘，可能穿过蒙版区域。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-night-2015",
+      "kind": "photo",
+      "region_id": "dark-space",
+      "label": "暗色太空背景",
+      "label_rationale": "The surrounding dark sky is locally smooth with sparse points that do not define a structure.",
+      "expected": "low",
+      "actual": "low",
+      "matched": true,
+      "scores": {
+        "texture": 0.2,
+        "edge_density": 0.0357,
+        "periodicity": 0.6038,
+        "structure": 0.1235
+      },
+      "reasons": [
+        "周围背景较平滑，适合使用轻量 OpenCV 修复。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-night-2015",
+      "kind": "photo",
+      "region_id": "station-arm",
+      "label": "空间站机械结构",
+      "label_rationale": "Mechanical parts add irregular texture around the region without a single continuous boundary through the mask.",
+      "expected": "review",
+      "actual": "review",
+      "matched": true,
+      "scores": {
+        "texture": 0.6333,
+        "edge_density": 0.1037,
+        "periodicity": 0.7387,
+        "structure": 0.0589
+      },
+      "reasons": [
+        "周围包含一定纹理，建议处理后放大检查边界。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-night-2015",
+      "kind": "photo",
+      "region_id": "city-lights",
+      "label": "城市灯光纹理",
+      "label_rationale": "Dense, irregular city lights can blur during filling and require visual review.",
+      "expected": "review",
+      "actual": "review",
+      "matched": true,
+      "scores": {
+        "texture": 0.6,
+        "edge_density": 0.1067,
+        "periodicity": 0.6292,
+        "structure": 0.0
+      },
+      "reasons": [
+        "周围包含一定纹理，建议处理后放大检查边界。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-night-2015",
+      "kind": "photo",
+      "region_id": "right-starfield",
+      "label": "右侧稀疏星空",
+      "label_rationale": "The surrounding sky is predominantly smooth and sparse stars do not form a continuous structure.",
+      "expected": "low",
+      "actual": "low",
+      "matched": true,
+      "scores": {
+        "texture": 0.1,
+        "edge_density": 0.01,
+        "periodicity": 0.5417,
+        "structure": 0.0
+      },
+      "reasons": [
+        "周围背景较平滑，适合使用轻量 OpenCV 修复。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-night-2015",
+      "kind": "photo",
+      "region_id": "dense-city-core",
+      "label": "密集城市灯光",
+      "label_rationale": "Dense stochastic lights make texture synthesis uncertain without a dominant geometric boundary.",
+      "expected": "review",
+      "actual": "review",
+      "matched": true,
+      "scores": {
+        "texture": 0.6667,
+        "edge_density": 0.1175,
+        "periodicity": 0.6237,
+        "structure": 0.1203
+      },
+      "reasons": [
+        "周围包含一定纹理，建议处理后放大检查边界。"
+      ]
+    },
+    {
+      "sample_id": "nasa-earth-night-2015",
+      "kind": "photo",
+      "region_id": "green-earth-limb",
+      "label": "绿色地球边缘",
+      "label_rationale": "A thin, continuous planetary limb crosses the context and visible discontinuity would be obvious.",
+      "expected": "high",
+      "actual": "high",
+      "matched": true,
+      "scores": {
+        "texture": 0.7667,
+        "edge_density": 0.1206,
+        "periodicity": 0.7114,
+        "structure": 0.324
+      },
+      "reasons": [
+        "周围检测到较长结构边缘，可能穿过蒙版区域。"
+      ]
+    },
+    {
+      "sample_id": "wmrm-home-desktop",
+      "kind": "screenshot",
+      "region_id": "empty-background",
+      "label": "空白页面背景",
+      "label_rationale": "The page fill is visually flat and contains no crossing UI boundary.",
+      "expected": "low",
+      "actual": "low",
+      "matched": true,
+      "scores": {
+        "texture": 0.0,
+        "edge_density": 0.0044,
+        "periodicity": 0.6777,
+        "structure": 0.0402
+      },
+      "reasons": [
+        "周围背景较平滑，适合使用轻量 OpenCV 修复。"
+      ]
+    },
+    {
+      "sample_id": "wmrm-home-desktop",
+      "kind": "screenshot",
+      "region_id": "headline-strokes",
+      "label": "标题笔画结构",
+      "label_rationale": "Large glyph strokes create long, high-contrast structures near the selected region.",
+      "expected": "high",
+      "actual": "high",
+      "matched": true,
+      "scores": {
+        "texture": 1.0,
+        "edge_density": 0.0461,
+        "periodicity": 0.7523,
+        "structure": 0.5524
+      },
+      "reasons": [
+        "周围检测到较长结构边缘，可能穿过蒙版区域。"
+      ]
+    },
+    {
+      "sample_id": "wmrm-home-desktop",
+      "kind": "screenshot",
+      "region_id": "upload-card-edge",
+      "label": "上传卡片边缘",
+      "label_rationale": "The card boundary is a long straight structure that must remain aligned.",
+      "expected": "high",
+      "actual": "high",
+      "matched": true,
+      "scores": {
+        "texture": 0.8,
+        "edge_density": 0.0621,
+        "periodicity": 0.6325,
+        "structure": 1.0
+      },
+      "reasons": [
+        "周围检测到较长结构边缘，可能穿过蒙版区域。"
+      ]
+    },
+    {
+      "sample_id": "wmrm-home-desktop",
+      "kind": "screenshot",
+      "region_id": "quiet-right-fill",
+      "label": "右侧浅色留白",
+      "label_rationale": "The selected area is a uniform page fill with no nearby control boundary crossing the mask.",
+      "expected": "low",
+      "actual": "low",
+      "matched": true,
+      "scores": {
+        "texture": 0.0,
+        "edge_density": 0.002,
+        "periodicity": 0.5572,
+        "structure": 0.0
+      },
+      "reasons": [
+        "周围背景较平滑，适合使用轻量 OpenCV 修复。"
+      ]
+    },
+    {
+      "sample_id": "wmrm-home-desktop",
+      "kind": "screenshot",
+      "region_id": "headline-interglyph-context",
+      "label": "标题字间纹理",
+      "label_rationale": "Nearby antialiased glyph fragments create moderate texture, while no long stroke crosses the selected area.",
+      "expected": "review",
+      "actual": "review",
+      "matched": true,
+      "scores": {
+        "texture": 0.6,
+        "edge_density": 0.026,
+        "periodicity": 0.6461,
+        "structure": 0.1324
+      },
+      "reasons": [
+        "周围包含一定纹理，建议处理后放大检查边界。"
+      ]
+    },
+    {
+      "sample_id": "wmrm-home-desktop",
+      "kind": "screenshot",
+      "region_id": "supporting-copy-structure",
+      "label": "说明文字行结构",
+      "label_rationale": "Multiple aligned text strokes and baselines form long visual structures that should not be broken.",
+      "expected": "high",
+      "actual": "high",
+      "matched": true,
+      "scores": {
+        "texture": 0.2667,
+        "edge_density": 0.0331,
+        "periodicity": 0.5004,
+        "structure": 0.3408
+      },
+      "reasons": [
+        "周围检测到较长结构边缘，可能穿过蒙版区域。"
+      ]
+    }
+  ]
+}

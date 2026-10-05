@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "description": "Copy this file to backend/private-fixtures/codecv/manifest.json and replace every placeholder after reviewing the export.",
+  "samples": [
+    {
+      "id": "codecv-template-name-export-date",
+      "provenance": "private_export",
+      "template_version": "template name or visible version",
+      "file": "resume-export.pdf",
+      "sha256": "replace-with-source-file-sha256",
+      "text_sha256": "replace-with-extracted-text-sha256",
+      "page_count": 1,
+      "source_record": "local export notes or URL without personal data",
+      "permission_note": "State who created the test content and why this file may be used locally.",
+      "review_required": false,
+      "expected": {
+        "match_status": "matched",
+        "candidate_count": 1,
+        "confirmed_count": 1,
+        "candidate_pages": [1],
+        "clean_match_status": "not_found"
+      }
+    }
+  ]
+}

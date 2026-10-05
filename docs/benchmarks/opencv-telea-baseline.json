@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "benchmark": "wmrm-synthetic-image-inpainting",
+  "provenance": "All images are generated procedurally by this repository; no external assets are used.",
+  "seed": 20260928,
+  "radius": 3,
+  "versions": {
+    "opencv": "5.0.0",
+    "numpy": "2.5.3",
+    "pillow": "12.3.0"
+  },
+  "summary": {
+    "scenario_count": 5,
+    "mean_masked_mae": 23.6191,
+    "mean_improvement_percent": 61.86,
+    "outside_pixel_integrity_cases": 5,
+    "grades": {
+      "excellent": 2,
+      "good": 0,
+      "review": 1,
+      "poor": 2
+    },
+    "recommendation": "Keep OpenCV Telea as the lightweight baseline for small masks on simple backgrounds; require visual review for structured or textured regions."
+  },
+  "cases": [
+    {
+      "case_id": "flat",
+      "label": "纯色背景",
+      "artifacts": {
+        "clean": "flat/clean.png",
+        "watermarked": "flat/watermarked.png",
+        "mask": "flat/mask.png",
+        "result": "flat/result.png"
+      },
+      "metrics": {
+        "input_masked_mae": 81.2771,
+        "masked_mae": 1.8614,
+        "masked_rmse": 2.2876,
+        "masked_psnr_db": 40.9432,
+        "boundary_mae": 0.5214,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 0.9993,
+        "improvement_percent": 97.71,
+        "grade": "excellent"
+      },
+      "processing": {
+        "removed_count": 1,
+        "masked_pixels": 4416,
+        "changed_pixels": 4413,
+        "outside_changed_pixels": 0,
+        "width": 256,
+        "height": 160,
+        "size_bytes": 4028,
+        "sha256": "7727f1a356ad9ea6870a00e1e478838bf8a0d637de4f4540b9be53f7afeb3e0c"
+      }
+    },
+    {
+      "case_id": "gradient",
+      "label": "平滑渐变",
+      "artifacts": {
+        "clean": "gradient/clean.png",
+        "watermarked": "gradient/watermarked.png",
+        "mask": "gradient/mask.png",
+        "result": "gradient/result.png"
+      },
+      "metrics": {
+        "input_masked_mae": 68.1883,
+        "masked_mae": 3.4435,
+        "masked_rmse": 4.685,
+        "masked_psnr_db": 34.7165,
+        "boundary_mae": 1.1121,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 1.0,
+        "improvement_percent": 94.95,
+        "grade": "excellent"
+      },
+      "processing": {
+        "removed_count": 1,
+        "masked_pixels": 4416,
+        "changed_pixels": 4416,
+        "outside_changed_pixels": 0,
+        "width": 256,
+        "height": 160,
+        "size_bytes": 10097,
+        "sha256": "1d5b68120c0bd651a3f58b4df4a4257cb5bb594c63f1bf172a2c981d4488f601"
+      }
+    },
+    {
+      "case_id": "stripes",
+      "label": "周期条纹",
+      "artifacts": {
+        "clean": "stripes/clean.png",
+        "watermarked": "stripes/watermarked.png",
+        "mask": "stripes/mask.png",
+        "result": "stripes/result.png"
+      },
+      "metrics": {
+        "input_masked_mae": 55.4386,
+        "masked_mae": 55.4229,
+        "masked_rmse": 73.4121,
+        "masked_psnr_db": 10.8155,
+        "boundary_mae": 41.1562,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 1.0,
+        "improvement_percent": 0.03,
+        "grade": "poor"
+      },
+      "processing": {
+        "removed_count": 1,
+        "masked_pixels": 4416,
+        "changed_pixels": 4416,
+        "outside_changed_pixels": 0,
+        "width": 256,
+        "height": 160,
+        "size_bytes": 4481,
+        "sha256": "461fb2ef65e47f160617504255ea06a2b16155982433b0e0a8e4b56433d7e4fb"
+      }
+    },
+    {
+      "case_id": "structure",
+      "label": "跨蒙版结构线",
+      "artifacts": {
+        "clean": "structure/clean.png",
+        "watermarked": "structure/watermarked.png",
+        "mask": "structure/mask.png",
+        "result": "structure/result.png"
+      },
+      "metrics": {
+        "input_masked_mae": 84.7197,
+        "masked_mae": 32.6119,
+        "masked_rmse": 65.4415,
+        "masked_psnr_db": 11.8137,
+        "boundary_mae": 10.3425,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 0.9991,
+        "improvement_percent": 61.51,
+        "grade": "poor"
+      },
+      "processing": {
+        "removed_count": 1,
+        "masked_pixels": 4416,
+        "changed_pixels": 4412,
+        "outside_changed_pixels": 0,
+        "width": 256,
+        "height": 160,
+        "size_bytes": 7470,
+        "sha256": "46dc26f4401c7b6113b293b4b162ea1df8ca8bf847dbca100f4535e4d0bc8591"
+      }
+    },
+    {
+      "case_id": "texture",
+      "label": "固定随机纹理",
+      "artifacts": {
+        "clean": "texture/clean.png",
+        "watermarked": "texture/watermarked.png",
+        "mask": "texture/mask.png",
+        "result": "texture/result.png"
+      },
+      "metrics": {
+        "input_masked_mae": 55.145,
+        "masked_mae": 24.7559,
+        "masked_rmse": 29.1753,
+        "masked_psnr_db": 18.8305,
+        "boundary_mae": 24.2151,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 1.0,
+        "improvement_percent": 55.11,
+        "grade": "review"
+      },
+      "processing": {
+        "removed_count": 1,
+        "masked_pixels": 4416,
+        "changed_pixels": 4416,
+        "outside_changed_pixels": 0,
+        "width": 256,
+        "height": 160,
+        "size_bytes": 107656,
+        "sha256": "2ec27a1fda7aa60f79f49903f6fa3098a31f793c0728429865c14bdaef9f27c1"
+      }
+    }
+  ]
+}

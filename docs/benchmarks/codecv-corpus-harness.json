@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "audit": "wmrm-codecv-export-corpus",
+  "manifest": "manifest.json",
+  "pypdf_version": "6.19.0",
+  "summary": {
+    "sample_count": 3,
+    "generated_count": 3,
+    "real_export_count": 0,
+    "matched_source_count": 2,
+    "cleanup_attempt_count": 2,
+    "cleanup_pass_count": 2,
+    "mismatch_count": 0,
+    "status": "generated_only"
+  },
+  "samples": [
+    {
+      "id": "generated-basic-v1",
+      "provenance": "repository_generated",
+      "template_version": "synthetic-basic-v1",
+      "file": "generated-basic-v1.pdf",
+      "sha256": "8e5db68c5b96a8d8cf703945d8262b9463f8dd16953823dab0b338378b1479ba",
+      "source_record": null,
+      "permission_note": null,
+      "expected": {
+        "match_status": "matched",
+        "candidate_count": 1,
+        "confirmed_count": 1,
+        "candidate_pages": [
+          1
+        ],
+        "clean_match_status": "not_found"
+      },
+      "actual": {
+        "page_count": 1,
+        "text_sha256": "548698286702b9d0e4d480b326b78862850ee53210fa1fb392ebfb3429a831d7",
+        "match_status": "matched",
+        "candidate_count": 1,
+        "confirmed_count": 1,
+        "ambiguous_count": 0,
+        "candidate_pages": [
+          1
+        ],
+        "resource_names": [
+          "/Watermark1"
+        ]
+      },
+      "cleanup": {
+        "attempted": true,
+        "passed": true,
+        "removed_count": 1,
+        "clean_match_status": "not_found",
+        "result_text_sha256": "548698286702b9d0e4d480b326b78862850ee53210fa1fb392ebfb3429a831d7",
+        "result_page_count": 1,
+        "error": null
+      },
+      "mismatches": []
+    },
+    {
+      "id": "generated-gs-evenodd-v2",
+      "provenance": "repository_generated",
+      "template_version": "synthetic-gs-fstar-v2",
+      "file": "generated-gs-evenodd-v2.pdf",
+      "sha256": "95bb72db82f003c423471bb0e7f9f8744c42720e7c3c301d1170340febd7db37",
+      "source_record": null,
+      "permission_note": null,
+      "expected": {
+        "match_status": "matched",
+        "candidate_count": 2,
+        "confirmed_count": 2,
+        "candidate_pages": [
+          1,
+          2
+        ],
+        "clean_match_status": "not_found"
+      },
+      "actual": {
+        "page_count": 2,
+        "text_sha256": "1a1737f206fc4bcd92aba1bf89dfbb815d3c9a837f56cc3745155aef90f5315b",
+        "match_status": "matched",
+        "candidate_count": 2,
+        "confirmed_count": 2,
+        "ambiguous_count": 0,
+        "candidate_pages": [
+          1,
+          2
+        ],
+        "resource_names": [
+          "/TileP7"
+        ]
+      },
+      "cleanup": {
+        "attempted": true,
+        "passed": true,
+        "removed_count": 2,
+        "clean_match_status": "not_found",
+        "result_text_sha256": "1a1737f206fc4bcd92aba1bf89dfbb815d3c9a837f56cc3745155aef90f5315b",
+        "result_page_count": 2,
+        "error": null
+      },
+      "mismatches": []
+    },
+    {
+      "id": "generated-negative-v1",
+      "provenance": "repository_generated",
+      "template_version": "synthetic-negative-v1",
+      "file": "generated-negative-v1.pdf",
+      "sha256": "713839632e0716c0f3e0e2d239f3f9f8b08664fbd681581be74afe7312deff58",
+      "source_record": null,
+      "permission_note": null,
+      "expected": {
+        "match_status": "not_found",
+        "candidate_count": 0,
+        "confirmed_count": 0,
+        "candidate_pages": [],
+        "clean_match_status": null
+      },
+      "actual": {
+        "page_count": 2,
+        "text_sha256": "1a1737f206fc4bcd92aba1bf89dfbb815d3c9a837f56cc3745155aef90f5315b",
+        "match_status": "not_found",
+        "candidate_count": 0,
+        "confirmed_count": 0,
+        "ambiguous_count": 0,
+        "candidate_pages": [],
+        "resource_names": []
+      },
+      "cleanup": {
+        "attempted": false,
+        "passed": false,
+        "removed_count": 0,
+        "clean_match_status": null,
+        "result_text_sha256": null,
+        "result_page_count": null,
+        "error": null
+      },
+      "mismatches": []
+    }
+  ]
+}

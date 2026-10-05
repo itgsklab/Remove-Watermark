@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "audit": "wmrm-pdf-redaction-producer-corpus",
+  "manifest": "manifest.json",
+  "pymupdf_version": "1.28.2",
+  "summary": {
+    "sample_count": 3,
+    "producer_count": 3,
+    "cleanup_pass_count": 3,
+    "mismatch_count": 0,
+    "status": "pass"
+  },
+  "samples": [
+    {
+      "id": "chrome-154",
+      "provenance": "repository_application_export",
+      "producer": "Google Chrome",
+      "producer_version": "154.0.8037.93",
+      "file": "chrome-154.pdf",
+      "sha256": "6e5191428adbc5c4f52730f57533e6e0049519105906ef975512a3d806caa930",
+      "source_record": "source/producer-source.html",
+      "source_sha256": "da6e6c705d4591044ca66a2f05a93811174c6689ee519b623ae1c920fb604b3c",
+      "export_note": "Headless --print-to-pdf export from repository-authored HTML.",
+      "page_count": 2,
+      "regions": [
+        {
+          "page_number": 1,
+          "x0": 188.793,
+          "y0": 427.067,
+          "x1": 365.454,
+          "y1": 462.345
+        }
+      ],
+      "changed_pages": [
+        1
+      ],
+      "target_removed": true,
+      "preserved_text_count": 3,
+      "unaffected_pages_preserved": true,
+      "result_sha256": "c5fd7c51a9e687003e8f94b51bdab9488eef9cde8d7729b226ece04ef1dbc2d0",
+      "backend": "pymupdf",
+      "backend_version": "1.28.2",
+      "mismatches": []
+    },
+    {
+      "id": "libreoffice-dev-26-8",
+      "provenance": "repository_application_export",
+      "producer": "LibreOfficeDev",
+      "producer_version": "26.8.0.0.alpha0 2c87e51eeaa2b413ff4ae097b2705eea1995d8e5",
+      "file": "libreoffice-dev-26.8.pdf",
+      "sha256": "431fdfa553fd0f6f8d2c0a5c279c50f289b2196edec9f2e8b341c707d4b5036a",
+      "source_record": "source/producer-source.docx",
+      "source_sha256": "a3e9d347f89fceabaab37cc301248c7eb36aeac13057e96180853888d50c6a2e",
+      "export_note": "Headless writer_pdf_Export from repository-authored DOCX.",
+      "page_count": 2,
+      "regions": [
+        {
+          "page_number": 1,
+          "x0": 70.1,
+          "y0": 464.45,
+          "x1": 220.344,
+          "y1": 496.45
+        }
+      ],
+      "changed_pages": [
+        1
+      ],
+      "target_removed": true,
+      "preserved_text_count": 3,
+      "unaffected_pages_preserved": true,
+      "result_sha256": "7a10cf8cd0a559da63e06027b94dd55d738834e73075ab428b32ca1d7d84b101",
+      "backend": "pymupdf",
+      "backend_version": "1.28.2",
+      "mismatches": []
+    },
+    {
+      "id": "word-16-110",
+      "provenance": "repository_application_export",
+      "producer": "Microsoft Word for Mac",
+      "producer_version": "16.110",
+      "file": "word-16.110.pdf",
+      "sha256": "434ded944714f2ff53922a3515d72b1242e1d1b4b63a640cb59d328b548a950b",
+      "source_record": "source/producer-source.docx",
+      "source_sha256": "a3e9d347f89fceabaab37cc301248c7eb36aeac13057e96180853888d50c6a2e",
+      "export_note": "AppleScript save as format PDF from repository-authored DOCX.",
+      "page_count": 2,
+      "regions": [
+        {
+          "page_number": 1,
+          "x0": 70.0,
+          "y0": 461.165,
+          "x1": 233.238,
+          "y1": 494.425
+        }
+      ],
+      "changed_pages": [
+        1
+      ],
+      "target_removed": true,
+      "preserved_text_count": 3,
+      "unaffected_pages_preserved": true,
+      "result_sha256": "6e58230083f5d6f9bdb9e4e3d20b9ac3d667e61134ea81740c74f669b6e11c99",
+      "backend": "pymupdf",
+      "backend_version": "1.28.2",
+      "mismatches": []
+    }
+  ]
+}

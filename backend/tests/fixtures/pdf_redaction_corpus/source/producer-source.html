@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Watermark remover PDF compatibility source</title>
+<style>
+  @page { size: Letter; margin: 1in; }
+  body { margin: 0; font: 16pt Arial, sans-serif; color: #172033; }
+  .page { position: relative; height: 9in; break-after: page; }
+  .page:last-child { break-after: auto; }
+  .keep-before { position: absolute; top: 0.45in; left: 0.25in; }
+  .remove { position: absolute; top: 3.6in; left: 1.65in; color: #777; font-size: 28pt; }
+  .keep-after { position: absolute; top: 7.5in; left: 0.25in; }
+</style>
+<body>
+  <section class="page">
+    <div class="keep-before">KEEP-BEFORE</div>
+    <div class="remove">REMOVE-ME</div>
+    <div class="keep-after">KEEP-AFTER</div>
+  </section>
+  <section class="page"><div>UNCHANGED-PAGE</div></section>
+</body>
+</html>

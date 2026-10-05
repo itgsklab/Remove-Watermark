@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "benchmark": "wmrm-mobile-watermark-inpainting",
+  "provenance": "All portrait images and watermark overlays are generated deterministically by this repository; no external assets or user data are used.",
+  "seed": 20261005,
+  "radius": 3,
+  "dimensions": {
+    "width": 360,
+    "height": 480
+  },
+  "versions": {
+    "opencv": "5.0.0",
+    "numpy": "2.5.3",
+    "pillow": "12.3.0"
+  },
+  "summary": {
+    "scenario_count": 3,
+    "failed_check_count": 0,
+    "outside_pixel_integrity_cases": 3,
+    "grades": {
+      "excellent": 1,
+      "good": 1,
+      "review": 1,
+      "poor": 0
+    },
+    "degraded_case_count": 1,
+    "status": "pass",
+    "recommendation": "Keep automatic OpenCV use limited to small masks on smooth backgrounds. Require before/after review for translucent marks and large structured overlays because removal can damage more pixels than the watermark changed."
+  },
+  "cases": [
+    {
+      "case_id": "corner-small",
+      "label": "右上角小水印",
+      "watermark_style": "small_corner_badge",
+      "expected_risk": "low",
+      "actual_risk": "low",
+      "expected_low_contrast": false,
+      "checks": {
+        "risk_matches": true,
+        "outside_pixels_preserved": true,
+        "all_regions_processed": true,
+        "low_contrast_matches": true
+      },
+      "artifacts": {
+        "clean": "corner-small/clean.png",
+        "watermarked": "corner-small/watermarked.png",
+        "mask": "corner-small/mask.png",
+        "result": "corner-small/result.png"
+      },
+      "regions": [
+        {
+          "x0": 242,
+          "y0": 22,
+          "x1": 348,
+          "y1": 60
+        }
+      ],
+      "mask_fraction": 0.0233,
+      "metrics": {
+        "input_masked_mae": 67.6256,
+        "masked_mae": 1.9339,
+        "masked_rmse": 2.6971,
+        "masked_psnr_db": 39.5128,
+        "boundary_mae": 0.9363,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 0.9988,
+        "improvement_percent": 97.14,
+        "grade": "excellent"
+      },
+      "quality_outcome": "improved",
+      "complexity": [
+        {
+          "risk": "low",
+          "texture": 0.0333,
+          "edge_density": 0.0,
+          "periodicity": 0.9549,
+          "structure": 0.0,
+          "reasons": [
+            "周围背景较平滑，适合使用轻量 OpenCV 修复。"
+          ]
+        }
+      ],
+      "selection_risk": {
+        "large_selection": false,
+        "regions": [
+          {
+            "mean_luma_delta": 0.2156,
+            "low_contrast": false,
+            "reason": "选区与周围亮度差异明显，未触发低对比度水印提示。"
+          }
+        ]
+      },
+      "processing": {
+        "removed_count": 1,
+        "masked_pixels": 4028,
+        "changed_pixels": 4023,
+        "outside_changed_pixels": 0,
+        "width": 360,
+        "height": 480,
+        "size_bytes": 6919,
+        "sha256": "5ebfe7dd14dca9588b698e7c4ec39e149d97e1bd4ad2b5b2c6578afdeb1fa5f9"
+      }
+    },
+    {
+      "case_id": "translucent-center",
+      "label": "中央半透明水印",
+      "watermark_style": "translucent_text",
+      "expected_risk": "review",
+      "actual_risk": "review",
+      "expected_low_contrast": true,
+      "checks": {
+        "risk_matches": true,
+        "outside_pixels_preserved": true,
+        "all_regions_processed": true,
+        "low_contrast_matches": true
+      },
+      "artifacts": {
+        "clean": "translucent-center/clean.png",
+        "watermarked": "translucent-center/watermarked.png",
+        "mask": "translucent-center/mask.png",
+        "result": "translucent-center/result.png"
+      },
+      "regions": [
+        {
+          "x0": 55,
+          "y0": 205,
+          "x1": 305,
+          "y1": 275
+        }
+      ],
+      "mask_fraction": 0.1013,
+      "metrics": {
+        "input_masked_mae": 5.4641,
+        "masked_mae": 14.6232,
+        "masked_rmse": 17.2719,
+        "masked_psnr_db": 23.384,
+        "boundary_mae": 14.3323,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 1.0,
+        "improvement_percent": -167.62,
+        "grade": "good"
+      },
+      "quality_outcome": "degraded",
+      "complexity": [
+        {
+          "risk": "review",
+          "texture": 0.3667,
+          "edge_density": 0.1127,
+          "periodicity": 0.5154,
+          "structure": 0.14,
+          "reasons": [
+            "周围包含一定纹理，建议处理后放大检查边界。"
+          ]
+        }
+      ],
+      "selection_risk": {
+        "large_selection": true,
+        "regions": [
+          {
+            "mean_luma_delta": 0.0127,
+            "low_contrast": true,
+            "reason": "选区与周围平均亮度接近，可能是半透明或低对比度水印；局部修复可能比保留原图造成更明显的变化。"
+          }
+        ]
+      },
+      "processing": {
+        "removed_count": 1,
+        "masked_pixels": 17500,
+        "changed_pixels": 17500,
+        "outside_changed_pixels": 0,
+        "width": 360,
+        "height": 480,
+        "size_bytes": 403780,
+        "sha256": "47280ee6e4b077b1914816b803c1be968ff96a200f9a48864c24cef52054e233"
+      }
+    },
+    {
+      "case_id": "multiline-overlay",
+      "label": "底部多行文字覆盖",
+      "watermark_style": "multiline_panel",
+      "expected_risk": "high",
+      "actual_risk": "high",
+      "expected_low_contrast": false,
+      "checks": {
+        "risk_matches": true,
+        "outside_pixels_preserved": true,
+        "all_regions_processed": true,
+        "low_contrast_matches": true
+      },
+      "artifacts": {
+        "clean": "multiline-overlay/clean.png",
+        "watermarked": "multiline-overlay/watermarked.png",
+        "mask": "multiline-overlay/mask.png",
+        "result": "multiline-overlay/result.png"
+      },
+      "regions": [
+        {
+          "x0": 35,
+          "y0": 330,
+          "x1": 325,
+          "y1": 444
+        }
+      ],
+      "mask_fraction": 0.1913,
+      "metrics": {
+        "input_masked_mae": 67.0195,
+        "masked_mae": 25.5181,
+        "masked_rmse": 40.7746,
+        "masked_psnr_db": 15.923,
+        "boundary_mae": 4.126,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 0.9998,
+        "improvement_percent": 61.92,
+        "grade": "review"
+      },
+      "quality_outcome": "improved",
+      "complexity": [
+        {
+          "risk": "high",
+          "texture": 0.8,
+          "edge_density": 0.0828,
+          "periodicity": 0.5773,
+          "structure": 1.0,
+          "reasons": [
+            "周围检测到较长结构边缘，可能穿过蒙版区域。"
+          ]
+        }
+      ],
+      "selection_risk": {
+        "large_selection": true,
+        "regions": [
+          {
+            "mean_luma_delta": 0.3044,
+            "low_contrast": false,
+            "reason": "选区与周围亮度差异明显，未触发低对比度水印提示。"
+          }
+        ]
+      },
+      "processing": {
+        "removed_count": 1,
+        "masked_pixels": 33060,
+        "changed_pixels": 33055,
+        "outside_changed_pixels": 0,
+        "width": 360,
+        "height": 480,
+        "size_bytes": 21748,
+        "sha256": "4f6b1a6690e687b78446df3c1427212a47889619a8e6cb91a785eb492b345183"
+      }
+    }
+  ]
+}
