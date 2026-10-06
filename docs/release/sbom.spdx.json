@@ -1,0 +1,3924 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "creationInfo": {
+    "created": "2026-10-05T09:01:33Z",
+    "creators": [
+      "Tool: Remove-Watermark-release-metadata/1.0"
+    ]
+  },
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-Package-Remove-Watermark"
+  ],
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/a400567af73110cce95ed9207e62fdad7dd3355f66b4f9cf90484c186c6697a1",
+  "name": "Remove Watermark release-input SBOM",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package-Remove-Watermark",
+      "copyrightText": "Copyright 2026 Remove Watermark contributors",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "AGPL-3.0-only",
+      "licenseDeclared": "AGPL-3.0-only",
+      "name": "Remove Watermark",
+      "primaryPackagePurpose": "APPLICATION",
+      "versionInfo": "0.1.0.dev0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-PyYAML-18eefed00a",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/PyYAML@6.0.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "PyYAML",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "6.0.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-SQLAlchemy-34965ee04f",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/SQLAlchemy@2.0.54",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "SQLAlchemy",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.0.54"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-altgraph-4b446b6b4c",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/altgraph@0.17.5",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "altgraph",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.17.5"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-annotated-doc-fd5042705b",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/annotated-doc@0.0.5",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "annotated-doc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.0.5"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-annotated-types-694f99f630",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/annotated-types@0.8.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "annotated-types",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.8.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-anyio-ca29c7f30f",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/anyio@4.15.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "anyio",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.15.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-click-283a0acf5a",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/click@8.5.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "click",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "8.5.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-defusedxml-880d6e153a",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/defusedxml@0.7.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "defusedxml",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.7.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-fastapi-33107e5a1f",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/fastapi@0.141.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "fastapi",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.141.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-h11-e5ddba133c",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/h11@0.16.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "h11",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.16.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-httptools-edd4b4ec8c",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/httptools@0.8.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "httptools",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.8.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-idna-ac3c710bb2",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/idna@3.20",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "idna",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.20"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-macholib-2919b969ab",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no; condition: sys_platform == \"darwin\"",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/macholib@1.16.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "macholib",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.16.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-numpy-84de1972db",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/numpy@2.5.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "numpy",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.5.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-opencv-python-headless-f37cffbdb2",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/opencv-python-headless@5.0.0.93",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "opencv-python-headless",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "5.0.0.93"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-packaging-5a74b9a306",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/packaging@26.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "packaging",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "26.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pefile-47eb1de58e",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no; condition: sys_platform == \"win32\"",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pefile@2024.8.26",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pefile",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2024.8.26"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pillow-9ead7a38c3",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pillow@12.3.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pillow",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "12.3.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pydantic-0d604cbc6e",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pydantic@2.13.5",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pydantic",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.13.5"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pydantic-core-99c2d90d45",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pydantic-core@2.46.5",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pydantic-core",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.46.5"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pydantic-settings-ea810db77d",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pydantic-settings@2.15.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pydantic-settings",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.15.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pyinstaller-a1a2790f51",
+      "comment": "Ecosystem: Python; usage: build; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pyinstaller@6.22.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pyinstaller",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "6.22.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pyinstaller-hooks-contrib-55243bfe5e",
+      "comment": "Ecosystem: Python; usage: build; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pyinstaller-hooks-contrib@2026.8",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pyinstaller-hooks-contrib",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2026.8"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pymupdf-0db42f9647",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pymupdf@1.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pymupdf",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pypdf-6b271e3171",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pypdf@6.19.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pypdf",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "6.19.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-python-dotenv-23552edbf2",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/python-dotenv@1.2.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "python-dotenv",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.2.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-python-multipart-ca09930ea3",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/python-multipart@0.0.32",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "python-multipart",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.0.32"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pywin32-ctypes-47bd1e96d6",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no; condition: sys_platform == \"win32\"",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pywin32-ctypes@0.2.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pywin32-ctypes",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.2.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-setuptools-1e886bf5b1",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/setuptools@84.0.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "setuptools",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "84.0.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-starlette-5ca0561e95",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/starlette@1.7.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "starlette",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.7.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-typing-extensions-2f92c2e15c",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/typing-extensions@4.16.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "typing-extensions",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.16.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-typing-inspection-b70e801d8d",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/typing-inspection@0.4.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "typing-inspection",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.4.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-uvicorn-dd86e738ea",
+      "comment": "Ecosystem: Python; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/uvicorn@0.53.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "uvicorn",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.53.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-uvloop-2b12c67ad0",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no; condition: sys_platform != \"win32\"",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/uvloop@0.22.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "uvloop",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.22.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-watchfiles-7c512f7879",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/watchfiles@1.3.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "watchfiles",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.3.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-websockets-2d96205671",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/websockets@17.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "websockets",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "17.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-babel-helper-string-parser-8415859f17",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40babel/helper-string-parser@7.29.7",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@babel/helper-string-parser",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.29.7"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-babel-helper-validator-identifier-33b6981ec5",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40babel/helper-validator-identifier@7.29.7",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@babel/helper-validator-identifier",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.29.7"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-babel-parser-8a7e3cbc94",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40babel/parser@7.29.9",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@babel/parser",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.29.9"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-babel-types-5c4071c580",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40babel/types@7.29.8",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@babel/types",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.29.8"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-aix-ppc64-865d072e0a",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=aix; cpu=ppc64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/aix-ppc64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/aix-ppc64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-android-arm-9df149f665",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=android; cpu=arm",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/android-arm@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/android-arm",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-android-arm64-a625b8c084",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=android; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/android-arm64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/android-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-android-x64-bdef992c9b",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=android; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/android-x64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/android-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-darwin-arm64-ee38718bdb",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=darwin; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/darwin-arm64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/darwin-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-darwin-x64-8c23589954",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=darwin; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/darwin-x64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/darwin-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-freebsd-arm64-6a5b409484",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=freebsd; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/freebsd-arm64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/freebsd-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-freebsd-x64-aa58243672",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=freebsd; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/freebsd-x64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/freebsd-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-linux-arm-4eb6672d75",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=arm",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/linux-arm@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/linux-arm",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-linux-arm64-d26588c893",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/linux-arm64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/linux-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-linux-ia32-a2e07d320d",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=ia32",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/linux-ia32@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/linux-ia32",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-linux-loong64-e9961ddbcf",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=loong64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/linux-loong64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/linux-loong64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-linux-mips64el-048563a2e1",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=mips64el",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/linux-mips64el@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/linux-mips64el",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-linux-ppc64-a75515cd2d",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=ppc64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/linux-ppc64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/linux-ppc64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-linux-riscv64-ad2ee8f1c5",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=riscv64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/linux-riscv64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/linux-riscv64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-linux-s390x-fd37bc29df",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=s390x",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/linux-s390x@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/linux-s390x",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-linux-x64-c4e755706f",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/linux-x64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/linux-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-netbsd-arm64-2f12fb7d82",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=netbsd; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/netbsd-arm64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/netbsd-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-netbsd-x64-99b5b326ed",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=netbsd; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/netbsd-x64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/netbsd-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-openbsd-arm64-b76e7315b6",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=openbsd; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/openbsd-arm64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/openbsd-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-openbsd-x64-b2e47afc72",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=openbsd; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/openbsd-x64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/openbsd-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-openharmony-arm64-8f4ae028d9",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=openharmony; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/openharmony-arm64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/openharmony-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-sunos-x64-44ae6e918c",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=sunos; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/sunos-x64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/sunos-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-win32-arm64-715d428cc4",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=win32; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/win32-arm64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/win32-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-win32-ia32-e7176b19c1",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=win32; cpu=ia32",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/win32-ia32@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/win32-ia32",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-win32-x64-1962b9559d",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=win32; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40esbuild/win32-x64@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@esbuild/win32-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-jridgewell-sourcemap-codec-b76aea8105",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40jridgewell/sourcemap-codec@1.6.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@jridgewell/sourcemap-codec",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.6.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-98bf9b218c",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-android-arm64-a6935c9979",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=android; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-android-arm64@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-android-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-darwin-arm64-037848830c",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=darwin; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-darwin-arm64@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-darwin-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-darwin-x64-4fd10f2636",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=darwin; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-darwin-x64@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-darwin-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-linux-arm-gnueabihf-e70b0e0577",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=linux; cpu=arm",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-linux-arm-gnueabihf@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-linux-arm-gnueabihf",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-linux-arm64-gnu-3d0cf1b6f0",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=linux; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-linux-arm64-gnu@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-linux-arm64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-linux-arm64-musl-04b61639e6",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=linux; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-linux-arm64-musl@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-linux-arm64-musl",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-linux-riscv64-gnu-f3e238d135",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=linux; cpu=riscv64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-linux-riscv64-gnu@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-linux-riscv64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-linux-x64-gnu-c869ed515c",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=linux; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-linux-x64-gnu@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-linux-x64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-linux-x64-musl-7574c0d962",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=linux; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-linux-x64-musl@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-linux-x64-musl",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-win32-arm64-msvc-e1362dfe34",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=win32; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-win32-arm64-msvc@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-win32-arm64-msvc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-canvas-win32-x64-msvc-28f2b6d293",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no; condition: os=win32; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/canvas-win32-x64-msvc@0.1.100",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/canvas-win32-x64-msvc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.1.100"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-napi-rs-lzma-linux-x64-gnu-b7eb9851ec",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40napi-rs/lzma-linux-x64-gnu@1.5.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@napi-rs/lzma-linux-x64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.5.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rolldown-pluginutils-95ae35fc7f",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rolldown/pluginutils@1.0.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rolldown/pluginutils",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.0.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-android-arm-eabi-2bb85c8b93",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=android; cpu=arm",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-android-arm-eabi@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-android-arm-eabi",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-android-arm64-a7090fc8a9",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=android; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-android-arm64@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-android-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-darwin-arm64-4f6ddcd4f1",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=darwin; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-darwin-arm64@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-darwin-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-darwin-x64-0d61b5d6ba",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=darwin; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-darwin-x64@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-darwin-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-freebsd-arm64-84e451d936",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=freebsd; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-freebsd-arm64@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-freebsd-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-freebsd-x64-d9ee83fded",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=freebsd; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-freebsd-x64@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-freebsd-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-arm-gnueabihf-4beab2d8c1",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=arm",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-arm-gnueabihf@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-arm-gnueabihf",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-arm-musleabihf-96b8f5bef0",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=arm",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-arm-musleabihf@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-arm-musleabihf",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-arm64-gnu-480f6a9f82",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-arm64-gnu@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-arm64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-arm64-musl-55c21216d4",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-arm64-musl@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-arm64-musl",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-loong64-gnu-1bce13a1e2",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=loong64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-loong64-gnu@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-loong64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-loong64-musl-64295fdebd",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=loong64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-loong64-musl@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-loong64-musl",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-ppc64-gnu-af4f9ca4f9",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=ppc64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-ppc64-gnu@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-ppc64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-ppc64-musl-3097db6f78",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=ppc64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-ppc64-musl@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-ppc64-musl",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-riscv64-gnu-97fa2b415f",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=riscv64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-riscv64-gnu@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-riscv64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-riscv64-musl-89b31f24be",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=riscv64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-riscv64-musl@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-riscv64-musl",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-s390x-gnu-58a3662dc2",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=s390x",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-s390x-gnu@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-s390x-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-x64-gnu-9529636aec",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-x64-gnu@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-x64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-linux-x64-musl-4857b99fb6",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=linux; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-linux-x64-musl@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-linux-x64-musl",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-openbsd-x64-5ec0d53679",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=openbsd; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-openbsd-x64@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-openbsd-x64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-openharmony-arm64-2e509b1aab",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=openharmony; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-openharmony-arm64@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-openharmony-arm64",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-win32-arm64-msvc-3d434f9f44",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=win32; cpu=arm64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-win32-arm64-msvc@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-win32-arm64-msvc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-win32-ia32-msvc-5eac304e00",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=win32; cpu=ia32",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-win32-ia32-msvc@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-win32-ia32-msvc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-win32-x64-gnu-cbac940cd6",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=win32; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-win32-x64-gnu@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-win32-x64-gnu",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-rollup-win32-x64-msvc-be95809cc7",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=win32; cpu=x64",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40rollup/rollup-win32-x64-msvc@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@rollup/rollup-win32-x64-msvc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-types-estree-82e4f58606",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40types/estree@1.0.9",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@types/estree",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.0.9"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-types-node-151fee3d59",
+      "comment": "Ecosystem: npm; usage: development; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40types/node@24.13.6",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@types/node",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "24.13.6"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vitejs-plugin-vue-e7b9c1a74b",
+      "comment": "Ecosystem: npm; usage: development; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vitejs/plugin-vue@6.0.9",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vitejs/plugin-vue",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "6.0.9"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-volar-language-core-2898ac65d8",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40volar/language-core@2.4.28",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@volar/language-core",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.4.28"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-volar-source-map-27c64580ac",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40volar/source-map@2.4.28",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@volar/source-map",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.4.28"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-volar-typescript-a3ed97806b",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40volar/typescript@2.4.28",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@volar/typescript",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.4.28"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-compiler-core-a6039d1d0e",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/compiler-core@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/compiler-core",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-compiler-dom-b0c1fe1298",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/compiler-dom@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/compiler-dom",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-compiler-sfc-77e6df4759",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/compiler-sfc@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/compiler-sfc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-compiler-ssr-3d43e39520",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/compiler-ssr@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/compiler-ssr",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-devtools-api-9ade398dd5",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/devtools-api@6.6.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/devtools-api",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "6.6.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-devtools-api-1f7505bcc0",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/devtools-api@7.7.10",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/devtools-api",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.7.10"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-devtools-kit-4dbae00f83",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/devtools-kit@7.7.10",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/devtools-kit",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.7.10"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-devtools-shared-9da2ff419a",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/devtools-shared@7.7.10",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/devtools-shared",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.7.10"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-language-core-ec38100f05",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/language-core@3.3.11",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/language-core",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.3.11"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-reactivity-cff0b0e552",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/reactivity@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/reactivity",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-runtime-core-c9032bf289",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/runtime-core@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/runtime-core",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-runtime-dom-311b5e082a",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/runtime-dom@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/runtime-dom",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-server-renderer-a3b0d1a979",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/server-renderer@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/server-renderer",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-shared-f318bd312e",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/shared@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/shared",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-tsconfig-b41b9bb278",
+      "comment": "Ecosystem: npm; usage: development; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40vue/tsconfig@0.8.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@vue/tsconfig",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.8.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-alien-signals-442319d324",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/alien-signals@3.2.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "alien-signals",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.2.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-birpc-07f82932f1",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/birpc@2.9.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "birpc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.9.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-copy-anything-421aa5d4c2",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/copy-anything@4.1.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "copy-anything",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.1.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-csstype-13d122959a",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/csstype@3.2.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "csstype",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.2.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-entities-4e7980c659",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/entities@7.0.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "entities",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.0.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-esbuild-6d63c76efa",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/esbuild@0.28.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "esbuild",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.28.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-estree-walker-63bbdb5519",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/estree-walker@2.0.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "estree-walker",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.0.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-fdir-abae46b9a5",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/fdir@6.5.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "fdir",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "6.5.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-fsevents-2f96060c35",
+      "comment": "Ecosystem: npm; usage: development; direct: no; condition: os=darwin",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/fsevents@2.3.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "fsevents",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.3.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-hookable-f2054166d8",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/hookable@5.5.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "hookable",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "5.5.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-magic-string-bf00faa2c0",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/magic-string@0.30.21",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "magic-string",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.30.21"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-mitt-42b7339cc3",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/mitt@3.0.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "mitt",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.0.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-muggle-string-d3167c04d8",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/muggle-string@0.4.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "muggle-string",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.4.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-nanoid-4135204f76",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/nanoid@3.3.19",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "nanoid",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.3.19"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-node-readable-to-web-readable-stream-698d274437",
+      "comment": "Ecosystem: npm; usage: optional runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/node-readable-to-web-readable-stream@0.4.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "node-readable-to-web-readable-stream",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.4.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-path-browserify-d540b7e45c",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/path-browserify@1.0.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "path-browserify",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.0.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-pdfjs-dist-8c833b04bb",
+      "comment": "Ecosystem: npm; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/pdfjs-dist@5.4.624",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pdfjs-dist",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "5.4.624"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-perfect-debounce-88043d58a9",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/perfect-debounce@1.0.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "perfect-debounce",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.0.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-picocolors-f053db95c1",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/picocolors@1.1.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "picocolors",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.1.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-picomatch-275aee24c8",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/picomatch@4.0.7",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "picomatch",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.0.7"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-pinia-f4512373a4",
+      "comment": "Ecosystem: npm; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/pinia@3.0.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pinia",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.0.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-postcss-854ad1542f",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/postcss@8.5.28",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "postcss",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "8.5.28"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rfdc-f8b6e7df27",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/rfdc@1.4.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "rfdc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.4.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-rollup-1770f6ddb4",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/rollup@4.63.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "rollup",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.63.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-source-map-js-c226b94fb4",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/source-map-js@1.2.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "source-map-js",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.2.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-speakingurl-43211caf5d",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/speakingurl@14.0.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "speakingurl",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "14.0.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-superjson-2597c89f34",
+      "comment": "Ecosystem: npm; usage: runtime; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/superjson@2.2.6",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "superjson",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.2.6"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-tinyglobby-2ad15c78bd",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/tinyglobby@0.2.17",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "tinyglobby",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.2.17"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-typescript-b1f466eff0",
+      "comment": "Ecosystem: npm; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/typescript@5.9.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "typescript",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "5.9.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-undici-types-ca9c681b83",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/undici-types@7.18.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "undici-types",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.18.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vite-45b66dc360",
+      "comment": "Ecosystem: npm; usage: development; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/vite@7.3.6",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "vite",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.3.6"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vscode-uri-493f359c47",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/vscode-uri@3.2.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "vscode-uri",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.2.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-26d4c8a3c4",
+      "comment": "Ecosystem: npm; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/vue@3.5.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "vue",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.5.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-router-dc5b9b3b58",
+      "comment": "Ecosystem: npm; usage: runtime; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/vue-router@4.6.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "vue-router",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.6.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-vue-tsc-abbb88f57e",
+      "comment": "Ecosystem: npm; usage: development; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/vue-tsc@3.3.11",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "vue-tsc",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.3.11"
+    }
+  ],
+  "relationships": [
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Remove-Watermark",
+      "relationshipType": "DESCRIBES",
+      "spdxElementId": "SPDXRef-DOCUMENT"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-PyYAML-18eefed00a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-SQLAlchemy-34965ee04f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-altgraph-4b446b6b4c",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-annotated-doc-fd5042705b",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-annotated-types-694f99f630",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-anyio-ca29c7f30f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-click-283a0acf5a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-defusedxml-880d6e153a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-fastapi-33107e5a1f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-h11-e5ddba133c",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-httptools-edd4b4ec8c",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-idna-ac3c710bb2",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-macholib-2919b969ab",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-numpy-84de1972db",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-opencv-python-headless-f37cffbdb2",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-packaging-5a74b9a306",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pefile-47eb1de58e",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pillow-9ead7a38c3",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pydantic-0d604cbc6e",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pydantic-core-99c2d90d45",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pydantic-settings-ea810db77d",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pyinstaller-a1a2790f51",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pyinstaller-hooks-contrib-55243bfe5e",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pymupdf-0db42f9647",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pypdf-6b271e3171",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-python-dotenv-23552edbf2",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-python-multipart-ca09930ea3",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pywin32-ctypes-47bd1e96d6",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-setuptools-1e886bf5b1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-starlette-5ca0561e95",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-typing-extensions-2f92c2e15c",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-typing-inspection-b70e801d8d",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-uvicorn-dd86e738ea",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-uvloop-2b12c67ad0",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-watchfiles-7c512f7879",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-websockets-2d96205671",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-babel-helper-string-parser-8415859f17",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-babel-helper-validator-identifier-33b6981ec5",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-babel-parser-8a7e3cbc94",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-babel-types-5c4071c580",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-aix-ppc64-865d072e0a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-android-arm-9df149f665",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-android-arm64-a625b8c084",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-android-x64-bdef992c9b",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-darwin-arm64-ee38718bdb",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-darwin-x64-8c23589954",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-freebsd-arm64-6a5b409484",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-freebsd-x64-aa58243672",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-linux-arm-4eb6672d75",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-linux-arm64-d26588c893",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-linux-ia32-a2e07d320d",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-linux-loong64-e9961ddbcf",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-linux-mips64el-048563a2e1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-linux-ppc64-a75515cd2d",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-linux-riscv64-ad2ee8f1c5",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-linux-s390x-fd37bc29df",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-linux-x64-c4e755706f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-netbsd-arm64-2f12fb7d82",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-netbsd-x64-99b5b326ed",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-openbsd-arm64-b76e7315b6",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-openbsd-x64-b2e47afc72",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-openharmony-arm64-8f4ae028d9",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-sunos-x64-44ae6e918c",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-win32-arm64-715d428cc4",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-win32-ia32-e7176b19c1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-win32-x64-1962b9559d",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-jridgewell-sourcemap-codec-b76aea8105",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-98bf9b218c",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-android-arm64-a6935c9979",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-darwin-arm64-037848830c",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-darwin-x64-4fd10f2636",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-linux-arm-gnueabihf-e70b0e0577",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-linux-arm64-gnu-3d0cf1b6f0",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-linux-arm64-musl-04b61639e6",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-linux-riscv64-gnu-f3e238d135",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-linux-x64-gnu-c869ed515c",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-linux-x64-musl-7574c0d962",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-win32-arm64-msvc-e1362dfe34",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-canvas-win32-x64-msvc-28f2b6d293",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-napi-rs-lzma-linux-x64-gnu-b7eb9851ec",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rolldown-pluginutils-95ae35fc7f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-android-arm-eabi-2bb85c8b93",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-android-arm64-a7090fc8a9",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-darwin-arm64-4f6ddcd4f1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-darwin-x64-0d61b5d6ba",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-freebsd-arm64-84e451d936",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-freebsd-x64-d9ee83fded",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-arm-gnueabihf-4beab2d8c1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-arm-musleabihf-96b8f5bef0",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-arm64-gnu-480f6a9f82",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-arm64-musl-55c21216d4",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-loong64-gnu-1bce13a1e2",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-loong64-musl-64295fdebd",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-ppc64-gnu-af4f9ca4f9",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-ppc64-musl-3097db6f78",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-riscv64-gnu-97fa2b415f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-riscv64-musl-89b31f24be",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-s390x-gnu-58a3662dc2",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-x64-gnu-9529636aec",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-linux-x64-musl-4857b99fb6",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-openbsd-x64-5ec0d53679",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-openharmony-arm64-2e509b1aab",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-win32-arm64-msvc-3d434f9f44",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-win32-ia32-msvc-5eac304e00",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-win32-x64-gnu-cbac940cd6",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-rollup-win32-x64-msvc-be95809cc7",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-types-estree-82e4f58606",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-types-node-151fee3d59",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vitejs-plugin-vue-e7b9c1a74b",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-volar-language-core-2898ac65d8",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-volar-source-map-27c64580ac",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-volar-typescript-a3ed97806b",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-compiler-core-a6039d1d0e",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-compiler-dom-b0c1fe1298",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-compiler-sfc-77e6df4759",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-compiler-ssr-3d43e39520",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-devtools-api-9ade398dd5",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-devtools-api-1f7505bcc0",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-devtools-kit-4dbae00f83",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-devtools-shared-9da2ff419a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-language-core-ec38100f05",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-reactivity-cff0b0e552",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-runtime-core-c9032bf289",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-runtime-dom-311b5e082a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-server-renderer-a3b0d1a979",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-shared-f318bd312e",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-tsconfig-b41b9bb278",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-alien-signals-442319d324",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-birpc-07f82932f1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-copy-anything-421aa5d4c2",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-csstype-13d122959a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-entities-4e7980c659",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-esbuild-6d63c76efa",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-estree-walker-63bbdb5519",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-fdir-abae46b9a5",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-fsevents-2f96060c35",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-hookable-f2054166d8",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-magic-string-bf00faa2c0",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-mitt-42b7339cc3",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-muggle-string-d3167c04d8",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-nanoid-4135204f76",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-node-readable-to-web-readable-stream-698d274437",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-path-browserify-d540b7e45c",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-pdfjs-dist-8c833b04bb",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-perfect-debounce-88043d58a9",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-picocolors-f053db95c1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-picomatch-275aee24c8",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-pinia-f4512373a4",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-postcss-854ad1542f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rfdc-f8b6e7df27",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-rollup-1770f6ddb4",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-source-map-js-c226b94fb4",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-speakingurl-43211caf5d",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-superjson-2597c89f34",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-tinyglobby-2ad15c78bd",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-typescript-b1f466eff0",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-undici-types-ca9c681b83",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vite-45b66dc360",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vscode-uri-493f359c47",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-26d4c8a3c4",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-router-dc5b9b3b58",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-tsc-abbb88f57e",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    }
+  ],
+  "spdxVersion": "SPDX-2.3"
+}

@@ -106,6 +106,17 @@ PNG、JPEG 和 WebP 可以进行元数据检查和矩形蒙版编辑。蒙版预
 make check
 ```
 
+验证发布依赖清单、SPDX SBOM 和全新虚拟环境中的 wheel 安装：
+
+```bash
+make release-metadata-check
+make wheel-check
+```
+
+版本变化见 [CHANGELOG.md](CHANGELOG.md)，第三方依赖清单见
+[docs/THIRD_PARTY_DEPENDENCIES.md](docs/THIRD_PARTY_DEPENDENCIES.md)，机器可读的 SPDX 2.3 SBOM 位于
+[docs/release/sbom.spdx.json](docs/release/sbom.spdx.json)。
+
 重新生成不含第三方素材的图片修复基准和报告：
 
 ```bash

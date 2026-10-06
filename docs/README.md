@@ -2,6 +2,8 @@
 
 Public compatibility notes, security boundaries, implementation details, and reproducible benchmark reports:
 
+- `THIRD_PARTY_DEPENDENCIES.md`
+- `release/sbom.spdx.json`
 - `DOCX_COMPATIBILITY.md`
 - `CODECV_PDF.md`
 - `GENERAL_PDF.md`

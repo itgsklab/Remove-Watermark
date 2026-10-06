@@ -1,0 +1,25 @@
+name: Release readiness
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  metadata-and-wheel:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+          cache: pip
+      - name: Verify committed dependency inventory and SPDX SBOM
+        run: python packaging/generate_release_metadata.py --check
+      - name: Build and install wheel in a clean environment
+        run: python packaging/verify_wheel_install.py
