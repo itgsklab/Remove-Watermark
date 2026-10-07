@@ -48,6 +48,7 @@ jobs:
           python-version: "3.12.10"
       - name: Test release evidence and candidate gates
         run: |
+          python packaging/tests/test_release_metadata.py
           python packaging/tests/test_verify_release_evidence.py
           python packaging/tests/test_prepare_release_candidate.py
       - name: Download platform evidence

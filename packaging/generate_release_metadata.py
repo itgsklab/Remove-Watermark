@@ -144,9 +144,13 @@ def input_digest() -> str:
     for path in (PYPROJECT, PYTHON_LOCK, NPM_MANIFEST, NPM_LOCK):
         digest.update(path.relative_to(ROOT).as_posix().encode())
         digest.update(b"\0")
-        digest.update(path.read_bytes())
+        digest.update(canonical_text_bytes(path))
         digest.update(b"\0")
     return digest.hexdigest()
+
+
+def canonical_text_bytes(path: Path) -> bytes:
+    return path.read_text(encoding="utf-8").encode("utf-8")
 
 
 def creation_time(existing_sbom: Path) -> str:
