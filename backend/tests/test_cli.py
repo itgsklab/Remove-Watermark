@@ -12,7 +12,7 @@ from test_codecv_pdf import make_pdf as make_codecv_pdf
 import wmrm.cli as cli
 from wmrm.adapters.pdf.raster_inpaint import PdfRasterInpaintError
 from wmrm.benchmarks.pdf_redaction_probe import _fixture_pdf
-from wmrm.cli import ExitCode, main
+from wmrm.cli import ExitCode, _emit_success, main
 
 
 def run_cli(arguments: list[str]) -> tuple[int, str, str]:
@@ -39,6 +39,25 @@ def test_doctor_has_machine_readable_runtime_status() -> None:
     assert payload["command"] == "doctor"
     assert payload["result"]["pymupdf"]["available"] is True
     assert isinstance(payload["result"]["tesseract"]["available"], bool)
+
+
+def test_json_output_is_safe_for_non_utf8_windows_streams() -> None:
+    raw = io.BytesIO()
+    stream = io.TextIOWrapper(raw, encoding="cp1252")
+    _emit_success(
+        "doctor",
+        {
+            "version": "0.1.0.dev0",
+            "pymupdf": {"available": True},
+            "tesseract": {"available": False, "reason": "未检测到 Tesseract"},
+        },
+        json_mode=True,
+        stream=stream,
+    )
+    stream.flush()
+    encoded = raw.getvalue()
+    payload = json.loads(encoded.decode("ascii"))
+    assert payload["result"]["tesseract"]["reason"] == "未检测到 Tesseract"
 
 
 def test_usage_error_is_json_and_returns_two() -> None:

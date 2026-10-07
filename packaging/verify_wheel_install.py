@@ -40,8 +40,13 @@ def git_value(*arguments: str) -> str:
 def run_json(command: list[str], *, cwd: Path, env: dict[str, str]) -> dict:
     print("+", " ".join(command))
     completed = subprocess.run(
-        command, cwd=cwd, env=env, check=True, capture_output=True, text=True
+        command, cwd=cwd, env=env, check=False, capture_output=True, text=True
     )
+    if completed.returncode:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no command output"
+        raise RuntimeError(
+            f"Command failed with exit code {completed.returncode}: {detail}"
+        )
     print(completed.stdout, end="")
     return json.loads(completed.stdout)
 
