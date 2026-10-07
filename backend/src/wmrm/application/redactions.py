@@ -87,9 +87,14 @@ class RedactionService:
             "仍可能造成未列出的重叠。",
         ]
         if backend.available:
-            warnings.append(
-                "执行将使用 PyMuPDF 应用物理 redaction，并生成新的 PDF；该操作不可逆。"
-            )
+            if request.strategy == "raster_inpaint":
+                warnings.append(
+                    "执行将栅格化所选页面，使用 OpenCV 修复区域，并回灌蒙版外的文字层。"
+                )
+            else:
+                warnings.append(
+                    "执行将使用 PyMuPDF 应用物理 redaction，并生成新的 PDF；该操作不可逆。"
+                )
         else:
             warnings.append(backend.reason or "PyMuPDF 区域删除后端不可用。")
         if overlap_count:

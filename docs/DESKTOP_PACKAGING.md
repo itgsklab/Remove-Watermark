@@ -1,6 +1,6 @@
 # 桌面打包
 
-## 打包方式
+## 当前产物
 
 桌面版采用 PyInstaller `onedir` 打包。Vue 生产构建被放入应用资源目录，FastAPI 在随机回环端口同源提供页面和 `/api/v1`。包装层只负责：
 
@@ -9,7 +9,7 @@
 - 启动本地服务并打开默认浏览器；
 - 接收设置页发出的退出请求，等待任务监督器清理后关闭服务。
 
-macOS 使用 `.app`，Windows 和 Linux 使用包含可执行文件及依赖的目录。每个平台必须在该平台上分别构建；仓库提供 GitHub Actions 三平台矩阵，本地实测结论覆盖 macOS Apple Silicon。
+macOS 使用 `.app`，Windows 和 Linux 使用包含可执行文件及依赖的目录。每个平台必须在该平台上分别构建；当前仓库提供 GitHub Actions 三平台矩阵，但本地实测结论只覆盖 macOS Apple Silicon。
 
 PyInstaller 官方文档建议 macOS 窗口应用使用 `onedir`，避免 `onefile` 每次启动解包的成本和签名限制：[Using PyInstaller](https://pyinstaller.org/en/stable/usage.html)。子进程入口在导入业务模块前调用 `multiprocessing.freeze_support()`，遵循官方的冻结进程要求：[Common Issues and Pitfalls](https://pyinstaller.org/en/stable/common-issues-and-pitfalls.html#multi-processing)。
 
@@ -82,4 +82,4 @@ CI 在上传前先生成 `.tar.gz`（macOS/Linux）或 `.zip`（Windows）。mac
 
 验证包括：Vue 生产构建、`.app` 生成、Mach-O `arm64` 架构、macOS ad-hoc 签名结构、健康接口、Vue History 路由、页面内退出，以及在冻结应用的 `spawn` 子进程中完成 OpenCV 图片修复并下载输出。
 
-发布包不包含 Developer ID 签名、公证、DMG/MSI 安装器或自动更新。Windows/Linux 工作流尚未形成可声明兼容的验证证据。
+当前没有 Developer ID 签名、公证、DMG/MSI 安装器或自动更新。Windows/Linux 工作流属于待 CI 实跑的构建配置，不能据此宣称已经完成对应平台兼容验证。

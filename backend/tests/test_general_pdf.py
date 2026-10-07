@@ -14,6 +14,8 @@ from pypdf.generic import (
 )
 from test_codecv_pdf import make_pdf as make_pattern_pdf
 
+from wmrm.benchmarks.pdf_redaction_probe import _fixture_pdf
+
 
 def make_general_pdf(
     *, pages: int = 2, repeated_text: str = "DRAFT", crop_origin: bool = False
@@ -397,6 +399,56 @@ def test_general_pdf_redaction_plan_executes_in_worker(client: TestClient) -> No
     assert downloaded.status_code == 200
     result = PdfReader(BytesIO(downloaded.content), strict=True)
     assert "Body paragraph" not in (result.pages[0].extract_text() or "")
+
+
+def test_general_pdf_raster_inpaint_reinjects_searchable_text(client: TestClient) -> None:
+    asset = upload(client, _fixture_pdf())
+    analysis = client.post(
+        "/api/v1/analyses",
+        json={"asset_id": asset["id"], "preset": "general"},
+    ).json()
+    region = {
+        "page_number": 1,
+        "x0": 80,
+        "y0": 660,
+        "x1": 235,
+        "y1": 715,
+        "transform_id": analysis["pdf_pages"][0]["transform_id"],
+    }
+    payload = {
+        "asset_id": asset["id"],
+        "asset_sha256": asset["sha256"],
+        "analysis_id": analysis["id"],
+        "regions": [region],
+        "strategy": "raster_inpaint",
+        "dpi": 96,
+        "radius": 3,
+        "ocr_languages": "eng",
+        "acknowledged_warnings": ["PDF_REDACTION_OVERLAP", "PDF_RASTERIZATION"],
+    }
+
+    plan = client.post("/api/v1/redaction-plans/validate", json=payload)
+    assert plan.status_code == 200
+    assert plan.json()["valid"] is True
+    assert plan.json()["strategy"] == "raster_inpaint"
+    assert plan.json()["dpi"] == 96
+
+    created = client.post("/api/v1/tasks", json={"plan_id": plan.json()["id"]})
+    assert created.status_code == 202
+    deadline = monotonic() + 10
+    task = created.json()
+    while task["status"] not in {"succeeded", "failed"} and monotonic() < deadline:
+        sleep(0.02)
+        task = client.get(f"/api/v1/tasks/{task['id']}").json()
+    assert task["status"] == "succeeded", task.get("error")
+    assert "栅格修复 1 个 PDF 区域并回灌文字层" in task["stage"]
+
+    artifact = next(item for item in task["artifacts"] if item["role"] == "output")
+    downloaded = client.get(artifact["download_url"])
+    result = PdfReader(BytesIO(downloaded.content), strict=True)
+    text = result.pages[0].extract_text() or ""
+    assert "REMOVE-ME" not in text
+    assert "KEEP-ME" in text
 
 
 def test_redaction_preview_rejects_stale_page_transform(client: TestClient) -> None:

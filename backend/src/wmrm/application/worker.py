@@ -9,6 +9,7 @@ from wmrm.adapters.images.inpaint import inpaint_image
 from wmrm.adapters.pdf.codecv_editor import remove_codecv_candidates
 from wmrm.adapters.pdf.preview import PdfPreviewRenderer
 from wmrm.adapters.pdf.pymupdf_redaction import LicenseMode, redact_pdf_regions
+from wmrm.adapters.pdf.raster_inpaint import raster_inpaint_pdf_regions
 
 
 def run_task_process(request: dict[str, Any], result_queue: Any, cancel_event: Any) -> None:
@@ -28,14 +29,26 @@ def run_task_process(request: dict[str, Any], result_queue: Any, cancel_event: A
                 cancel_event.is_set,
             )
             preview_payload = {"available": False, "warning": None, "images": []}
-        elif plan_kind == "pdf_redaction":
-            result = redact_pdf_regions(
-                source_path,
-                output_path,
-                list(request["regions"]),
-                license_mode=cast(LicenseMode, str(request["license_mode"])),
-                should_cancel=cancel_event.is_set,
-            )
+        elif plan_kind in {"pdf_redaction", "pdf_raster_inpaint"}:
+            if plan_kind == "pdf_raster_inpaint":
+                result = raster_inpaint_pdf_regions(
+                    source_path,
+                    output_path,
+                    list(request["regions"]),
+                    license_mode=cast(LicenseMode, str(request["license_mode"])),
+                    dpi=int(request["dpi"]),
+                    radius=int(request["radius"]),
+                    ocr_languages=str(request["ocr_languages"]),
+                    should_cancel=cancel_event.is_set,
+                )
+            else:
+                result = redact_pdf_regions(
+                    source_path,
+                    output_path,
+                    list(request["regions"]),
+                    license_mode=cast(LicenseMode, str(request["license_mode"])),
+                    should_cancel=cancel_event.is_set,
+                )
             renderer = _renderer(asset_kind, request["preview_config"])
             preview = renderer.render(
                 source_path,

@@ -65,7 +65,7 @@ class ImageMaskService:
                     409,
                 )
 
-        covered_pixels = _rectangle_union_area(request.regions)
+        covered_pixels = rectangle_union_area(request.regions)
         coverage_ratio = covered_pixels / (
             metadata.display_width * metadata.display_height
         )
@@ -132,7 +132,7 @@ class ImageMaskService:
         )
 
 
-def _rectangle_union_area(regions) -> float:
+def rectangle_union_area(regions) -> float:
     rectangles = [
         (
             math.floor(item.x0),

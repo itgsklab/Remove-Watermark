@@ -108,6 +108,9 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .warning { padding: 12px 14px; border-left: 3px solid #b66c13; background: #fff7e8; }
 .redaction-panel { margin-top: 20px; }
 .redaction-panel h2 { margin: 5px 0 8px; }
+.pdf-strategy-options { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 10px; margin: 18px 0 10px; }
+.pdf-strategy-options label { display: grid; gap: 6px; color: #536057; font-size: .82rem; }
+.pdf-strategy-options input, .pdf-strategy-options select { width: 100%; padding: 9px 10px; border: 1px solid #c8d0c8; border-radius: 9px; background: white; color: inherit; }
 .redaction-fields { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 10px; margin: 18px 0; }
 .redaction-fields label { display: grid; gap: 6px; color: #536057; font-size: .82rem; }
 .redaction-fields input, .redaction-fields select { width: 100%; padding: 9px 10px; border: 1px solid #c8d0c8; border-radius: 9px; background: white; color: inherit; }
@@ -185,6 +188,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   .comparison-heading { align-items: flex-start; flex-direction: column; }
   .comparison-pair { grid-template-columns: 1fr; }
   .redaction-fields { grid-template-columns: repeat(2, 1fr); }
+  .pdf-strategy-options { grid-template-columns: 1fr 1fr; }
   .image-metadata-heading { grid-template-columns: 1fr; }
   .image-metadata-grid { grid-template-columns: 1fr 1fr; }
   .complexity-region dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }

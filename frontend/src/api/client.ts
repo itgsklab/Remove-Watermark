@@ -168,9 +168,12 @@ export interface RedactionPlan {
   valid: boolean
   asset_id: string
   analysis_id: string
-  strategy: 'pymupdf_redaction'
+  strategy: 'pymupdf_redaction' | 'raster_inpaint'
   license_mode: 'agpl' | 'commercial'
   regions: RedactionRegion[]
+  dpi: number | null
+  radius: number | null
+  ocr_languages: string | null
   warnings: PlanWarning[]
   output_kind: 'pdf'
 }
@@ -400,6 +403,7 @@ export async function validateImagePlan(
 export async function previewRedactions(
   analysis: Analysis,
   region: RedactionRegion,
+  strategy: 'pymupdf_redaction' | 'raster_inpaint' = 'pymupdf_redaction',
 ): Promise<RedactionPreview> {
   return parse<RedactionPreview>(await fetch('/api/v1/redactions/preview', {
     method: 'POST',
@@ -408,6 +412,7 @@ export async function previewRedactions(
       asset_id: analysis.asset_id,
       analysis_id: analysis.id,
       regions: [region],
+      strategy,
     }),
   }))
 }
@@ -416,6 +421,12 @@ export async function validateRedactionPlan(
   analysis: Analysis,
   regions: RedactionRegion[],
   acknowledgedWarnings: string[],
+  options: {
+    strategy: 'pymupdf_redaction' | 'raster_inpaint'
+    dpi?: number
+    radius?: number
+    ocr_languages?: string
+  } = { strategy: 'pymupdf_redaction' },
 ): Promise<RedactionPlan> {
   return parse<RedactionPlan>(await fetch('/api/v1/redaction-plans/validate', {
     method: 'POST',
@@ -425,6 +436,10 @@ export async function validateRedactionPlan(
       asset_sha256: analysis.asset_sha256,
       analysis_id: analysis.id,
       regions,
+      strategy: options.strategy,
+      dpi: options.dpi,
+      radius: options.radius,
+      ocr_languages: options.ocr_languages,
       acknowledged_warnings: acknowledgedWarnings,
     }),
   }))

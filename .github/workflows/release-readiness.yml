@@ -12,7 +12,14 @@ permissions:
 
 jobs:
   metadata-and-wheel:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          - macos-14
+          - windows-2022
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -22,4 +29,40 @@ jobs:
       - name: Verify committed dependency inventory and SPDX SBOM
         run: python packaging/generate_release_metadata.py --check
       - name: Build and install wheel in a clean environment
-        run: python packaging/verify_wheel_install.py
+        run: python packaging/verify_wheel_install.py --report-json work/release-readiness.json
+      - name: Upload release-readiness evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-readiness-${{ runner.os }}-${{ runner.arch }}
+          path: work/release-readiness.json
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate-evidence:
+    needs: metadata-and-wheel
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12.10"
+      - name: Test release evidence and candidate gates
+        run: |
+          python packaging/tests/test_verify_release_evidence.py
+          python packaging/tests/test_prepare_release_candidate.py
+      - name: Download platform evidence
+        uses: actions/download-artifact@v8
+        with:
+          pattern: release-readiness-*
+          path: work/release-evidence
+      - name: Require matching Linux, macOS and Windows evidence
+        run: >-
+          python packaging/verify_release_evidence.py work/release-evidence
+          --output-json work/release-readiness-summary.json
+      - name: Upload aggregate release evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-readiness-summary
+          path: work/release-readiness-summary.json
+          if-no-files-found: error
+          retention-days: 30

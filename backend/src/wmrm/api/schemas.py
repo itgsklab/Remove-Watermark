@@ -171,6 +171,7 @@ class PreviewRedactionsRequest(BaseModel):
     asset_id: str
     analysis_id: str
     regions: list[RedactionRegionRequest] = Field(min_length=1, max_length=100)
+    strategy: Literal["pymupdf_redaction", "raster_inpaint"] = "pymupdf_redaction"
 
 
 class RedactionOverlap(BaseModel):
@@ -197,6 +198,11 @@ class RedactionPreviewResponse(BaseModel):
 
 class ValidateRedactionPlanRequest(PreviewRedactionsRequest):
     asset_sha256: str = Field(min_length=64, max_length=64)
+    dpi: int = Field(default=144, ge=96, le=300)
+    radius: int = Field(default=3, ge=1, le=10)
+    ocr_languages: str = Field(
+        default="eng", min_length=1, max_length=80, pattern=r"^[A-Za-z0-9_+-]+$"
+    )
     acknowledged_warnings: list[str] = Field(default_factory=list)
 
 
@@ -282,9 +288,12 @@ class RedactionPlanResponse(BaseModel):
     valid: bool
     asset_id: str
     analysis_id: str
-    strategy: Literal["pymupdf_redaction"] = "pymupdf_redaction"
+    strategy: Literal["pymupdf_redaction", "raster_inpaint"] = "pymupdf_redaction"
     license_mode: Literal["agpl", "commercial"]
     regions: list[RedactionRegionRequest]
+    dpi: int | None = None
+    radius: int | None = None
+    ocr_languages: str | None = None
     warnings: list[PlanWarning]
     output_kind: Literal["pdf"] = "pdf"
 

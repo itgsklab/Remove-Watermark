@@ -154,6 +154,8 @@ class TaskService:
                 record.stage = (
                     "使用 OpenCV 修复并校验图片"
                     if is_image
+                    else "栅格修复 PDF 并回灌文字层"
+                    if plan_kind == "pdf_raster_inpaint"
                     else "应用并校验 PDF 区域删除"
                     if plan_kind == "pdf_redaction"
                     else "生成并校验 PDF"
@@ -176,6 +178,8 @@ class TaskService:
                     "candidates": payload.get("candidates", []),
                     "regions": payload.get("regions", []),
                     "radius": payload.get("radius", 3),
+                    "dpi": payload.get("dpi", 144),
+                    "ocr_languages": payload.get("ocr_languages", "eng"),
                     "license_mode": payload.get("license_mode"),
                     "preview_config": self._preview_config(is_pdf),
                 }
@@ -315,6 +319,19 @@ class TaskService:
                     record.stage = (
                         f"已修复 {result['removed_count']} 个蒙版区域并完成像素校验"
                         if is_image
+                        else (
+                            f"已栅格修复 {result['removed_count']} 个 PDF 区域并回灌文字层"
+                            + (
+                                "；第 "
+                                + "、".join(
+                                    str(item) for item in result["unsearchable_pages"]
+                                )
+                                + " 页没有可回灌文字"
+                                if result.get("unsearchable_pages")
+                                else ""
+                            )
+                        )
+                        if plan_kind == "pdf_raster_inpaint"
                         else f"已物理删除 {result['removed_count']} 个 PDF 区域并完成校验"
                         if plan_kind == "pdf_redaction"
                         else f"已删除 {result['removed_count']} 个候选并完成校验"
@@ -486,7 +503,9 @@ class TaskService:
         return ComparisonResponse(
             available=available,
             removed_count=(
-                len(regions) if payload.get("kind") == "pdf_redaction" else len(candidates)
+                len(regions)
+                if payload.get("kind") in {"pdf_redaction", "pdf_raster_inpaint"}
+                else len(candidates)
             ),
             changed_parts=sorted(changed_parts),
             source_page_count=len(source_pages),

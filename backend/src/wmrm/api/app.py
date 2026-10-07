@@ -259,7 +259,13 @@ def create_app(
                     id="pdf",
                     label="PDF",
                     status="experimental",
-                    strategies=["inspect", "region-redaction"],
+                    strategies=[
+                        "inspect",
+                        "region-redaction",
+                        "raster-inpaint",
+                        "searchable-text-layer",
+                        "optional-tesseract-ocr",
+                    ],
                 ),
                 CapabilityItem(
                     id="image",

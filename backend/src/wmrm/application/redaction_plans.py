@@ -3,6 +3,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 
+from wmrm.adapters.pdf.raster_inpaint import probe_tesseract
 from wmrm.api.schemas import (
     PlanWarning,
     RedactionPlanResponse,
@@ -29,18 +30,35 @@ class RedactionPlanService:
         if not preview.executable:
             raise AssetError(
                 "REDACTION_BACKEND_UNAVAILABLE",
-                "PyMuPDF 区域删除后端不可用，请检查运行依赖。",
+                "PyMuPDF PDF 处理后端不可用，请检查运行依赖。",
                 409,
             )
 
         overlap_count = sum(len(region.overlaps) for region in preview.regions)
-        warnings = [
-            PlanWarning(
-                code="PDF_REDACTION_IRREVERSIBLE",
-                message="区域内的文字、图片像素、矢量图和链接将从输出副本中物理删除。",
-                requires_acknowledgement=False,
+        if request.strategy == "raster_inpaint":
+            ocr = probe_tesseract()
+            ocr_note = (
+                "无原始文字层的页面会调用 Tesseract OCR。"
+                if ocr["available"]
+                else "本机未检测到 Tesseract；无原始文字层的页面可能无法搜索。"
             )
-        ]
+            warnings = [
+                PlanWarning(
+                    code="PDF_RASTERIZATION",
+                    message=(
+                        "所选页面将栅格化并使用 OpenCV 修复，链接、表单和矢量对象不会保留；"
+                        f"原始文字层会在蒙版外回灌。{ocr_note}"
+                    ),
+                )
+            ]
+        else:
+            warnings = [
+                PlanWarning(
+                    code="PDF_REDACTION_IRREVERSIBLE",
+                    message="区域内的文字、图片像素、矢量图和链接将从输出副本中物理删除。",
+                    requires_acknowledgement=False,
+                )
+            ]
         if overlap_count:
             warnings.append(
                 PlanWarning(
@@ -58,8 +76,14 @@ class RedactionPlanService:
             valid=valid,
             asset_id=asset.id,
             analysis_id=request.analysis_id,
+            strategy=request.strategy,
             license_mode=self.redactions.license_mode,
             regions=request.regions,
+            dpi=request.dpi if request.strategy == "raster_inpaint" else None,
+            radius=request.radius if request.strategy == "raster_inpaint" else None,
+            ocr_languages=(
+                request.ocr_languages if request.strategy == "raster_inpaint" else None
+            ),
             warnings=warnings,
         )
         if not valid:
@@ -73,11 +97,18 @@ class RedactionPlanService:
                 analysis_id=request.analysis_id,
                 plan_json=json.dumps(
                     {
-                        "kind": "pdf_redaction",
+                        "kind": (
+                            "pdf_raster_inpaint"
+                            if request.strategy == "raster_inpaint"
+                            else "pdf_redaction"
+                        ),
                         "response": response.model_dump(mode="json"),
                         "asset_sha256": asset.sha256,
                         "regions": [item.model_dump(mode="json") for item in request.regions],
                         "license_mode": self.redactions.license_mode,
+                        "dpi": request.dpi,
+                        "radius": request.radius,
+                        "ocr_languages": request.ocr_languages,
                     },
                     ensure_ascii=False,
                 ),

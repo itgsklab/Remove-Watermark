@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check desktop-install desktop-build desktop-verify desktop-archive image-benchmark mobile-watermark-benchmark mobile-selection-corpus complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check check
+.PHONY: backend-install backend-check frontend-install frontend-check desktop-install desktop-build desktop-verify desktop-archive image-benchmark mobile-watermark-benchmark mobile-selection-corpus complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -69,6 +69,13 @@ pdf-redaction-probe:
 	cd backend && .venv/bin/python -m wmrm.benchmarks.pdf_redaction_probe \
 		--report-json ../work/pdf-redaction-probe.json \
 		--output-pdf ../work/pdf-redaction-probe.pdf \
+		--strict
+
+pdf-ocr-probe:
+	cd backend && .venv/bin/python -m wmrm.benchmarks.pdf_ocr_probe \
+		--report-json ../docs/benchmarks/pdf-ocr-probe.json \
+		--report-md ../docs/benchmarks/pdf-ocr-probe.md \
+		--output-pdf ../work/pdf-ocr-probe.pdf \
 		--strict
 
 pdf-redaction-corpus:

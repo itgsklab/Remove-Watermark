@@ -1,0 +1,43 @@
+{
+  "fixture": "repository-generated synthetic image-only PDF",
+  "tesseract": {
+    "available": true,
+    "version": "tesseract 5.5.3",
+    "languages": "chi_sim+eng"
+  },
+  "checks": {
+    "source_is_image_only": true,
+    "ocr_page_reported": true,
+    "no_unsearchable_pages": true,
+    "english_text_searchable": true,
+    "chinese_text_searchable": true,
+    "masked_text_omitted": true,
+    "masked_pixels_repaired": true,
+    "page_count_preserved": true,
+    "strict_reopen": true
+  },
+  "operation": {
+    "backend": "pymupdf-opencv",
+    "backend_version": "1.28.2",
+    "license_mode": "agpl",
+    "region_count": 1,
+    "removed_count": 1,
+    "changed_pages": [
+      1
+    ],
+    "rasterized_pages": [
+      1
+    ],
+    "source_text_pages": [],
+    "ocr_pages": [
+      1
+    ],
+    "unsearchable_pages": [],
+    "inserted_word_count": 10,
+    "dpi": 200,
+    "radius": 3,
+    "size_bytes": 81686
+  },
+  "extracted_text": "SEARCHABLE\nDOCUMENT\n本\n地水印处理测试",
+  "passed": true
+}

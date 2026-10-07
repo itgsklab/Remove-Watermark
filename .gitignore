@@ -17,3 +17,4 @@ frontend/.env.local
 dist/
 packaging/build/
 work/
+STATUS.md

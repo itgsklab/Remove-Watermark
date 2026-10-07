@@ -1,6 +1,8 @@
-# Remove Watermark
+# Watermark Remover
 
 面向 DOCX、PDF、CodeCV 简历和小红书图片的本地优先水印处理工具。
+
+> 当前状态：早期开发版。已完成 DOCX VML、CodeCV PDF 平铺水印、通用 PDF 区域物理删除、PDF Deep 栅格修复与可搜索文字层、静态图片矩形蒙版的处理闭环、小红书分享链接的安全解析，以及经过 Apple Silicon 实测的本地桌面预览包。
 
 ## 技术栈
 
@@ -14,7 +16,7 @@
 ```text
 backend/   Python API、领域模型、任务与处理适配器
 frontend/  Vue 本地 Web 界面
-docs/      技术说明、兼容性记录与基准报告
+docs/      技术说明、安全边界与可复现基准
 ```
 
 ## 开发启动
@@ -49,9 +51,20 @@ make desktop-build
 make desktop-verify
 ```
 
-macOS 产物为 `dist/Watermark Remover.app`。桌面启动器在随机本地端口同源提供 Vue 与 API，自动打开浏览器；可以在“设置”页面经过二次确认后安全退出。Windows、macOS 和 Linux 必须分别在对应平台构建。已验证的构建环境为 macOS 15.7.3 / Apple Silicon。详细构建输入、数据目录、安全边界及代码签名说明见 [docs/DESKTOP_PACKAGING.md](docs/DESKTOP_PACKAGING.md)。
+macOS 产物为 `dist/Watermark Remover.app`。桌面启动器在随机本地端口同源提供 Vue 与 API，自动打开浏览器；可以在“设置”页面经过二次确认后安全退出。Windows、macOS 和 Linux 必须分别在对应平台构建，当前只有 macOS 15.7.3 / Apple Silicon 完成了真实产物和图片处理子进程验证。详细构建输入、数据目录、安全边界及未完成的签名工作见 [docs/DESKTOP_PACKAGING.md](docs/DESKTOP_PACKAGING.md)。
 
-## API
+## 命令行
+
+安装后可使用 `wmrm doctor` 检查本机 PDF/OCR 运行环境。`wmrm pdf-deep` 和
+`wmrm pdf-redact` 分别提供栅格修复与对象级区域删除；`wmrm image-plan` 和
+`wmrm image-apply` 提供先审阅风险计划、再执行图片蒙版修复的流程；`wmrm docx-plan`、
+`wmrm docx-apply`、`wmrm codecv-plan` 和 `wmrm codecv-apply` 提供候选证据审阅、逐项确认与
+精确对象删除。命令都使用独立输出路径，并可通过 `--json` 返回机器可读结果。参数、坐标
+约定和退出码见 [docs/CLI.md](docs/CLI.md)。
+首个公开版本的稳定命令、JSON 信封、退出码及计划 schema 约定见
+[docs/release/CLI_COMPATIBILITY_V1.md](docs/release/CLI_COMPATIBILITY_V1.md)。
+
+## 当前可用 API
 
 - `GET /api/v1/health`
 - `GET /api/v1/capabilities`
@@ -65,7 +78,7 @@ macOS 产物为 `dist/Watermark Remover.app`。桌面启动器在随机本地端
 - `GET /api/v1/analyses/{analysis_id}`
 - `POST /api/v1/plans/validate`（校验 DOCX/CodeCV PDF 候选、策略、文件摘要与风险确认）
 - `POST /api/v1/redactions/preview`（校验通用 PDF 区域并列出正文、图形和交互对象重叠）
-- `POST /api/v1/redaction-plans/validate`（确认区域删除风险并创建 PyMuPDF 处理计划）
+- `POST /api/v1/redaction-plans/validate`（创建对象级删除或 Deep 栅格修复计划）
 - `POST /api/v1/image-masks/preview`（校验坐标、计算蒙版并集，并预检周围背景复杂度）
 - `POST /api/v1/image-plans/validate`（创建 OpenCV 图片修复计划并校验风险确认）
 - `POST /api/v1/tasks`（后台生成新的 DOCX、PDF 或图片副本）
@@ -74,7 +87,7 @@ macOS 产物为 `dist/Watermark Remover.app`。桌面启动器在随机本地端
 - `POST /api/v1/tasks/{task_id}/cancel`
 - `GET /api/v1/tasks/{task_id}/artifacts/{artifact_id}`
 
-## DOCX 处理流程
+## DOCX 当前处理流程
 
 1. 上传 DOCX 并进行只读扫描。
 2. 选择页眉或页脚中的 VML 文字水印候选。
@@ -84,13 +97,15 @@ macOS 产物为 `dist/Watermark Remover.app`。桌面启动器在随机本地端
 6. 校验压缩包结构、必需部件、修改部件 XML，以及所有非目标部件的字节一致性。
 7. 使用本机 LibreOffice 和 Poppler 渲染原件与结果，按页并排检查。
 
-原始上传文件不会被覆盖。该流程只识别 Word 页眉/页脚中的 VML `textpath` 文字形状，无法处理图片水印、正文背景或旧版 `.doc`。
+原始上传文件不会被覆盖。当前版本只识别 Word 页眉/页脚中的 VML `textpath` 文字形状，无法处理图片水印、正文背景或旧版 `.doc`。
 
 页面预览属于可选能力。缺少渲染工具或转换失败时，DOCX 处理任务仍会成功，界面会保留结果下载并说明预览不可用。可通过 `WMRM_DOCX_PREVIEW_ENABLED=false` 关闭预览。
 
 CodeCV PDF 只删除扫描阶段确认的内容流操作序列，不按固定资源名删除所有 `/Pattern`。输出后会重新检查页数、页面框、旋转、正文文字操作和目标签名数量。PDF 对比使用 Poppler，可通过 `WMRM_PDF_PREVIEW_ENABLED=false` 关闭。
 
 通用 PDF 支持框选一个区域、检查与正文及交互对象的重叠，并在用户明确确认后通过 PyMuPDF 应用物理 redaction。执行会删除区域内文字、清除相交图片像素、移除相交矢量图和链接，再以完整垃圾回收写入新 PDF；原文件不会被覆盖。坐标摘要、页面尺寸和旋转会在执行前后重新校验。
+
+对于无法对象级分离的合成水印，通用 PDF 还支持 Deep 栅格修复：只渲染被选中的页面，使用 OpenCV Telea 修复水印区域，并把蒙版外的原始文字重新写入隐藏可搜索层。原本没有文字层的页面会在本机存在 Tesseract 时尝试 OCR；缺少 OCR 时任务会明确列出不可搜索页面。选中页面的链接、表单和矢量对象不会保留，执行前必须确认这一风险。
 
 PNG、JPEG 和 WebP 可以进行元数据检查和矩形蒙版编辑。蒙版预览会分析区域周围的纹理、边缘、周期性和结构线，并对高复杂度背景要求显式确认。覆盖达到图片面积 10% 或选区与周围平均亮度差异低于 4% 时，也会提示大面积或半透明水印风险并要求确认。静态图片使用 OpenCV Telea 算法修复所选区域，在独立 worker 中生成无损 PNG 副本；输出会重新解码，并验证尺寸以及蒙版外像素完全一致。输出会应用 EXIF 方向并移除原始 EXIF、ICC 等元数据。动态图仍只支持检查。
 
@@ -100,7 +115,7 @@ PNG、JPEG 和 WebP 可以进行元数据检查和矩形蒙版编辑。蒙版预
 
 默认保留产物 30 天、未被计划引用的上传文件 7 天、遗留临时文件 24 小时；分别可通过 `WMRM_ARTIFACT_RETENTION_DAYS`、`WMRM_UNREFERENCED_ASSET_RETENTION_DAYS` 和 `WMRM_FAILED_WORK_RETENTION_HOURS` 调整。任务进程的边界和恢复语义见 [docs/WORKER.md](docs/WORKER.md)。
 
-执行完整检查：
+执行全部已实现检查：
 
 ```bash
 make check
@@ -155,10 +170,11 @@ make codecv-corpus
 make pdf-redaction-corpus
 ```
 
-DOCX 的结构兼容配置、证据等级和处理边界见 [docs/DOCX_COMPATIBILITY.md](docs/DOCX_COMPATIBILITY.md)。
-CodeCV PDF 的操作签名、批量语料审计和处理边界见 [docs/CODECV_PDF.md](docs/CODECV_PDF.md)。
+DOCX 的结构兼容配置、证据等级和当前边界见 [docs/DOCX_COMPATIBILITY.md](docs/DOCX_COMPATIBILITY.md)。
+CodeCV PDF 的操作签名、批量语料审计和当前边界见 [docs/CODECV_PDF.md](docs/CODECV_PDF.md)。
 通用 PDF 的候选分类、坐标和误判边界见 [docs/GENERAL_PDF.md](docs/GENERAL_PDF.md)。
 区域删除的风险预览、PyMuPDF 一致性探针、跨生成器语料审计与执行后端边界见 [docs/PDF_REDACTION.md](docs/PDF_REDACTION.md)。
+PDF Deep 栅格修复、文字层回灌、可选 OCR 和当前限制见 [docs/PDF_DEEP.md](docs/PDF_DEEP.md)。
 图片检查、坐标合同和蒙版边界见 [docs/IMAGE_MASKS.md](docs/IMAGE_MASKS.md)。
 小红书分享链接的允许域名、SSRF 防护和元数据边界见 [docs/XIAOHONGSHU_LINKS.md](docs/XIAOHONGSHU_LINKS.md)。
 桌面同源部署、构建矩阵和已验证平台见 [docs/DESKTOP_PACKAGING.md](docs/DESKTOP_PACKAGING.md)。

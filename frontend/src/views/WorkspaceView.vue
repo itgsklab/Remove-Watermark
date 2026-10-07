@@ -42,6 +42,11 @@ const redactionY0 = ref(0)
 const redactionX1 = ref(100)
 const redactionY1 = ref(100)
 const confirmedRedactionOverlap = ref(false)
+const pdfRegionStrategy = ref<'pymupdf_redaction' | 'raster_inpaint'>('pymupdf_redaction')
+const pdfDeepDpi = ref(144)
+const pdfDeepRadius = ref(3)
+const pdfOcrLanguages = ref('eng')
+const confirmedRasterization = ref(false)
 const imageMasks = ref<ImageMaskRegion[]>([])
 const imageMaskPreview = ref<ImageMaskPreview | null>(null)
 const imageRadius = ref(3)
@@ -97,6 +102,7 @@ async function inspect() {
     task.value = null
     redactionPreview.value = null
     confirmedRedactionOverlap.value = false
+    confirmedRasterization.value = false
     imageMasks.value = []
     imageMaskPreview.value = null
     imagePlanWarnings.value = []
@@ -272,6 +278,7 @@ function useVisualRegion(region: {
 function clearRedactionDraft() {
   redactionPreview.value = null
   confirmedRedactionOverlap.value = false
+  confirmedRasterization.value = false
 }
 
 async function previewRedactionRisk() {
@@ -279,14 +286,18 @@ async function previewRedactionRisk() {
   busy.value = true
   message.value = ''
   try {
-    redactionPreview.value = await previewRedactions(analysis.value, {
-      page_number: redactionPage.value,
-      x0: redactionX0.value,
-      y0: redactionY0.value,
-      x1: redactionX1.value,
-      y1: redactionY1.value,
-      transform_id: selectedPdfPage.value.transform_id,
-    })
+    redactionPreview.value = await previewRedactions(
+      analysis.value,
+      {
+        page_number: redactionPage.value,
+        x0: redactionX0.value,
+        y0: redactionY0.value,
+        x1: redactionX1.value,
+        y1: redactionY1.value,
+        transform_id: selectedPdfPage.value.transform_id,
+      },
+      pdfRegionStrategy.value,
+    )
     confirmedRedactionOverlap.value = false
     const count = redactionPreview.value.regions[0]?.overlaps.length || 0
     message.value = count
@@ -305,17 +316,22 @@ async function processRedaction() {
   busy.value = true
   message.value = ''
   try {
-    const acknowledgements = confirmedRedactionOverlap.value
-      ? ['PDF_REDACTION_OVERLAP']
-      : []
-    const plan = await validateRedactionPlan(analysis.value, [region], acknowledgements)
+    const acknowledgements: string[] = []
+    if (confirmedRedactionOverlap.value) acknowledgements.push('PDF_REDACTION_OVERLAP')
+    if (confirmedRasterization.value) acknowledgements.push('PDF_RASTERIZATION')
+    const plan = await validateRedactionPlan(analysis.value, [region], acknowledgements, {
+      strategy: pdfRegionStrategy.value,
+      dpi: pdfDeepDpi.value,
+      radius: pdfDeepRadius.value,
+      ocr_languages: pdfOcrLanguages.value,
+    })
     if (!plan.valid || !plan.id) {
-      message.value = '该区域与正文或交互对象相交，请确认风险后再执行。'
+      message.value = '请确认区域重叠与处理方式风险后再执行。'
       return
     }
     await waitForTask(await createTask(plan.id))
   } catch (error) {
-    message.value = error instanceof ApiError ? error.message : '创建 PDF 区域删除任务失败。'
+    message.value = error instanceof ApiError ? error.message : '创建 PDF 区域处理任务失败。'
   } finally {
     busy.value = false
   }
@@ -388,7 +404,7 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
             placeholder="例如 DRAFT、草稿"
           />
           <p>扫描重复文字、图片、Form、Pattern、注释和可选内容组。</p>
-          <p class="hint">扫描后可框选区域，经重叠风险确认后生成应用物理删除的新 PDF。</p>
+          <p class="hint">扫描后可框选区域，选择对象级删除或 Deep 栅格修复并生成新 PDF。</p>
         </template>
         <template v-else>
           <p>检查 CodeCV 平铺图案操作签名和对应资源对象。</p>
@@ -603,10 +619,36 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
     </section>
     <section v-if="analysis.preset === 'general' && analysis.pdf_pages.length" class="panel redaction-panel">
       <div>
-        <p class="eyebrow">区域删除风险预览</p>
-        <h2>输入 PDF 点坐标</h2>
-        <p>先验证坐标和相交对象，再由 PyMuPDF 生成物理删除后的新文件。</p>
+        <p class="eyebrow">PDF 区域处理</p>
+        <h2>框选水印并选择处理方式</h2>
+        <p>对象级删除适合普通 PDF；栅格修复适合无法单独删除的合成水印。</p>
       </div>
+      <div class="pdf-strategy-options">
+        <label for="pdf-region-strategy">
+          处理方式
+          <select id="pdf-region-strategy" v-model="pdfRegionStrategy" @change="clearRedactionDraft">
+            <option value="pymupdf_redaction">对象级区域删除（保留页面结构）</option>
+            <option value="raster_inpaint">Deep 栅格修复（OpenCV + 可搜索文字层）</option>
+          </select>
+        </label>
+        <template v-if="pdfRegionStrategy === 'raster_inpaint'">
+          <label>
+            渲染 DPI
+            <input v-model.number="pdfDeepDpi" type="number" min="96" max="300" step="12" @input="clearRedactionDraft" />
+          </label>
+          <label>
+            修复半径
+            <input v-model.number="pdfDeepRadius" type="number" min="1" max="10" @input="clearRedactionDraft" />
+          </label>
+          <label>
+            OCR 语言
+            <input v-model="pdfOcrLanguages" type="text" maxlength="80" placeholder="eng 或 chi_sim+eng" @input="clearRedactionDraft" />
+          </label>
+        </template>
+      </div>
+      <p v-if="pdfRegionStrategy === 'raster_inpaint'" class="hint">
+        只栅格化被选中的页面；蒙版外原始文字会作为隐藏文字层回灌。图片型页面仅在本机安装 Tesseract 时执行 OCR。
+      </p>
       <PdfRegionEditor
         v-if="selectedPdfPage"
         :asset-id="assetId"
@@ -642,14 +684,20 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         <p v-for="warning in redactionPreview.warnings" :key="warning" class="warning">{{ warning }}</p>
         <label v-if="redactionPreview.requires_acknowledgement" class="risk-confirm">
           <input v-model="confirmedRedactionOverlap" type="checkbox" :disabled="busy" />
-          我已核对相交对象，确认从输出副本中物理删除该区域内容
+          {{ pdfRegionStrategy === 'raster_inpaint'
+            ? '我已核对相交对象，确认在输出副本中栅格修复该区域'
+            : '我已核对相交对象，确认从输出副本中物理删除该区域内容' }}
+        </label>
+        <label v-if="pdfRegionStrategy === 'raster_inpaint'" class="risk-confirm">
+          <input v-model="confirmedRasterization" type="checkbox" :disabled="busy" />
+          我确认所选页面将栅格化，链接、表单和矢量对象不会保留，并会检查输出文字层
         </label>
         <div v-if="redactionPreview.executable" class="process-actions">
           <button
-            :disabled="busy || (redactionPreview.requires_acknowledgement && !confirmedRedactionOverlap)"
+            :disabled="busy || (redactionPreview.requires_acknowledgement && !confirmedRedactionOverlap) || (pdfRegionStrategy === 'raster_inpaint' && !confirmedRasterization)"
             @click="processRedaction"
-          >{{ busy ? '正在处理…' : '生成区域删除后的 PDF 副本' }}</button>
-          <p>使用 AGPL 版 PyMuPDF；原始上传文件不会被覆盖。</p>
+          >{{ busy ? '正在处理…' : pdfRegionStrategy === 'raster_inpaint' ? '生成栅格修复 PDF 副本' : '生成区域删除后的 PDF 副本' }}</button>
+          <p>使用 AGPL 版 PyMuPDF；只生成新副本，不覆盖原文件。</p>
           <button
             v-if="task && ['queued', 'running', 'cancelling'].includes(task.status)"
             class="secondary-button"

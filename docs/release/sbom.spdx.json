@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/a400567af73110cce95ed9207e62fdad7dd3355f66b4f9cf90484c186c6697a1",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/7bc7eecf8b0658bf45710288448e4a1e3939f10a44eec541be1b20477a58965b",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {

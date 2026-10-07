@@ -17,6 +17,15 @@ All notable changes to this project are documented in this file. The format foll
 - Reproducible desktop packaging inputs and macOS Apple Silicon bundle verification.
 - Deterministic third-party dependency inventory and SPDX 2.3 release-input SBOM.
 - Clean-environment backend wheel build, installation, dependency, and import checks.
+- Installable CLI commands for PDF region removal, PDF Deep repair, reviewable image plans, DOCX
+  candidate removal, and CodeCV candidate removal.
+- Machine-checked v1 CLI/JSON compatibility contract targeting the first public `0.1.0` release.
+- Isolated-wheel execution checks for every CLI command on the release-readiness path.
+- Per-platform release-readiness reports with source, contract and wheel digests.
+- A three-platform evidence gate that rejects missing, duplicate, dirty or mismatched release
+  reports before release-candidate preparation.
+- A dry-run-first release-candidate preparation tool that revalidates raw evidence, updates every
+  version source, regenerates release metadata and rolls back failed updates.
 
 ### Security
 

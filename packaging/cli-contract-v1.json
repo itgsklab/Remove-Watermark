@@ -1,0 +1,31 @@
+{
+  "contract_version": 1,
+  "target_public_version": "0.1.0",
+  "development_version": "0.1.0.dev0",
+  "success_envelope_keys": ["command", "ok", "result"],
+  "error_envelope_keys": ["error", "exit_code", "ok"],
+  "error_body_keys": ["code", "message"],
+  "exit_codes": {
+    "success": 0,
+    "usage": 2,
+    "input_invalid": 3,
+    "acknowledgement_required": 4,
+    "processing_failed": 5
+  },
+  "commands": {
+    "doctor": ["pymupdf", "tesseract", "version"],
+    "pdf-deep": ["backend", "changed_pages", "output", "rasterized_pages", "removed_count", "sha256"],
+    "pdf-redact": ["backend", "changed_pages", "output", "removed_count", "sha256"],
+    "image-plan": ["complexity", "coverage_ratio", "output", "plan_id", "required_acknowledgements", "warnings"],
+    "image-apply": ["height", "output", "outside_changed_pixels", "plan_id", "removed_count", "sha256", "width"],
+    "docx-plan": ["candidate_count", "candidates", "output", "plan_id", "scan_warnings", "source_kind", "warnings"],
+    "docx-apply": ["candidate_ids", "output", "plan_id", "removed_count", "sha256"],
+    "codecv-plan": ["candidate_count", "candidates", "match_status", "output", "plan_id", "scan_warnings", "source_kind", "warnings"],
+    "codecv-apply": ["candidate_ids", "changed_pages", "output", "plan_id", "removed_count", "sha256"]
+  },
+  "plan_schemas": {
+    "image_inpaint": 1,
+    "docx_object_removal": 1,
+    "codecv_object_removal": 1
+  }
+}

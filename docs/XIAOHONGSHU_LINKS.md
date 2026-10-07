@@ -55,4 +55,4 @@ WMRM_XHS_METADATA_ENABLED=true wmrm-api
 - `resolved`：完成页面读取；字段仍可能为空。
 - `unavailable`：远端状态、内容类型、跳转或网络条件不满足。
 
-`media_download_supported` 固定为 `false`。处理小红书图片时，用户应上传自己有权处理的图片文件，复用现有图片蒙版、风险预检和 OpenCV 处理闭环。
+`media_download_supported` 固定为 `false`。后续若实现“小红书图片去水印”，第一条可执行路径仍是让用户上传有权处理的图片文件，复用现有图片蒙版、风险预检和 OpenCV 处理闭环。

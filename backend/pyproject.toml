@@ -36,6 +36,7 @@ packaging = [
 ]
 
 [project.scripts]
+wmrm = "wmrm.cli:main"
 wmrm-api = "wmrm.api.app:main"
 wmrm-desktop = "wmrm.desktop:main"
 wmrm-image-benchmark = "wmrm.benchmarks.image_quality:main"
@@ -45,6 +46,7 @@ wmrm-complexity-calibration = "wmrm.benchmarks.complexity_calibration:main"
 wmrm-codecv-corpus = "wmrm.benchmarks.codecv_corpus:main"
 wmrm-codecv-probe = "wmrm.benchmarks.codecv_probe:main"
 wmrm-pdf-redaction-probe = "wmrm.benchmarks.pdf_redaction_probe:main"
+wmrm-pdf-ocr-probe = "wmrm.benchmarks.pdf_ocr_probe:main"
 wmrm-pdf-redaction-corpus = "wmrm.benchmarks.pdf_redaction_corpus:main"
 
 [tool.hatch.build.targets.wheel]

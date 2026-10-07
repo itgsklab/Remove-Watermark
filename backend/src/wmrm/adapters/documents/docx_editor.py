@@ -42,7 +42,7 @@ def remove_docx_candidates(
     for candidate in candidates:
         grouped[candidate["source_locator"]["part_name"]].append(candidate)
 
-    output_path.parent.mkdir(parents=True, exist_ok=False)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path = output_path.with_suffix(".tmp")
     try:
         _raise_if_cancelled(should_cancel)
