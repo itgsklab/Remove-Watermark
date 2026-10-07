@@ -1,8 +1,9 @@
 # CLI compatibility contract v1
 
 This contract defines the automation surface targeted for the first public `0.1.0` release. The
-package remains on `0.1.0.dev0` while release-candidate evidence is collected. The machine-readable
-source of truth is [`packaging/cli-contract-v1.json`](../../packaging/cli-contract-v1.json).
+package is on `0.1.0rc1` after passing the Linux, macOS and Windows release-candidate evidence gate.
+The machine-readable source of truth is
+[`packaging/cli-contract-v1.json`](../../packaging/cli-contract-v1.json).
 
 ## Stable surface
 
