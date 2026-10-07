@@ -1,7 +1,7 @@
 {
   "contract_version": 1,
   "target_public_version": "0.1.0",
-  "development_version": "0.1.0.dev0",
+  "development_version": "0.1.0rc1",
   "success_envelope_keys": ["command", "ok", "result"],
   "error_envelope_keys": ["error", "exit_code", "ok"],
   "error_body_keys": ["code", "message"],

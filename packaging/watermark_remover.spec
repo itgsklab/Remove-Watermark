@@ -63,7 +63,7 @@ if platform.system() == "Darwin":
         name="Watermark Remover.app",
         icon=None,
         bundle_identifier="org.watermarkremover.desktop",
-        version="0.1.0.dev0",
+        version="0.1.0rc1",
         info_plist={
             "CFBundleDisplayName": "Watermark Remover",
             "NSHighResolutionCapable": True,

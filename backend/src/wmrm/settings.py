@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="WMRM_", extra="ignore")
 
     app_name: str = "Watermark Remover"
-    app_version: str = "0.1.0.dev0"
+    app_version: str = "0.1.0rc1"
     host: str = "127.0.0.1"
     port: int = 8765
     data_dir: Path = Field(default=Path(".wmrm-data"))

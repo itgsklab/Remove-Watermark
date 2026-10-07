@@ -57,7 +57,7 @@ def stage_frontend(skip_npm_ci: bool) -> None:
 def write_build_info() -> None:
     BUILD.mkdir(parents=True, exist_ok=True)
     payload = {
-        "app_version": "0.1.0.dev0",
+        "app_version": "0.1.0rc1",
         "built_at": build_timestamp(),
         "git_commit": git_value("rev-parse", "HEAD"),
         "git_dirty": bool(git_value("status", "--porcelain")),
