@@ -1,11 +1,11 @@
 import uuid
-from collections.abc import AsyncIterator, Callable, Iterator
+from collections.abc import AsyncIterator, Iterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated
 
 import uvicorn
-from fastapi import BackgroundTasks, Depends, FastAPI, Request, UploadFile
+from fastapi import Depends, FastAPI, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
@@ -63,7 +63,6 @@ def create_app(
     *,
     xiaohongshu_transport: MetadataTransport | None = None,
     frontend_dir: Path | None = None,
-    shutdown_callback: Callable[[], None] | None = None,
 ) -> FastAPI:
     config = settings or load_settings()
     database = Database(config.database_path)
@@ -241,7 +240,6 @@ def create_app(
         return CapabilitiesResponse(
             version=config.app_version,
             max_upload_bytes=config.max_upload_bytes,
-            desktop_mode=shutdown_callback is not None,
             formats=[
                 CapabilityItem(
                     id="codecv_pdf",
@@ -281,13 +279,6 @@ def create_app(
                 ),
             ],
         )
-
-    @app.post("/api/v1/system/shutdown", status_code=202)
-    async def shutdown(background_tasks: BackgroundTasks) -> Response:
-        if shutdown_callback is None:
-            raise AssetError("SHUTDOWN_NOT_AVAILABLE", "当前启动方式不支持从页面关闭服务。", 409)
-        background_tasks.add_task(shutdown_callback)
-        return Response(status_code=202)
 
     @app.post("/api/v1/xiaohongshu/preview", response_model=XiaohongshuPreviewResponse)
     def preview_xiaohongshu_link(

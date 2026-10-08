@@ -30,7 +30,6 @@ class CapabilityItem(BaseModel):
 class CapabilitiesResponse(BaseModel):
     version: str
     max_upload_bytes: int
-    desktop_mode: bool = False
     formats: list[CapabilityItem]
 
 

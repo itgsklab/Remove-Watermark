@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check desktop-install desktop-build desktop-verify desktop-archive image-benchmark mobile-watermark-benchmark mobile-selection-corpus complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check check
+.PHONY: backend-install backend-check frontend-install frontend-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -12,17 +12,11 @@ frontend-install:
 frontend-check:
 	cd frontend && npm run typecheck && npm run build
 
-desktop-install:
-	cd backend && .venv/bin/pip install -c ../packaging/constraints.txt -e '.[packaging]'
+web-build:
+	cd frontend && npm ci && npm run build
 
-desktop-build:
-	backend/.venv/bin/python packaging/build_desktop.py --skip-npm-ci
-
-desktop-verify:
-	backend/.venv/bin/python packaging/verify_desktop.py
-
-desktop-archive:
-	backend/.venv/bin/python packaging/archive_desktop.py
+web-run:
+	backend/.venv/bin/wmrm-web --frontend-dir frontend/dist
 
 image-benchmark:
 	cd backend && .venv/bin/python -m wmrm.benchmarks.image_quality \

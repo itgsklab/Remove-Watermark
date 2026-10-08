@@ -13,9 +13,9 @@ reports maintained in this repository:
 - `CLI.md`
 - `IMAGE_MASKS.md`
 - `WORKER.md`
+- `WEB_DEPLOYMENT.md`
 - `LAMA_EVALUATION.md`
 - `XIAOHONGSHU_LINKS.md`
-- `DESKTOP_PACKAGING.md`
 - `release/CLI_COMPATIBILITY_V1.md`
 - `release/RELEASE_CANDIDATE.md`
 - `benchmarks/opencv-telea-baseline.md`

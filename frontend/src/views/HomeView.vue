@@ -76,9 +76,9 @@ function metadataStatusLabel(status: XiaohongshuPreview['metadata_status']) {
 
 <template>
   <section class="hero">
-    <p class="eyebrow">本地优先 · 早期开发版</p>
+    <p class="eyebrow">本地优先 · 0.1.0 发布候选</p>
     <h1>看清改动，再处理水印</h1>
-    <p class="intro">计划支持 DOCX、PDF、CodeCV 简历和小红书图片。原件默认保留，处理前确认候选与影响范围。</p>
+    <p class="intro">支持 DOCX、PDF、CodeCV 简历和本地图片。原件默认保留，处理前确认候选与影响范围。</p>
   </section>
 
   <section class="panel upload-panel">

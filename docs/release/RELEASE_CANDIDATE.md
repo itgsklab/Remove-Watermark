@@ -20,7 +20,7 @@ plan identifies the source commit, input evidence digests, old and new Python/np
 version source that would change.
 
 After reviewing the plan, repeat the command with `--apply`. This changes the Python version to
-`0.1.0rc1`, the npm version to `0.1.0-rc.1`, updates all backend, frontend and desktop version
+`0.1.0rc1`, the npm version to `0.1.0-rc.1`, updates all backend and frontend version
 sources, and regenerates the dependency inventory and SPDX SBOM. Writes are rolled back if metadata
 generation or its freshness check fails.
 

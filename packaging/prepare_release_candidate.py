@@ -37,8 +37,6 @@ VERSION_SOURCES = (
     VersionSource(Path("backend/pyproject.toml"), "python"),
     VersionSource(Path("backend/src/wmrm/__init__.py"), "python"),
     VersionSource(Path("backend/src/wmrm/settings.py"), "python"),
-    VersionSource(Path("packaging/build_desktop.py"), "python"),
-    VersionSource(Path("packaging/watermark_remover.spec"), "python"),
     VersionSource(Path("packaging/cli-contract-v1.json"), "python"),
     VersionSource(Path("frontend/package.json"), "npm"),
     VersionSource(Path("frontend/package-lock.json"), "npm", expected_count=2),

@@ -9,9 +9,9 @@ import subprocess
 import sys
 import tempfile
 import venv
-from zipfile import ZipFile
 from datetime import UTC, datetime
 from pathlib import Path
+from zipfile import ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
 BACKEND = ROOT / "backend"
@@ -510,6 +510,8 @@ def main() -> int:
     )
     run([str(python), "-I", "-c", probe], cwd=work, env=clean_env)
     cli = venv_script(environment, "wmrm")
+    web = venv_script(environment, "wmrm-web")
+    run([str(web), "--help"], cwd=work, env=clean_env)
     verify_contract_surface(cli, work, clean_env, contract)
     doctor = run_cli_json(
         cli,

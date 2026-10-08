@@ -2,7 +2,7 @@
 
 面向 DOCX、PDF、CodeCV 简历和小红书图片的本地优先水印处理工具。
 
-> 当前状态：`0.1.0rc1` 发布候选。已完成 DOCX VML、CodeCV PDF 平铺水印、通用 PDF 区域物理删除、PDF Deep 栅格修复与可搜索文字层、静态图片矩形蒙版的处理闭环、小红书分享链接的安全解析，以及经过 Apple Silicon 实测的本地桌面预览包。
+> 当前状态：`0.1.0rc1` 发布候选。已完成 DOCX VML、CodeCV PDF 平铺水印、通用 PDF 区域物理删除、PDF Deep 栅格修复与可搜索文字层、静态图片矩形蒙版的处理闭环，以及小红书分享链接的安全解析。用户界面采用 Vue Web 页面，不提供原生桌面 App。
 
 ## 技术栈
 
@@ -41,17 +41,17 @@ npm run dev
 
 Vite 默认把 `/api` 代理到 `http://127.0.0.1:8765`。
 
-## 桌面预览包
+## 生产 Web 启动
 
-安装固定的 PyInstaller 构建依赖，并使用现有前端依赖生成当前平台产物：
+先安装后端与前端依赖，然后构建 Vue 生产资源并由 FastAPI 同源提供页面和 API：
 
 ```bash
-make desktop-install
-make desktop-build
-make desktop-verify
+make backend-install
+make web-build
+make web-run
 ```
 
-macOS 产物为 `dist/Watermark Remover.app`。桌面启动器在随机本地端口同源提供 Vue 与 API，自动打开浏览器；可以在“设置”页面经过二次确认后安全退出。Windows、macOS 和 Linux 必须分别在对应平台构建，当前只有 macOS 15.7.3 / Apple Silicon 完成了真实产物和图片处理子进程验证。详细构建输入、数据目录、安全边界及未完成的签名工作见 [docs/DESKTOP_PACKAGING.md](docs/DESKTOP_PACKAGING.md)。
+浏览器访问 `http://127.0.0.1:8765/`。生产模式关闭开发 CORS，只监听本机回环地址，并为静态资源设置缓存和 CSP 等安全响应头。可使用 `wmrm-web --help` 查看前端目录、端口和数据目录参数；停止服务时回到启动终端按 `Ctrl+C`。
 
 ## 命令行
 
@@ -68,7 +68,6 @@ macOS 产物为 `dist/Watermark Remover.app`。桌面启动器在随机本地端
 
 - `GET /api/v1/health`
 - `GET /api/v1/capabilities`
-- `POST /api/v1/system/shutdown`（仅桌面启动器启用）
 - `POST /api/v1/xiaohongshu/preview`（解析分享文案；可选读取标题/描述，不返回或下载媒体）
 - `POST /api/v1/assets`
 - `GET /api/v1/assets/{asset_id}`
@@ -177,7 +176,6 @@ CodeCV PDF 的操作签名、批量语料审计和当前边界见 [docs/CODECV_P
 PDF Deep 栅格修复、文字层回灌、可选 OCR 和当前限制见 [docs/PDF_DEEP.md](docs/PDF_DEEP.md)。
 图片检查、坐标合同和蒙版边界见 [docs/IMAGE_MASKS.md](docs/IMAGE_MASKS.md)。
 小红书分享链接的允许域名、SSRF 防护和元数据边界见 [docs/XIAOHONGSHU_LINKS.md](docs/XIAOHONGSHU_LINKS.md)。
-桌面同源部署、构建矩阵和已验证平台见 [docs/DESKTOP_PACKAGING.md](docs/DESKTOP_PACKAGING.md)。
 OpenCV 基准结果见 [docs/benchmarks/opencv-telea-baseline.md](docs/benchmarks/opencv-telea-baseline.md)，移动端水印基准见 [docs/benchmarks/mobile-watermark-baseline.md](docs/benchmarks/mobile-watermark-baseline.md)，复杂度真实样本校准见 [docs/benchmarks/image-complexity-calibration.md](docs/benchmarks/image-complexity-calibration.md)，LaMa 打包审查见 [docs/LAMA_EVALUATION.md](docs/LAMA_EVALUATION.md)。
 
 ## 许可证

@@ -27,7 +27,7 @@ unsearchable. Page previews are generated through the existing Poppler compariso
 Tesseract is optional and is never downloaded automatically. The default language is `eng`; the Vue
 workspace accepts installed Tesseract language expressions such as `chi_sim+eng`. If Tesseract is
 missing or OCR fails, born-digital pages can still reuse their original words, while image-only pages
-are reported as unsearchable. Desktop launches check `PATH` plus conventional Homebrew, Unix and
+are reported as unsearchable. Web and CLI launches check `PATH` plus conventional Homebrew, Unix and
 Windows Tesseract install locations so macOS Finder launches can find Homebrew installations.
 
 Run `make pdf-ocr-probe` to generate a synthetic image-only PDF and verify the installed Tesseract

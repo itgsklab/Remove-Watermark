@@ -8,13 +8,14 @@ All notable changes to this project are documented in this file. The format foll
 ### Added
 
 - Local-first Vue and FastAPI application for inspecting and removing supported watermarks.
+- Production `wmrm-web` entry point for serving the built Vue interface and FastAPI API from one
+  loopback-only origin.
 - DOCX VML watermark selection, validation, removal, and optional rendered comparison.
 - CodeCV PDF signature detection and targeted content-stream cleanup.
 - General PDF region redaction with overlap warnings and before/after previews.
 - Static PNG, JPEG, and WebP mask editing with OpenCV Telea inpainting.
 - Xiaohongshu share-link parsing with an optional metadata-only preview boundary.
 - Supervised background workers, cancellation, recovery, retention, and downloadable artifacts.
-- Reproducible desktop packaging inputs and macOS Apple Silicon bundle verification.
 - Deterministic third-party dependency inventory and SPDX 2.3 release-input SBOM.
 - Clean-environment backend wheel build, installation, dependency, and import checks.
 - Installable CLI commands for PDF region removal, PDF Deep repair, reviewable image plans, DOCX

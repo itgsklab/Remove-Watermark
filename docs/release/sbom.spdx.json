@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/d129e6c50664a1303fed94448a00ba1df158a1b327cc3b111be4caaf4b42732a",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/9ece0cd259a68fc9d71921b7e1c043ba0855a8a7cbfff28ff89b959c2a5382db",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {
@@ -422,44 +422,6 @@
       "name": "pydantic-settings",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "2.15.0"
-    },
-    {
-      "SPDXID": "SPDXRef-Package-Python-pyinstaller-a1a2790f51",
-      "comment": "Ecosystem: Python; usage: build; direct: yes",
-      "copyrightText": "NOASSERTION",
-      "downloadLocation": "NOASSERTION",
-      "externalRefs": [
-        {
-          "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:pypi/pyinstaller@6.22.3",
-          "referenceType": "purl"
-        }
-      ],
-      "filesAnalyzed": false,
-      "licenseConcluded": "NOASSERTION",
-      "licenseDeclared": "NOASSERTION",
-      "name": "pyinstaller",
-      "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "6.22.3"
-    },
-    {
-      "SPDXID": "SPDXRef-Package-Python-pyinstaller-hooks-contrib-55243bfe5e",
-      "comment": "Ecosystem: Python; usage: build; direct: yes",
-      "copyrightText": "NOASSERTION",
-      "downloadLocation": "NOASSERTION",
-      "externalRefs": [
-        {
-          "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:pypi/pyinstaller-hooks-contrib@2026.8",
-          "referenceType": "purl"
-        }
-      ],
-      "filesAnalyzed": false,
-      "licenseConcluded": "NOASSERTION",
-      "licenseDeclared": "NOASSERTION",
-      "name": "pyinstaller-hooks-contrib",
-      "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "2026.8"
     },
     {
       "SPDXID": "SPDXRef-Package-Python-pymupdf-0db42f9647",
@@ -2894,14 +2856,14 @@
       "versionInfo": "4.63.4"
     },
     {
-      "SPDXID": "SPDXRef-Package-npm-source-map-js-c226b94fb4",
+      "SPDXID": "SPDXRef-Package-npm-source-map-js-1e0286b7f9",
       "comment": "Ecosystem: npm; usage: runtime; direct: no",
       "copyrightText": "NOASSERTION",
       "downloadLocation": "NOASSERTION",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:npm/source-map-js@1.2.1",
+          "referenceLocator": "pkg:npm/source-map-js@1.2.2",
           "referenceType": "purl"
         }
       ],
@@ -2910,7 +2872,7 @@
       "licenseDeclared": "NOASSERTION",
       "name": "source-map-js",
       "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "1.2.1"
+      "versionInfo": "1.2.2"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-speakingurl-43211caf5d",
@@ -3211,16 +3173,6 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-Python-pydantic-settings-ea810db77d",
-      "relationshipType": "DEPENDS_ON",
-      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
-    },
-    {
-      "relatedSpdxElement": "SPDXRef-Package-Python-pyinstaller-a1a2790f51",
-      "relationshipType": "DEPENDS_ON",
-      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
-    },
-    {
-      "relatedSpdxElement": "SPDXRef-Package-Python-pyinstaller-hooks-contrib-55243bfe5e",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3865,7 +3817,7 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Package-npm-source-map-js-c226b94fb4",
+      "relatedSpdxElement": "SPDXRef-Package-npm-source-map-js-1e0286b7f9",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },

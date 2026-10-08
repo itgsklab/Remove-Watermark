@@ -62,5 +62,5 @@ candidate.
 
 `python packaging/prepare_release_candidate.py` revalidates that aggregate against the three raw
 reports and the current clean Git commit before producing a version-change plan. Applying the plan
-updates every Python, npm and desktop version source and regenerates release metadata transactionally;
+updates every Python and npm version source and regenerates release metadata transactionally;
 it does not commit, tag or publish. See [release-candidate preparation](RELEASE_CANDIDATE.md).

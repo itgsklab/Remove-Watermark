@@ -4,8 +4,8 @@ This file is generated from the pinned Python packaging constraints and npm lock
 It records release inputs; it is not a legal opinion or a substitute for license review.
 Regenerate it with `make release-metadata` and verify it with `make release-metadata-check`.
 
-- Input digest: `d129e6c50664a1303fed94448a00ba1df158a1b327cc3b111be4caaf4b42732a`
-- Python packages: 36
+- Input digest: `9ece0cd259a68fc9d71921b7e1c043ba0855a8a7cbfff28ff89b959c2a5382db`
+- Python packages: 34
 - npm packages: 126
 - License fields: `NOASSERTION` until an authoritative package-by-package review is recorded
 
@@ -32,8 +32,6 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | Python | `pydantic` | `2.13.5` | locked transitive | no | — |
 | Python | `pydantic-core` | `2.46.5` | locked transitive | no | — |
 | Python | `pydantic-settings` | `2.15.0` | runtime | yes | — |
-| Python | `pyinstaller` | `6.22.3` | build | yes | — |
-| Python | `pyinstaller-hooks-contrib` | `2026.8` | build | yes | — |
 | Python | `pymupdf` | `1.28.2` | runtime | yes | — |
 | Python | `pypdf` | `6.19.0` | runtime | yes | — |
 | Python | `python-dotenv` | `1.2.3` | locked transitive | no | — |
@@ -162,7 +160,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `postcss` | `8.5.28` | runtime | no | — |
 | npm | `rfdc` | `1.4.1` | runtime | no | — |
 | npm | `rollup` | `4.63.4` | development | no | — |
-| npm | `source-map-js` | `1.2.1` | runtime | no | — |
+| npm | `source-map-js` | `1.2.2` | runtime | no | — |
 | npm | `speakingurl` | `14.0.1` | runtime | no | — |
 | npm | `superjson` | `2.2.6` | runtime | no | — |
 | npm | `tinyglobby` | `0.2.17` | development | no | — |

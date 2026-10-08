@@ -21,7 +21,6 @@ export interface CapabilityItem {
 export interface Capabilities {
   version: string
   max_upload_bytes: number
-  desktop_mode: boolean
   formats: CapabilityItem[]
 }
 
@@ -298,16 +297,6 @@ async function parse<T>(response: Response): Promise<T> {
 
 export async function getCapabilities(): Promise<Capabilities> {
   return parse<Capabilities>(await fetch('/api/v1/capabilities'))
-}
-
-export async function shutdownDesktop(): Promise<void> {
-  const response = await fetch('/api/v1/system/shutdown', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-  })
-  if (response.ok) return
-  const payload = await response.json() as { error: ApiErrorBody }
-  throw new ApiError(payload.error, response.status)
 }
 
 export async function previewXiaohongshuLink(
