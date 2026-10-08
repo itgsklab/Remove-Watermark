@@ -33,3 +33,21 @@ CSP, frame, referrer and content-type protections.
 The frontend contains no server shutdown action. Service lifecycle remains under the terminal or
 process supervisor that launched FastAPI. Uploaded files, the SQLite database and generated outputs
 remain in the configured local data directory.
+
+## Release bundle
+
+Release maintainers can combine an audited wheel, source distribution and compiled Vue build into a
+reproducible Web archive:
+
+```bash
+python packaging/build_web_bundle.py \
+  --version 0.1.0rc1 \
+  --wheel work/release/wmrm-0.1.0rc1-py3-none-any.whl \
+  --sdist work/release/wmrm-0.1.0rc1.tar.gz \
+  --frontend-dir frontend/dist \
+  --source-date-epoch "$(git show -s --format=%ct HEAD)" \
+  --output work/release/remove-watermark-web-0.1.0rc1.tar.gz
+```
+
+The archive uses normalized ownership, modes and timestamps, rejects symlinks, contains the project
+license and an internal `SHA256SUMS`, and includes startup instructions for Unix and Windows.

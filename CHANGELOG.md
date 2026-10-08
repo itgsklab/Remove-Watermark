@@ -10,6 +10,8 @@ All notable changes to this project are documented in this file. The format foll
 - Local-first Vue and FastAPI application for inspecting and removing supported watermarks.
 - Production `wmrm-web` entry point for serving the built Vue interface and FastAPI API from one
   loopback-only origin.
+- Reproducible Web release bundles containing compiled Vue assets, audited Python artifacts,
+  startup instructions, the project license and internal SHA-256 checksums.
 - DOCX VML watermark selection, validation, removal, and optional rendered comparison.
 - CodeCV PDF signature detection and targeted content-stream cleanup.
 - General PDF region redaction with overlap warnings and before/after previews.
