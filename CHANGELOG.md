@@ -26,6 +26,8 @@ All notable changes to this project are documented in this file. The format foll
   reports before release-candidate preparation.
 - A dry-run-first release-candidate preparation tool that revalidates raw evidence, updates every
   version source, regenerates release metadata and rolls back failed updates.
+- AGPL-3.0 license text embedded in Python wheel and source-distribution artifacts, with a
+  release-readiness check that rejects missing or changed license payloads.
 
 ### Security
 

@@ -8,6 +8,7 @@ version = "0.1.0rc1"
 description = "Local-first watermark processing service"
 readme = "README.md"
 license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
   "defusedxml>=0.7.1,<1",

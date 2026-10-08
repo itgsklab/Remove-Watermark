@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import venv
+from zipfile import ZipFile
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -29,6 +30,22 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def verify_license_payload(wheel: Path) -> None:
+    expected = (BACKEND / "LICENSE").read_bytes()
+    with ZipFile(wheel) as archive:
+        matches = [
+            name
+            for name in archive.namelist()
+            if name.endswith(".dist-info/licenses/LICENSE")
+        ]
+        if len(matches) != 1:
+            raise RuntimeError(
+                f"Expected one packaged AGPL license file, found {len(matches)}."
+            )
+        if archive.read(matches[0]) != expected:
+            raise RuntimeError("Packaged AGPL license does not match backend/LICENSE.")
 
 
 def git_value(*arguments: str) -> str:
@@ -463,6 +480,7 @@ def main() -> int:
     built = sorted(wheels.glob("wmrm-*.whl"))
     if len(built) != 1:
         raise SystemExit(f"Expected one wmrm wheel, found {len(built)}")
+    verify_license_payload(built[0])
 
     venv.EnvBuilder(with_pip=True, clear=True).create(environment)
     python = venv_python(environment)
