@@ -45,7 +45,7 @@ def test_resolves_configured_frontend_build(tmp_path: Path) -> None:
 def test_rejects_incomplete_frontend_build(tmp_path: Path) -> None:
     incomplete = tmp_path / "dist"
     incomplete.mkdir()
-    with pytest.raises(ValueError, match="未找到完整的 Vue 生产构建"):
+    with pytest.raises(ValueError, match="No complete Vue production build"):
         web.resolve_frontend_dir(incomplete)
 
 
@@ -59,7 +59,7 @@ def test_web_settings_require_loopback_and_valid_port(tmp_path: Path) -> None:
     assert settings.port == 9010
     assert settings.data_dir == tmp_path / "new"
     assert settings.dev_cors is False
-    with pytest.raises(ValueError, match="端口"):
+    with pytest.raises(ValueError, match="port"):
         web.web_settings(settings, port=70000, data_dir=None)
     with pytest.raises(ValueError, match="127.0.0.1"):
         web.web_settings(Settings(host="0.0.0.0"), port=None, data_dir=None)

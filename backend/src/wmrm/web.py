@@ -36,25 +36,25 @@ def resolve_frontend_dir(
         if (resolved / "index.html").is_file() and (resolved / "assets").is_dir():
             return resolved
     checked = ", ".join(str(path) for path in candidates)
-    raise ValueError(f"未找到完整的 Vue 生产构建。已检查：{checked}")
+    raise ValueError(f"No complete Vue production build was found. Checked: {checked}")
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="启动由 FastAPI 同源提供的 Watermark Remover Web 界面。"
+        description="Serve the Watermark Remover Vue interface and API from FastAPI."
     )
-    parser.add_argument("--frontend-dir", type=Path, help="Vue 生产构建目录。")
-    parser.add_argument("--port", type=int, help="本地监听端口，默认读取 WMRM_PORT。")
-    parser.add_argument("--data-dir", type=Path, help="覆盖本地数据目录。")
+    parser.add_argument("--frontend-dir", type=Path, help="Vue production build directory.")
+    parser.add_argument("--port", type=int, help="Loopback port; defaults to WMRM_PORT.")
+    parser.add_argument("--data-dir", type=Path, help="Override the local data directory.")
     return parser
 
 
 def web_settings(base: Settings, *, port: int | None, data_dir: Path | None) -> Settings:
     selected_port = base.port if port is None else port
     if not 1 <= selected_port <= 65535:
-        raise ValueError("端口必须在 1 到 65535 之间。")
+        raise ValueError("The port must be between 1 and 65535.")
     if base.host != LOOPBACK_HOST:
-        raise ValueError("Web 服务当前只允许监听 127.0.0.1。")
+        raise ValueError("The Web service may only listen on 127.0.0.1.")
     updates: dict[str, object] = {
         "host": LOOPBACK_HOST,
         "port": selected_port,
