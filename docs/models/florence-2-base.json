@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "model_id": "microsoft/Florence-2-base",
+  "revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+  "reviewed_at": "2026-10-09",
+  "license": {
+    "spdx": "MIT",
+    "file": "LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "source": "https://huggingface.co/microsoft/Florence-2-base/blob/5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac/LICENSE"
+  },
+  "sources": {
+    "model_card": "https://huggingface.co/microsoft/Florence-2-base",
+    "transformers_documentation": "https://huggingface.co/docs/transformers/model_doc/florence2"
+  },
+  "architecture": {
+    "parameter_count": 231567705,
+    "candidate_tasks": [
+      "caption_to_phrase_grounding",
+      "open_vocabulary_detection"
+    ]
+  },
+  "allowed_files": [
+    {
+      "path": "model.safetensors",
+      "size_bytes": 463221266,
+      "sha256": "03075d2d2d2bbd3e180b9ba0afae4aa8563226e2d32911656966e05b2f2ee060"
+    },
+    {
+      "path": "config.json",
+      "size_bytes": 2430,
+      "sha256": "c666d0fe0172d46e115e8fba6cd93cd83714575b33a73005cab8d24ce2a3aa8f"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "size_bytes": 806,
+      "sha256": "2f5921bbc53c7cc04251e1027b45b1cec726276be6db23d1bb40641bfbe2cf29"
+    },
+    {
+      "path": "tokenizer.json",
+      "size_bytes": 1355863,
+      "sha256": "847bbeab6174d66a88898f729d52fa8d355fafe1bea101cf960dd404581df70e"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "size_bytes": 34,
+      "sha256": "79ffcf43af8ebda99d165f61d243180da2e2639952e41e71e11611c18770489c"
+    },
+    {
+      "path": "vocab.json",
+      "size_bytes": 1099884,
+      "sha256": "394fdc63c71aabe0a9b97117f5d62fb5fcc4d59b2b3ea929a3929e6a53217b3c"
+    }
+  ],
+  "runtime_policy": {
+    "bundled_in_release": false,
+    "automatic_download": false,
+    "allow_remote_code": false,
+    "allow_pickle_weights": false,
+    "required_weight_format": "safetensors",
+    "require_exact_revision": true,
+    "require_sha256_verification": true
+  }
+}

@@ -32,6 +32,8 @@ All notable changes to this project are documented in this file. The format foll
   version source, regenerates release metadata and rolls back failed updates.
 - AGPL-3.0 license text embedded in Python wheel and source-distribution artifacts, with a
   release-readiness check that rejects missing or changed license payloads.
+- A model-independent watermark-localization Protocol, reviewed positive/negative corpus and IoU/
+  precision/recall benchmark contract for evaluating optional VLM adapters without bundling weights.
 
 ### Security
 

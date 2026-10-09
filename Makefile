@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check check
+.PHONY: backend-install backend-check frontend-install frontend-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-contract complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -37,6 +37,13 @@ mobile-selection-corpus:
 		--report-json ../docs/benchmarks/mobile-selection-corpus.json \
 		--report-md ../docs/benchmarks/mobile-selection-corpus.md \
 		--strict
+
+vlm-localization-contract:
+	cd backend && .venv/bin/python -m wmrm.benchmarks.vlm_localization \
+		--manifest tests/fixtures/vlm_localization/manifest.json \
+		--predictions tests/fixtures/vlm_localization/contract-predictions.json \
+		--report-json ../docs/benchmarks/vlm-localization-contract.json \
+		--report-md ../docs/benchmarks/vlm-localization-contract.md
 
 complexity-calibration:
 	cd backend && .venv/bin/python -m wmrm.benchmarks.complexity_calibration \

@@ -111,6 +111,8 @@ PNG、JPEG 和 WebP 可以进行元数据检查和矩形蒙版编辑。蒙版预
 
 小红书入口可以从分享文案中提取 HTTPS 笔记直链或短链。纯链接解析不访问网络；页面读取和图片导入分别通过 `WMRM_XHS_METADATA_ENABLED=true`、`WMRM_XHS_MEDIA_IMPORT_ENABLED=true` 显式启用。预览只返回不含 CDN URL 的候选编号；导入时后端重新读取页面并校验候选，再将公开页面声明的 JPEG、PNG 或 WebP 封面/图集图片保存到本地资产库，随后复用现有图片检查和蒙版修复流程。页面中由受限 CDN 以 HTTP 形式声明的图片会先升级为 HTTPS，实际请求不会使用明文 HTTP。使用 fake-IP DNS 的本机可通过 `WMRM_XHS_HTTPS_PROXY=http://127.0.0.1:<port>` 显式启用受限回环代理；项目不会自动继承系统代理。它不执行页面 JavaScript、不使用登录 Cookie、不处理视频，也不承诺图片候选是原始全尺寸图片或完整图集。安全模型和配置见 [docs/XIAOHONGSHU_LINKS.md](docs/XIAOHONGSHU_LINKS.md)。
 
+可选 VLM 水印定位目前只提供无模型依赖的边界框 Protocol、固定模型/许可证清单和可复现评分合同，不下载或分发权重，也未进入 Web 处理流程。候选模型、Safetensors 摘要、禁止远程代码策略和真实模型门禁见 [docs/VLM_LOCALIZATION.md](docs/VLM_LOCALIZATION.md)。
+
 任务元数据保存在 SQLite 中。单个任务在独立的 `spawn` 子进程中处理，由常驻监督线程串行调度；子进程崩溃会转为明确的失败状态，取消超时会强制终止子进程。服务重启后，排队或意外中断的任务会重新校验并执行，正在取消的任务会完成取消。取消宽限期默认 2 秒，可通过 `WMRM_WORKER_CANCEL_GRACE_SECONDS` 调整。
 
 默认保留产物 30 天、未被计划引用的上传文件 7 天、遗留临时文件 24 小时；分别可通过 `WMRM_ARTIFACT_RETENTION_DAYS`、`WMRM_UNREFERENCED_ASSET_RETENTION_DAYS` 和 `WMRM_FAILED_WORK_RETENTION_HOURS` 调整。任务进程的边界和恢复语义见 [docs/WORKER.md](docs/WORKER.md)。
@@ -150,6 +152,12 @@ make mobile-watermark-benchmark
 make mobile-selection-corpus
 ```
 
+复现不下载模型的 VLM 定位评分合同：
+
+```bash
+make vlm-localization-contract
+```
+
 复核带来源记录的真实照片和项目截图复杂度阈值：
 
 ```bash
@@ -177,7 +185,8 @@ CodeCV PDF 的操作签名、批量语料审计和当前边界见 [docs/CODECV_P
 PDF Deep 栅格修复、文字层回灌、可选 OCR 和当前限制见 [docs/PDF_DEEP.md](docs/PDF_DEEP.md)。
 图片检查、坐标合同和蒙版边界见 [docs/IMAGE_MASKS.md](docs/IMAGE_MASKS.md)。
 小红书分享链接的允许域名、SSRF 防护和元数据边界见 [docs/XIAOHONGSHU_LINKS.md](docs/XIAOHONGSHU_LINKS.md)。
-OpenCV 基准结果见 [docs/benchmarks/opencv-telea-baseline.md](docs/benchmarks/opencv-telea-baseline.md)，移动端水印基准见 [docs/benchmarks/mobile-watermark-baseline.md](docs/benchmarks/mobile-watermark-baseline.md)，复杂度真实样本校准见 [docs/benchmarks/image-complexity-calibration.md](docs/benchmarks/image-complexity-calibration.md)，LaMa 打包审查见 [docs/LAMA_EVALUATION.md](docs/LAMA_EVALUATION.md)。
+VLM 定位候选模型、权重供应链边界和评分门禁见 [docs/VLM_LOCALIZATION.md](docs/VLM_LOCALIZATION.md)。
+OpenCV 基准结果见 [docs/benchmarks/opencv-telea-baseline.md](docs/benchmarks/opencv-telea-baseline.md)，移动端水印基准见 [docs/benchmarks/mobile-watermark-baseline.md](docs/benchmarks/mobile-watermark-baseline.md)，复杂度真实样本校准见 [docs/benchmarks/image-complexity-calibration.md](docs/benchmarks/image-complexity-calibration.md)，VLM 定位评分合同见 [docs/benchmarks/vlm-localization-contract.md](docs/benchmarks/vlm-localization-contract.md)，LaMa 打包审查见 [docs/LAMA_EVALUATION.md](docs/LAMA_EVALUATION.md)。
 
 ## 许可证
 

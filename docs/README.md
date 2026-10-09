@@ -16,11 +16,14 @@ reports maintained in this repository:
 - `WEB_DEPLOYMENT.md`
 - `LAMA_EVALUATION.md`
 - `XIAOHONGSHU_LINKS.md`
+- `VLM_LOCALIZATION.md`
+- `models/florence-2-base.json`
 - `release/CLI_COMPATIBILITY_V1.md`
 - `release/RELEASE_CANDIDATE.md`
 - `benchmarks/opencv-telea-baseline.md`
 - `benchmarks/mobile-watermark-baseline.md`
 - `benchmarks/mobile-selection-corpus.md`
+- `benchmarks/vlm-localization-contract.md`
 - `benchmarks/image-complexity-calibration.md`
 - `benchmarks/codecv-corpus-harness.md`
 - `benchmarks/pdf-ocr-probe.md`

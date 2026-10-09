@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "benchmark": "wmrm-vlm-watermark-localization",
+  "evaluation_kind": "contract_fixture",
+  "detector": {
+    "id": "localization-contract-fixture",
+    "model_id": null,
+    "model_revision": null,
+    "prompt": "watermark, logo, username overlay, translucent text",
+    "is_model_output": false,
+    "note": "Geometry fixture for testing the benchmark contract; not a model performance claim."
+  },
+  "thresholds": {
+    "iou": 0.5,
+    "minimum_precision": 0.75,
+    "minimum_recall": 0.85
+  },
+  "summary": {
+    "sample_count": 5,
+    "positive_count": 3,
+    "negative_count": 2,
+    "true_positive": 3,
+    "false_positive": 0,
+    "false_negative": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "mean_matched_iou": 0.901063,
+    "metric_gate": "pass",
+    "release_claim_allowed": false
+  },
+  "samples": [
+    {
+      "sample_id": "real-horizon-corner",
+      "kind": "positive",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.887097
+      ]
+    },
+    {
+      "sample_id": "real-horizon-translucent",
+      "kind": "positive",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.892636
+      ]
+    },
+    {
+      "sample_id": "real-night-multiline",
+      "kind": "positive",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.923457
+      ]
+    },
+    {
+      "sample_id": "clean-horizon-negative",
+      "kind": "negative",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "clean-night-negative",
+      "kind": "negative",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    }
+  ]
+}
