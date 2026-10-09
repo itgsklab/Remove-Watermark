@@ -16,7 +16,8 @@ All notable changes to this project are documented in this file. The format foll
 - CodeCV PDF signature detection and targeted content-stream cleanup.
 - General PDF region redaction with overlap warnings and before/after previews.
 - Static PNG, JPEG, and WebP mask editing with OpenCV Telea inpainting.
-- Xiaohongshu share-link parsing with an optional metadata-only preview boundary.
+- Xiaohongshu share-link parsing with optional metadata preview and guarded public-cover import into
+  the existing local image workflow.
 - Supervised background workers, cancellation, recovery, retention, and downloadable artifacts.
 - Deterministic third-party dependency inventory and SPDX 2.3 release-input SBOM.
 - Clean-environment backend wheel build, installation, dependency, and import checks.
@@ -36,5 +37,7 @@ All notable changes to this project are documented in this file. The format foll
 
 - Local services bind to loopback interfaces and reject cross-origin state-changing requests.
 - Uploads use signature checks, size limits, archive safety limits, and isolated processing.
+- Xiaohongshu imports keep token-bearing CDN URLs on the backend and require HTTPS, approved CDN
+  hosts, public DNS results, pinned connections, bounded redirects, image types and size limits.
 
 [Unreleased]: https://github.com/itgsklab/Remove-Watermark/commits/main

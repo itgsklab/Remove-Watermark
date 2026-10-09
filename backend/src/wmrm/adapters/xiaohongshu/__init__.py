@@ -1,2 +1,1 @@
-"""Xiaohongshu link parsing and metadata-only preview support."""
-
+"""Xiaohongshu link parsing, metadata preview and guarded public-cover import."""

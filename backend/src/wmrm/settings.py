@@ -37,9 +37,11 @@ class Settings(BaseSettings):
     worker_start_method: Literal["spawn", "forkserver"] = "spawn"
     worker_cancel_grace_seconds: float = Field(default=2.0, ge=0.1, le=30)
     xhs_metadata_enabled: bool = False
+    xhs_media_import_enabled: bool = False
     xhs_metadata_timeout_seconds: float = Field(default=5.0, ge=0.5, le=15)
     xhs_metadata_max_bytes: int = Field(default=512 * 1024, ge=1024, le=2 * 1024 * 1024)
     xhs_metadata_max_redirects: int = Field(default=3, ge=0, le=5)
+    xhs_media_max_bytes: int = Field(default=25 * 1024 * 1024, ge=1024, le=100 * 1024 * 1024)
     dev_cors: bool = False
 
     @property

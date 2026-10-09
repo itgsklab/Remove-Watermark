@@ -5,9 +5,10 @@
 `POST /api/v1/xiaohongshu/preview` 接受一段分享文案或一个 HTTPS 链接，完成两层处理：
 
 1. **本地解析**：提取唯一链接、校验精确域名和笔记路径、去掉输出地址中的查询参数，并返回笔记 ID。
-2. **可选元数据预览**：显式启用后，跟随有限次受控跳转，只读取 HTML 中的标题、描述、作者、canonical 地址以及“是否声明缩略图”。
+2. **可选元数据预览**：显式启用后，跟随有限次受控跳转，读取 HTML 中的标题、描述、作者、canonical 地址以及公开图片元数据。
+3. **可选封面导入**：只向前端返回不可逆候选编号；用户选择后，后端重新读取页面、确认候选仍存在，再从受限的小红书 CDN 下载图片并保存到本地资产库。
 
-接口不会返回、代理或保存 `og:image` 的地址，也不会下载图片或视频。它不执行页面 JavaScript，不使用登录 Cookie，不绕过访问控制，不调用非公开下载接口。这个边界用于先识别用户提供的笔记，再决定是否由用户上传自己有权处理的本地图片。
+接口不会把 `og:image`、查询令牌或 CDN 地址返回浏览器或写入数据库。它只读取公开 HTML 元数据，不执行页面 JavaScript，不使用登录 Cookie，不绕过访问控制，不调用非公开下载接口，也不处理视频。当前导入的是页面公开声明的封面候选，不保证是原始全尺寸图片。
 
 官方 Deep Link 文档给出的笔记标识形式是 `xhsdiscover://item/<note_id>`。本项目的 Web 入口当前识别以下 HTTPS 形式：
 
@@ -33,11 +34,15 @@
 - 不使用系统 HTTP 代理，不自动携带 Cookie，也不把输入链接写入持久化存储。
 - 元数据响应必须是 HTML，默认最多读取 512 KiB、等待 5 秒、跟随 3 次跳转。
 - API 输出会移除查询参数，避免把分享令牌或跟踪参数回显给界面。
+- 媒体地址必须使用 HTTPS，且主机必须是 `xhscdn.com` 或其子域；每次媒体跳转重新执行相同校验。
+- 媒体下载同样先拒绝非公网 DNS 结果并固定到已检查 IP，只接受 JPEG、PNG 和 WebP；文件签名还会经过统一资产导入校验。
 
 元数据网络读取默认关闭。按需启用：
 
 ```bash
-WMRM_XHS_METADATA_ENABLED=true wmrm-api
+WMRM_XHS_METADATA_ENABLED=true \
+WMRM_XHS_MEDIA_IMPORT_ENABLED=true \
+wmrm-api
 ```
 
 可调整的本机配置：
@@ -45,6 +50,7 @@ WMRM_XHS_METADATA_ENABLED=true wmrm-api
 - `WMRM_XHS_METADATA_TIMEOUT_SECONDS`：默认 `5`
 - `WMRM_XHS_METADATA_MAX_BYTES`：默认 `524288`
 - `WMRM_XHS_METADATA_MAX_REDIRECTS`：默认 `3`
+- `WMRM_XHS_MEDIA_MAX_BYTES`：默认 `26214400`，并且不会超过全局上传上限
 
 ## 响应语义
 
@@ -55,4 +61,4 @@ WMRM_XHS_METADATA_ENABLED=true wmrm-api
 - `resolved`：完成页面读取；字段仍可能为空。
 - `unavailable`：远端状态、内容类型、跳转或网络条件不满足。
 
-`media_download_supported` 固定为 `false`。后续若实现“小红书图片去水印”，第一条可执行路径仍是让用户上传有权处理的图片文件，复用现有图片蒙版、风险预检和 OpenCV 处理闭环。
+`media_download_supported` 只有在页面读取和图片导入同时启用时才为 `true`。`media_candidates` 只包含候选编号、顺序和角色，不包含远端 URL。`POST /api/v1/xiaohongshu/import` 会重新解析同一分享内容并拒绝已消失或变化的候选；成功后返回普通 `AssetResponse`，可直接进入图片检查、风险预检和 OpenCV 处理闭环。

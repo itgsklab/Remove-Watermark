@@ -10,6 +10,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from sqlalchemy.orm import Session
+from starlette.concurrency import run_in_threadpool
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from wmrm.adapters.documents.docx import DocxInspector
@@ -18,7 +19,11 @@ from wmrm.adapters.images.metadata import ImageInspector
 from wmrm.adapters.pdf.codecv import CodeCvPdfInspector
 from wmrm.adapters.pdf.general import GeneralPdfInspector
 from wmrm.adapters.pdf.preview import PdfPreviewRenderer
-from wmrm.adapters.xiaohongshu.links import MetadataTransport, XiaohongshuLinkError
+from wmrm.adapters.xiaohongshu.links import (
+    MediaTransport,
+    MetadataTransport,
+    XiaohongshuLinkError,
+)
 from wmrm.api.frontend import mount_frontend
 from wmrm.api.schemas import (
     AnalysisResponse,
@@ -41,6 +46,7 @@ from wmrm.api.schemas import (
     ValidateImagePlanRequest,
     ValidatePlanRequest,
     ValidateRedactionPlanRequest,
+    XiaohongshuImportRequest,
     XiaohongshuPreviewRequest,
     XiaohongshuPreviewResponse,
 )
@@ -62,6 +68,7 @@ def create_app(
     settings: Settings | None = None,
     *,
     xiaohongshu_transport: MetadataTransport | None = None,
+    xiaohongshu_media_transport: MediaTransport | None = None,
     frontend_dir: Path | None = None,
 ) -> FastAPI:
     config = settings or load_settings()
@@ -110,10 +117,13 @@ def create_app(
     image_plans = ImagePlanService(assets, image_masks)
     xiaohongshu_links = XiaohongshuLinkService(
         metadata_enabled=config.xhs_metadata_enabled,
+        media_import_enabled=config.xhs_media_import_enabled,
         timeout_seconds=config.xhs_metadata_timeout_seconds,
         max_bytes=config.xhs_metadata_max_bytes,
+        media_max_bytes=min(config.xhs_media_max_bytes, config.max_upload_bytes),
         max_redirects=config.xhs_metadata_max_redirects,
         transport=xiaohongshu_transport,
+        media_transport=xiaohongshu_media_transport,
     )
 
     @asynccontextmanager
@@ -275,7 +285,7 @@ def create_app(
                     id="xiaohongshu_link",
                     label="小红书分享链接",
                     status="experimental",
-                    strategies=["share-link-parse", "metadata-preview"],
+                    strategies=["share-link-parse", "metadata-preview", "safe-cover-import"],
                 ),
             ],
         )
@@ -287,6 +297,28 @@ def create_app(
         return XiaohongshuPreviewResponse.model_validate(
             xiaohongshu_links.preview(request.share_text, request.resolve_metadata)
         )
+
+    @app.post("/api/v1/xiaohongshu/import", response_model=AssetResponse, status_code=201)
+    async def import_xiaohongshu_image(
+        request: XiaohongshuImportRequest,
+        session: Annotated[Session, Depends(get_session)],
+    ) -> AssetResponse:
+        downloaded = await run_in_threadpool(
+            xiaohongshu_links.import_image,
+            request.share_text,
+            request.candidate_id,
+        )
+
+        async def chunks() -> AsyncIterator[bytes]:
+            yield downloaded.body
+
+        asset_id, inspected = await assets.stage_upload(chunks(), downloaded.filename)
+        try:
+            record = assets.create_record(session, asset_id, inspected, downloaded.filename)
+        except Exception:
+            inspected.stored_path.unlink(missing_ok=True)
+            raise
+        return AssetResponse.model_validate(record)
 
     @app.post("/api/v1/assets", response_model=AssetResponse, status_code=201)
     async def upload_asset(

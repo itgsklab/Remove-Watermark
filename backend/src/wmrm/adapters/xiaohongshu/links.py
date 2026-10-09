@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import hashlib
 import http.client
 import ipaddress
 import re
 import socket
 import ssl
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from typing import Protocol
 from urllib.parse import urljoin, urlsplit, urlunsplit
@@ -13,6 +14,7 @@ from urllib.parse import urljoin, urlsplit, urlunsplit
 DIRECT_HOSTS = frozenset({"xiaohongshu.com", "www.xiaohongshu.com"})
 SHORT_HOSTS = frozenset({"xhslink.com", "www.xhslink.com"})
 ALLOWED_HOSTS = DIRECT_HOSTS | SHORT_HOSTS
+MEDIA_HOST = "xhscdn.com"
 REDIRECT_STATUSES = frozenset({301, 302, 303, 307, 308})
 URL_PATTERN = re.compile(r"https?://[^\s<>\"'，。；：！？、）》】}\)\]]+", re.IGNORECASE)
 NOTE_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
@@ -51,10 +53,31 @@ class LinkMetadata:
     description: str | None
     author: str | None
     thumbnail_present: bool
+    media_candidates: tuple[MediaCandidate, ...] = ()
     warnings: tuple[str, ...] = ()
 
 
+@dataclass(frozen=True)
+class MediaCandidate:
+    candidate_id: str
+    position: int
+    role: str
+    source_url: str = field(repr=False)
+
+
+@dataclass(frozen=True)
+class DownloadedImage:
+    candidate_id: str
+    body: bytes
+    content_type: str
+    filename: str
+
+
 class MetadataTransport(Protocol):
+    def fetch(self, url: str, *, timeout: float, max_bytes: int) -> MetadataResponse: ...
+
+
+class MediaTransport(Protocol):
     def fetch(self, url: str, *, timeout: float, max_bytes: int) -> MetadataResponse: ...
 
 
@@ -116,6 +139,7 @@ class _MetadataParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.meta: dict[str, str] = {}
+        self.media_urls: list[tuple[str, str]] = []
         self.canonical: str | None = None
         self.title_parts: list[str] = []
         self._in_title = False
@@ -125,6 +149,8 @@ class _MetadataParser(HTMLParser):
         if tag.lower() == "meta":
             key = (values.get("property") or values.get("name") or "").lower()
             content = values.get("content", "").strip()
+            if key in {"og:image", "og:image:url", "twitter:image"} and content:
+                self.media_urls.append((key, content))
             if key and content and key not in self.meta:
                 self.meta[key] = content
         elif tag.lower() == "link" and "canonical" in values.get("rel", "").lower().split():
@@ -160,15 +186,62 @@ def extract_metadata(body: bytes, page_url: str) -> LinkMetadata:
     title = parser.meta.get("og:title") or "".join(parser.title_parts).strip() or None
     description = parser.meta.get("og:description") or parser.meta.get("description") or None
     author = parser.meta.get("author") or parser.meta.get("article:author") or None
+    candidates: list[MediaCandidate] = []
+    seen_urls: set[str] = set()
+    for _, media_url in parser.media_urls:
+        try:
+            normalized_media = parse_media_url(urljoin(page_url, media_url))
+        except XiaohongshuLinkError:
+            warnings.append("页面提供了不受支持的图片地址，已忽略。")
+            continue
+        if normalized_media in seen_urls:
+            continue
+        seen_urls.add(normalized_media)
+        candidates.append(
+            MediaCandidate(
+                candidate_id=_media_candidate_id(normalized_media),
+                position=len(candidates) + 1,
+                role="cover",
+                source_url=normalized_media,
+            )
+        )
+        if len(candidates) == 20:
+            warnings.append("页面图片候选超过 20 个，仅保留前 20 个。")
+            break
     return LinkMetadata(
         canonical_url=canonical_url,
         note_id=note_id,
         title=_clean_text(title, 200),
         description=_clean_text(description, 500),
         author=_clean_text(author, 100),
-        thumbnail_present=bool(parser.meta.get("og:image")),
+        thumbnail_present=bool(candidates),
+        media_candidates=tuple(candidates),
         warnings=tuple(warnings),
     )
+
+
+def parse_media_url(url: str) -> str:
+    if len(url) > 4096:
+        raise XiaohongshuLinkError("XHS_MEDIA_URL_INVALID", "图片地址过长。")
+    try:
+        parts = urlsplit(url)
+        host = (parts.hostname or "").encode("idna").decode("ascii").lower()
+        port = parts.port
+    except (UnicodeError, ValueError) as exc:
+        raise XiaohongshuLinkError("XHS_MEDIA_URL_INVALID", "图片地址格式无效。") from exc
+    if parts.scheme.lower() != "https":
+        raise XiaohongshuLinkError("XHS_MEDIA_HTTPS_REQUIRED", "图片地址必须使用 HTTPS。")
+    if parts.username is not None or parts.password is not None or port not in {None, 443}:
+        raise XiaohongshuLinkError("XHS_MEDIA_URL_INVALID", "图片地址包含不允许的信息。")
+    if host != MEDIA_HOST and not host.endswith(f".{MEDIA_HOST}"):
+        raise XiaohongshuLinkError("XHS_MEDIA_HOST_NOT_ALLOWED", "图片地址不在受支持的 CDN。")
+    if not parts.path or parts.path == "/":
+        raise XiaohongshuLinkError("XHS_MEDIA_URL_INVALID", "图片地址缺少资源路径。")
+    return urlunsplit(("https", host, parts.path, parts.query, ""))
+
+
+def _media_candidate_id(url: str) -> str:
+    return "xhs-image-" + hashlib.sha256(url.encode()).hexdigest()[:20]
 
 
 def _clean_text(value: str | None, limit: int) -> str | None:
@@ -222,6 +295,42 @@ class PublicHttpsTransport:
             raise XiaohongshuLinkError(
                 "XHS_METADATA_UNAVAILABLE", "暂时无法读取页面元数据。", 502
             ) from exc
+        finally:
+            connection.close()
+
+
+class PublicMediaTransport:
+    """Fetch one validated Xiaohongshu CDN image while pinning a checked public IP."""
+
+    user_agent = "wmrm-media-import/0.1"
+
+    def fetch(self, url: str, *, timeout: float, max_bytes: int) -> MetadataResponse:
+        normalized = parse_media_url(url)
+        parts = urlsplit(normalized)
+        host = parts.hostname or ""
+        ip = _resolve_public_ip(host)
+        target = urlunsplit(("", "", parts.path or "/", parts.query, ""))
+        connection = _PinnedHTTPSConnection(host, ip, timeout=timeout)
+        try:
+            connection.request(
+                "GET",
+                target,
+                headers={
+                    "Accept": "image/avif,image/webp,image/png,image/jpeg",
+                    "User-Agent": self.user_agent,
+                },
+            )
+            response = connection.getresponse()
+            body = response.read(max_bytes + 1)
+            if len(body) > max_bytes:
+                raise XiaohongshuLinkError("XHS_MEDIA_TOO_LARGE", "图片超过导入大小限制。", 413)
+            return MetadataResponse(
+                response.status,
+                {key.lower(): value for key, value in response.getheaders()},
+                body,
+            )
+        except (OSError, ssl.SSLError, http.client.HTTPException) as exc:
+            raise XiaohongshuLinkError("XHS_MEDIA_UNAVAILABLE", "暂时无法下载图片。", 502) from exc
         finally:
             connection.close()
 
@@ -281,4 +390,51 @@ def resolve_metadata(
                 "XHS_SHORT_LINK_UNRESOLVED", "短链接没有跳转到受支持的笔记地址。", 502
             )
         return extract_metadata(response.body, current)
+    raise AssertionError("redirect loop exhausted")
+
+
+def download_image(
+    candidate: MediaCandidate,
+    transport: MediaTransport,
+    *,
+    timeout: float,
+    max_bytes: int,
+    max_redirects: int,
+) -> DownloadedImage:
+    current = candidate.source_url
+    for redirect_count in range(max_redirects + 1):
+        response = transport.fetch(current, timeout=timeout, max_bytes=max_bytes)
+        if response.status in REDIRECT_STATUSES:
+            if redirect_count == max_redirects:
+                raise XiaohongshuLinkError(
+                    "XHS_MEDIA_TOO_MANY_REDIRECTS", "图片重定向次数过多。", 502
+                )
+            location = response.headers.get("location")
+            if not location:
+                raise XiaohongshuLinkError(
+                    "XHS_MEDIA_INVALID_REDIRECT", "图片重定向缺少地址。", 502
+                )
+            current = parse_media_url(urljoin(current, location))
+            continue
+        if response.status != 200:
+            raise XiaohongshuLinkError("XHS_MEDIA_UNAVAILABLE", "图片服务器未返回可下载内容。", 502)
+        content_type = response.headers.get("content-type", "").split(";", 1)[0].strip().lower()
+        extensions = {
+            "image/jpeg": "jpg",
+            "image/png": "png",
+            "image/webp": "webp",
+        }
+        extension = extensions.get(content_type)
+        if extension is None:
+            raise XiaohongshuLinkError(
+                "XHS_MEDIA_TYPE_UNSUPPORTED", "只支持 JPEG、PNG 和 WebP 图片。", 415
+            )
+        if not response.body:
+            raise XiaohongshuLinkError("XHS_MEDIA_INVALID", "下载到的图片为空。", 422)
+        return DownloadedImage(
+            candidate_id=candidate.candidate_id,
+            body=response.body,
+            content_type=content_type,
+            filename=f"xiaohongshu-{candidate.position}.{extension}",
+        )
     raise AssertionError("redirect loop exhausted")

@@ -1,11 +1,15 @@
+from io import BytesIO
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from PIL import Image
 
 from wmrm.adapters.xiaohongshu.links import (
+    MediaCandidate,
     MetadataResponse,
     XiaohongshuLinkError,
+    download_image,
     parse_share_text,
     resolve_metadata,
 )
@@ -107,6 +111,8 @@ def test_resolves_short_link_to_metadata_without_returning_media_url() -> None:
     assert metadata.description == "周末 城市散步"
     assert metadata.author == "示例作者"
     assert metadata.thumbnail_present is True
+    assert len(metadata.media_candidates) == 1
+    assert metadata.media_candidates[0].candidate_id.startswith("xhs-image-")
     assert image_url not in repr(metadata)
 
 
@@ -140,6 +146,52 @@ def test_rejects_non_html_metadata_response() -> None:
     assert error.value.code == "XHS_CONTENT_TYPE_UNSUPPORTED"
 
 
+def test_media_redirect_cannot_leave_xiaohongshu_cdn() -> None:
+    candidate = MediaCandidate(
+        candidate_id="xhs-image-0123456789abcdef0123",
+        position=1,
+        role="cover",
+        source_url="https://sns-webpic-qc.xhscdn.com/cover.png",
+    )
+    transport = FakeTransport(
+        [MetadataResponse(302, {"location": "https://evil.example/cover.png"}, b"")]
+    )
+
+    with pytest.raises(XiaohongshuLinkError) as error:
+        download_image(
+            candidate,
+            transport,
+            timeout=2,
+            max_bytes=100_000,
+            max_redirects=3,
+        )
+
+    assert error.value.code == "XHS_MEDIA_HOST_NOT_ALLOWED"
+
+
+def test_media_download_rejects_unsupported_content_type() -> None:
+    candidate = MediaCandidate(
+        candidate_id="xhs-image-0123456789abcdef0123",
+        position=1,
+        role="cover",
+        source_url="https://sns-webpic-qc.xhscdn.com/cover.bin",
+    )
+    transport = FakeTransport(
+        [MetadataResponse(200, {"content-type": "application/octet-stream"}, b"data")]
+    )
+
+    with pytest.raises(XiaohongshuLinkError) as error:
+        download_image(
+            candidate,
+            transport,
+            timeout=2,
+            max_bytes=100_000,
+            max_redirects=3,
+        )
+
+    assert error.value.code == "XHS_MEDIA_TYPE_UNSUPPORTED"
+
+
 def test_preview_api_parses_without_network(client: TestClient) -> None:
     response = client.post(
         "/api/v1/xiaohongshu/preview",
@@ -158,6 +210,7 @@ def test_preview_api_parses_without_network(client: TestClient) -> None:
         "author": None,
         "thumbnail_present": False,
         "media_download_supported": False,
+        "media_candidates": [],
         "warnings": [],
     }
 
@@ -209,3 +262,93 @@ def test_preview_api_resolves_with_explicit_opt_in(tmp_path: Path) -> None:
     assert response.json()["metadata_status"] == "resolved"
     assert response.json()["title"] == "A safe preview"
     assert set(response.json()).isdisjoint({"media_urls", "image_url", "video_url"})
+
+
+def test_preview_ignores_media_url_outside_xiaohongshu_cdn() -> None:
+    transport = FakeTransport(
+        [
+            MetadataResponse(
+                200,
+                {"content-type": "text/html"},
+                b'<meta property="og:image" content="https://evil.example/tracker.png">',
+            )
+        ]
+    )
+    metadata = resolve_metadata(
+        parse_share_text(f"https://www.xiaohongshu.com/explore/{NOTE_ID}"),
+        transport,
+        timeout=2,
+        max_bytes=100_000,
+        max_redirects=3,
+    )
+
+    assert metadata.media_candidates == ()
+    assert metadata.thumbnail_present is False
+    assert metadata.warnings == ("页面提供了不受支持的图片地址，已忽略。",)
+
+
+def test_imports_previewed_cover_into_local_asset_store(tmp_path: Path) -> None:
+    media_url = "https://sns-webpic-qc.xhscdn.com/public-cover.png?token=secret"
+    html = f'<meta property="og:image" content="{media_url}">'.encode()
+    metadata_transport = FakeTransport(
+        [
+            MetadataResponse(200, {"content-type": "text/html"}, html),
+            MetadataResponse(200, {"content-type": "text/html"}, html),
+        ]
+    )
+    image_buffer = BytesIO()
+    Image.new("RGB", (12, 8), "#d04a3a").save(image_buffer, format="PNG")
+    media_transport = FakeTransport(
+        [
+            MetadataResponse(
+                200,
+                {"content-type": "image/png"},
+                image_buffer.getvalue(),
+            )
+        ]
+    )
+    app = create_app(
+        Settings(
+            data_dir=tmp_path / "data",
+            docx_preview_enabled=False,
+            pdf_preview_enabled=False,
+            worker_start_method="forkserver",
+            xhs_metadata_enabled=True,
+            xhs_media_import_enabled=True,
+        ),
+        xiaohongshu_transport=metadata_transport,
+        xiaohongshu_media_transport=media_transport,
+    )
+    share_text = f"https://www.xiaohongshu.com/explore/{NOTE_ID}"
+    with TestClient(app) as api:
+        preview = api.post(
+            "/api/v1/xiaohongshu/preview",
+            json={"share_text": share_text, "resolve_metadata": True},
+        )
+        candidate = preview.json()["media_candidates"][0]
+        imported = api.post(
+            "/api/v1/xiaohongshu/import",
+            json={"share_text": share_text, "candidate_id": candidate["candidate_id"]},
+        )
+        content = api.get(f"/api/v1/assets/{imported.json()['id']}/content")
+
+    assert preview.status_code == 200
+    assert preview.json()["media_download_supported"] is True
+    assert media_url not in preview.text
+    assert imported.status_code == 201
+    assert imported.json()["kind"] == "png"
+    assert imported.json()["display_name"] == "xiaohongshu-1.png"
+    assert content.content == image_buffer.getvalue()
+
+
+def test_rejects_media_import_when_local_opt_in_is_disabled(client: TestClient) -> None:
+    response = client.post(
+        "/api/v1/xiaohongshu/import",
+        json={
+            "share_text": f"https://www.xiaohongshu.com/explore/{NOTE_ID}",
+            "candidate_id": "xhs-image-0123456789abcdef0123",
+        },
+    )
+
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "XHS_MEDIA_IMPORT_DISABLED"

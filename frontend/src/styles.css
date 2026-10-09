@@ -60,6 +60,12 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .link-details div { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; }
 .link-details dt { color: #738078; font-size: .78rem; }
 .link-details dd { margin: 0; overflow-wrap: anywhere; font-size: .86rem; }
+.xhs-media-candidates { display: grid; gap: 10px; margin-top: 16px; }
+.xhs-media-candidate {
+  display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  padding: 13px 14px; border: 1px solid #c9ded2; border-radius: 11px; background: #fff;
+}
+.xhs-media-candidate p { margin: 4px 0 0; color: #607068; font-size: .8rem; }
 .capabilities { margin-top: 26px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 .status { float: right; color: #9a6114; background: #fff0d5; border-radius: 999px; padding: 4px 9px; font-size: .74rem; }
 .empty-state { min-height: 55vh; display: grid; align-content: center; }
@@ -195,4 +201,6 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   .tasks-head, .task-row { align-items: flex-start; flex-direction: column; }
   .xhs-actions, .link-preview-heading { align-items: stretch; flex-direction: column; }
   .xhs-actions button { width: 100%; }
+  .xhs-media-candidate { align-items: stretch; flex-direction: column; }
+  .xhs-media-candidate button { width: 100%; }
 }

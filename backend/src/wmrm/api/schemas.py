@@ -38,6 +38,12 @@ class XiaohongshuPreviewRequest(BaseModel):
     resolve_metadata: bool = False
 
 
+class XiaohongshuMediaCandidateResponse(BaseModel):
+    candidate_id: str
+    position: int = Field(ge=1)
+    role: Literal["cover"]
+
+
 class XiaohongshuPreviewResponse(BaseModel):
     kind: Literal["direct", "short"]
     normalized_url: str
@@ -48,8 +54,14 @@ class XiaohongshuPreviewResponse(BaseModel):
     description: str | None
     author: str | None
     thumbnail_present: bool
-    media_download_supported: Literal[False] = False
+    media_download_supported: bool
+    media_candidates: list[XiaohongshuMediaCandidateResponse] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
+
+
+class XiaohongshuImportRequest(BaseModel):
+    share_text: str = Field(min_length=1, max_length=4096)
+    candidate_id: str = Field(pattern=r"^xhs-image-[a-f0-9]{20}$")
 
 
 class AssetResponse(BaseModel):
@@ -364,9 +376,7 @@ class ComparisonResponse(BaseModel):
 class TaskResponse(BaseModel):
     id: str
     plan_id: str
-    status: Literal[
-        "queued", "running", "cancelling", "cancelled", "succeeded", "failed"
-    ]
+    status: Literal["queued", "running", "cancelling", "cancelled", "succeeded", "failed"]
     stage: str
     progress: float = Field(ge=0, le=1)
     created_at: datetime

@@ -34,7 +34,12 @@ export interface XiaohongshuPreview {
   description: string | null
   author: string | null
   thumbnail_present: boolean
-  media_download_supported: false
+  media_download_supported: boolean
+  media_candidates: Array<{
+    candidate_id: string
+    position: number
+    role: 'cover'
+  }>
   warnings: string[]
 }
 
@@ -307,6 +312,17 @@ export async function previewXiaohongshuLink(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ share_text: shareText, resolve_metadata: resolveMetadata }),
+  }))
+}
+
+export async function importXiaohongshuImage(
+  shareText: string,
+  candidateId: string,
+): Promise<Asset> {
+  return parse<Asset>(await fetch('/api/v1/xiaohongshu/import', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ share_text: shareText, candidate_id: candidateId }),
   }))
 }
 
