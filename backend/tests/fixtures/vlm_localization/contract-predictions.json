@@ -10,9 +10,10 @@
   },
   "predictions": [
     {"sample_id": "real-horizon-corner", "boxes": [{"x0": 398, "y0": 28, "x1": 522, "y1": 76, "label": "watermark", "confidence": 0.95}]},
-    {"sample_id": "real-horizon-translucent", "boxes": [{"x0": 85, "y0": 116, "x1": 455, "y1": 225, "label": "watermark", "confidence": 0.9}]},
+    {"sample_id": "real-horizon-translucent", "boxes": [{"x0": 123, "y0": 153, "x1": 330, "y1": 204, "label": "watermark", "confidence": 0.9}]},
     {"sample_id": "real-night-multiline", "boxes": [{"x0": 45, "y0": 515, "x1": 495, "y1": 695, "label": "watermark", "confidence": 0.92}]},
     {"sample_id": "clean-horizon-negative", "boxes": []},
-    {"sample_id": "clean-night-negative", "boxes": []}
+    {"sample_id": "clean-night-negative", "boxes": []},
+    {"sample_id": "clean-project-ui-negative", "boxes": []}
   ]
 }

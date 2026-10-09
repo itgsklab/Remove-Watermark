@@ -18,8 +18,8 @@
       "sha256": "c7efb2a9356ae1366b5b3cec5477ccf890ba95d085aa537731a9caf0d2eeca33",
       "width": 540,
       "height": 720,
-      "expected_regions": [{"x0": 90, "y0": 120, "x1": 450, "y1": 220, "label": "watermark"}],
-      "provenance": "NASA source photograph with repository-generated translucent center overlay.",
+      "expected_regions": [{"x0": 125, "y0": 157, "x1": 326, "y1": 197, "label": "watermark"}],
+      "provenance": "NASA source photograph with repository-generated translucent center text. Visible glyph bounds come from the deterministic Pillow textbbox used by the fixture builder; the wider mobile-risk selection is not reused as localization truth.",
       "review_required": false
     },
     {
@@ -50,6 +50,16 @@
       "height": 851,
       "expected_regions": [],
       "provenance": "Unmodified pinned NASA source photograph used as a negative localization sample.",
+      "review_required": false
+    },
+    {
+      "id": "clean-project-ui-negative",
+      "file": "../image_complexity/project-home-desktop.png",
+      "sha256": "0639a998f0dfacac68eb9c6067348ea706b363bd5860d97e3041b89ee8ceafa2",
+      "width": 1265,
+      "height": 889,
+      "expected_regions": [],
+      "provenance": "Repository-generated Watermark Remover home-page screenshot with no user data or watermark, used to measure text-heavy UI false positives.",
       "review_required": false
     }
   ]

@@ -24,12 +24,16 @@ def run_localization_benchmark(
     iou_threshold: float = 0.5,
     min_precision: float = 0.75,
     min_recall: float = 0.85,
+    min_sample_count: int = 20,
+    min_negative_count: int = 10,
     require_model_output: bool = False,
 ) -> dict[str, Any]:
     if not 0 < iou_threshold <= 1:
         raise LocalizationBenchmarkError("IoU threshold must be in (0, 1].")
     if not 0 <= min_precision <= 1 or not 0 <= min_recall <= 1:
         raise LocalizationBenchmarkError("Precision and recall thresholds must be in [0, 1].")
+    if min_sample_count < 1 or min_negative_count < 1:
+        raise LocalizationBenchmarkError("Evidence-count thresholds must be positive.")
     manifest_path = manifest_path.resolve()
     predictions_path = predictions_path.resolve()
     manifest = _load_json(manifest_path)
@@ -112,6 +116,11 @@ def run_localization_benchmark(
     )
     mean_iou = sum(matched_ious) / len(matched_ious) if matched_ious else 0.0
     gate_passed = precision >= min_precision and recall >= min_recall
+    positive_count = sum(item["kind"] == "positive" for item in results)
+    negative_count = sum(item["kind"] == "negative" for item in results)
+    evidence_gate_passed = (
+        len(results) >= min_sample_count and negative_count >= min_negative_count
+    )
     report = {
         "schema_version": 1,
         "benchmark": "wmrm-vlm-watermark-localization",
@@ -121,18 +130,21 @@ def run_localization_benchmark(
             "iou": iou_threshold,
             "minimum_precision": min_precision,
             "minimum_recall": min_recall,
+            "minimum_sample_count": min_sample_count,
+            "minimum_negative_count": min_negative_count,
         },
         "summary": {
             "sample_count": len(results),
-            "positive_count": sum(item["kind"] == "positive" for item in results),
-            "negative_count": sum(item["kind"] == "negative" for item in results),
+            "positive_count": positive_count,
+            "negative_count": negative_count,
             **totals,
             "precision": round(precision, 6),
             "recall": round(recall, 6),
             "f1": round(f1, 6),
             "mean_matched_iou": round(mean_iou, 6),
             "metric_gate": "pass" if gate_passed else "fail",
-            "release_claim_allowed": is_model_output and gate_passed,
+            "evidence_gate": "pass" if evidence_gate_passed else "fail",
+            "release_claim_allowed": is_model_output and gate_passed and evidence_gate_passed,
         },
         "samples": results,
     }
@@ -282,11 +294,13 @@ def _markdown(report: dict[str, Any]) -> str:
             f"Metric gate: **{summary['metric_gate']}** · Precision: {summary['precision']:.3f} · "
             f"Recall: {summary['recall']:.3f} · F1: {summary['f1']:.3f} · "
             f"Mean matched IoU: {summary['mean_matched_iou']:.3f}",
+            f"Evidence gate: **{summary['evidence_gate']}** · "
+            f"Samples: {summary['sample_count']} · Negatives: {summary['negative_count']}",
             "",
             *rows,
             "",
-            "A release claim is allowed only when `evaluation_kind` is `model` "
-            "and the metric gate passes.",
+            "A release claim is allowed only for real model output when both metric and "
+            "minimum-evidence gates pass.",
             "",
         ]
     )
@@ -299,6 +313,8 @@ def main() -> None:
     parser.add_argument("--report-json", type=Path, required=True)
     parser.add_argument("--report-md", type=Path, required=True)
     parser.add_argument("--require-model-output", action="store_true")
+    parser.add_argument("--min-samples", type=int, default=20)
+    parser.add_argument("--min-negatives", type=int, default=10)
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
     report = run_localization_benchmark(
@@ -307,9 +323,11 @@ def main() -> None:
         report_json=args.report_json,
         report_markdown=args.report_md,
         require_model_output=args.require_model_output,
+        min_sample_count=args.min_samples,
+        min_negative_count=args.min_negatives,
     )
-    if args.strict and report["summary"]["metric_gate"] != "pass":
-        raise SystemExit("Localization metric gate failed.")
+    if args.strict and not report["summary"]["release_claim_allowed"]:
+        raise SystemExit("Localization release-evidence gate failed.")
 
 
 if __name__ == "__main__":

@@ -10,6 +10,8 @@ from PIL import Image
 
 from wmrm.adapters.images.detection import LocalizationBox
 
+MAX_CANDIDATE_COVERAGE = 0.30
+
 
 class Florence2ConfigurationError(RuntimeError):
     """The optional local model is unavailable or violates its pinned manifest."""
@@ -143,6 +145,9 @@ class Florence2Localizer:
                 raise Florence2ConfigurationError("Florence-2 returned an invalid box.") from exc
             if box.x1 > width or box.y1 > height:
                 raise Florence2ConfigurationError("Florence-2 returned an out-of-bounds box.")
+            coverage = (box.x1 - box.x0) * (box.y1 - box.y0) / (width * height)
+            if coverage > MAX_CANDIDATE_COVERAGE:
+                continue
             boxes.append(box)
         return tuple(boxes)
 
@@ -193,6 +198,7 @@ class _TransformersFlorence2Runtime:
             "device": device,
             "torch_version": torch.__version__,
             "transformers_version": transformers.__version__,
+            "maximum_candidate_coverage": MAX_CANDIDATE_COVERAGE,
         }
 
     def predict(self, image: Image.Image, prompt: str) -> tuple[dict[str, Any], ...]:

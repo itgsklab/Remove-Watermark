@@ -36,6 +36,9 @@ All notable changes to this project are documented in this file. The format foll
   precision/recall benchmark contract for evaluating optional VLM adapters without bundling weights.
 - An opt-in Florence-2 localizer, pinned model downloader and real-prediction command that verify
   Safetensors files and keep model dependencies and weights outside the default Web installation.
+- Conservative rejection of Florence-2 boxes covering over 30% of an image, corrected visible-glyph
+  truth for translucent text, a text-heavy UI negative sample, and separate metric/evidence gates
+  requiring at least 20 reviewed samples with 10 negatives before any release claim.
 
 ### Security
 

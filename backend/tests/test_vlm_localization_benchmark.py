@@ -62,13 +62,14 @@ def test_contract_fixture_scores_positive_and_negative_samples(tmp_path: Path) -
     )
 
     assert report["evaluation_kind"] == "contract_fixture"
-    assert report["summary"]["sample_count"] == 5
+    assert report["summary"]["sample_count"] == 6
     assert report["summary"]["positive_count"] == 3
-    assert report["summary"]["negative_count"] == 2
+    assert report["summary"]["negative_count"] == 3
     assert report["summary"]["true_positive"] == 3
     assert report["summary"]["false_positive"] == 0
     assert report["summary"]["false_negative"] == 0
     assert report["summary"]["metric_gate"] == "pass"
+    assert report["summary"]["evidence_gate"] == "fail"
     assert report["summary"]["release_claim_allowed"] is False
     assert "not a model performance result" in (tmp_path / "report.md").read_text()
 
@@ -82,6 +83,27 @@ def test_contract_fixture_cannot_satisfy_real_model_requirement(tmp_path: Path) 
             report_markdown=tmp_path / "report.md",
             require_model_output=True,
         )
+
+
+def test_release_claim_requires_model_metrics_and_minimum_evidence(tmp_path: Path) -> None:
+    predictions = json.loads((FIXTURES / "contract-predictions.json").read_text())
+    predictions["detector"]["is_model_output"] = True
+    predictions_path = tmp_path / "predictions.json"
+    predictions_path.write_text(json.dumps(predictions))
+
+    report = run_localization_benchmark(
+        FIXTURES / "manifest.json",
+        predictions_path,
+        report_json=tmp_path / "report.json",
+        report_markdown=tmp_path / "report.md",
+        min_sample_count=6,
+        min_negative_count=3,
+        require_model_output=True,
+    )
+
+    assert report["summary"]["metric_gate"] == "pass"
+    assert report["summary"]["evidence_gate"] == "pass"
+    assert report["summary"]["release_claim_allowed"] is True
 
 
 def test_benchmark_rejects_out_of_bounds_prediction(tmp_path: Path) -> None:

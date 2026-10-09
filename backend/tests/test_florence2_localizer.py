@@ -22,6 +22,11 @@ class FakeRuntime:
         return ({"bbox": [1, 2, 10, 12], "label": "overlay"},)
 
 
+class HugeBoxRuntime:
+    def predict(self, image: Image.Image, prompt: str) -> tuple[dict, ...]:
+        return ({"bbox": [0, 0, image.width, image.height], "label": "watermark"},)
+
+
 class FakeLocalizer:
     model_id = "test/model"
     model_revision = "a" * 40
@@ -99,6 +104,17 @@ def test_localizer_rejects_out_of_bounds_runtime_result(tmp_path: Path) -> None:
         localizer.localize(image_path, "watermark")
 
 
+def test_localizer_filters_oversized_candidates(tmp_path: Path) -> None:
+    model_dir, manifest_path = _model_fixture(tmp_path)
+    image_path = tmp_path / "input.png"
+    Image.new("RGB", (100, 100), "white").save(image_path)
+    localizer = Florence2Localizer(
+        model_dir, manifest_path, runtime=HugeBoxRuntime()
+    )
+
+    assert localizer.localize(image_path, "watermark") == ()
+
+
 def test_prediction_file_is_marked_as_real_model_output(tmp_path: Path) -> None:
     fixtures = Path(__file__).parent / "fixtures"
     source = fixtures / "vlm_localization" / "manifest.json"
@@ -112,7 +128,7 @@ def test_prediction_file_is_marked_as_real_model_output(tmp_path: Path) -> None:
         localizer=FakeLocalizer(),
     )
     assert result["detector"]["is_model_output"] is True
-    assert len(result["predictions"]) == 5
+    assert len(result["predictions"]) == 6
     assert json.loads(output.read_text()) == result
 
 

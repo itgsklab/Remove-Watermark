@@ -12,27 +12,31 @@
       "kind": "local-vendored-florence2",
       "device": "mps",
       "torch_version": "2.14.1",
-      "transformers_version": "4.49.0"
+      "transformers_version": "4.49.0",
+      "maximum_candidate_coverage": 0.3
     },
     "note": "Generated locally from SHA-256 verified Safetensors weights."
   },
   "thresholds": {
     "iou": 0.5,
     "minimum_precision": 0.75,
-    "minimum_recall": 0.85
+    "minimum_recall": 0.85,
+    "minimum_sample_count": 20,
+    "minimum_negative_count": 10
   },
   "summary": {
-    "sample_count": 5,
+    "sample_count": 6,
     "positive_count": 3,
-    "negative_count": 2,
-    "true_positive": 2,
-    "false_positive": 3,
-    "false_negative": 1,
-    "precision": 0.4,
-    "recall": 0.666667,
-    "f1": 0.5,
-    "mean_matched_iou": 0.878785,
-    "metric_gate": "fail",
+    "negative_count": 3,
+    "true_positive": 3,
+    "false_positive": 1,
+    "false_negative": 0,
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.857143,
+    "mean_matched_iou": 0.839341,
+    "metric_gate": "pass",
+    "evidence_gate": "fail",
     "release_claim_allowed": false
   },
   "samples": [
@@ -53,10 +57,12 @@
       "kind": "positive",
       "expected_count": 1,
       "predicted_count": 1,
-      "true_positive": 0,
-      "false_positive": 1,
-      "false_negative": 1,
-      "matched_ious": []
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.760453
+      ]
     },
     {
       "sample_id": "real-night-multiline",
@@ -74,14 +80,24 @@
       "sample_id": "clean-horizon-negative",
       "kind": "negative",
       "expected_count": 0,
-      "predicted_count": 1,
+      "predicted_count": 0,
       "true_positive": 0,
-      "false_positive": 1,
+      "false_positive": 0,
       "false_negative": 0,
       "matched_ious": []
     },
     {
       "sample_id": "clean-night-negative",
+      "kind": "negative",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "clean-project-ui-negative",
       "kind": "negative",
       "expected_count": 0,
       "predicted_count": 1,

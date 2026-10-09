@@ -13,20 +13,23 @@
   "thresholds": {
     "iou": 0.5,
     "minimum_precision": 0.75,
-    "minimum_recall": 0.85
+    "minimum_recall": 0.85,
+    "minimum_sample_count": 20,
+    "minimum_negative_count": 10
   },
   "summary": {
-    "sample_count": 5,
+    "sample_count": 6,
     "positive_count": 3,
-    "negative_count": 2,
+    "negative_count": 3,
     "true_positive": 3,
     "false_positive": 0,
     "false_negative": 0,
     "precision": 1.0,
     "recall": 1.0,
     "f1": 1.0,
-    "mean_matched_iou": 0.901063,
+    "mean_matched_iou": 0.857378,
     "metric_gate": "pass",
+    "evidence_gate": "fail",
     "release_claim_allowed": false
   },
   "samples": [
@@ -51,7 +54,7 @@
       "false_positive": 0,
       "false_negative": 0,
       "matched_ious": [
-        0.892636
+        0.76158
       ]
     },
     {
@@ -78,6 +81,16 @@
     },
     {
       "sample_id": "clean-night-negative",
+      "kind": "negative",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "clean-project-ui-negative",
       "kind": "negative",
       "expected_count": 0,
       "predicted_count": 0,
