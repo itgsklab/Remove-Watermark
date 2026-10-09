@@ -28,6 +28,13 @@ class ReleaseMetadataTests(unittest.TestCase):
                 metadata.canonical_text_bytes(crlf),
             )
 
+    def test_vendored_florence_runtime_is_declared(self) -> None:
+        components = metadata.vendored_components()
+
+        self.assertEqual(len(components), 1)
+        self.assertEqual(components[0].license, "Apache-2.0")
+        self.assertEqual(components[0].usage, "optional runtime source")
+
 
 if __name__ == "__main__":
     unittest.main()

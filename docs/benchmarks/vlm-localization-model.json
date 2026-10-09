@@ -1,14 +1,20 @@
 {
   "schema_version": 1,
   "benchmark": "wmrm-vlm-watermark-localization",
-  "evaluation_kind": "contract_fixture",
+  "evaluation_kind": "model",
   "detector": {
-    "id": "localization-contract-fixture",
-    "model_id": null,
-    "model_revision": null,
+    "id": "florence-2-local-open-vocabulary",
+    "model_id": "microsoft/Florence-2-base",
+    "model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
     "prompt": "watermark",
-    "is_model_output": false,
-    "note": "Geometry fixture for testing the benchmark contract; not a model performance claim."
+    "is_model_output": true,
+    "runtime": {
+      "kind": "local-vendored-florence2",
+      "device": "mps",
+      "torch_version": "2.14.1",
+      "transformers_version": "4.49.0"
+    },
+    "note": "Generated locally from SHA-256 verified Safetensors weights."
   },
   "thresholds": {
     "iou": 0.5,
@@ -19,14 +25,14 @@
     "sample_count": 5,
     "positive_count": 3,
     "negative_count": 2,
-    "true_positive": 3,
-    "false_positive": 0,
-    "false_negative": 0,
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1": 1.0,
-    "mean_matched_iou": 0.901063,
-    "metric_gate": "pass",
+    "true_positive": 2,
+    "false_positive": 3,
+    "false_negative": 1,
+    "precision": 0.4,
+    "recall": 0.666667,
+    "f1": 0.5,
+    "mean_matched_iou": 0.878785,
+    "metric_gate": "fail",
     "release_claim_allowed": false
   },
   "samples": [
@@ -39,7 +45,7 @@
       "false_positive": 0,
       "false_negative": 0,
       "matched_ious": [
-        0.887097
+        0.832633
       ]
     },
     {
@@ -47,12 +53,10 @@
       "kind": "positive",
       "expected_count": 1,
       "predicted_count": 1,
-      "true_positive": 1,
-      "false_positive": 0,
-      "false_negative": 0,
-      "matched_ious": [
-        0.892636
-      ]
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 1,
+      "matched_ious": []
     },
     {
       "sample_id": "real-night-multiline",
@@ -63,16 +67,16 @@
       "false_positive": 0,
       "false_negative": 0,
       "matched_ious": [
-        0.923457
+        0.924937
       ]
     },
     {
       "sample_id": "clean-horizon-negative",
       "kind": "negative",
       "expected_count": 0,
-      "predicted_count": 0,
+      "predicted_count": 1,
       "true_positive": 0,
-      "false_positive": 0,
+      "false_positive": 1,
       "false_negative": 0,
       "matched_ious": []
     },
@@ -80,9 +84,9 @@
       "sample_id": "clean-night-negative",
       "kind": "negative",
       "expected_count": 0,
-      "predicted_count": 0,
+      "predicted_count": 1,
       "true_positive": 0,
-      "false_positive": 0,
+      "false_positive": 1,
       "false_negative": 0,
       "matched_ious": []
     }

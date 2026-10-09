@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/9ece0cd259a68fc9d71921b7e1c043ba0855a8a7cbfff28ff89b959c2a5382db",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/34bde146ef9f0594a0654d6c2f05301dcd50e3e73498d22fee6f44fd8f979201",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {
@@ -669,6 +669,25 @@
       "name": "websockets",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "17.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Vendored-Microsoft-Florence-2-runtime-17ac8fec0f",
+      "comment": "Ecosystem: Vendored; usage: optional runtime source; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:generic/Microsoft-Florence-2-runtime@5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "name": "Microsoft-Florence-2-runtime",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-babel-helper-string-parser-8415859f17",
@@ -3238,6 +3257,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-Python-websockets-2d96205671",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Vendored-Microsoft-Florence-2-runtime-17ac8fec0f",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },

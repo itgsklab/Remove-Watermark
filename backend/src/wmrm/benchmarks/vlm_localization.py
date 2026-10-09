@@ -105,7 +105,11 @@ def run_localization_benchmark(
 
     precision = _ratio(totals["true_positive"], totals["true_positive"] + totals["false_positive"])
     recall = _ratio(totals["true_positive"], totals["true_positive"] + totals["false_negative"])
-    f1 = _ratio(2 * precision * recall, precision + recall)
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if precision + recall
+        else 0.0
+    )
     mean_iou = sum(matched_ious) / len(matched_ious) if matched_ious else 0.0
     gate_passed = precision >= min_precision and recall >= min_recall
     report = {
@@ -295,14 +299,17 @@ def main() -> None:
     parser.add_argument("--report-json", type=Path, required=True)
     parser.add_argument("--report-md", type=Path, required=True)
     parser.add_argument("--require-model-output", action="store_true")
+    parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
-    run_localization_benchmark(
+    report = run_localization_benchmark(
         args.manifest,
         args.predictions,
         report_json=args.report_json,
         report_markdown=args.report_md,
         require_model_output=args.require_model_output,
     )
+    if args.strict and report["summary"]["metric_gate"] != "pass":
+        raise SystemExit("Localization metric gate failed.")
 
 
 if __name__ == "__main__":

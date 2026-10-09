@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 
@@ -43,6 +44,13 @@ def test_florence_model_manifest_keeps_weights_optional_and_safe() -> None:
         "require_exact_revision": True,
         "require_sha256_verification": True,
     }
+    vendor_root = Path(__file__).parents[1] / "src" / "wmrm" / "vendor" / "florence2"
+    implementation = manifest["runtime_implementation"]
+    assert implementation["license"] == "Apache-2.0"
+    for record in implementation["vendored_files"]:
+        assert hashlib.sha256((vendor_root / record["path"]).read_bytes()).hexdigest() == record[
+            "sha256"
+        ]
 
 
 def test_contract_fixture_scores_positive_and_negative_samples(tmp_path: Path) -> None:
@@ -115,3 +123,22 @@ def test_benchmark_counts_negative_false_positive(tmp_path: Path) -> None:
 
     assert report["summary"]["false_positive"] == 1
     assert report["summary"]["precision"] == 0.75
+
+
+def test_zero_recall_has_zero_f1(tmp_path: Path) -> None:
+    predictions = json.loads((FIXTURES / "contract-predictions.json").read_text())
+    for row in predictions["predictions"]:
+        row["boxes"] = []
+    predictions_path = tmp_path / "predictions.json"
+    predictions_path.write_text(json.dumps(predictions))
+
+    report = run_localization_benchmark(
+        FIXTURES / "manifest.json",
+        predictions_path,
+        report_json=tmp_path / "report.json",
+        report_markdown=tmp_path / "report.md",
+    )
+
+    assert report["summary"]["precision"] == 1.0
+    assert report["summary"]["recall"] == 0.0
+    assert report["summary"]["f1"] == 0.0

@@ -19,6 +19,8 @@ NPM_MANIFEST = ROOT / "frontend" / "package.json"
 NPM_LOCK = ROOT / "frontend" / "package-lock.json"
 DEFAULT_INVENTORY = ROOT / "docs" / "THIRD_PARTY_DEPENDENCIES.md"
 DEFAULT_SBOM = ROOT / "docs" / "release" / "sbom.spdx.json"
+FLORENCE_MANIFEST = ROOT / "docs" / "models" / "florence-2-base.json"
+FLORENCE_VENDOR = ROOT / "backend" / "src" / "wmrm" / "vendor" / "florence2"
 
 PIN_RE = re.compile(
     r"^(?P<name>[A-Za-z0-9_.-]+)==(?P<version>[^;\s]+)(?:\s*;\s*(?P<marker>.+))?$"
@@ -34,6 +36,7 @@ class Component:
     usage: str
     direct: bool
     condition: str = ""
+    license: str = "NOASSERTION"
 
     @property
     def key(self) -> str:
@@ -47,6 +50,8 @@ class Component:
 
     @property
     def purl(self) -> str:
+        if self.ecosystem == "Vendored":
+            return f"pkg:generic/{quote(self.name, safe='')}@{quote(self.version, safe='')}"
         if self.ecosystem == "Python":
             return f"pkg:pypi/{quote(self.name, safe='')}@{quote(self.version, safe='')}"
         if self.name.startswith("@") and "/" in self.name:
@@ -139,9 +144,37 @@ def npm_components() -> list[Component]:
     return list(components.values())
 
 
+def vendored_components() -> list[Component]:
+    manifest = json.loads(FLORENCE_MANIFEST.read_text(encoding="utf-8"))
+    implementation = manifest["runtime_implementation"]
+    return [
+        Component(
+            ecosystem="Vendored",
+            name="Microsoft-Florence-2-runtime",
+            version=implementation["source_revision"],
+            usage="optional runtime source",
+            direct=True,
+            license=implementation["license"],
+        )
+    ]
+
+
 def input_digest() -> str:
     digest = hashlib.sha256()
-    for path in (PYPROJECT, PYTHON_LOCK, NPM_MANIFEST, NPM_LOCK):
+    inputs = [
+        PYPROJECT,
+        PYTHON_LOCK,
+        NPM_MANIFEST,
+        NPM_LOCK,
+        FLORENCE_MANIFEST,
+        FLORENCE_VENDOR / "LICENSE",
+        *(FLORENCE_VENDOR / name for name in (
+            "configuration_florence2.py",
+            "modeling_florence2.py",
+            "processing_florence2.py",
+        )),
+    ]
+    for path in inputs:
         digest.update(path.relative_to(ROOT).as_posix().encode())
         digest.update(b"\0")
         digest.update(canonical_text_bytes(path))
@@ -170,12 +203,13 @@ def creation_time(existing_sbom: Path) -> str:
 
 
 def all_components() -> list[Component]:
-    return sorted(python_components() + npm_components())
+    return sorted(python_components() + npm_components() + vendored_components())
 
 
 def render_inventory(components: list[Component], digest: str) -> str:
     python_count = sum(item.ecosystem == "Python" for item in components)
     npm_count = sum(item.ecosystem == "npm" for item in components)
+    vendored_count = sum(item.ecosystem == "Vendored" for item in components)
     lines = [
         "# Third-party dependency inventory",
         "",
@@ -186,6 +220,7 @@ def render_inventory(components: list[Component], digest: str) -> str:
         f"- Input digest: `{digest}`",
         f"- Python packages: {python_count}",
         f"- npm packages: {npm_count}",
+        f"- Vendored components: {vendored_count}",
         "- License fields: `NOASSERTION` until an authoritative package-by-package review is recorded",
         "",
         "| Ecosystem | Package | Version | Usage | Direct | Platform condition |",
@@ -231,8 +266,8 @@ def render_sbom(components: list[Component], digest: str, created: str) -> str:
                 "versionInfo": item.version,
                 "downloadLocation": "NOASSERTION",
                 "filesAnalyzed": False,
-                "licenseConcluded": "NOASSERTION",
-                "licenseDeclared": "NOASSERTION",
+                "licenseConcluded": item.license,
+                "licenseDeclared": item.license,
                 "copyrightText": "NOASSERTION",
                 "primaryPackagePurpose": "LIBRARY",
                 "externalRefs": [

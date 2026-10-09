@@ -4,7 +4,7 @@
     "id": "localization-contract-fixture",
     "model_id": null,
     "model_revision": null,
-    "prompt": "watermark, logo, username overlay, translucent text",
+    "prompt": "watermark",
     "is_model_output": false,
     "note": "Geometry fixture for testing the benchmark contract; not a model performance claim."
   },

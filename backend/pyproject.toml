@@ -25,6 +25,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+vlm = [
+  "einops>=0.8,<1",
+  "safetensors>=0.4,<1",
+  "timm>=1.0,<2",
+  "torch>=2.4,<3",
+  "transformers>=4.49,<4.50",
+]
 dev = [
   "httpx>=0.28,<1",
   "pytest>=8.3,<9",
@@ -44,6 +51,8 @@ wmrm-codecv-probe = "wmrm.benchmarks.codecv_probe:main"
 wmrm-pdf-redaction-probe = "wmrm.benchmarks.pdf_redaction_probe:main"
 wmrm-pdf-ocr-probe = "wmrm.benchmarks.pdf_ocr_probe:main"
 wmrm-pdf-redaction-corpus = "wmrm.benchmarks.pdf_redaction_corpus:main"
+wmrm-vlm-predict = "wmrm.benchmarks.vlm_predict:main"
+wmrm-vlm-fetch = "wmrm.benchmarks.vlm_fetch:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/wmrm"]
@@ -55,6 +64,7 @@ addopts = "-q"
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+exclude = ["src/wmrm/vendor"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

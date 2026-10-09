@@ -34,6 +34,8 @@ All notable changes to this project are documented in this file. The format foll
   release-readiness check that rejects missing or changed license payloads.
 - A model-independent watermark-localization Protocol, reviewed positive/negative corpus and IoU/
   precision/recall benchmark contract for evaluating optional VLM adapters without bundling weights.
+- An opt-in Florence-2 localizer, pinned model downloader and real-prediction command that verify
+  Safetensors files and keep model dependencies and weights outside the default Web installation.
 
 ### Security
 

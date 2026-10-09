@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-contract complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check check
+.PHONY: backend-install backend-check frontend-install frontend-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -38,12 +38,30 @@ mobile-selection-corpus:
 		--report-md ../docs/benchmarks/mobile-selection-corpus.md \
 		--strict
 
+vlm-model-fetch:
+	cd backend && .venv/bin/python -m wmrm.benchmarks.vlm_fetch \
+		--manifest ../docs/models/florence-2-base.json \
+		--destination ../work/models/florence-2-base
+
 vlm-localization-contract:
 	cd backend && .venv/bin/python -m wmrm.benchmarks.vlm_localization \
 		--manifest tests/fixtures/vlm_localization/manifest.json \
 		--predictions tests/fixtures/vlm_localization/contract-predictions.json \
 		--report-json ../docs/benchmarks/vlm-localization-contract.json \
 		--report-md ../docs/benchmarks/vlm-localization-contract.md
+
+vlm-localization-model:
+	cd backend && .venv/bin/python -m wmrm.benchmarks.vlm_predict \
+		--manifest tests/fixtures/vlm_localization/manifest.json \
+		--model-dir ../work/models/florence-2-base \
+		--model-manifest ../docs/models/florence-2-base.json \
+		--output ../work/vlm-localization-predictions.json
+	cd backend && .venv/bin/python -m wmrm.benchmarks.vlm_localization \
+		--manifest tests/fixtures/vlm_localization/manifest.json \
+		--predictions ../work/vlm-localization-predictions.json \
+		--report-json ../work/vlm-localization-model.json \
+		--report-md ../work/vlm-localization-model.md \
+		--require-model-output --strict
 
 complexity-calibration:
 	cd backend && .venv/bin/python -m wmrm.benchmarks.complexity_calibration \

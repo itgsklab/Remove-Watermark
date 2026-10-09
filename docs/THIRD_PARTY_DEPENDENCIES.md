@@ -4,9 +4,10 @@ This file is generated from the pinned Python packaging constraints and npm lock
 It records release inputs; it is not a legal opinion or a substitute for license review.
 Regenerate it with `make release-metadata` and verify it with `make release-metadata-check`.
 
-- Input digest: `9ece0cd259a68fc9d71921b7e1c043ba0855a8a7cbfff28ff89b959c2a5382db`
+- Input digest: `34bde146ef9f0594a0654d6c2f05301dcd50e3e73498d22fee6f44fd8f979201`
 - Python packages: 34
 - npm packages: 126
+- Vendored components: 1
 - License fields: `NOASSERTION` until an authoritative package-by-package review is recorded
 
 | Ecosystem | Package | Version | Usage | Direct | Platform condition |
@@ -45,6 +46,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | Python | `uvloop` | `0.22.1` | locked transitive | no | sys_platform != "win32" |
 | Python | `watchfiles` | `1.3.0` | locked transitive | no | — |
 | Python | `websockets` | `17.1` | locked transitive | no | — |
+| Vendored | `Microsoft-Florence-2-runtime` | `5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac` | optional runtime source | yes | — |
 | npm | `@babel/helper-string-parser` | `7.29.7` | runtime | no | — |
 | npm | `@babel/helper-validator-identifier` | `7.29.7` | runtime | no | — |
 | npm | `@babel/parser` | `7.29.9` | runtime | no | — |

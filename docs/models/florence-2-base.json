@@ -20,6 +20,25 @@
       "open_vocabulary_detection"
     ]
   },
+  "runtime_implementation": {
+    "source_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+    "license": "Apache-2.0",
+    "transformers_compatibility": ">=4.49,<4.50",
+    "vendored_files": [
+      {
+        "path": "configuration_florence2.py",
+        "sha256": "de2e45a975b3582de05d2f4d963a3e9f9a3d20dccf78d28e0052932a0be93bdf"
+      },
+      {
+        "path": "modeling_florence2.py",
+        "sha256": "5162bf465e61b6e29cc113a467630ec3cb56ed8e4d46eb6207157f10fb9b8a24"
+      },
+      {
+        "path": "processing_florence2.py",
+        "sha256": "f146023a507c009f425a49ee39aa037f4f25c64e14336e3e4f3f1d7377a68e98"
+      }
+    ]
+  },
   "allowed_files": [
     {
       "path": "model.safetensors",

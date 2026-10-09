@@ -158,6 +158,10 @@ make mobile-selection-corpus
 make vlm-localization-contract
 ```
 
+显式安装可选模型依赖、下载固定版本 Florence-2 并运行本地真实模型评估的步骤见
+[docs/VLM_LOCALIZATION.md](docs/VLM_LOCALIZATION.md)。模型权重和预测结果均保留在被 Git 忽略的
+`work/` 目录，不进入 Web 发行物。
+
 复核带来源记录的真实照片和项目截图复杂度阈值：
 
 ```bash
@@ -186,7 +190,7 @@ PDF Deep 栅格修复、文字层回灌、可选 OCR 和当前限制见 [docs/PD
 图片检查、坐标合同和蒙版边界见 [docs/IMAGE_MASKS.md](docs/IMAGE_MASKS.md)。
 小红书分享链接的允许域名、SSRF 防护和元数据边界见 [docs/XIAOHONGSHU_LINKS.md](docs/XIAOHONGSHU_LINKS.md)。
 VLM 定位候选模型、权重供应链边界和评分门禁见 [docs/VLM_LOCALIZATION.md](docs/VLM_LOCALIZATION.md)。
-OpenCV 基准结果见 [docs/benchmarks/opencv-telea-baseline.md](docs/benchmarks/opencv-telea-baseline.md)，移动端水印基准见 [docs/benchmarks/mobile-watermark-baseline.md](docs/benchmarks/mobile-watermark-baseline.md)，复杂度真实样本校准见 [docs/benchmarks/image-complexity-calibration.md](docs/benchmarks/image-complexity-calibration.md)，VLM 定位评分合同见 [docs/benchmarks/vlm-localization-contract.md](docs/benchmarks/vlm-localization-contract.md)，LaMa 打包审查见 [docs/LAMA_EVALUATION.md](docs/LAMA_EVALUATION.md)。
+OpenCV 基准结果见 [docs/benchmarks/opencv-telea-baseline.md](docs/benchmarks/opencv-telea-baseline.md)，移动端水印基准见 [docs/benchmarks/mobile-watermark-baseline.md](docs/benchmarks/mobile-watermark-baseline.md)，复杂度真实样本校准见 [docs/benchmarks/image-complexity-calibration.md](docs/benchmarks/image-complexity-calibration.md)，VLM 定位评分合同见 [docs/benchmarks/vlm-localization-contract.md](docs/benchmarks/vlm-localization-contract.md)，首次真实模型结果见 [docs/benchmarks/vlm-localization-model.md](docs/benchmarks/vlm-localization-model.md)，LaMa 打包审查见 [docs/LAMA_EVALUATION.md](docs/LAMA_EVALUATION.md)。
 
 ## 许可证
 

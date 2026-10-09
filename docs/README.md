@@ -24,6 +24,7 @@ reports maintained in this repository:
 - `benchmarks/mobile-watermark-baseline.md`
 - `benchmarks/mobile-selection-corpus.md`
 - `benchmarks/vlm-localization-contract.md`
+- `benchmarks/vlm-localization-model.md`
 - `benchmarks/image-complexity-calibration.md`
 - `benchmarks/codecv-corpus-harness.md`
 - `benchmarks/pdf-ocr-probe.md`
