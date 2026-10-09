@@ -52,10 +52,10 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .xhs-actions { margin-top: 14px; align-items: flex-start; }
 .metadata-option { display: flex; gap: 8px; align-items: flex-start; color: #536057; font-size: .84rem; line-height: 1.45; }
 .metadata-option input { margin-top: 3px; }
-.link-preview { margin-top: 18px; padding: 18px; border: 1px solid #a9cdbb; border-radius: 14px; background: #edf8f1; }
+.link-preview { min-width: 0; margin-top: 18px; padding: 18px; border: 1px solid #a9cdbb; border-radius: 14px; background: #edf8f1; }
 .link-preview-heading { align-items: flex-start; }
 .link-preview-heading h3 { margin: 8px 0 0; font-size: 1.1rem; }
-.link-description { color: #536057; line-height: 1.55; }
+.link-description { overflow-wrap: anywhere; color: #536057; line-height: 1.55; }
 .link-details { display: grid; gap: 10px; margin: 16px 0 0; }
 .link-details div { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; }
 .link-details dt { color: #738078; font-size: .78rem; }
@@ -65,6 +65,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   display: flex; align-items: center; justify-content: space-between; gap: 18px;
   padding: 13px 14px; border: 1px solid #c9ded2; border-radius: 11px; background: #fff;
 }
+.xhs-media-candidate > div { min-width: 0; }
 .xhs-media-candidate p { margin: 4px 0 0; color: #607068; font-size: .8rem; }
 .capabilities { margin-top: 26px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 .status { float: right; color: #9a6114; background: #fff0d5; border-radius: 999px; padding: 4px 9px; font-size: .74rem; }
@@ -111,7 +112,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .comparison-pair img { display: block; height: auto; }
 .missing-preview { min-height: 180px; display: grid; place-items: center; color: #738078; }
 .empty-candidates { color: #536057; }
-.warning { padding: 12px 14px; border-left: 3px solid #b66c13; background: #fff7e8; }
+.warning { overflow-wrap: anywhere; padding: 12px 14px; border-left: 3px solid #b66c13; background: #fff7e8; }
 .redaction-panel { margin-top: 20px; }
 .redaction-panel h2 { margin: 5px 0 8px; }
 .pdf-strategy-options { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 10px; margin: 18px 0 10px; }

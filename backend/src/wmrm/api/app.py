@@ -122,6 +122,7 @@ def create_app(
         max_bytes=config.xhs_metadata_max_bytes,
         media_max_bytes=min(config.xhs_media_max_bytes, config.max_upload_bytes),
         max_redirects=config.xhs_metadata_max_redirects,
+        https_proxy=config.xhs_https_proxy,
         transport=xiaohongshu_transport,
         media_transport=xiaohongshu_media_transport,
     )

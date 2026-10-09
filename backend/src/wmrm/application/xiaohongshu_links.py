@@ -21,6 +21,7 @@ class XiaohongshuLinkService:
         max_bytes: int,
         media_max_bytes: int,
         max_redirects: int,
+        https_proxy: str | None = None,
         transport: MetadataTransport | None = None,
         media_transport: MediaTransport | None = None,
     ) -> None:
@@ -30,8 +31,8 @@ class XiaohongshuLinkService:
         self.max_bytes = max_bytes
         self.media_max_bytes = media_max_bytes
         self.max_redirects = max_redirects
-        self.transport = transport or PublicHttpsTransport()
-        self.media_transport = media_transport or PublicMediaTransport()
+        self.transport = transport or PublicHttpsTransport(https_proxy)
+        self.media_transport = media_transport or PublicMediaTransport(https_proxy)
 
     def preview(self, share_text: str, resolve: bool) -> dict[str, object]:
         parsed = parse_share_text(share_text)

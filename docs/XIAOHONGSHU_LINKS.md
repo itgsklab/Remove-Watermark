@@ -32,8 +32,9 @@
 
 - 仅接受 `https`，拒绝用户信息、非 443 端口、IP 地址和相似后缀域名。
 - 直链和每一次跳转都必须落在精确允许列表内。
-- 生产传输层先解析 DNS，拒绝任一非公网结果，再把连接固定到已检查的 IP；TLS 仍按原始域名校验证书。
-- 不使用系统 HTTP 代理，不自动携带 Cookie，也不把输入链接写入持久化存储。
+- 默认直连传输层先解析 DNS，拒绝任一非公网结果，再把连接固定到已检查的 IP；TLS 仍按原始域名校验证书。
+- 不自动读取系统 HTTP 代理，不自动携带 Cookie，也不把输入链接写入持久化存储。
+- 可显式配置仅限 IP 字面量 `127.0.0.1` 或 `::1` 的本机 HTTP CONNECT 代理。代理模式跳过容易被 fake-IP 污染的本机目标 DNS，但每个页面、跳转和媒体目标仍先经过精确域名与 HTTPS 校验，TLS 仍按目标域名验证。
 - 元数据响应必须是 HTML，默认最多读取 512 KiB、等待 5 秒、跟随 3 次跳转。
 - API 输出会移除查询参数，避免把分享令牌或跟踪参数回显给界面。
 - 页面声明的媒体地址必须使用 HTTP(S)，且主机必须是 `xhscdn.com` 或其子域；HTTP 声明会在发起请求前升级为 HTTPS，不允许显式端口。每次媒体跳转仍只接受 HTTPS，并重新执行相同校验。
@@ -47,12 +48,24 @@ WMRM_XHS_MEDIA_IMPORT_ENABLED=true \
 wmrm-api
 ```
 
+如果本机代理软件使用 fake-IP DNS，直连模式会把 `198.18.0.0/15` 等非公网结果作为 SSRF 风险拒绝。此时可以显式指定本机 HTTP CONNECT 端口：
+
+```bash
+WMRM_XHS_METADATA_ENABLED=true \
+WMRM_XHS_MEDIA_IMPORT_ENABLED=true \
+WMRM_XHS_HTTPS_PROXY=http://127.0.0.1:7890 \
+wmrm-api
+```
+
+代理配置不接受 `localhost`、局域网/公网地址、HTTPS 代理、认证信息、路径、查询参数或缺失端口。默认值为空；项目不会自动继承系统代理设置。
+
 可调整的本机配置：
 
 - `WMRM_XHS_METADATA_TIMEOUT_SECONDS`：默认 `5`
 - `WMRM_XHS_METADATA_MAX_BYTES`：默认 `524288`
 - `WMRM_XHS_METADATA_MAX_REDIRECTS`：默认 `3`
 - `WMRM_XHS_MEDIA_MAX_BYTES`：默认 `26214400`，并且不会超过全局上传上限
+- `WMRM_XHS_HTTPS_PROXY`：默认空；可选的回环 HTTP CONNECT 代理，例如 `http://127.0.0.1:7890`
 
 ## 响应语义
 

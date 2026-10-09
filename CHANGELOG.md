@@ -41,5 +41,7 @@ All notable changes to this project are documented in this file. The format foll
   hosts, public DNS results, pinned connections, bounded redirects, image types and size limits.
 - Page-declared HTTP image metadata is accepted only for the approved Xiaohongshu CDN and upgraded
   to HTTPS before any network request; redirects and media downloads remain HTTPS-only.
+- Optional Xiaohongshu proxy mode accepts only an explicit loopback HTTP CONNECT endpoint, keeps
+  target allowlists and TLS validation, and avoids fake-IP DNS without inheriting system proxies.
 
 [Unreleased]: https://github.com/itgsklab/Remove-Watermark/commits/main

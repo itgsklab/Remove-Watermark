@@ -283,24 +283,77 @@ class _PinnedHTTPSConnection(http.client.HTTPSConnection):
         self.sock = self._context.wrap_socket(raw_socket, server_hostname=self.host)
 
 
+@dataclass(frozen=True)
+class _LoopbackProxy:
+    host: str
+    port: int
+
+
+def _parse_loopback_proxy(url: str | None) -> _LoopbackProxy | None:
+    if not url:
+        return None
+    try:
+        parts = urlsplit(url)
+        host = parts.hostname or ""
+        port = parts.port
+        address = ipaddress.ip_address(host)
+    except (UnicodeError, ValueError) as exc:
+        raise ValueError("小红书 HTTPS 代理地址格式无效。") from exc
+    if (
+        parts.scheme.lower() != "http"
+        or not address.is_loopback
+        or port is None
+        or parts.username is not None
+        or parts.password is not None
+        or parts.path not in {"", "/"}
+        or parts.query
+        or parts.fragment
+    ):
+        raise ValueError("小红书 HTTPS 代理只接受带端口的回环 HTTP 地址。")
+    return _LoopbackProxy(str(address), port)
+
+
+class _LoopbackProxyHTTPSConnection(http.client.HTTPConnection):
+    def __init__(self, proxy: _LoopbackProxy, target_host: str, *, timeout: float):
+        super().__init__(proxy.host, port=proxy.port, timeout=timeout)
+        self._target_host = target_host
+        self._context = ssl.create_default_context()
+        self.set_tunnel(target_host, port=443)
+
+    def connect(self) -> None:
+        super().connect()
+        self.sock = self._context.wrap_socket(self.sock, server_hostname=self._target_host)
+
+
+def _https_connection(
+    host: str, timeout: float, proxy: _LoopbackProxy | None
+) -> http.client.HTTPConnection:
+    if proxy is not None:
+        return _LoopbackProxyHTTPSConnection(proxy, host, timeout=timeout)
+    return _PinnedHTTPSConnection(host, _resolve_public_ip(host), timeout=timeout)
+
+
 class PublicHttpsTransport:
     """Fetch one validated HTTPS page while pinning the checked public IP address."""
 
     user_agent = "wmrm-metadata-preview/0.1"
 
+    def __init__(self, https_proxy: str | None = None):
+        self.proxy = _parse_loopback_proxy(https_proxy)
+
     def fetch(self, url: str, *, timeout: float, max_bytes: int) -> MetadataResponse:
         parsed = parse_url(url)
         parts = urlsplit(parsed.request_url)
         host = parts.hostname or ""
-        ip = _resolve_public_ip(host)
         target = urlunsplit(("", "", parts.path or "/", parts.query, ""))
-        connection = _PinnedHTTPSConnection(host, ip, timeout=timeout)
+        connection = _https_connection(host, timeout, self.proxy)
         try:
             connection.request(
                 "GET",
                 target,
                 headers={
                     "Accept": "text/html,application/xhtml+xml",
+                    "Host": host,
                     "User-Agent": self.user_agent,
                 },
             )
@@ -326,19 +379,22 @@ class PublicMediaTransport:
 
     user_agent = "wmrm-media-import/0.1"
 
+    def __init__(self, https_proxy: str | None = None):
+        self.proxy = _parse_loopback_proxy(https_proxy)
+
     def fetch(self, url: str, *, timeout: float, max_bytes: int) -> MetadataResponse:
         normalized = parse_media_url(url)
         parts = urlsplit(normalized)
         host = parts.hostname or ""
-        ip = _resolve_public_ip(host)
         target = urlunsplit(("", "", parts.path or "/", parts.query, ""))
-        connection = _PinnedHTTPSConnection(host, ip, timeout=timeout)
+        connection = _https_connection(host, timeout, self.proxy)
         try:
             connection.request(
                 "GET",
                 target,
                 headers={
                     "Accept": "image/avif,image/webp,image/png,image/jpeg",
+                    "Host": host,
                     "User-Agent": self.user_agent,
                 },
             )

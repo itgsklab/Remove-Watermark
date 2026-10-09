@@ -179,7 +179,7 @@ async function importCandidate(candidateId: string) {
             {{ importingCandidate === candidate.candidate_id ? '正在导入…' : '导入并检查' }}
           </button>
         </div>
-        <p v-if="!linkPreview.media_download_supported" class="warning">本机尚未启用图片导入。设置 WMRM_XHS_METADATA_ENABLED=true 和 WMRM_XHS_MEDIA_IMPORT_ENABLED=true 后重启服务。</p>
+        <p v-if="!linkPreview.media_download_supported" class="warning">本机尚未启用图片导入。设置 WMRM_XHS_METADATA_ENABLED=true 和 WMRM_XHS_MEDIA_IMPORT_ENABLED=true 后重启服务；使用 fake-IP DNS 时可另设 WMRM_XHS_HTTPS_PROXY。</p>
       </div>
       <p class="hint">请只导入和处理你有权使用的内容。图片候选来自页面公开元数据，不保证是原始全尺寸图片，也不保证页面始终提供完整图集。</p>
       <p v-for="warning in linkPreview.warnings" :key="warning" class="warning">{{ warning }}</p>

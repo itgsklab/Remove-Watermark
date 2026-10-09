@@ -5,9 +5,12 @@ import pytest
 from fastapi.testclient import TestClient
 from PIL import Image
 
+import wmrm.adapters.xiaohongshu.links as xhs_links
 from wmrm.adapters.xiaohongshu.links import (
     MediaCandidate,
     MetadataResponse,
+    PublicHttpsTransport,
+    PublicMediaTransport,
     XiaohongshuLinkError,
     download_image,
     parse_share_text,
@@ -29,6 +32,20 @@ class FakeTransport:
         assert max_bytes >= 1024
         self.urls.append(url)
         return self.responses.pop(0)
+
+
+class FakeHttpResponse:
+    status = 200
+
+    def __init__(self, body: bytes, content_type: str):
+        self.body = body
+        self.content_type = content_type
+
+    def read(self, limit: int) -> bytes:
+        return self.body[:limit]
+
+    def getheaders(self) -> list[tuple[str, str]]:
+        return [("Content-Type", self.content_type)]
 
 
 def test_parses_direct_note_and_removes_query_from_public_result() -> None:
@@ -70,6 +87,74 @@ def test_rejects_invalid_or_ambiguous_input(value: str, code: str) -> None:
     with pytest.raises(XiaohongshuLinkError) as error:
         parse_share_text(value)
     assert error.value.code == code
+
+
+@pytest.mark.parametrize(
+    "proxy_url",
+    [
+        "https://127.0.0.1:7890",
+        "http://localhost:7890",
+        "http://192.168.1.2:7890",
+        "http://user@127.0.0.1:7890",
+        "http://127.0.0.1:7890/proxy",
+        "http://127.0.0.1",
+    ],
+)
+def test_rejects_non_loopback_or_ambiguous_https_proxy(proxy_url: str) -> None:
+    with pytest.raises(ValueError, match="小红书 HTTPS 代理"):
+        PublicHttpsTransport(proxy_url)
+
+
+def test_accepts_ipv4_and_ipv6_loopback_https_proxies() -> None:
+    assert PublicHttpsTransport("http://127.0.0.1:7890").proxy is not None
+    assert PublicMediaTransport("http://[::1]:7890").proxy is not None
+
+
+def test_proxy_transport_tunnels_allowlisted_host_without_local_dns(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: dict[str, object] = {}
+
+    class FakeConnection:
+        def request(self, method: str, target: str, *, headers: dict[str, str]) -> None:
+            calls.update(method=method, target=target, headers=headers)
+
+        def getresponse(self) -> FakeHttpResponse:
+            return FakeHttpResponse(b"<title>Proxy result</title>", "text/html")
+
+        def close(self) -> None:
+            calls["closed"] = True
+
+    def connection_factory(proxy, host: str, *, timeout: float):
+        calls.update(proxy_host=proxy.host, proxy_port=proxy.port, host=host, timeout=timeout)
+        return FakeConnection()
+
+    def fail_dns(_: str) -> str:
+        raise AssertionError("proxy mode must not use fake-IP local DNS")
+
+    monkeypatch.setattr(xhs_links, "_LoopbackProxyHTTPSConnection", connection_factory)
+    monkeypatch.setattr(xhs_links, "_resolve_public_ip", fail_dns)
+    response = PublicHttpsTransport("http://127.0.0.1:7890").fetch(
+        f"https://www.xiaohongshu.com/explore/{NOTE_ID}",
+        timeout=2,
+        max_bytes=100_000,
+    )
+
+    assert response.status == 200
+    assert calls == {
+        "proxy_host": "127.0.0.1",
+        "proxy_port": 7890,
+        "host": "www.xiaohongshu.com",
+        "timeout": 2,
+        "method": "GET",
+        "target": f"/explore/{NOTE_ID}",
+        "headers": {
+            "Accept": "text/html,application/xhtml+xml",
+            "Host": "www.xiaohongshu.com",
+            "User-Agent": "wmrm-metadata-preview/0.1",
+        },
+        "closed": True,
+    }
 
 
 def test_resolves_short_link_to_metadata_without_returning_media_url() -> None:
