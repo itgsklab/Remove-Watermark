@@ -2,7 +2,7 @@
 
 面向 DOCX、PDF、CodeCV 简历和小红书图片的本地优先水印处理工具。
 
-> 当前状态：`0.1.0rc1` 发布候选后的开发版本。已完成 DOCX VML、CodeCV PDF 平铺水印、通用 PDF 区域物理删除、PDF Deep 栅格修复与可搜索文字层、静态图片矩形蒙版的处理闭环，以及小红书分享链接解析与公开封面安全导入。用户界面采用 Vue Web 页面，不提供原生桌面 App。
+> 当前状态：`0.1.0rc1` 发布候选后的开发版本。已完成 DOCX VML、CodeCV PDF 平铺水印、通用 PDF 区域物理删除、PDF Deep 栅格修复与可搜索文字层、静态图片矩形蒙版的处理闭环，以及小红书分享链接解析与公开页面图片安全导入。用户界面采用 Vue Web 页面，不提供原生桌面 App。
 
 ## 技术栈
 
@@ -68,8 +68,8 @@ make web-run
 
 - `GET /api/v1/health`
 - `GET /api/v1/capabilities`
-- `POST /api/v1/xiaohongshu/preview`（解析分享文案；可选读取标题、描述和不含 URL 的封面候选）
-- `POST /api/v1/xiaohongshu/import`（重新校验页面和候选后，将公开封面保存为本地图片资产）
+- `POST /api/v1/xiaohongshu/preview`（解析分享文案；可选读取标题、描述和不含 URL 的封面/图集候选）
+- `POST /api/v1/xiaohongshu/import`（重新校验页面和候选后，将公开页面图片保存为本地图片资产）
 - `POST /api/v1/assets`
 - `GET /api/v1/assets/{asset_id}`
 - `GET /api/v1/assets/{asset_id}/content`（受控提供本地预览源文件）
@@ -109,7 +109,7 @@ CodeCV PDF 只删除扫描阶段确认的内容流操作序列，不按固定资
 
 PNG、JPEG 和 WebP 可以进行元数据检查和矩形蒙版编辑。蒙版预览会分析区域周围的纹理、边缘、周期性和结构线，并对高复杂度背景要求显式确认。覆盖达到图片面积 10% 或选区与周围平均亮度差异低于 4% 时，也会提示大面积或半透明水印风险并要求确认。静态图片使用 OpenCV Telea 算法修复所选区域，在独立 worker 中生成无损 PNG 副本；输出会重新解码，并验证尺寸以及蒙版外像素完全一致。输出会应用 EXIF 方向并移除原始 EXIF、ICC 等元数据。动态图仍只支持检查。
 
-小红书入口可以从分享文案中提取 HTTPS 笔记直链或短链。纯链接解析不访问网络；页面读取和图片导入分别通过 `WMRM_XHS_METADATA_ENABLED=true`、`WMRM_XHS_MEDIA_IMPORT_ENABLED=true` 显式启用。预览只返回不含 CDN URL 的候选编号；导入时后端重新读取页面并校验候选，再将公开页面声明的 JPEG、PNG 或 WebP 封面保存到本地资产库，随后复用现有图片检查和蒙版修复流程。它不执行页面 JavaScript、不使用登录 Cookie、不处理视频，也不承诺封面候选是原始全尺寸图片。安全模型和配置见 [docs/XIAOHONGSHU_LINKS.md](docs/XIAOHONGSHU_LINKS.md)。
+小红书入口可以从分享文案中提取 HTTPS 笔记直链或短链。纯链接解析不访问网络；页面读取和图片导入分别通过 `WMRM_XHS_METADATA_ENABLED=true`、`WMRM_XHS_MEDIA_IMPORT_ENABLED=true` 显式启用。预览只返回不含 CDN URL 的候选编号；导入时后端重新读取页面并校验候选，再将公开页面声明的 JPEG、PNG 或 WebP 封面/图集图片保存到本地资产库，随后复用现有图片检查和蒙版修复流程。页面中由受限 CDN 以 HTTP 形式声明的图片会先升级为 HTTPS，实际请求不会使用明文 HTTP。它不执行页面 JavaScript、不使用登录 Cookie、不处理视频，也不承诺图片候选是原始全尺寸图片或完整图集。安全模型和配置见 [docs/XIAOHONGSHU_LINKS.md](docs/XIAOHONGSHU_LINKS.md)。
 
 任务元数据保存在 SQLite 中。单个任务在独立的 `spawn` 子进程中处理，由常驻监督线程串行调度；子进程崩溃会转为明确的失败状态，取消超时会强制终止子进程。服务重启后，排队或意外中断的任务会重新校验并执行，正在取消的任务会完成取消。取消宽限期默认 2 秒，可通过 `WMRM_WORKER_CANCEL_GRACE_SECONDS` 调整。
 

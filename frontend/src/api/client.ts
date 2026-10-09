@@ -38,7 +38,7 @@ export interface XiaohongshuPreview {
   media_candidates: Array<{
     candidate_id: string
     position: number
-    role: 'cover'
+    role: 'cover' | 'gallery'
   }>
   warnings: string[]
 }

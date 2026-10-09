@@ -190,18 +190,19 @@ def extract_metadata(body: bytes, page_url: str) -> LinkMetadata:
     seen_urls: set[str] = set()
     for _, media_url in parser.media_urls:
         try:
-            normalized_media = parse_media_url(urljoin(page_url, media_url))
+            normalized_media = parse_page_media_url(urljoin(page_url, media_url))
         except XiaohongshuLinkError:
             warnings.append("页面提供了不受支持的图片地址，已忽略。")
             continue
         if normalized_media in seen_urls:
             continue
         seen_urls.add(normalized_media)
+        position = len(candidates) + 1
         candidates.append(
             MediaCandidate(
                 candidate_id=_media_candidate_id(normalized_media),
-                position=len(candidates) + 1,
-                role="cover",
+                position=position,
+                role="cover" if position == 1 else "gallery",
                 source_url=normalized_media,
             )
         )
@@ -232,6 +233,27 @@ def parse_media_url(url: str) -> str:
     if parts.scheme.lower() != "https":
         raise XiaohongshuLinkError("XHS_MEDIA_HTTPS_REQUIRED", "图片地址必须使用 HTTPS。")
     if parts.username is not None or parts.password is not None or port not in {None, 443}:
+        raise XiaohongshuLinkError("XHS_MEDIA_URL_INVALID", "图片地址包含不允许的信息。")
+    if host != MEDIA_HOST and not host.endswith(f".{MEDIA_HOST}"):
+        raise XiaohongshuLinkError("XHS_MEDIA_HOST_NOT_ALLOWED", "图片地址不在受支持的 CDN。")
+    if not parts.path or parts.path == "/":
+        raise XiaohongshuLinkError("XHS_MEDIA_URL_INVALID", "图片地址缺少资源路径。")
+    return urlunsplit(("https", host, parts.path, parts.query, ""))
+
+
+def parse_page_media_url(url: str) -> str:
+    """Validate page-declared CDN media and upgrade an HTTP declaration to HTTPS."""
+    if len(url) > 4096:
+        raise XiaohongshuLinkError("XHS_MEDIA_URL_INVALID", "图片地址过长。")
+    try:
+        parts = urlsplit(url)
+        host = (parts.hostname or "").encode("idna").decode("ascii").lower()
+        port = parts.port
+    except (UnicodeError, ValueError) as exc:
+        raise XiaohongshuLinkError("XHS_MEDIA_URL_INVALID", "图片地址格式无效。") from exc
+    if parts.scheme.lower() not in {"http", "https"}:
+        raise XiaohongshuLinkError("XHS_MEDIA_HTTPS_REQUIRED", "图片地址必须使用 HTTP(S)。")
+    if parts.username is not None or parts.password is not None or port is not None:
         raise XiaohongshuLinkError("XHS_MEDIA_URL_INVALID", "图片地址包含不允许的信息。")
     if host != MEDIA_HOST and not host.endswith(f".{MEDIA_HOST}"):
         raise XiaohongshuLinkError("XHS_MEDIA_HOST_NOT_ALLOWED", "图片地址不在受支持的 CDN。")

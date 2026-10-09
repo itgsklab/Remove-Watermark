@@ -287,6 +287,41 @@ def test_preview_ignores_media_url_outside_xiaohongshu_cdn() -> None:
     assert metadata.warnings == ("页面提供了不受支持的图片地址，已忽略。",)
 
 
+def test_extracts_page_declared_gallery_and_upgrades_cdn_urls_to_https() -> None:
+    first = "http://sns-webpic-qc.xhscdn.com/first.jpg?token=one"
+    second = "http://sns-webpic-qc.xhscdn.com/second.jpg?token=two"
+    transport = FakeTransport(
+        [
+            MetadataResponse(
+                200,
+                {"content-type": "text/html"},
+                (
+                    '<meta property="og:image" content="//picasso-static.xiaohongshu.com/logo.png">'
+                    f'<meta property="og:image" content="{first}">'
+                    f'<meta property="og:image" content="{second}">'
+                    f'<meta property="og:image" content="{second}">'
+                ).encode(),
+            )
+        ]
+    )
+
+    metadata = resolve_metadata(
+        parse_share_text(f"https://www.xiaohongshu.com/explore/{NOTE_ID}"),
+        transport,
+        timeout=2,
+        max_bytes=100_000,
+        max_redirects=3,
+    )
+
+    assert [(item.position, item.role) for item in metadata.media_candidates] == [
+        (1, "cover"),
+        (2, "gallery"),
+    ]
+    assert metadata.media_candidates[0].source_url == first.replace("http://", "https://")
+    assert metadata.media_candidates[1].source_url == second.replace("http://", "https://")
+    assert metadata.warnings == ("页面提供了不受支持的图片地址，已忽略。",)
+
+
 def test_imports_previewed_cover_into_local_asset_store(tmp_path: Path) -> None:
     media_url = "https://sns-webpic-qc.xhscdn.com/public-cover.png?token=secret"
     html = f'<meta property="og:image" content="{media_url}">'.encode()

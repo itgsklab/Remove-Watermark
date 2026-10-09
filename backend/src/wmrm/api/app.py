@@ -285,7 +285,7 @@ def create_app(
                     id="xiaohongshu_link",
                     label="小红书分享链接",
                     status="experimental",
-                    strategies=["share-link-parse", "metadata-preview", "safe-cover-import"],
+                    strategies=["share-link-parse", "metadata-preview", "safe-page-image-import"],
                 ),
             ],
         )

@@ -41,7 +41,7 @@ class XiaohongshuPreviewRequest(BaseModel):
 class XiaohongshuMediaCandidateResponse(BaseModel):
     candidate_id: str
     position: int = Field(ge=1)
-    role: Literal["cover"]
+    role: Literal["cover", "gallery"]
 
 
 class XiaohongshuPreviewResponse(BaseModel):

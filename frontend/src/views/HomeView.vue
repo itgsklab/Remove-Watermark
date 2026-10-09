@@ -117,9 +117,9 @@ async function importCandidate(candidateId: string) {
         <p class="eyebrow">小红书 · 分享链接</p>
         <h2>先确认笔记地址</h2>
       </div>
-      <span class="boundary-badge">公开封面安全导入</span>
+      <span class="boundary-badge">公开图片安全导入</span>
     </div>
-    <p class="hint">粘贴分享文案或 HTTPS 链接。启用页面读取后，可将公开页面声明的封面候选安全导入本地；不会向浏览器暴露带令牌的 CDN 地址，也不处理视频。</p>
+    <p class="hint">粘贴分享文案或 HTTPS 链接。启用页面读取后，可将公开页面声明的封面和图集候选安全导入本地；不会向浏览器暴露带令牌的 CDN 地址，也不处理视频。</p>
     <label class="share-input-label" for="xhs-share-text">分享内容</label>
     <textarea
       id="xhs-share-text"
@@ -132,7 +132,7 @@ async function importCandidate(candidateId: string) {
     <div class="xhs-actions">
       <label class="metadata-option">
         <input v-model="resolveMetadata" type="checkbox" />
-        <span>尝试读取页面标题、描述和公开封面候选（需后端显式启用）</span>
+        <span>尝试读取页面标题、描述和公开图片候选（需后端显式启用）</span>
       </label>
       <button :disabled="!shareText.trim() || linkBusy" @click="inspectShareLink">
         {{ linkBusy ? '正在解析…' : '解析分享链接' }}
@@ -163,13 +163,13 @@ async function importCandidate(candidateId: string) {
         </div>
         <div>
           <dt>媒体边界</dt>
-          <dd>{{ linkPreview.media_candidates.length ? `发现 ${linkPreview.media_candidates.length} 个公开封面候选` : '未发现可导入封面' }}</dd>
+          <dd>{{ linkPreview.media_candidates.length ? `发现 ${linkPreview.media_candidates.length} 个公开图片候选` : '未发现可导入图片' }}</dd>
         </div>
       </dl>
       <div v-if="linkPreview.media_candidates.length" class="xhs-media-candidates">
         <div v-for="candidate in linkPreview.media_candidates" :key="candidate.candidate_id" class="xhs-media-candidate">
           <div>
-            <strong>封面候选 {{ candidate.position }}</strong>
+            <strong>{{ candidate.role === 'cover' ? '封面候选' : '图集图片' }} {{ candidate.position }}</strong>
             <p>图片地址保留在本地后端，仅导入后进入现有图片检查流程。</p>
           </div>
           <button
@@ -181,7 +181,7 @@ async function importCandidate(candidateId: string) {
         </div>
         <p v-if="!linkPreview.media_download_supported" class="warning">本机尚未启用图片导入。设置 WMRM_XHS_METADATA_ENABLED=true 和 WMRM_XHS_MEDIA_IMPORT_ENABLED=true 后重启服务。</p>
       </div>
-      <p class="hint">请只导入和处理你有权使用的内容。封面候选来自页面公开元数据，不保证是原始全尺寸图片。</p>
+      <p class="hint">请只导入和处理你有权使用的内容。图片候选来自页面公开元数据，不保证是原始全尺寸图片，也不保证页面始终提供完整图集。</p>
       <p v-for="warning in linkPreview.warnings" :key="warning" class="warning">{{ warning }}</p>
     </article>
   </section>
