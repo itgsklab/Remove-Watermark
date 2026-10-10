@@ -22,27 +22,148 @@
     "minimum_precision": 0.75,
     "minimum_recall": 0.85,
     "minimum_sample_count": 20,
-    "minimum_negative_count": 10
+    "minimum_negative_count": 10,
+    "minimum_scene_kind_count": 4,
+    "minimum_paired_scene_count": 7
   },
   "summary": {
-    "sample_count": 6,
-    "positive_count": 3,
-    "negative_count": 3,
-    "true_positive": 3,
-    "false_positive": 1,
-    "false_negative": 0,
-    "precision": 0.75,
-    "recall": 1.0,
-    "f1": 0.857143,
-    "mean_matched_iou": 0.839341,
-    "metric_gate": "pass",
-    "evidence_gate": "fail",
+    "sample_count": 20,
+    "positive_count": 10,
+    "negative_count": 10,
+    "scene_kind_count": 4,
+    "paired_scene_count": 7,
+    "true_positive": 6,
+    "false_positive": 14,
+    "false_negative": 4,
+    "precision": 0.3,
+    "recall": 0.6,
+    "f1": 0.4,
+    "mean_matched_iou": 0.82489,
+    "metric_gate": "fail",
+    "evidence_gate": "pass",
     "release_claim_allowed": false
   },
+  "scene_breakdown": [
+    {
+      "scene_kind": "document",
+      "sample_count": 2,
+      "positive_count": 1,
+      "negative_count": 1,
+      "true_positive": 0,
+      "false_positive": 2,
+      "false_negative": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    {
+      "scene_kind": "natural_scene",
+      "sample_count": 9,
+      "positive_count": 5,
+      "negative_count": 4,
+      "true_positive": 5,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "scene_kind": "ordinary_ui",
+      "sample_count": 7,
+      "positive_count": 3,
+      "negative_count": 4,
+      "true_positive": 1,
+      "false_positive": 10,
+      "false_negative": 2,
+      "precision": 0.090909,
+      "recall": 0.333333,
+      "f1": 0.142857
+    },
+    {
+      "scene_kind": "typography",
+      "sample_count": 2,
+      "positive_count": 1,
+      "negative_count": 1,
+      "true_positive": 0,
+      "false_positive": 2,
+      "false_negative": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    }
+  ],
+  "pair_diagnostics": [
+    {
+      "pair_id": "code-editor",
+      "scene_kind": "ordinary_ui",
+      "negative_sample_id": "paired-code-editor-negative",
+      "positive_sample_id": "paired-code-editor-positive",
+      "negative_clean": false,
+      "positive_detected": true,
+      "pair_passed": false
+    },
+    {
+      "pair_id": "dashboard",
+      "scene_kind": "ordinary_ui",
+      "negative_sample_id": "paired-dashboard-negative",
+      "positive_sample_id": "paired-dashboard-positive",
+      "negative_clean": false,
+      "positive_detected": false,
+      "pair_passed": false
+    },
+    {
+      "pair_id": "document",
+      "scene_kind": "document",
+      "negative_sample_id": "paired-document-negative",
+      "positive_sample_id": "paired-document-positive",
+      "negative_clean": false,
+      "positive_detected": false,
+      "pair_passed": false
+    },
+    {
+      "pair_id": "mobile-feed",
+      "scene_kind": "ordinary_ui",
+      "negative_sample_id": "paired-mobile-feed-negative",
+      "positive_sample_id": "paired-mobile-feed-positive",
+      "negative_clean": false,
+      "positive_detected": false,
+      "pair_passed": false
+    },
+    {
+      "pair_id": "photo-horizon",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-photo-horizon-negative",
+      "positive_sample_id": "paired-photo-horizon-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "photo-night",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-photo-night-negative",
+      "positive_sample_id": "paired-photo-night-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "poster",
+      "scene_kind": "typography",
+      "negative_sample_id": "paired-poster-negative",
+      "positive_sample_id": "paired-poster-positive",
+      "negative_clean": false,
+      "positive_detected": false,
+      "pair_passed": false
+    }
+  ],
   "samples": [
     {
       "sample_id": "real-horizon-corner",
       "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": null,
       "expected_count": 1,
       "predicted_count": 1,
       "true_positive": 1,
@@ -55,6 +176,8 @@
     {
       "sample_id": "real-horizon-translucent",
       "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": null,
       "expected_count": 1,
       "predicted_count": 1,
       "true_positive": 1,
@@ -67,6 +190,8 @@
     {
       "sample_id": "real-night-multiline",
       "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": null,
       "expected_count": 1,
       "predicted_count": 1,
       "true_positive": 1,
@@ -79,6 +204,8 @@
     {
       "sample_id": "clean-horizon-negative",
       "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": null,
       "expected_count": 0,
       "predicted_count": 0,
       "true_positive": 0,
@@ -89,6 +216,8 @@
     {
       "sample_id": "clean-night-negative",
       "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": null,
       "expected_count": 0,
       "predicted_count": 0,
       "true_positive": 0,
@@ -99,11 +228,187 @@
     {
       "sample_id": "clean-project-ui-negative",
       "kind": "negative",
+      "scene_kind": "ordinary_ui",
+      "pair_id": null,
       "expected_count": 0,
       "predicted_count": 1,
       "true_positive": 0,
       "false_positive": 1,
       "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-photo-horizon-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "photo-horizon",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-photo-horizon-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "photo-horizon",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.871107
+      ]
+    },
+    {
+      "sample_id": "paired-photo-night-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "photo-night",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-photo-night-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "photo-night",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.704126
+      ]
+    },
+    {
+      "sample_id": "paired-dashboard-negative",
+      "kind": "negative",
+      "scene_kind": "ordinary_ui",
+      "pair_id": "dashboard",
+      "expected_count": 0,
+      "predicted_count": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-dashboard-positive",
+      "kind": "positive",
+      "scene_kind": "ordinary_ui",
+      "pair_id": "dashboard",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 1,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-document-negative",
+      "kind": "negative",
+      "scene_kind": "document",
+      "pair_id": "document",
+      "expected_count": 0,
+      "predicted_count": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-document-positive",
+      "kind": "positive",
+      "scene_kind": "document",
+      "pair_id": "document",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 1,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-code-editor-negative",
+      "kind": "negative",
+      "scene_kind": "ordinary_ui",
+      "pair_id": "code-editor",
+      "expected_count": 0,
+      "predicted_count": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-code-editor-positive",
+      "kind": "positive",
+      "scene_kind": "ordinary_ui",
+      "pair_id": "code-editor",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.856082
+      ]
+    },
+    {
+      "sample_id": "paired-poster-negative",
+      "kind": "negative",
+      "scene_kind": "typography",
+      "pair_id": "poster",
+      "expected_count": 0,
+      "predicted_count": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-poster-positive",
+      "kind": "positive",
+      "scene_kind": "typography",
+      "pair_id": "poster",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 1,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-mobile-feed-negative",
+      "kind": "negative",
+      "scene_kind": "ordinary_ui",
+      "pair_id": "mobile-feed",
+      "expected_count": 0,
+      "predicted_count": 3,
+      "true_positive": 0,
+      "false_positive": 3,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-mobile-feed-positive",
+      "kind": "positive",
+      "scene_kind": "ordinary_ui",
+      "pair_id": "mobile-feed",
+      "expected_count": 1,
+      "predicted_count": 3,
+      "true_positive": 0,
+      "false_positive": 3,
+      "false_negative": 1,
       "matched_ious": []
     }
   ]

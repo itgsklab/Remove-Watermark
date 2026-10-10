@@ -77,9 +77,7 @@ def test_verified_local_model_and_injected_runtime(tmp_path: Path) -> None:
 
     image_path = tmp_path / "input.png"
     Image.new("RGB", (20, 20), "white").save(image_path)
-    localizer = Florence2Localizer(
-        model_dir, manifest_path, runtime=FakeRuntime()
-    )
+    localizer = Florence2Localizer(model_dir, manifest_path, runtime=FakeRuntime())
     assert localizer.localize(image_path, "watermark")[0].label == "overlay"
 
 
@@ -108,9 +106,7 @@ def test_localizer_filters_oversized_candidates(tmp_path: Path) -> None:
     model_dir, manifest_path = _model_fixture(tmp_path)
     image_path = tmp_path / "input.png"
     Image.new("RGB", (100, 100), "white").save(image_path)
-    localizer = Florence2Localizer(
-        model_dir, manifest_path, runtime=HugeBoxRuntime()
-    )
+    localizer = Florence2Localizer(model_dir, manifest_path, runtime=HugeBoxRuntime())
 
     assert localizer.localize(image_path, "watermark") == ()
 
@@ -128,7 +124,7 @@ def test_prediction_file_is_marked_as_real_model_output(tmp_path: Path) -> None:
         localizer=FakeLocalizer(),
     )
     assert result["detector"]["is_model_output"] is True
-    assert len(result["predictions"]) == 6
+    assert len(result["predictions"]) == 20
     assert json.loads(output.read_text()) == result
 
 

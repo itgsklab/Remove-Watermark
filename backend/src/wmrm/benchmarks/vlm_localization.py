@@ -26,13 +26,23 @@ def run_localization_benchmark(
     min_recall: float = 0.85,
     min_sample_count: int = 20,
     min_negative_count: int = 10,
+    min_scene_kind_count: int = 4,
+    min_paired_scene_count: int = 7,
     require_model_output: bool = False,
 ) -> dict[str, Any]:
     if not 0 < iou_threshold <= 1:
         raise LocalizationBenchmarkError("IoU threshold must be in (0, 1].")
     if not 0 <= min_precision <= 1 or not 0 <= min_recall <= 1:
         raise LocalizationBenchmarkError("Precision and recall thresholds must be in [0, 1].")
-    if min_sample_count < 1 or min_negative_count < 1:
+    if any(
+        value < 1
+        for value in (
+            min_sample_count,
+            min_negative_count,
+            min_scene_kind_count,
+            min_paired_scene_count,
+        )
+    ):
         raise LocalizationBenchmarkError("Evidence-count thresholds must be positive.")
     manifest_path = manifest_path.resolve()
     predictions_path = predictions_path.resolve()
@@ -64,6 +74,7 @@ def run_localization_benchmark(
 
     results = []
     expected_ids: set[str] = set()
+    pair_members: dict[str, list[dict[str, Any]]] = {}
     totals = {"true_positive": 0, "false_positive": 0, "false_negative": 0}
     matched_ious: list[float] = []
     for sample in samples:
@@ -75,6 +86,10 @@ def run_localization_benchmark(
         expected_ids.add(sample_id)
         if sample.get("review_required") is not False:
             raise LocalizationBenchmarkError(f"Sample {sample_id} requires manual review.")
+        scene_kind = _required_text(sample, "scene_kind")
+        pair_id = sample.get("pair_id")
+        if pair_id is not None and (not isinstance(pair_id, str) or not pair_id.strip()):
+            raise LocalizationBenchmarkError(f"Invalid pair_id for {sample_id}.")
         image_path = _contained_file(manifest_path.parent, _required_text(sample, "file"))
         _verify_sha(image_path, _required_text(sample, "sha256"))
         width = _required_int(sample, "width")
@@ -91,35 +106,37 @@ def run_localization_benchmark(
         for key in totals:
             totals[key] += score[key]
         matched_ious.extend(score["matched_ious"])
-        results.append(
-            {
-                "sample_id": sample_id,
-                "kind": "positive" if expected else "negative",
-                "expected_count": len(expected),
-                "predicted_count": len(actual),
-                "true_positive": score["true_positive"],
-                "false_positive": score["false_positive"],
-                "false_negative": score["false_negative"],
-                "matched_ious": [round(value, 6) for value in score["matched_ious"]],
-            }
-        )
+        result = {
+            "sample_id": sample_id,
+            "kind": "positive" if expected else "negative",
+            "scene_kind": scene_kind,
+            "pair_id": pair_id,
+            "expected_count": len(expected),
+            "predicted_count": len(actual),
+            "true_positive": score["true_positive"],
+            "false_positive": score["false_positive"],
+            "false_negative": score["false_negative"],
+            "matched_ious": [round(value, 6) for value in score["matched_ious"]],
+        }
+        results.append(result)
+        if pair_id is not None:
+            pair_members.setdefault(pair_id, []).append(result)
     extras = sorted(set(prediction_map) - expected_ids)
     if extras:
         raise LocalizationBenchmarkError(f"Predictions contain unknown samples: {extras}")
 
-    precision = _ratio(totals["true_positive"], totals["true_positive"] + totals["false_positive"])
-    recall = _ratio(totals["true_positive"], totals["true_positive"] + totals["false_negative"])
-    f1 = (
-        2 * precision * recall / (precision + recall)
-        if precision + recall
-        else 0.0
-    )
+    pairs = _pair_diagnostics(pair_members)
+    precision, recall, f1 = _precision_recall_f1(totals)
     mean_iou = sum(matched_ious) / len(matched_ious) if matched_ious else 0.0
     gate_passed = precision >= min_precision and recall >= min_recall
     positive_count = sum(item["kind"] == "positive" for item in results)
     negative_count = sum(item["kind"] == "negative" for item in results)
+    scene_kinds = sorted({item["scene_kind"] for item in results})
     evidence_gate_passed = (
-        len(results) >= min_sample_count and negative_count >= min_negative_count
+        len(results) >= min_sample_count
+        and negative_count >= min_negative_count
+        and len(scene_kinds) >= min_scene_kind_count
+        and len(pairs) >= min_paired_scene_count
     )
     report = {
         "schema_version": 1,
@@ -132,11 +149,15 @@ def run_localization_benchmark(
             "minimum_recall": min_recall,
             "minimum_sample_count": min_sample_count,
             "minimum_negative_count": min_negative_count,
+            "minimum_scene_kind_count": min_scene_kind_count,
+            "minimum_paired_scene_count": min_paired_scene_count,
         },
         "summary": {
             "sample_count": len(results),
             "positive_count": positive_count,
             "negative_count": negative_count,
+            "scene_kind_count": len(scene_kinds),
+            "paired_scene_count": len(pairs),
             **totals,
             "precision": round(precision, 6),
             "recall": round(recall, 6),
@@ -146,6 +167,8 @@ def run_localization_benchmark(
             "evidence_gate": "pass" if evidence_gate_passed else "fail",
             "release_claim_allowed": is_model_output and gate_passed and evidence_gate_passed,
         },
+        "scene_breakdown": _scene_breakdown(results),
+        "pair_diagnostics": pairs,
         "samples": results,
     }
     report_json.parent.mkdir(parents=True, exist_ok=True)
@@ -195,9 +218,7 @@ def _boxes(
                 y1=_required_number(value, "y1"),
                 label=_required_text(value, "label"),
                 confidence=(
-                    confidence
-                    if confidence is not None
-                    else _required_number(value, "confidence")
+                    confidence if confidence is not None else _required_number(value, "confidence")
                 ),
             )
         except ValueError as exc:
@@ -266,6 +287,67 @@ def _ratio(numerator: float, denominator: float) -> float:
     return numerator / denominator if denominator else 1.0
 
 
+def _precision_recall_f1(totals: dict[str, int]) -> tuple[float, float, float]:
+    precision = _ratio(totals["true_positive"], totals["true_positive"] + totals["false_positive"])
+    recall = _ratio(totals["true_positive"], totals["true_positive"] + totals["false_negative"])
+    f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
+    return precision, recall, f1
+
+
+def _scene_breakdown(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = []
+    for scene_kind in sorted({item["scene_kind"] for item in results}):
+        samples = [item for item in results if item["scene_kind"] == scene_kind]
+        totals = {
+            key: sum(item[key] for item in samples)
+            for key in ("true_positive", "false_positive", "false_negative")
+        }
+        precision, recall, f1 = _precision_recall_f1(totals)
+        rows.append(
+            {
+                "scene_kind": scene_kind,
+                "sample_count": len(samples),
+                "positive_count": sum(item["kind"] == "positive" for item in samples),
+                "negative_count": sum(item["kind"] == "negative" for item in samples),
+                **totals,
+                "precision": round(precision, 6),
+                "recall": round(recall, 6),
+                "f1": round(f1, 6),
+            }
+        )
+    return rows
+
+
+def _pair_diagnostics(pair_members: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
+    rows = []
+    for pair_id, members in sorted(pair_members.items()):
+        positives = [item for item in members if item["kind"] == "positive"]
+        negatives = [item for item in members if item["kind"] == "negative"]
+        if len(positives) != 1 or len(negatives) != 1:
+            raise LocalizationBenchmarkError(
+                f"Pair {pair_id} must contain exactly one positive and one negative sample."
+            )
+        positive = positives[0]
+        negative = negatives[0]
+        negative_clean = negative["false_positive"] == 0
+        positive_detected = (
+            positive["true_positive"] == positive["expected_count"]
+            and positive["false_positive"] == 0
+        )
+        rows.append(
+            {
+                "pair_id": pair_id,
+                "scene_kind": positive["scene_kind"],
+                "negative_sample_id": negative["sample_id"],
+                "positive_sample_id": positive["sample_id"],
+                "negative_clean": negative_clean,
+                "positive_detected": positive_detected,
+                "pair_passed": negative_clean and positive_detected,
+            }
+        )
+    return rows
+
+
 def _markdown(report: dict[str, Any]) -> str:
     summary = report["summary"]
     rows = [
@@ -279,6 +361,28 @@ def _markdown(report: dict[str, Any]) -> str:
             f"{sample['predicted_count']} | {sample['true_positive']} | "
             f"{sample['false_positive']} | {sample['false_negative']} | "
             f"{', '.join(f'{value:.3f}' for value in ious) if ious else '—'} |"
+        )
+    scene_rows = [
+        "| Scene | Samples | Positives | Negatives | TP | FP | FN | Precision | Recall | F1 |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for scene in report["scene_breakdown"]:
+        scene_rows.append(
+            f"| {scene['scene_kind']} | {scene['sample_count']} | {scene['positive_count']} | "
+            f"{scene['negative_count']} | {scene['true_positive']} | {scene['false_positive']} | "
+            f"{scene['false_negative']} | {scene['precision']:.3f} | {scene['recall']:.3f} | "
+            f"{scene['f1']:.3f} |"
+        )
+    pair_rows = [
+        "| Pair | Scene | Clean negative | Mark detected | Pair pass |",
+        "|---|---|---:|---:|---:|",
+    ]
+    for pair in report["pair_diagnostics"]:
+        pair_rows.append(
+            f"| {pair['pair_id']} | {pair['scene_kind']} | "
+            f"{'yes' if pair['negative_clean'] else 'no'} | "
+            f"{'yes' if pair['positive_detected'] else 'no'} | "
+            f"{'yes' if pair['pair_passed'] else 'no'} |"
         )
     claim = (
         "This report contains real model output."
@@ -295,7 +399,18 @@ def _markdown(report: dict[str, Any]) -> str:
             f"Recall: {summary['recall']:.3f} · F1: {summary['f1']:.3f} · "
             f"Mean matched IoU: {summary['mean_matched_iou']:.3f}",
             f"Evidence gate: **{summary['evidence_gate']}** · "
-            f"Samples: {summary['sample_count']} · Negatives: {summary['negative_count']}",
+            f"Samples: {summary['sample_count']} · Negatives: {summary['negative_count']} · "
+            f"Scenes: {summary['scene_kind_count']} · Pairs: {summary['paired_scene_count']}",
+            "",
+            "## Scene breakdown",
+            "",
+            *scene_rows,
+            "",
+            "## Paired-scene diagnostics",
+            "",
+            *pair_rows,
+            "",
+            "## Samples",
             "",
             *rows,
             "",
@@ -315,6 +430,8 @@ def main() -> None:
     parser.add_argument("--require-model-output", action="store_true")
     parser.add_argument("--min-samples", type=int, default=20)
     parser.add_argument("--min-negatives", type=int, default=10)
+    parser.add_argument("--min-scene-kinds", type=int, default=4)
+    parser.add_argument("--min-paired-scenes", type=int, default=7)
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
     report = run_localization_benchmark(
@@ -325,6 +442,8 @@ def main() -> None:
         require_model_output=args.require_model_output,
         min_sample_count=args.min_samples,
         min_negative_count=args.min_negatives,
+        min_scene_kind_count=args.min_scene_kinds,
+        min_paired_scene_count=args.min_paired_scenes,
     )
     if args.strict and not report["summary"]["release_claim_allowed"]:
         raise SystemExit("Localization release-evidence gate failed.")

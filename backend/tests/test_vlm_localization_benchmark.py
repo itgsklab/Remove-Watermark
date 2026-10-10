@@ -48,9 +48,10 @@ def test_florence_model_manifest_keeps_weights_optional_and_safe() -> None:
     implementation = manifest["runtime_implementation"]
     assert implementation["license"] == "Apache-2.0"
     for record in implementation["vendored_files"]:
-        assert hashlib.sha256((vendor_root / record["path"]).read_bytes()).hexdigest() == record[
-            "sha256"
-        ]
+        assert (
+            hashlib.sha256((vendor_root / record["path"]).read_bytes()).hexdigest()
+            == record["sha256"]
+        )
 
 
 def test_contract_fixture_scores_positive_and_negative_samples(tmp_path: Path) -> None:
@@ -62,14 +63,16 @@ def test_contract_fixture_scores_positive_and_negative_samples(tmp_path: Path) -
     )
 
     assert report["evaluation_kind"] == "contract_fixture"
-    assert report["summary"]["sample_count"] == 6
-    assert report["summary"]["positive_count"] == 3
-    assert report["summary"]["negative_count"] == 3
-    assert report["summary"]["true_positive"] == 3
+    assert report["summary"]["sample_count"] == 20
+    assert report["summary"]["positive_count"] == 10
+    assert report["summary"]["negative_count"] == 10
+    assert report["summary"]["scene_kind_count"] == 4
+    assert report["summary"]["paired_scene_count"] == 7
+    assert report["summary"]["true_positive"] == 10
     assert report["summary"]["false_positive"] == 0
     assert report["summary"]["false_negative"] == 0
     assert report["summary"]["metric_gate"] == "pass"
-    assert report["summary"]["evidence_gate"] == "fail"
+    assert report["summary"]["evidence_gate"] == "pass"
     assert report["summary"]["release_claim_allowed"] is False
     assert "not a model performance result" in (tmp_path / "report.md").read_text()
 
@@ -96,8 +99,6 @@ def test_release_claim_requires_model_metrics_and_minimum_evidence(tmp_path: Pat
         predictions_path,
         report_json=tmp_path / "report.json",
         report_markdown=tmp_path / "report.md",
-        min_sample_count=6,
-        min_negative_count=3,
         require_model_output=True,
     )
 
@@ -144,7 +145,28 @@ def test_benchmark_counts_negative_false_positive(tmp_path: Path) -> None:
     )
 
     assert report["summary"]["false_positive"] == 1
-    assert report["summary"]["precision"] == 0.75
+    assert report["summary"]["precision"] == pytest.approx(10 / 11)
+
+
+def test_report_exposes_scene_and_pair_diagnostics(tmp_path: Path) -> None:
+    report = run_localization_benchmark(
+        FIXTURES / "manifest.json",
+        FIXTURES / "contract-predictions.json",
+        report_json=tmp_path / "report.json",
+        report_markdown=tmp_path / "report.md",
+    )
+
+    assert {row["scene_kind"] for row in report["scene_breakdown"]} == {
+        "document",
+        "natural_scene",
+        "ordinary_ui",
+        "typography",
+    }
+    assert len(report["pair_diagnostics"]) == 7
+    assert all(row["pair_passed"] for row in report["pair_diagnostics"])
+    markdown = (tmp_path / "report.md").read_text()
+    assert "## Scene breakdown" in markdown
+    assert "## Paired-scene diagnostics" in markdown
 
 
 def test_zero_recall_has_zero_f1(tmp_path: Path) -> None:

@@ -65,25 +65,31 @@ Florence-2 的生成式边界框没有经过校准的置信度，因此适配器
 
 ## 可复现基准
 
-基准清单目前包含三张有水印正样本和三张无水印负样本。底图来自仓库中已记录来源与摘要
-的 NASA 图片以及无用户数据的项目 UI 截图；水印由项目确定性生成。评分包括：
+基准清单目前包含 10 张有水印正样本和 10 张无水印负样本。除原有 NASA 图片和无用户
+数据的项目 UI 截图外，新增 7 组确定性生成的干净/带水印配对场景，覆盖自然照片、普通
+Web UI、文档、代码编辑器、排版海报和移动信息流。所有生成样本都可以用
+`make vlm-localization-corpus` 重建。评分包括：
 
 - IoU 大于等于 0.5 的一对一匹配；
 - Precision、Recall、F1 和匹配框平均 IoU；
 - 无水印负样本上的误报；
+- 按场景类型拆分的 Precision、Recall 和 F1；
+- 同一底图干净版无误报且带水印版正确命中的配对诊断；
 - 图片 SHA-256、尺寸、边界和人工复核状态校验。
 
 当前提交的合同预测文件是几何夹具，用于证明评分器会通过正确框、拒绝越界框并统计负样本
 误报。它明确设置 `is_model_output=false`，因此即使指标门禁通过，也不能形成模型效果声明。
 真实模型评估必须使用 `--require-model-output`，达到 Precision 0.75、Recall 0.85，并至少
-覆盖 20 个样本、其中 10 个负样本。严格模式只有指标和证据数量同时通过才返回成功。
+覆盖 20 个样本、其中 10 个负样本、4 类场景和 7 组正负配对。严格模式只有指标和证据
+多样性同时通过才返回成功。
 
-2026-10-10 的当前真实模型运行记录在
+2026-10-11 的当前真实模型运行记录在
 [`benchmarks/vlm-localization-model.md`](benchmarks/vlm-localization-model.md)：单一 `watermark`
-提示命中全部 3 个正样本，两个超大框被安全过滤；文字密集的项目 UI 负样本仍产生一次
-误报。Precision 0.750、Recall 1.000、F1 0.857，指标门禁通过，但 6 个样本、3 个负样本
-未达到最低证据数量。因此 `release_claim_allowed=false`，适配器仍仅用于显式离线评估，
-不进入 API 或 Web 自动选择。
+提示在自然照片子集得到 Precision 1.000、Recall 1.000，但在普通 UI、文档和排版场景中
+会把菜单、标题、按钮和内容卡片误识别为水印。全量结果为 Precision 0.300、Recall 0.600、
+F1 0.400；证据门禁通过，指标门禁失败。`transparent watermark`、`watermark overlay`、
+`logo watermark` 和 `overlaid watermark` 的本地对照也没有同时改善误报与漏报。因此
+`release_claim_allowed=false`，适配器仍仅用于显式离线评估，不进入 API 或 Web 自动选择。
 
 复现合同评分：
 
