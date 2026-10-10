@@ -91,6 +91,28 @@ F1 0.400；证据门禁通过，指标门禁失败。`transparent watermark`、`
 `logo watermark` 和 `overlaid watermark` 的本地对照也没有同时改善误报与漏报。因此
 `release_claim_allowed=false`，适配器仍仅用于显式离线评估，不进入 API 或 Web 自动选择。
 
+## 自然照片场景门禁
+
+[`PhotoSceneGate`](../backend/src/wmrm/adapters/images/photo_scene.py) 在 VLM 推理前只读取解码后的
+像素，不读取文件名、扩展名、EXIF、模型检测结果、文字标签或水印坐标。它把图像最长边缩小
+到 256 像素，同时要求全局亮度熵不低于 4.5、16 级 RGB 量化颜色不少于 128 种。两个条件
+都满足时才允许 Florence-2 运行；其余图片回退到现有手动框选流程。
+
+固定20样本上的门禁分类 Precision、Recall 和 Specificity 均为 1.000，7 组水印加入前后判定
+全部稳定。门禁后的自然照片定位 Precision、Recall 均为 1.000；全场景结果则是 Precision
+1.000、Recall 0.500，因为门禁会主动放弃 UI、文档和排版场景。详细结果见
+[`benchmarks/vlm-photo-gate.md`](benchmarks/vlm-photo-gate.md) 和
+[`benchmarks/vlm-photo-gated-localization.md`](benchmarks/vlm-photo-gated-localization.md)。
+
+当前 9 个照片样本只来自两个独立 NASA 图片来源，未达到至少 10 个独立照片来源的证据要求，
+所以 `release_claim_allowed=false`，门禁和 Florence-2 仍不进入 API/Web。它可以在本机显式
+评估，并且非照片样本不会执行模型推理：
+
+```bash
+make vlm-localization-model-photo-gated
+make vlm-photo-gate
+```
+
 复现合同评分：
 
 ```bash

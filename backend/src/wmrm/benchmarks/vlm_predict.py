@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from wmrm.adapters.images.florence2 import Florence2Localizer
+from wmrm.adapters.images.photo_scene import PhotoGatedLocalizer, WatermarkLocalizer
 
 DEFAULT_PROMPT = "watermark"
 
@@ -18,15 +19,16 @@ def generate_predictions(
     *,
     prompt: str = DEFAULT_PROMPT,
     device: str = "auto",
-    localizer: Florence2Localizer | None = None,
+    localizer: WatermarkLocalizer | None = None,
+    use_photo_scene_gate: bool = False,
 ) -> dict[str, Any]:
     corpus_manifest = corpus_manifest.resolve()
     corpus = json.loads(corpus_manifest.read_text(encoding="utf-8"))
     if corpus.get("schema_version") != 1 or not isinstance(corpus.get("samples"), list):
         raise ValueError("Unsupported localization corpus manifest.")
-    detector = localizer or Florence2Localizer(
-        model_dir, model_manifest, device=device
-    )
+    detector = localizer or Florence2Localizer(model_dir, model_manifest, device=device)
+    if use_photo_scene_gate:
+        detector = PhotoGatedLocalizer(detector)
     rows = []
     for sample in corpus["samples"]:
         sample_id = sample.get("id")
@@ -80,6 +82,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--prompt", default=DEFAULT_PROMPT)
     parser.add_argument("--device", choices=("auto", "cpu", "mps", "cuda"), default="auto")
+    parser.add_argument("--photo-scene-gate", action="store_true")
     args = parser.parse_args()
     generate_predictions(
         args.manifest,
@@ -88,6 +91,7 @@ def main() -> None:
         args.output,
         prompt=args.prompt,
         device=args.device,
+        use_photo_scene_gate=args.photo_scene_gate,
     )
 
 

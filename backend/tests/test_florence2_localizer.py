@@ -30,6 +30,7 @@ class HugeBoxRuntime:
 class FakeLocalizer:
     model_id = "test/model"
     model_revision = "a" * 40
+    runtime_metadata = {"kind": "fake"}
 
     def localize(self, image_path: Path, prompt: str):
         assert image_path.is_file()

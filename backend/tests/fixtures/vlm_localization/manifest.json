@@ -18,6 +18,7 @@
         }
       ],
       "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
       "pair_id": null,
       "provenance": "NASA source photograph with repository-generated opaque corner overlay.",
       "review_required": false
@@ -38,6 +39,7 @@
         }
       ],
       "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
       "pair_id": null,
       "provenance": "NASA source photograph with repository-generated translucent center text. Visible glyph bounds come from the deterministic Pillow textbbox used by the fixture builder; the wider mobile-risk selection is not reused as localization truth.",
       "review_required": false
@@ -58,6 +60,7 @@
         }
       ],
       "scene_kind": "natural_scene",
+      "source_group": "nasa-iss045e013851",
       "pair_id": null,
       "provenance": "NASA source photograph with repository-generated opaque multiline overlay.",
       "review_required": false
@@ -70,6 +73,7 @@
       "height": 718,
       "expected_regions": [],
       "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
       "pair_id": null,
       "provenance": "Unmodified pinned NASA source photograph used as a negative localization sample.",
       "review_required": false
@@ -82,6 +86,7 @@
       "height": 851,
       "expected_regions": [],
       "scene_kind": "natural_scene",
+      "source_group": "nasa-iss045e013851",
       "pair_id": null,
       "provenance": "Unmodified pinned NASA source photograph used as a negative localization sample.",
       "review_required": false
@@ -94,6 +99,7 @@
       "height": 889,
       "expected_regions": [],
       "scene_kind": "ordinary_ui",
+      "source_group": "project-home-ui",
       "pair_id": null,
       "provenance": "Repository-generated Watermark Remover home-page screenshot with no user data or watermark, used to measure text-heavy UI false positives.",
       "review_required": false
@@ -107,6 +113,7 @@
       "width": 720,
       "height": 480,
       "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
       "pair_id": "photo-horizon",
       "review_required": false
     },
@@ -127,6 +134,7 @@
       "width": 720,
       "height": 480,
       "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
       "pair_id": "photo-horizon",
       "review_required": false
     },
@@ -139,6 +147,7 @@
       "width": 720,
       "height": 480,
       "scene_kind": "natural_scene",
+      "source_group": "nasa-iss045e013851",
       "pair_id": "photo-night",
       "review_required": false
     },
@@ -159,6 +168,7 @@
       "width": 720,
       "height": 480,
       "scene_kind": "natural_scene",
+      "source_group": "nasa-iss045e013851",
       "pair_id": "photo-night",
       "review_required": false
     },
@@ -171,6 +181,7 @@
       "width": 720,
       "height": 540,
       "scene_kind": "ordinary_ui",
+      "source_group": "generated-dashboard",
       "pair_id": "dashboard",
       "review_required": false
     },
@@ -191,6 +202,7 @@
       "width": 720,
       "height": 540,
       "scene_kind": "ordinary_ui",
+      "source_group": "generated-dashboard",
       "pair_id": "dashboard",
       "review_required": false
     },
@@ -203,6 +215,7 @@
       "width": 720,
       "height": 540,
       "scene_kind": "document",
+      "source_group": "generated-document",
       "pair_id": "document",
       "review_required": false
     },
@@ -223,6 +236,7 @@
       "width": 720,
       "height": 540,
       "scene_kind": "document",
+      "source_group": "generated-document",
       "pair_id": "document",
       "review_required": false
     },
@@ -235,6 +249,7 @@
       "width": 720,
       "height": 540,
       "scene_kind": "ordinary_ui",
+      "source_group": "generated-code-editor",
       "pair_id": "code-editor",
       "review_required": false
     },
@@ -255,6 +270,7 @@
       "width": 720,
       "height": 540,
       "scene_kind": "ordinary_ui",
+      "source_group": "generated-code-editor",
       "pair_id": "code-editor",
       "review_required": false
     },
@@ -267,6 +283,7 @@
       "width": 720,
       "height": 540,
       "scene_kind": "typography",
+      "source_group": "generated-poster",
       "pair_id": "poster",
       "review_required": false
     },
@@ -287,6 +304,7 @@
       "width": 720,
       "height": 540,
       "scene_kind": "typography",
+      "source_group": "generated-poster",
       "pair_id": "poster",
       "review_required": false
     },
@@ -299,6 +317,7 @@
       "width": 540,
       "height": 720,
       "scene_kind": "ordinary_ui",
+      "source_group": "generated-mobile-feed",
       "pair_id": "mobile-feed",
       "review_required": false
     },
@@ -319,6 +338,7 @@
       "width": 540,
       "height": 720,
       "scene_kind": "ordinary_ui",
+      "source_group": "generated-mobile-feed",
       "pair_id": "mobile-feed",
       "review_required": false
     }

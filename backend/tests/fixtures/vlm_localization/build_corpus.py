@@ -14,13 +14,37 @@ MOBILE_ROOT = FIXTURE_ROOT / "mobile_selection_corpus"
 
 def main() -> None:
     generated = [
-        _pair("photo-horizon", "natural_scene", _horizon_scene(), _corner_badge),
-        _pair("photo-night", "natural_scene", _night_scene(), _top_preview),
-        _pair("dashboard", "ordinary_ui", _dashboard_scene(), _center_demo),
-        _pair("document", "document", _document_scene(), _diagonal_draft),
-        _pair("code-editor", "ordinary_ui", _code_scene(), _internal_badge),
-        _pair("poster", "typography", _poster_scene(), _poster_sample),
-        _pair("mobile-feed", "ordinary_ui", _mobile_feed_scene(), _creator_mark),
+        _pair(
+            "photo-horizon",
+            "natural_scene",
+            "nasa-iss074e0089803",
+            _horizon_scene(),
+            _corner_badge,
+        ),
+        _pair(
+            "photo-night",
+            "natural_scene",
+            "nasa-iss045e013851",
+            _night_scene(),
+            _top_preview,
+        ),
+        _pair("dashboard", "ordinary_ui", "generated-dashboard", _dashboard_scene(), _center_demo),
+        _pair("document", "document", "generated-document", _document_scene(), _diagonal_draft),
+        _pair(
+            "code-editor",
+            "ordinary_ui",
+            "generated-code-editor",
+            _code_scene(),
+            _internal_badge,
+        ),
+        _pair("poster", "typography", "generated-poster", _poster_scene(), _poster_sample),
+        _pair(
+            "mobile-feed",
+            "ordinary_ui",
+            "generated-mobile-feed",
+            _mobile_feed_scene(),
+            _creator_mark,
+        ),
     ]
     manifest = {
         "schema_version": 1,
@@ -45,6 +69,7 @@ def _existing_samples() -> list[dict]:
             MOBILE_ROOT / "real-horizon-corner.png",
             [{"x0": 400, "y0": 30, "x1": 520, "y1": 74, "label": "watermark"}],
             "natural_scene",
+            "nasa-iss074e0089803",
             "NASA source photograph with repository-generated opaque corner overlay.",
         ),
         _existing(
@@ -53,6 +78,7 @@ def _existing_samples() -> list[dict]:
             MOBILE_ROOT / "real-horizon-translucent.png",
             [{"x0": 125, "y0": 157, "x1": 326, "y1": 197, "label": "watermark"}],
             "natural_scene",
+            "nasa-iss074e0089803",
             (
                 "NASA source photograph with repository-generated translucent center text. "
                 "Visible glyph bounds come from the deterministic Pillow textbbox used by the "
@@ -66,6 +92,7 @@ def _existing_samples() -> list[dict]:
             MOBILE_ROOT / "real-night-multiline.png",
             [{"x0": 50, "y0": 520, "x1": 490, "y1": 690, "label": "watermark"}],
             "natural_scene",
+            "nasa-iss045e013851",
             "NASA source photograph with repository-generated opaque multiline overlay.",
         ),
         _existing(
@@ -74,6 +101,7 @@ def _existing_samples() -> list[dict]:
             IMAGE_ROOT / "nasa-earth-iss074e0089803.jpg",
             [],
             "natural_scene",
+            "nasa-iss074e0089803",
             "Unmodified pinned NASA source photograph used as a negative localization sample.",
         ),
         _existing(
@@ -82,6 +110,7 @@ def _existing_samples() -> list[dict]:
             IMAGE_ROOT / "nasa-earth-iss045e013851.jpg",
             [],
             "natural_scene",
+            "nasa-iss045e013851",
             "Unmodified pinned NASA source photograph used as a negative localization sample.",
         ),
         _existing(
@@ -90,6 +119,7 @@ def _existing_samples() -> list[dict]:
             IMAGE_ROOT / "project-home-desktop.png",
             [],
             "ordinary_ui",
+            "project-home-ui",
             (
                 "Repository-generated Watermark Remover home-page screenshot with no user data "
                 "or watermark, used to measure text-heavy UI false positives."
@@ -104,6 +134,7 @@ def _existing(
     path: Path,
     expected: list[dict],
     scene_kind: str,
+    source_group: str,
     provenance: str,
 ) -> dict:
     with Image.open(path) as image:
@@ -116,13 +147,20 @@ def _existing(
         "height": height,
         "expected_regions": expected,
         "scene_kind": scene_kind,
+        "source_group": source_group,
         "pair_id": None,
         "provenance": provenance,
         "review_required": False,
     }
 
 
-def _pair(sample_id: str, scene_kind: str, clean: Image.Image, painter) -> tuple[dict, dict]:
+def _pair(
+    sample_id: str,
+    scene_kind: str,
+    source_group: str,
+    clean: Image.Image,
+    painter,
+) -> tuple[dict, dict]:
     clean_name = f"paired-{sample_id}-clean.png"
     marked_name = f"paired-{sample_id}-watermark.png"
     clean_path = ROOT / clean_name
@@ -134,6 +172,7 @@ def _pair(sample_id: str, scene_kind: str, clean: Image.Image, painter) -> tuple
         "width": clean.width,
         "height": clean.height,
         "scene_kind": scene_kind,
+        "source_group": source_group,
         "pair_id": sample_id,
         "review_required": False,
     }

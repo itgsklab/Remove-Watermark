@@ -42,6 +42,9 @@ All notable changes to this project are documented in this file. The format foll
 - A reproducible 20-image Florence-2 corpus with seven clean/watermarked scene pairs, per-scene
   metrics and pair diagnostics; expanded evidence shows the candidate is reliable on the small
   natural-photo subset but fails the overall UI/document/typography quality gate.
+- An opt-in pixel-only photo-scene gate that prevents Florence-2 inference on UI, document and
+  typography images, with reproducible classification, pair-stability and independent-source
+  evidence reports. It remains outside the Web flow until photo-source coverage is sufficient.
 
 ### Security
 

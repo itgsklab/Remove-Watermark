@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "benchmark": "wmrm-vlm-photo-scene-gate",
+  "thresholds": {
+    "maximum_sample_dimension": 256,
+    "minimum_luminance_entropy": 4.5,
+    "minimum_quantized_color_count": 128,
+    "color_quantization_step": 16
+  },
+  "summary": {
+    "sample_count": 20,
+    "expected_photo_count": 9,
+    "expected_non_photo_count": 11,
+    "true_positive": 9,
+    "false_positive": 0,
+    "true_negative": 11,
+    "false_negative": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "specificity": 1.0,
+    "stable_pair_count": 7,
+    "pair_count": 7,
+    "independent_photo_source_count": 2,
+    "minimum_independent_photo_sources": 10,
+    "source_evidence_gate": "fail",
+    "release_claim_allowed": false
+  },
+  "eligible_localization": {
+    "scene_kind": "natural_scene",
+    "sample_count": 9,
+    "positive_count": 5,
+    "negative_count": 4,
+    "true_positive": 5,
+    "false_positive": 0,
+    "false_negative": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "samples": [
+    {
+      "sample_id": "real-horizon-corner",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 5.5563,
+      "quantized_color_count": 212,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "real-horizon-translucent",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 5.5659,
+      "quantized_color_count": 213,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "real-night-multiline",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss045e013851",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 6.4993,
+      "quantized_color_count": 471,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "clean-horizon-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 5.1557,
+      "quantized_color_count": 190,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "clean-night-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss045e013851",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 5.6467,
+      "quantized_color_count": 400,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "clean-project-ui-negative",
+      "scene_kind": "ordinary_ui",
+      "source_group": "project-home-ui",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 2.7627,
+      "quantized_color_count": 76,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-photo-horizon-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 5.6377,
+      "quantized_color_count": 201,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-photo-horizon-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss074e0089803",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 5.6974,
+      "quantized_color_count": 212,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-photo-night-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss045e013851",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 5.8105,
+      "quantized_color_count": 385,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-photo-night-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss045e013851",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 5.8327,
+      "quantized_color_count": 389,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-dashboard-negative",
+      "scene_kind": "ordinary_ui",
+      "source_group": "generated-dashboard",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 2.4758,
+      "quantized_color_count": 49,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-dashboard-positive",
+      "scene_kind": "ordinary_ui",
+      "source_group": "generated-dashboard",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 2.6214,
+      "quantized_color_count": 49,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-document-negative",
+      "scene_kind": "document",
+      "source_group": "generated-document",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 2.0304,
+      "quantized_color_count": 41,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-document-positive",
+      "scene_kind": "document",
+      "source_group": "generated-document",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 2.1524,
+      "quantized_color_count": 77,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-code-editor-negative",
+      "scene_kind": "ordinary_ui",
+      "source_group": "generated-code-editor",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 2.0104,
+      "quantized_color_count": 25,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-code-editor-positive",
+      "scene_kind": "ordinary_ui",
+      "source_group": "generated-code-editor",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 2.201,
+      "quantized_color_count": 54,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-poster-negative",
+      "scene_kind": "typography",
+      "source_group": "generated-poster",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 1.1677,
+      "quantized_color_count": 62,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-poster-positive",
+      "scene_kind": "typography",
+      "source_group": "generated-poster",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 1.2309,
+      "quantized_color_count": 73,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-mobile-feed-negative",
+      "scene_kind": "ordinary_ui",
+      "source_group": "generated-mobile-feed",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 3.1065,
+      "quantized_color_count": 66,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-mobile-feed-positive",
+      "scene_kind": "ordinary_ui",
+      "source_group": "generated-mobile-feed",
+      "expected_photo": false,
+      "eligible": false,
+      "luminance_entropy": 3.1909,
+      "quantized_color_count": 66,
+      "classification_correct": true
+    }
+  ]
+}
