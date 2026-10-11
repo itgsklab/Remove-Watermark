@@ -46,12 +46,12 @@ reproducible Web archive:
 
 ```bash
 python packaging/build_web_bundle.py \
-  --version 0.1.0rc1 \
-  --wheel work/release/wmrm-0.1.0rc1-py3-none-any.whl \
-  --sdist work/release/wmrm-0.1.0rc1.tar.gz \
+  --version 0.1.0rc2 \
+  --wheel work/release/wmrm-0.1.0rc2-py3-none-any.whl \
+  --sdist work/release/wmrm-0.1.0rc2.tar.gz \
   --frontend-dir frontend/dist \
   --source-date-epoch "$(git show -s --format=%ct HEAD)" \
-  --output work/release/remove-watermark-web-0.1.0rc1.tar.gz
+  --output work/release/remove-watermark-web-0.1.0rc2.tar.gz
 ```
 
 The archive uses normalized ownership, modes and timestamps, rejects symlinks, contains the project
