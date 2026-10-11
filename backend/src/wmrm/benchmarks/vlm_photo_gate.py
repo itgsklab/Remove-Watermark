@@ -63,6 +63,10 @@ def evaluate_photo_gate(
                 "eligible": assessment.eligible,
                 "luminance_entropy": assessment.luminance_entropy,
                 "quantized_color_count": assessment.quantized_color_count,
+                "luminance_standard_deviation": assessment.luminance_standard_deviation,
+                "flat_gradient_ratio": assessment.flat_gradient_ratio,
+                "gradient_orientation_entropy": assessment.gradient_orientation_entropy,
+                "matched_routes": list(assessment.matched_routes),
                 "classification_correct": assessment.eligible == expected_photo,
             }
         )
@@ -184,14 +188,19 @@ def _markdown(report: dict[str, Any]) -> str:
     summary = report["summary"]
     localization = report["eligible_localization"]
     rows = [
-        "| Sample | Expected | Eligible | Entropy | Colors | Correct |",
-        "|---|---:|---:|---:|---:|---:|",
+        "| Sample | Expected | Eligible | Entropy | Colors | Luma SD | Flat | "
+        "Orientation H | Routes | Correct |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---|---:|",
     ]
     for sample in report["samples"]:
         rows.append(
             f"| {sample['sample_id']} | {'photo' if sample['expected_photo'] else 'other'} | "
             f"{'yes' if sample['eligible'] else 'no'} | {sample['luminance_entropy']:.4f} | "
             f"{sample['quantized_color_count']} | "
+            f"{sample['luminance_standard_deviation']:.4f} | "
+            f"{sample['flat_gradient_ratio']:.4f} | "
+            f"{sample['gradient_orientation_entropy']:.4f} | "
+            f"{', '.join(sample['matched_routes']) if sample['matched_routes'] else '—'} | "
             f"{'yes' if sample['classification_correct'] else 'no'} |"
         )
     return "\n".join(

@@ -39,13 +39,13 @@ All notable changes to this project are documented in this file. The format foll
 - Conservative rejection of Florence-2 boxes covering over 30% of an image, corrected visible-glyph
   truth for translucent text, a text-heavy UI negative sample, and separate metric/evidence gates
   requiring at least 20 reviewed samples with 10 negatives before any release claim.
-- A reproducible 36-image Florence-2 corpus with 15 clean/watermarked scene pairs, 18 negatives,
-  per-scene metrics and pair diagnostics; expanded evidence includes ten independent photo sources
+- A reproducible 48-image Florence-2 corpus with 21 clean/watermarked scene pairs, 24 negatives,
+  per-scene metrics and pair diagnostics; expanded evidence includes sixteen independent photo sources
   and shows that the candidate still fails the overall quality gate.
 - An opt-in pixel-only photo-scene gate that prevents Florence-2 inference on UI, document and
-  typography images, with reproducible classification, pair-stability and independent-source
-  evidence reports. Hard photo cases expose insufficient recall and pair stability, so it remains
-  outside the Web flow.
+  typography images, with color-diversity, continuous-tone and distributed-detail evidence routes
+  plus reproducible classification, pair-stability and independent-source reports. The scene gate
+  passes its fixed corpus, while Florence-2 photo precision remains below the release threshold.
 
 ### Security
 

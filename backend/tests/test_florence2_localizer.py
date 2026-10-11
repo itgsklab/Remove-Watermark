@@ -125,7 +125,7 @@ def test_prediction_file_is_marked_as_real_model_output(tmp_path: Path) -> None:
         localizer=FakeLocalizer(),
     )
     assert result["detector"]["is_model_output"] is True
-    assert len(result["predictions"]) == 36
+    assert len(result["predictions"]) == 48
     assert json.loads(output.read_text()) == result
 
 

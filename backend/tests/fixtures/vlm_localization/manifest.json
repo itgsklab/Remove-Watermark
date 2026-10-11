@@ -461,6 +461,222 @@
       "source_record": "https://images.nasa.gov/details/PIA11727"
     },
     {
+      "id": "paired-commons-38778875-negative",
+      "file": "paired-commons-38778875-clean.png",
+      "sha256": "addf9000759b42a71ca720196a43f6e547ea0257ebcbf6f422e29b235d30f6fc",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Landscape snowy hills Heraklion' (Jebulon), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-38778875",
+      "pair_id": "commons-38778875",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=38778875"
+    },
+    {
+      "id": "paired-commons-38778875-positive",
+      "file": "paired-commons-38778875-watermark.png",
+      "sha256": "c3080e4a7f4c7212bb9675d66de477c7081d2c79729af34413e2a3f058ada77c",
+      "expected_regions": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Landscape snowy hills Heraklion' (Jebulon), normalized by the repository without user data. Paired with deterministic repository-generated opaque lower-right badge.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-38778875",
+      "pair_id": "commons-38778875",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=38778875"
+    },
+    {
+      "id": "paired-commons-59873545-negative",
+      "file": "paired-commons-59873545-clean.png",
+      "sha256": "ff6a909d9548fa1af29421a33bf97b6da85086b3b7b2df20b9cc71579f2ae610",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Spruce forest at Holma' (W.carter), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-59873545",
+      "pair_id": "commons-59873545",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=59873545"
+    },
+    {
+      "id": "paired-commons-59873545-positive",
+      "file": "paired-commons-59873545-watermark.png",
+      "sha256": "8e853ead657d8cce132ca19e745044c3cf6a6e6bdd90495b4f8e949c7a93abb3",
+      "expected_regions": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Spruce forest at Holma' (W.carter), normalized by the repository without user data. Paired with deterministic repository-generated translucent top-center text overlay.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-59873545",
+      "pair_id": "commons-59873545",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=59873545"
+    },
+    {
+      "id": "paired-commons-14666867-negative",
+      "file": "paired-commons-14666867-clean.png",
+      "sha256": "8992d270d54da0a02f5c19b84455c60b4ab89558b1f226f2f40425217eeb7258",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Granite Mountains, Mojave Desert' (Wilson44691), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-14666867",
+      "pair_id": "commons-14666867",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=14666867"
+    },
+    {
+      "id": "paired-commons-14666867-positive",
+      "file": "paired-commons-14666867-watermark.png",
+      "sha256": "6c773035c056caf745aabc3727c1a372b0004df7013ee730141aa030ced596a4",
+      "expected_regions": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Granite Mountains, Mojave Desert' (Wilson44691), normalized by the repository without user data. Paired with deterministic repository-generated opaque lower-right badge.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-14666867",
+      "pair_id": "commons-14666867",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=14666867"
+    },
+    {
+      "id": "paired-commons-74184357-negative",
+      "file": "paired-commons-74184357-clean.png",
+      "sha256": "3675ebc1ae4440cde77d971a567c6d7b2f2cac43ccf939db676a250cd9119c54",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Black And White Forest' (Imagii), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-74184357",
+      "pair_id": "commons-74184357",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=74184357"
+    },
+    {
+      "id": "paired-commons-74184357-positive",
+      "file": "paired-commons-74184357-watermark.png",
+      "sha256": "ab39c78b5705eebc0e0bb83d6d55ab8a7d284eff9c5a8f699b9a584d00dfd866",
+      "expected_regions": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Black And White Forest' (Imagii), normalized by the repository without user data. Paired with deterministic repository-generated translucent top-center text overlay.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-74184357",
+      "pair_id": "commons-74184357",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=74184357"
+    },
+    {
+      "id": "paired-commons-144326190-negative",
+      "file": "paired-commons-144326190-clean.png",
+      "sha256": "8bd9bc8138355e96332f5275e66e4d7fab61ab4b8548998ec6a39be4dec7e661",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Fog in forest at Kent, Washington' (Roc0ast3r), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-144326190",
+      "pair_id": "commons-144326190",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=144326190"
+    },
+    {
+      "id": "paired-commons-144326190-positive",
+      "file": "paired-commons-144326190-watermark.png",
+      "sha256": "dfbab5822b9257ecfce3fe6495de6f40a92564d5f6a1c052b30922a56d015b2d",
+      "expected_regions": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Fog in forest at Kent, Washington' (Roc0ast3r), normalized by the repository without user data. Paired with deterministic repository-generated opaque lower-right badge.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-144326190",
+      "pair_id": "commons-144326190",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=144326190"
+    },
+    {
+      "id": "paired-commons-201054816-negative",
+      "file": "paired-commons-201054816-clean.png",
+      "sha256": "6ea898c7f84ec030a4ef265734cf5582b37642281e1b161d70174f7229b7e830",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Night view of Çanakkale, Turkey' (Edsonasante), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-201054816",
+      "pair_id": "commons-201054816",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=201054816"
+    },
+    {
+      "id": "paired-commons-201054816-positive",
+      "file": "paired-commons-201054816-watermark.png",
+      "sha256": "74bcbcdb0fb0f5ef7ab366aa44385f15effc852de0b64afd2746a08fa5c40f8a",
+      "expected_regions": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Night view of Çanakkale, Turkey' (Edsonasante), normalized by the repository without user data. Paired with deterministic repository-generated translucent top-center text overlay.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "commons-201054816",
+      "pair_id": "commons-201054816",
+      "review_required": false,
+      "source_record": "https://commons.wikimedia.org/?curid=201054816"
+    },
+    {
       "id": "paired-dashboard-negative",
       "file": "paired-dashboard-clean.png",
       "sha256": "a268a38e5269e8f70e0f411e5283334a7d09d5225dfeb4399e34aa7b2e6e30d4",

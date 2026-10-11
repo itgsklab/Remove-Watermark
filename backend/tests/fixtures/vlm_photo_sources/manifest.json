@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "description": "Pinned NASA image-library sources reviewed for the photo-scene gate corpus. The benchmark adds repository-generated watermark overlays; source images remain unchanged in this directory.",
+  "description": "Pinned, independently sourced photo-like image assets reviewed for the photo-scene gate corpus. The benchmark adds repository-generated watermark overlays; source images remain unchanged in this directory.",
   "sources": [
     {
       "source_group": "nasa-pia24642",
@@ -11,8 +11,11 @@
       "credit": "NASA/JPL-Caltech",
       "record_url": "https://images.nasa.gov/details/PIA24642",
       "asset_url": "https://images-assets.nasa.gov/image/PIA24642/PIA24642~small.jpg",
-      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-      "review_required": false
+      "review_required": false,
+      "provider": "NASA Image and Video Library",
+      "license": "NASA media usage guidelines",
+      "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution_required": true
     },
     {
       "source_group": "nasa-as11-40-5878",
@@ -23,8 +26,11 @@
       "credit": "NASA Johnson Space Center",
       "record_url": "https://images.nasa.gov/details/as11-40-5878",
       "asset_url": "https://images-assets.nasa.gov/image/as11-40-5878/as11-40-5878~medium.jpg",
-      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-      "review_required": false
+      "review_required": false,
+      "provider": "NASA Image and Video Library",
+      "license": "NASA media usage guidelines",
+      "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution_required": true
     },
     {
       "source_group": "nasa-iss042e097549",
@@ -35,8 +41,11 @@
       "credit": "NASA Johnson Space Center",
       "record_url": "https://images.nasa.gov/details/iss042e097549",
       "asset_url": "https://images-assets.nasa.gov/image/iss042e097549/iss042e097549~medium.jpg",
-      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-      "review_required": false
+      "review_required": false,
+      "provider": "NASA Image and Video Library",
+      "license": "NASA media usage guidelines",
+      "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution_required": true
     },
     {
       "source_group": "nasa-pia11141",
@@ -47,8 +56,11 @@
       "credit": "NASA/JPL/Space Science Institute",
       "record_url": "https://images.nasa.gov/details/PIA11141",
       "asset_url": "https://images-assets.nasa.gov/image/PIA11141/PIA11141~medium.jpg",
-      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-      "review_required": false
+      "review_required": false,
+      "provider": "NASA Image and Video Library",
+      "license": "NASA media usage guidelines",
+      "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution_required": true
     },
     {
       "source_group": "nasa-pia00254",
@@ -59,8 +71,11 @@
       "credit": "NASA/JPL",
       "record_url": "https://images.nasa.gov/details/PIA00254",
       "asset_url": "https://images-assets.nasa.gov/image/PIA00254/PIA00254~medium.jpg",
-      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-      "review_required": false
+      "review_required": false,
+      "provider": "NASA Image and Video Library",
+      "license": "NASA media usage guidelines",
+      "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution_required": true
     },
     {
       "source_group": "nasa-pia20284",
@@ -71,8 +86,11 @@
       "credit": "NASA/JPL-Caltech/MSSS",
       "record_url": "https://images.nasa.gov/details/PIA20284",
       "asset_url": "https://images-assets.nasa.gov/image/PIA20284/PIA20284~medium.jpg",
-      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-      "review_required": false
+      "review_required": false,
+      "provider": "NASA Image and Video Library",
+      "license": "NASA media usage guidelines",
+      "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution_required": true
     },
     {
       "source_group": "nasa-pia17792",
@@ -83,8 +101,11 @@
       "credit": "NASA/JPL-Caltech",
       "record_url": "https://images.nasa.gov/details/PIA17792",
       "asset_url": "https://images-assets.nasa.gov/image/PIA17792/PIA17792~medium.jpg",
-      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-      "review_required": false
+      "review_required": false,
+      "provider": "NASA Image and Video Library",
+      "license": "NASA media usage guidelines",
+      "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution_required": true
     },
     {
       "source_group": "nasa-pia11727",
@@ -95,7 +116,100 @@
       "credit": "NASA/JPL/Brown",
       "record_url": "https://images.nasa.gov/details/PIA11727",
       "asset_url": "https://images-assets.nasa.gov/image/PIA11727/PIA11727~orig.jpg",
-      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "review_required": false,
+      "provider": "NASA Image and Video Library",
+      "license": "NASA media usage guidelines",
+      "license_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "attribution_required": true
+    },
+    {
+      "source_group": "commons-38778875",
+      "commons_page_id": 38778875,
+      "file": "commons-38778875.jpg",
+      "sha256": "d79fb214d758df67aeadf7ccc51912aee4d3ae3f69168badf9fa2272238292a1",
+      "title": "Landscape snowy hills Heraklion",
+      "credit": "Jebulon",
+      "provider": "Wikimedia Commons",
+      "record_url": "https://commons.wikimedia.org/?curid=38778875",
+      "asset_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Landscape_snowy_hills_Heraklion.jpg/1280px-Landscape_snowy_hills_Heraklion.jpg",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution_required": false,
+      "review_required": false
+    },
+    {
+      "source_group": "commons-59873545",
+      "commons_page_id": 59873545,
+      "file": "commons-59873545.jpg",
+      "sha256": "f2bcb53007a3324bd5db0fec82d71a737b70c1e5e3f16eec88667f099b95fee4",
+      "title": "Spruce forest at Holma",
+      "credit": "W.carter",
+      "provider": "Wikimedia Commons",
+      "record_url": "https://commons.wikimedia.org/?curid=59873545",
+      "asset_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/Spruce_forest_at_Holma.jpg/1280px-Spruce_forest_at_Holma.jpg",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution_required": false,
+      "review_required": false
+    },
+    {
+      "source_group": "commons-14666867",
+      "commons_page_id": 14666867,
+      "file": "commons-14666867.jpg",
+      "sha256": "021cda5111e771db0bca22300c2f0b4cd10ad574fbc75a9f8deb5b89c470eb35",
+      "title": "Granite Mountains, Mojave Desert",
+      "credit": "Wilson44691",
+      "provider": "Wikimedia Commons",
+      "record_url": "https://commons.wikimedia.org/?curid=14666867",
+      "asset_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/GraniteMountains031611.jpg/1280px-GraniteMountains031611.jpg",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution_required": false,
+      "review_required": false
+    },
+    {
+      "source_group": "commons-74184357",
+      "commons_page_id": 74184357,
+      "file": "commons-74184357.jpg",
+      "sha256": "db219e3efd9bd4514ec238c121e6a2940489c81d665268d6608aeebf754c9562",
+      "title": "Black And White Forest",
+      "credit": "Imagii",
+      "provider": "Wikimedia Commons",
+      "record_url": "https://commons.wikimedia.org/?curid=74184357",
+      "asset_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Black_And_White_Forest_%28128929829%29.jpeg/1280px-Black_And_White_Forest_%28128929829%29.jpeg",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution_required": false,
+      "review_required": false
+    },
+    {
+      "source_group": "commons-144326190",
+      "commons_page_id": 144326190,
+      "file": "commons-144326190.jpg",
+      "sha256": "49df0403f69d893187be2aa9efd696b8b1426ba1c732f8faaa7496a2f9e67890",
+      "title": "Fog in forest at Kent, Washington",
+      "credit": "Roc0ast3r",
+      "provider": "Wikimedia Commons",
+      "record_url": "https://commons.wikimedia.org/?curid=144326190",
+      "asset_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Fog_in_forest_at_Kent%2C_Washington_-_2.jpg/1280px-Fog_in_forest_at_Kent%2C_Washington_-_2.jpg",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution_required": false,
+      "review_required": false
+    },
+    {
+      "source_group": "commons-201054816",
+      "commons_page_id": 201054816,
+      "file": "commons-201054816.jpg",
+      "sha256": "4a84d842459f8520fb52fb59b3e57658202a6485a13ad227cbabdbc04225772d",
+      "title": "Night view of Çanakkale, Turkey",
+      "credit": "Edsonasante",
+      "provider": "Wikimedia Commons",
+      "record_url": "https://commons.wikimedia.org/?curid=201054816",
+      "asset_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Night_view_of_%C3%87anakkale%2C_Turkey.jpg/1280px-Night_view_of_%C3%87anakkale%2C_Turkey.jpg",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution_required": false,
       "review_required": false
     }
   ]

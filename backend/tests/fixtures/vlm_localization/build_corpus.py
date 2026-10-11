@@ -48,6 +48,12 @@ def main() -> None:
                     _top_preview,
                     _corner_badge,
                     _top_preview,
+                    _corner_badge,
+                    _top_preview,
+                    _corner_badge,
+                    _top_preview,
+                    _corner_badge,
+                    _top_preview,
                 ),
                 strict=True,
             )
@@ -235,8 +241,8 @@ def _photo_sources() -> list[dict]:
     sources = manifest.get("sources")
     if manifest.get("schema_version") != 1 or not isinstance(sources, list):
         raise ValueError("Unsupported VLM photo-source manifest.")
-    if len(sources) != 8:
-        raise ValueError("The VLM photo-source expansion must contain exactly eight sources.")
+    if len(sources) != 14:
+        raise ValueError("The VLM photo-source expansion must contain exactly fourteen sources.")
     return sources
 
 

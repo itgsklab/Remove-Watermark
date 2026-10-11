@@ -30,22 +30,30 @@ def test_photo_scene_gate_uses_pixel_diversity(tmp_path: Path) -> None:
     assert flat_result.quantized_color_count < photo_result.quantized_color_count
 
 
-def test_photo_source_manifest_pins_eight_independent_nasa_assets() -> None:
+def test_photo_source_manifest_pins_fourteen_licensed_assets() -> None:
     manifest = json.loads((PHOTO_SOURCES / "manifest.json").read_text())
 
     assert manifest["schema_version"] == 1
-    assert len(manifest["sources"]) == 8
-    assert len({source["source_group"] for source in manifest["sources"]}) == 8
+    assert len(manifest["sources"]) == 14
+    assert len({source["source_group"] for source in manifest["sources"]}) == 14
     for source in manifest["sources"]:
         path = PHOTO_SOURCES / source["file"]
         assert path.is_file()
         assert hashlib.sha256(path.read_bytes()).hexdigest() == source["sha256"]
-        assert source["record_url"].startswith("https://images.nasa.gov/details/")
-        assert source["asset_url"].startswith("https://images-assets.nasa.gov/image/")
+        assert source["record_url"].startswith("https://")
+        assert source["asset_url"].startswith("https://")
+        assert source["license_url"].startswith("https://")
         assert source["review_required"] is False
 
+    commons = [
+        source for source in manifest["sources"] if source["provider"] == "Wikimedia Commons"
+    ]
+    assert len(commons) == 6
+    assert all(source["license"] == "CC0-1.0" for source in commons)
+    assert all(source["attribution_required"] is False for source in commons)
 
-def test_expanded_corpus_gate_exposes_low_entropy_photo_limit(tmp_path: Path) -> None:
+
+def test_expanded_corpus_gate_handles_low_entropy_photo_sources(tmp_path: Path) -> None:
     predictions = json.loads((FIXTURES / "contract-predictions.json").read_text())
     predictions["detector"]["is_model_output"] = True
     predictions_path = tmp_path / "predictions.json"
@@ -62,17 +70,21 @@ def test_expanded_corpus_gate_exposes_low_entropy_photo_limit(tmp_path: Path) ->
     )
 
     summary = report["summary"]
-    assert summary["sample_count"] == 36
-    assert summary["true_positive"] == 17
+    assert summary["sample_count"] == 48
+    assert summary["true_positive"] == 37
     assert summary["true_negative"] == 11
     assert summary["false_positive"] == 0
-    assert summary["false_negative"] == 8
-    assert summary["stable_pair_count"] == 13
-    assert summary["independent_photo_source_count"] == 10
+    assert summary["false_negative"] == 0
+    assert summary["stable_pair_count"] == 21
+    assert summary["independent_photo_source_count"] == 16
     assert summary["source_evidence_gate"] == "pass"
-    assert summary["release_claim_allowed"] is False
+    assert summary["release_claim_allowed"] is True
     assert report["eligible_localization"]["precision"] == 1.0
-    assert report["eligible_localization"]["recall"] == 0.769231
+    assert report["eligible_localization"]["recall"] == 1.0
+    samples = {sample["sample_id"]: sample for sample in report["samples"]}
+    assert "continuous-tone" in samples["paired-as11-40-5878-negative"]["matched_routes"]
+    assert "distributed-detail" in samples["paired-pia17792-negative"]["matched_routes"]
+    assert "continuous-tone" in samples["paired-commons-74184357-negative"]["matched_routes"]
 
 
 def test_photo_gated_localizer_skips_non_photo_pixels(tmp_path: Path) -> None:

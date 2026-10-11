@@ -18,7 +18,14 @@
         "maximum_sample_dimension": 256,
         "minimum_luminance_entropy": 4.5,
         "minimum_quantized_color_count": 128,
-        "color_quantization_step": 16
+        "color_quantization_step": 16,
+        "minimum_luminance_standard_deviation": 25.0,
+        "flat_gradient_magnitude": 10.0,
+        "maximum_flat_gradient_ratio": 0.75,
+        "minimum_dark_detail_entropy": 3.4,
+        "gradient_orientation_magnitude": 20.0,
+        "gradient_orientation_bin_count": 18,
+        "minimum_gradient_orientation_entropy": 3.9
       }
     },
     "note": "Derived from pinned real model output after a deterministic pixel-only photo gate."
@@ -33,18 +40,18 @@
     "minimum_paired_scene_count": 7
   },
   "summary": {
-    "sample_count": 36,
-    "positive_count": 18,
-    "negative_count": 18,
+    "sample_count": 48,
+    "positive_count": 24,
+    "negative_count": 24,
     "scene_kind_count": 4,
-    "paired_scene_count": 15,
-    "true_positive": 10,
-    "false_positive": 1,
-    "false_negative": 8,
-    "precision": 0.909091,
-    "recall": 0.555556,
-    "f1": 0.689655,
-    "mean_matched_iou": 0.807258,
+    "paired_scene_count": 21,
+    "true_positive": 18,
+    "false_positive": 6,
+    "false_negative": 6,
+    "precision": 0.75,
+    "recall": 0.75,
+    "f1": 0.75,
+    "mean_matched_iou": 0.787399,
     "metric_gate": "fail",
     "evidence_gate": "pass",
     "release_claim_allowed": false
@@ -64,15 +71,15 @@
     },
     {
       "scene_kind": "natural_scene",
-      "sample_count": 25,
-      "positive_count": 13,
-      "negative_count": 12,
-      "true_positive": 10,
-      "false_positive": 1,
-      "false_negative": 3,
-      "precision": 0.909091,
-      "recall": 0.769231,
-      "f1": 0.833333
+      "sample_count": 37,
+      "positive_count": 19,
+      "negative_count": 18,
+      "true_positive": 18,
+      "false_positive": 6,
+      "false_negative": 1,
+      "precision": 0.75,
+      "recall": 0.947368,
+      "f1": 0.837209
     },
     {
       "scene_kind": "ordinary_ui",
@@ -105,8 +112,8 @@
       "scene_kind": "natural_scene",
       "negative_sample_id": "paired-as11-40-5878-negative",
       "positive_sample_id": "paired-as11-40-5878-positive",
-      "negative_clean": true,
-      "positive_detected": false,
+      "negative_clean": false,
+      "positive_detected": true,
       "pair_passed": false
     },
     {
@@ -116,6 +123,60 @@
       "positive_sample_id": "paired-code-editor-positive",
       "negative_clean": true,
       "positive_detected": false,
+      "pair_passed": false
+    },
+    {
+      "pair_id": "commons-144326190",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-commons-144326190-negative",
+      "positive_sample_id": "paired-commons-144326190-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "commons-14666867",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-commons-14666867-negative",
+      "positive_sample_id": "paired-commons-14666867-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "commons-201054816",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-commons-201054816-negative",
+      "positive_sample_id": "paired-commons-201054816-positive",
+      "negative_clean": false,
+      "positive_detected": true,
+      "pair_passed": false
+    },
+    {
+      "pair_id": "commons-38778875",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-commons-38778875-negative",
+      "positive_sample_id": "paired-commons-38778875-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "commons-59873545",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-commons-59873545-negative",
+      "positive_sample_id": "paired-commons-59873545-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "commons-74184357",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-commons-74184357-negative",
+      "positive_sample_id": "paired-commons-74184357-positive",
+      "negative_clean": false,
+      "positive_detected": true,
       "pair_passed": false
     },
     {
@@ -187,8 +248,8 @@
       "negative_sample_id": "paired-pia11141-negative",
       "positive_sample_id": "paired-pia11141-positive",
       "negative_clean": true,
-      "positive_detected": false,
-      "pair_passed": false
+      "positive_detected": true,
+      "pair_passed": true
     },
     {
       "pair_id": "pia11727",
@@ -204,7 +265,7 @@
       "scene_kind": "natural_scene",
       "negative_sample_id": "paired-pia17792-negative",
       "positive_sample_id": "paired-pia17792-positive",
-      "negative_clean": true,
+      "negative_clean": false,
       "positive_detected": false,
       "pair_passed": false
     },
@@ -399,9 +460,9 @@
       "scene_kind": "natural_scene",
       "pair_id": "as11-40-5878",
       "expected_count": 0,
-      "predicted_count": 0,
+      "predicted_count": 1,
       "true_positive": 0,
-      "false_positive": 0,
+      "false_positive": 1,
       "false_negative": 0,
       "matched_ious": []
     },
@@ -411,11 +472,13 @@
       "scene_kind": "natural_scene",
       "pair_id": "as11-40-5878",
       "expected_count": 1,
-      "predicted_count": 0,
-      "true_positive": 0,
+      "predicted_count": 1,
+      "true_positive": 1,
       "false_positive": 0,
-      "false_negative": 1,
-      "matched_ious": []
+      "false_negative": 0,
+      "matched_ious": [
+        0.671924
+      ]
     },
     {
       "sample_id": "paired-iss042e097549-negative",
@@ -461,11 +524,13 @@
       "scene_kind": "natural_scene",
       "pair_id": "pia11141",
       "expected_count": 1,
-      "predicted_count": 0,
-      "true_positive": 0,
+      "predicted_count": 1,
+      "true_positive": 1,
       "false_positive": 0,
-      "false_negative": 1,
-      "matched_ious": []
+      "false_negative": 0,
+      "matched_ious": [
+        0.73371
+      ]
     },
     {
       "sample_id": "paired-pia00254-negative",
@@ -525,9 +590,9 @@
       "scene_kind": "natural_scene",
       "pair_id": "pia17792",
       "expected_count": 0,
-      "predicted_count": 0,
+      "predicted_count": 1,
       "true_positive": 0,
-      "false_positive": 0,
+      "false_positive": 1,
       "false_negative": 0,
       "matched_ious": []
     },
@@ -537,9 +602,9 @@
       "scene_kind": "natural_scene",
       "pair_id": "pia17792",
       "expected_count": 1,
-      "predicted_count": 0,
+      "predicted_count": 1,
       "true_positive": 0,
-      "false_positive": 0,
+      "false_positive": 1,
       "false_negative": 1,
       "matched_ious": []
     },
@@ -567,6 +632,162 @@
       "false_negative": 0,
       "matched_ious": [
         0.652565
+      ]
+    },
+    {
+      "sample_id": "paired-commons-38778875-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-38778875",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-commons-38778875-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-38778875",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.861557
+      ]
+    },
+    {
+      "sample_id": "paired-commons-59873545-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-59873545",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-commons-59873545-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-59873545",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.717222
+      ]
+    },
+    {
+      "sample_id": "paired-commons-14666867-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-14666867",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-commons-14666867-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-14666867",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.861557
+      ]
+    },
+    {
+      "sample_id": "paired-commons-74184357-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-74184357",
+      "expected_count": 0,
+      "predicted_count": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-commons-74184357-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-74184357",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.694263
+      ]
+    },
+    {
+      "sample_id": "paired-commons-144326190-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-144326190",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-commons-144326190-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-144326190",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.861557
+      ]
+    },
+    {
+      "sample_id": "paired-commons-201054816-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-201054816",
+      "expected_count": 0,
+      "predicted_count": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-commons-201054816-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "commons-201054816",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        0.698812
       ]
     },
     {

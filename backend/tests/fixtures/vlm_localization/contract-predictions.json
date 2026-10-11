@@ -231,6 +231,108 @@
       ]
     },
     {
+      "sample_id": "paired-commons-38778875-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-38778875-positive",
+      "boxes": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-59873545-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-59873545-positive",
+      "boxes": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-14666867-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-14666867-positive",
+      "boxes": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-74184357-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-74184357-positive",
+      "boxes": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-144326190-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-144326190-positive",
+      "boxes": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-201054816-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-201054816-positive",
+      "boxes": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
       "sample_id": "paired-dashboard-negative",
       "boxes": []
     },

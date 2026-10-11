@@ -65,8 +65,8 @@ Florence-2 的生成式边界框没有经过校准的置信度，因此适配器
 
 ## 可复现基准
 
-基准清单目前包含 18 张有水印正样本和 18 张无水印负样本。除原有 NASA 图片和无用户
-数据的项目 UI 截图外，共有 15 组可重建的干净/带水印配对场景，覆盖自然照片、普通
+基准清单目前包含 24 张有水印正样本和 24 张无水印负样本。除 NASA 图片、6 张 Commons
+CC0 实拍照片和无用户数据的项目 UI 截图外，共有 21 组可重建的干净/带水印配对场景，覆盖自然照片、普通
 Web UI、文档、代码编辑器、排版海报和移动信息流。所有生成样本都可以用
 `make vlm-localization-corpus` 重建。评分包括：
 
@@ -85,8 +85,8 @@ Web UI、文档、代码编辑器、排版海报和移动信息流。所有生�
 
 2026-10-11 的当前真实模型运行记录在
 [`benchmarks/vlm-localization-model.md`](benchmarks/vlm-localization-model.md)：单一 `watermark`
-提示在自然照片子集得到 Precision 0.750、Recall 0.923；全量结果为 Precision 0.419、
-Recall 0.722、F1 0.531。新增难例既暴露了无水印月球照片上的误报，也保留了 UI、文档和
+提示在自然照片子集得到 Precision 0.750、Recall 0.947；全量结果为 Precision 0.487、
+Recall 0.792、F1 0.603。新增难例继续暴露无水印照片上的误报，也保留了 UI、文档和
 排版场景中的误报。证据门禁通过，指标门禁失败。此前对 `transparent watermark`、
 `watermark overlay`、`logo watermark` 和 `overlaid watermark` 的本地对照也没有同时改善
 误报与漏报。因此
@@ -96,21 +96,24 @@ Recall 0.722、F1 0.531。新增难例既暴露了无水印月球照片上的误
 
 [`PhotoSceneGate`](../backend/src/wmrm/adapters/images/photo_scene.py) 在 VLM 推理前只读取解码后的
 像素，不读取文件名、扩展名、EXIF、模型检测结果、文字标签或水印坐标。它把图像最长边缩小
-到 256 像素，同时要求全局亮度熵不低于 4.5、16 级 RGB 量化颜色不少于 128 种。两个条件
-都满足时才允许 Florence-2 运行；其余图片回退到现有手动框选流程。
+到 256 像素，保留原有的亮度熵和量化色彩路径，并增加两条通用证据路径：亮度标准差配合
+非平坦梯度比例识别连续色调，亮度分布配合梯度方向熵识别暗场景中的分散细节。任一路径通过
+才允许 Florence-2 运行；其余图片回退到现有手动框选流程。阈值和计算参数全部随报告记录。
 
-扩充后的固定 36 样本来自 10 个独立照片来源，包含灰度月壤、低色彩火星影像、暗背景行星、
-夜景和科学合成图。来源数量证据已经通过，但门禁分类 Precision 1.000、Recall 0.680、
-Specificity 1.000，且 15 组配对中只有 13 组在加水印前后保持同一判定。它会拒绝 8 个真实
-照片样本。门禁后的自然照片定位 Precision 0.909、Recall 0.769；全场景结果为 Precision
-0.909、Recall 0.556，因为门禁还会主动放弃 UI、文档和排版场景。详细结果见
+扩充后的固定 48 样本来自 16 个独立照片来源，包含灰度月壤、低色彩火星影像、暗背景行星、
+夜景、科学合成图，以及雪地、针叶林、雾林、沙漠和黑白森林实拍。门禁分类 Precision、
+Recall 和 Specificity 均为 1.000，21 组配对在加水印前后全部保持同一判定。门禁后的自然
+照片定位 Precision 0.750、Recall 0.947；全场景结果为 Precision 0.750、Recall 0.750，
+因为门禁会主动放弃 UI、文档和排版场景。详细结果见
 [`benchmarks/vlm-photo-gate.md`](benchmarks/vlm-photo-gate.md) 和
 [`benchmarks/vlm-photo-gated-localization.md`](benchmarks/vlm-photo-gated-localization.md)。
 
 来源清单、资产 URL、署名和 SHA-256 位于
 [`vlm_photo_sources/manifest.json`](../backend/tests/fixtures/vlm_photo_sources/manifest.json)。当前
-门禁没有达到照片分类、配对稳定性和照片定位要求，所以 `release_claim_allowed=false`，门禁和
-Florence-2 仍不进入 API/Web。它可以在本机显式评估，并且非照片样本不会执行模型推理：
+照片专用门禁已经达到分类、来源、配对稳定性和照片范围定位要求，因此照片门禁报告设置
+`release_claim_allowed=true`。全场景报告仍为 `false`，因为照片专用策略会主动放弃非照片
+内容，不应作为通用自动定位器。API/Web 尚未接入这一可选模型路径；该用户可见合同需要在
+下一开发切片中单独实现和复核。当前可以在本机显式评估，并且非照片样本不会执行模型推理：
 
 ```bash
 make vlm-localization-model-photo-gated

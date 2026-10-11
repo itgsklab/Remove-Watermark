@@ -14,6 +14,13 @@ MAX_SAMPLE_DIMENSION = 256
 LUMINANCE_ENTROPY_THRESHOLD = 4.5
 QUANTIZED_COLOR_THRESHOLD = 128
 COLOR_QUANTIZATION_STEP = 16
+LUMINANCE_STANDARD_DEVIATION_THRESHOLD = 25.0
+FLAT_GRADIENT_MAGNITUDE = 10.0
+MAXIMUM_FLAT_GRADIENT_RATIO = 0.75
+DARK_DETAIL_ENTROPY_THRESHOLD = 3.4
+GRADIENT_ORIENTATION_MAGNITUDE = 20.0
+GRADIENT_ORIENTATION_BIN_COUNT = 18
+GRADIENT_ORIENTATION_ENTROPY_THRESHOLD = 3.9
 
 
 @dataclass(frozen=True, slots=True)
@@ -21,6 +28,10 @@ class PhotoSceneAssessment:
     eligible: bool
     luminance_entropy: float
     quantized_color_count: int
+    luminance_standard_deviation: float
+    flat_gradient_ratio: float
+    gradient_orientation_entropy: float
+    matched_routes: tuple[str, ...]
     reasons: tuple[str, ...]
 
 
@@ -51,19 +62,64 @@ class PhotoSceneGate:
         quantized = image.astype(np.uint16) // COLOR_QUANTIZATION_STEP
         color_ids = quantized[:, :, 0] * 256 + quantized[:, :, 1] * 16 + quantized[:, :, 2]
         quantized_color_count = int(np.unique(color_ids).size)
-        reasons = []
-        if luminance_entropy < LUMINANCE_ENTROPY_THRESHOLD:
-            reasons.append("全局亮度层次不足，图像更接近平面界面、文档或排版内容。")
-        if quantized_color_count < QUANTIZED_COLOR_THRESHOLD:
-            reasons.append("量化后的色彩种类不足，无法确认是自然照片场景。")
-        eligible = not reasons
-        if eligible:
-            reasons.append("亮度层次和色彩多样性均达到保守的自然照片门槛。")
+        luminance_standard_deviation = float(gray.std())
+        gradient_x = cv2.Sobel(gray, cv2.CV_32F, 1, 0, ksize=3)
+        gradient_y = cv2.Sobel(gray, cv2.CV_32F, 0, 1, ksize=3)
+        gradient_magnitude = cv2.magnitude(gradient_x, gradient_y)
+        flat_gradient_ratio = float(np.mean(gradient_magnitude < FLAT_GRADIENT_MAGNITUDE))
+        detailed = gradient_magnitude >= GRADIENT_ORIENTATION_MAGNITUDE
+        if np.any(detailed):
+            orientation = np.arctan2(gradient_y[detailed], gradient_x[detailed])
+            orientation_histogram = np.histogram(
+                orientation,
+                bins=GRADIENT_ORIENTATION_BIN_COUNT,
+                range=(-np.pi, np.pi),
+            )[0].astype(np.float64)
+            orientation_probabilities = (
+                orientation_histogram[orientation_histogram > 0] / orientation_histogram.sum()
+            )
+            gradient_orientation_entropy = float(
+                -(orientation_probabilities * np.log2(orientation_probabilities)).sum()
+            )
+        else:
+            gradient_orientation_entropy = 0.0
+
+        matched_routes = []
+        if (
+            luminance_entropy >= LUMINANCE_ENTROPY_THRESHOLD
+            and quantized_color_count >= QUANTIZED_COLOR_THRESHOLD
+        ):
+            matched_routes.append("color-diversity")
+        if (
+            luminance_standard_deviation >= LUMINANCE_STANDARD_DEVIATION_THRESHOLD
+            and flat_gradient_ratio <= MAXIMUM_FLAT_GRADIENT_RATIO
+        ):
+            matched_routes.append("continuous-tone")
+        if (
+            luminance_entropy >= DARK_DETAIL_ENTROPY_THRESHOLD
+            and luminance_standard_deviation >= LUMINANCE_STANDARD_DEVIATION_THRESHOLD
+            and gradient_orientation_entropy >= GRADIENT_ORIENTATION_ENTROPY_THRESHOLD
+        ):
+            matched_routes.append("distributed-detail")
+
+        eligible = bool(matched_routes)
+        reasons = (
+            (
+                "像素通过以下通用照片证据路径："
+                f"{', '.join(matched_routes)}。"
+            ),
+        ) if eligible else (
+            "色彩多样性、连续色调和分散方向细节均不足，无法确认是自然照片场景。",
+        )
         return PhotoSceneAssessment(
             eligible=eligible,
             luminance_entropy=round(luminance_entropy, 4),
             quantized_color_count=quantized_color_count,
-            reasons=tuple(reasons),
+            luminance_standard_deviation=round(luminance_standard_deviation, 4),
+            flat_gradient_ratio=round(flat_gradient_ratio, 6),
+            gradient_orientation_entropy=round(gradient_orientation_entropy, 4),
+            matched_routes=tuple(matched_routes),
+            reasons=reasons,
         )
 
 
@@ -103,4 +159,11 @@ def photo_scene_gate_metadata() -> dict[str, int | float]:
         "minimum_luminance_entropy": LUMINANCE_ENTROPY_THRESHOLD,
         "minimum_quantized_color_count": QUANTIZED_COLOR_THRESHOLD,
         "color_quantization_step": COLOR_QUANTIZATION_STEP,
+        "minimum_luminance_standard_deviation": LUMINANCE_STANDARD_DEVIATION_THRESHOLD,
+        "flat_gradient_magnitude": FLAT_GRADIENT_MAGNITUDE,
+        "maximum_flat_gradient_ratio": MAXIMUM_FLAT_GRADIENT_RATIO,
+        "minimum_dark_detail_entropy": DARK_DETAIL_ENTROPY_THRESHOLD,
+        "gradient_orientation_magnitude": GRADIENT_ORIENTATION_MAGNITUDE,
+        "gradient_orientation_bin_count": GRADIENT_ORIENTATION_BIN_COUNT,
+        "minimum_gradient_orientation_entropy": GRADIENT_ORIENTATION_ENTROPY_THRESHOLD,
     }

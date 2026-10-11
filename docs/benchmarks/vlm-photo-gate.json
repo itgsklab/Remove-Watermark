@@ -5,37 +5,44 @@
     "maximum_sample_dimension": 256,
     "minimum_luminance_entropy": 4.5,
     "minimum_quantized_color_count": 128,
-    "color_quantization_step": 16
+    "color_quantization_step": 16,
+    "minimum_luminance_standard_deviation": 25.0,
+    "flat_gradient_magnitude": 10.0,
+    "maximum_flat_gradient_ratio": 0.75,
+    "minimum_dark_detail_entropy": 3.4,
+    "gradient_orientation_magnitude": 20.0,
+    "gradient_orientation_bin_count": 18,
+    "minimum_gradient_orientation_entropy": 3.9
   },
   "summary": {
-    "sample_count": 36,
-    "expected_photo_count": 25,
+    "sample_count": 48,
+    "expected_photo_count": 37,
     "expected_non_photo_count": 11,
-    "true_positive": 17,
+    "true_positive": 37,
     "false_positive": 0,
     "true_negative": 11,
-    "false_negative": 8,
+    "false_negative": 0,
     "precision": 1.0,
-    "recall": 0.68,
+    "recall": 1.0,
     "specificity": 1.0,
-    "stable_pair_count": 13,
-    "pair_count": 15,
-    "independent_photo_source_count": 10,
+    "stable_pair_count": 21,
+    "pair_count": 21,
+    "independent_photo_source_count": 16,
     "minimum_independent_photo_sources": 10,
     "source_evidence_gate": "pass",
-    "release_claim_allowed": false
+    "release_claim_allowed": true
   },
   "eligible_localization": {
     "scene_kind": "natural_scene",
-    "sample_count": 25,
-    "positive_count": 13,
-    "negative_count": 12,
-    "true_positive": 10,
-    "false_positive": 1,
-    "false_negative": 3,
-    "precision": 0.909091,
-    "recall": 0.769231,
-    "f1": 0.833333
+    "sample_count": 37,
+    "positive_count": 19,
+    "negative_count": 18,
+    "true_positive": 18,
+    "false_positive": 6,
+    "false_negative": 1,
+    "precision": 0.75,
+    "recall": 0.947368,
+    "f1": 0.837209
   },
   "samples": [
     {
@@ -46,6 +53,13 @@
       "eligible": true,
       "luminance_entropy": 5.5563,
       "quantized_color_count": 212,
+      "luminance_standard_deviation": 74.5819,
+      "flat_gradient_ratio": 0.532857,
+      "gradient_orientation_entropy": 3.7159,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone"
+      ],
       "classification_correct": true
     },
     {
@@ -56,6 +70,13 @@
       "eligible": true,
       "luminance_entropy": 5.5659,
       "quantized_color_count": 213,
+      "luminance_standard_deviation": 74.5023,
+      "flat_gradient_ratio": 0.526001,
+      "gradient_orientation_entropy": 3.7576,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone"
+      ],
       "classification_correct": true
     },
     {
@@ -66,6 +87,14 @@
       "eligible": true,
       "luminance_entropy": 6.4993,
       "quantized_color_count": 471,
+      "luminance_standard_deviation": 56.8243,
+      "flat_gradient_ratio": 0.295573,
+      "gradient_orientation_entropy": 4.1455,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
       "classification_correct": true
     },
     {
@@ -76,6 +105,13 @@
       "eligible": true,
       "luminance_entropy": 5.1557,
       "quantized_color_count": 190,
+      "luminance_standard_deviation": 67.3696,
+      "flat_gradient_ratio": 0.546604,
+      "gradient_orientation_entropy": 3.6999,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone"
+      ],
       "classification_correct": true
     },
     {
@@ -86,6 +122,14 @@
       "eligible": true,
       "luminance_entropy": 5.6467,
       "quantized_color_count": 400,
+      "luminance_standard_deviation": 44.811,
+      "flat_gradient_ratio": 0.450299,
+      "gradient_orientation_entropy": 4.1261,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
       "classification_correct": true
     },
     {
@@ -96,6 +140,10 @@
       "eligible": false,
       "luminance_entropy": 2.7627,
       "quantized_color_count": 76,
+      "luminance_standard_deviation": 33.1175,
+      "flat_gradient_ratio": 0.821289,
+      "gradient_orientation_entropy": 3.5805,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -106,6 +154,13 @@
       "eligible": true,
       "luminance_entropy": 5.6377,
       "quantized_color_count": 201,
+      "luminance_standard_deviation": 70.765,
+      "flat_gradient_ratio": 0.503381,
+      "gradient_orientation_entropy": 3.6772,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone"
+      ],
       "classification_correct": true
     },
     {
@@ -116,6 +171,13 @@
       "eligible": true,
       "luminance_entropy": 5.6974,
       "quantized_color_count": 212,
+      "luminance_standard_deviation": 70.4402,
+      "flat_gradient_ratio": 0.507493,
+      "gradient_orientation_entropy": 3.665,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone"
+      ],
       "classification_correct": true
     },
     {
@@ -126,6 +188,14 @@
       "eligible": true,
       "luminance_entropy": 5.8105,
       "quantized_color_count": 385,
+      "luminance_standard_deviation": 47.5592,
+      "flat_gradient_ratio": 0.42288,
+      "gradient_orientation_entropy": 4.1277,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
       "classification_correct": true
     },
     {
@@ -136,6 +206,14 @@
       "eligible": true,
       "luminance_entropy": 5.8327,
       "quantized_color_count": 389,
+      "luminance_standard_deviation": 47.7595,
+      "flat_gradient_ratio": 0.417169,
+      "gradient_orientation_entropy": 4.1302,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
       "classification_correct": true
     },
     {
@@ -143,10 +221,16 @@
       "scene_kind": "natural_scene",
       "source_group": "nasa-pia24642",
       "expected_photo": true,
-      "eligible": false,
+      "eligible": true,
       "luminance_entropy": 6.4548,
       "quantized_color_count": 93,
-      "classification_correct": false
+      "luminance_standard_deviation": 27.4791,
+      "flat_gradient_ratio": 0.203216,
+      "gradient_orientation_entropy": 3.8808,
+      "matched_routes": [
+        "continuous-tone"
+      ],
+      "classification_correct": true
     },
     {
       "sample_id": "paired-pia24642-positive",
@@ -156,6 +240,13 @@
       "eligible": true,
       "luminance_entropy": 6.5462,
       "quantized_color_count": 128,
+      "luminance_standard_deviation": 31.2644,
+      "flat_gradient_ratio": 0.205683,
+      "gradient_orientation_entropy": 3.8758,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone"
+      ],
       "classification_correct": true
     },
     {
@@ -163,20 +254,34 @@
       "scene_kind": "natural_scene",
       "source_group": "nasa-as11-40-5878",
       "expected_photo": true,
-      "eligible": false,
+      "eligible": true,
       "luminance_entropy": 7.1603,
       "quantized_color_count": 16,
-      "classification_correct": false
+      "luminance_standard_deviation": 43.561,
+      "flat_gradient_ratio": 0.027184,
+      "gradient_orientation_entropy": 4.1537,
+      "matched_routes": [
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
     },
     {
       "sample_id": "paired-as11-40-5878-positive",
       "scene_kind": "natural_scene",
       "source_group": "nasa-as11-40-5878",
       "expected_photo": true,
-      "eligible": false,
+      "eligible": true,
       "luminance_entropy": 7.1624,
       "quantized_color_count": 27,
-      "classification_correct": false
+      "luminance_standard_deviation": 43.5898,
+      "flat_gradient_ratio": 0.027047,
+      "gradient_orientation_entropy": 4.1531,
+      "matched_routes": [
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
     },
     {
       "sample_id": "paired-iss042e097549-negative",
@@ -186,6 +291,13 @@
       "eligible": true,
       "luminance_entropy": 6.7489,
       "quantized_color_count": 197,
+      "luminance_standard_deviation": 86.451,
+      "flat_gradient_ratio": 0.433251,
+      "gradient_orientation_entropy": 2.7482,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone"
+      ],
       "classification_correct": true
     },
     {
@@ -196,6 +308,13 @@
       "eligible": true,
       "luminance_entropy": 6.7876,
       "quantized_color_count": 205,
+      "luminance_standard_deviation": 84.8332,
+      "flat_gradient_ratio": 0.435216,
+      "gradient_orientation_entropy": 2.7005,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone"
+      ],
       "classification_correct": true
     },
     {
@@ -203,30 +322,49 @@
       "scene_kind": "natural_scene",
       "source_group": "nasa-pia11141",
       "expected_photo": true,
-      "eligible": false,
+      "eligible": true,
       "luminance_entropy": 3.5689,
       "quantized_color_count": 113,
-      "classification_correct": false
+      "luminance_standard_deviation": 63.5991,
+      "flat_gradient_ratio": 0.679025,
+      "gradient_orientation_entropy": 3.6139,
+      "matched_routes": [
+        "continuous-tone"
+      ],
+      "classification_correct": true
     },
     {
       "sample_id": "paired-pia11141-positive",
       "scene_kind": "natural_scene",
       "source_group": "nasa-pia11141",
       "expected_photo": true,
-      "eligible": false,
+      "eligible": true,
       "luminance_entropy": 3.6777,
       "quantized_color_count": 113,
-      "classification_correct": false
+      "luminance_standard_deviation": 63.5349,
+      "flat_gradient_ratio": 0.661024,
+      "gradient_orientation_entropy": 3.6917,
+      "matched_routes": [
+        "continuous-tone"
+      ],
+      "classification_correct": true
     },
     {
       "sample_id": "paired-pia00254-negative",
       "scene_kind": "natural_scene",
       "source_group": "nasa-pia00254",
       "expected_photo": true,
-      "eligible": false,
+      "eligible": true,
       "luminance_entropy": 6.3973,
       "quantized_color_count": 115,
-      "classification_correct": false
+      "luminance_standard_deviation": 64.7068,
+      "flat_gradient_ratio": 0.251371,
+      "gradient_orientation_entropy": 4.0761,
+      "matched_routes": [
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
     },
     {
       "sample_id": "paired-pia00254-positive",
@@ -236,6 +374,14 @@
       "eligible": true,
       "luminance_entropy": 6.4266,
       "quantized_color_count": 143,
+      "luminance_standard_deviation": 64.004,
+      "flat_gradient_ratio": 0.255779,
+      "gradient_orientation_entropy": 4.0756,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
       "classification_correct": true
     },
     {
@@ -246,6 +392,14 @@
       "eligible": true,
       "luminance_entropy": 7.6705,
       "quantized_color_count": 228,
+      "luminance_standard_deviation": 57.7837,
+      "flat_gradient_ratio": 0.213359,
+      "gradient_orientation_entropy": 3.9955,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
       "classification_correct": true
     },
     {
@@ -256,6 +410,14 @@
       "eligible": true,
       "luminance_entropy": 7.6715,
       "quantized_color_count": 228,
+      "luminance_standard_deviation": 57.7948,
+      "flat_gradient_ratio": 0.19979,
+      "gradient_orientation_entropy": 4.0051,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
       "classification_correct": true
     },
     {
@@ -263,20 +425,32 @@
       "scene_kind": "natural_scene",
       "source_group": "nasa-pia17792",
       "expected_photo": true,
-      "eligible": false,
+      "eligible": true,
       "luminance_entropy": 3.5691,
       "quantized_color_count": 317,
-      "classification_correct": false
+      "luminance_standard_deviation": 34.3808,
+      "flat_gradient_ratio": 0.838747,
+      "gradient_orientation_entropy": 4.0954,
+      "matched_routes": [
+        "distributed-detail"
+      ],
+      "classification_correct": true
     },
     {
       "sample_id": "paired-pia17792-positive",
       "scene_kind": "natural_scene",
       "source_group": "nasa-pia17792",
       "expected_photo": true,
-      "eligible": false,
+      "eligible": true,
       "luminance_entropy": 3.6489,
       "quantized_color_count": 317,
-      "classification_correct": false
+      "luminance_standard_deviation": 34.2569,
+      "flat_gradient_ratio": 0.834476,
+      "gradient_orientation_entropy": 4.0853,
+      "matched_routes": [
+        "distributed-detail"
+      ],
+      "classification_correct": true
     },
     {
       "sample_id": "paired-pia11727-negative",
@@ -286,6 +460,14 @@
       "eligible": true,
       "luminance_entropy": 7.2844,
       "quantized_color_count": 764,
+      "luminance_standard_deviation": 40.1424,
+      "flat_gradient_ratio": 0.083585,
+      "gradient_orientation_entropy": 4.1356,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
       "classification_correct": true
     },
     {
@@ -296,6 +478,226 @@
       "eligible": true,
       "luminance_entropy": 7.289,
       "quantized_color_count": 790,
+      "luminance_standard_deviation": 40.2279,
+      "flat_gradient_ratio": 0.082899,
+      "gradient_orientation_entropy": 4.1362,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-38778875-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-38778875",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.3288,
+      "quantized_color_count": 304,
+      "luminance_standard_deviation": 55.4634,
+      "flat_gradient_ratio": 0.181606,
+      "gradient_orientation_entropy": 4.0889,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-38778875-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-38778875",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.3724,
+      "quantized_color_count": 304,
+      "luminance_standard_deviation": 56.327,
+      "flat_gradient_ratio": 0.184987,
+      "gradient_orientation_entropy": 4.0846,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-59873545-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-59873545",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 6.8841,
+      "quantized_color_count": 332,
+      "luminance_standard_deviation": 38.4976,
+      "flat_gradient_ratio": 0.028532,
+      "gradient_orientation_entropy": 4.0761,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-59873545-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-59873545",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 6.8941,
+      "quantized_color_count": 339,
+      "luminance_standard_deviation": 38.6231,
+      "flat_gradient_ratio": 0.028417,
+      "gradient_orientation_entropy": 4.0789,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-14666867-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-14666867",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.5311,
+      "quantized_color_count": 218,
+      "luminance_standard_deviation": 65.3344,
+      "flat_gradient_ratio": 0.095874,
+      "gradient_orientation_entropy": 4.0711,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-14666867-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-14666867",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.5632,
+      "quantized_color_count": 218,
+      "luminance_standard_deviation": 66.5716,
+      "flat_gradient_ratio": 0.098501,
+      "gradient_orientation_entropy": 4.0645,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-74184357-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-74184357",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.1939,
+      "quantized_color_count": 16,
+      "luminance_standard_deviation": 37.2844,
+      "flat_gradient_ratio": 0.020879,
+      "gradient_orientation_entropy": 4.0965,
+      "matched_routes": [
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-74184357-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-74184357",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.1973,
+      "quantized_color_count": 27,
+      "luminance_standard_deviation": 37.3708,
+      "flat_gradient_ratio": 0.020673,
+      "gradient_orientation_entropy": 4.0971,
+      "matched_routes": [
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-144326190-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-144326190",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.4376,
+      "quantized_color_count": 109,
+      "luminance_standard_deviation": 47.014,
+      "flat_gradient_ratio": 0.027024,
+      "gradient_orientation_entropy": 4.0723,
+      "matched_routes": [
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-144326190-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-144326190",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.497,
+      "quantized_color_count": 111,
+      "luminance_standard_deviation": 48.1323,
+      "flat_gradient_ratio": 0.031022,
+      "gradient_orientation_entropy": 4.076,
+      "matched_routes": [
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-201054816-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-201054816",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.1001,
+      "quantized_color_count": 390,
+      "luminance_standard_deviation": 52.4772,
+      "flat_gradient_ratio": 0.321203,
+      "gradient_orientation_entropy": 3.9483,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-commons-201054816-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "commons-201054816",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.1051,
+      "quantized_color_count": 390,
+      "luminance_standard_deviation": 52.6227,
+      "flat_gradient_ratio": 0.309873,
+      "gradient_orientation_entropy": 3.9508,
+      "matched_routes": [
+        "color-diversity",
+        "continuous-tone",
+        "distributed-detail"
+      ],
       "classification_correct": true
     },
     {
@@ -306,6 +708,10 @@
       "eligible": false,
       "luminance_entropy": 2.4758,
       "quantized_color_count": 49,
+      "luminance_standard_deviation": 83.7334,
+      "flat_gradient_ratio": 0.81956,
+      "gradient_orientation_entropy": 3.4508,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -316,6 +722,10 @@
       "eligible": false,
       "luminance_entropy": 2.6214,
       "quantized_color_count": 49,
+      "luminance_standard_deviation": 83.6212,
+      "flat_gradient_ratio": 0.800618,
+      "gradient_orientation_entropy": 3.624,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -326,6 +736,10 @@
       "eligible": false,
       "luminance_entropy": 2.0304,
       "quantized_color_count": 41,
+      "luminance_standard_deviation": 20.4161,
+      "flat_gradient_ratio": 0.799967,
+      "gradient_orientation_entropy": 3.0704,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -336,6 +750,10 @@
       "eligible": false,
       "luminance_entropy": 2.1524,
       "quantized_color_count": 77,
+      "luminance_standard_deviation": 20.9189,
+      "flat_gradient_ratio": 0.785136,
+      "gradient_orientation_entropy": 3.2466,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -346,6 +764,10 @@
       "eligible": false,
       "luminance_entropy": 2.0104,
       "quantized_color_count": 25,
+      "luminance_standard_deviation": 13.1854,
+      "flat_gradient_ratio": 0.887105,
+      "gradient_orientation_entropy": 3.5889,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -356,6 +778,10 @@
       "eligible": false,
       "luminance_entropy": 2.201,
       "quantized_color_count": 54,
+      "luminance_standard_deviation": 16.7146,
+      "flat_gradient_ratio": 0.871195,
+      "gradient_orientation_entropy": 3.5777,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -366,6 +792,10 @@
       "eligible": false,
       "luminance_entropy": 1.1677,
       "quantized_color_count": 62,
+      "luminance_standard_deviation": 39.7253,
+      "flat_gradient_ratio": 0.81543,
+      "gradient_orientation_entropy": 3.4138,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -376,6 +806,10 @@
       "eligible": false,
       "luminance_entropy": 1.2309,
       "quantized_color_count": 73,
+      "luminance_standard_deviation": 39.8111,
+      "flat_gradient_ratio": 0.805888,
+      "gradient_orientation_entropy": 3.4675,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -386,6 +820,10 @@
       "eligible": false,
       "luminance_entropy": 3.1065,
       "quantized_color_count": 66,
+      "luminance_standard_deviation": 26.8274,
+      "flat_gradient_ratio": 0.823425,
+      "gradient_orientation_entropy": 3.4708,
+      "matched_routes": [],
       "classification_correct": true
     },
     {
@@ -396,6 +834,10 @@
       "eligible": false,
       "luminance_entropy": 3.1909,
       "quantized_color_count": 66,
+      "luminance_standard_deviation": 27.3333,
+      "flat_gradient_ratio": 0.812703,
+      "gradient_orientation_entropy": 3.5262,
+      "matched_routes": [],
       "classification_correct": true
     }
   ]

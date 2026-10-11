@@ -2,15 +2,15 @@
 
 This report contains real model output.
 
-Metric gate: **fail** · Precision: 0.419 · Recall: 0.722 · F1: 0.531 · Mean matched IoU: 0.795
-Evidence gate: **pass** · Samples: 36 · Negatives: 18 · Scenes: 4 · Pairs: 15
+Metric gate: **fail** · Precision: 0.487 · Recall: 0.792 · F1: 0.603 · Mean matched IoU: 0.791
+Evidence gate: **pass** · Samples: 48 · Negatives: 24 · Scenes: 4 · Pairs: 21
 
 ## Scene breakdown
 
 | Scene | Samples | Positives | Negatives | TP | FP | FN | Precision | Recall | F1 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | document | 2 | 1 | 1 | 0 | 2 | 1 | 0.000 | 0.000 | 0.000 |
-| natural_scene | 25 | 13 | 12 | 12 | 4 | 1 | 0.750 | 0.923 | 0.828 |
+| natural_scene | 37 | 19 | 18 | 18 | 6 | 1 | 0.750 | 0.947 | 0.837 |
 | ordinary_ui | 7 | 3 | 4 | 1 | 10 | 2 | 0.091 | 0.333 | 0.143 |
 | typography | 2 | 1 | 1 | 0 | 2 | 1 | 0.000 | 0.000 | 0.000 |
 
@@ -20,6 +20,12 @@ Evidence gate: **pass** · Samples: 36 · Negatives: 18 · Scenes: 4 · Pairs: 1
 |---|---|---:|---:|---:|
 | as11-40-5878 | natural_scene | no | yes | no |
 | code-editor | ordinary_ui | no | yes | no |
+| commons-144326190 | natural_scene | yes | yes | yes |
+| commons-14666867 | natural_scene | yes | yes | yes |
+| commons-201054816 | natural_scene | no | yes | no |
+| commons-38778875 | natural_scene | yes | yes | yes |
+| commons-59873545 | natural_scene | yes | yes | yes |
+| commons-74184357 | natural_scene | no | yes | no |
 | dashboard | ordinary_ui | no | no | no |
 | document | document | no | no | no |
 | iss042e097549 | natural_scene | no | yes | no |
@@ -64,6 +70,18 @@ Evidence gate: **pass** · Samples: 36 · Negatives: 18 · Scenes: 4 · Pairs: 1
 | paired-pia17792-positive | positive | 1 | 1 | 0 | 1 | 1 | — |
 | paired-pia11727-negative | negative | 0 | 0 | 0 | 0 | 0 | — |
 | paired-pia11727-positive | positive | 1 | 1 | 1 | 0 | 0 | 0.653 |
+| paired-commons-38778875-negative | negative | 0 | 0 | 0 | 0 | 0 | — |
+| paired-commons-38778875-positive | positive | 1 | 1 | 1 | 0 | 0 | 0.862 |
+| paired-commons-59873545-negative | negative | 0 | 0 | 0 | 0 | 0 | — |
+| paired-commons-59873545-positive | positive | 1 | 1 | 1 | 0 | 0 | 0.717 |
+| paired-commons-14666867-negative | negative | 0 | 0 | 0 | 0 | 0 | — |
+| paired-commons-14666867-positive | positive | 1 | 1 | 1 | 0 | 0 | 0.862 |
+| paired-commons-74184357-negative | negative | 0 | 1 | 0 | 1 | 0 | — |
+| paired-commons-74184357-positive | positive | 1 | 1 | 1 | 0 | 0 | 0.694 |
+| paired-commons-144326190-negative | negative | 0 | 0 | 0 | 0 | 0 | — |
+| paired-commons-144326190-positive | positive | 1 | 1 | 1 | 0 | 0 | 0.862 |
+| paired-commons-201054816-negative | negative | 0 | 1 | 0 | 1 | 0 | — |
+| paired-commons-201054816-positive | positive | 1 | 1 | 1 | 0 | 0 | 0.699 |
 | paired-dashboard-negative | negative | 0 | 1 | 0 | 1 | 0 | — |
 | paired-dashboard-positive | positive | 1 | 1 | 0 | 1 | 1 | — |
 | paired-document-negative | negative | 0 | 1 | 0 | 1 | 0 | — |
