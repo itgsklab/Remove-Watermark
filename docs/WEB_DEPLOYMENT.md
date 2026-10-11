@@ -30,6 +30,11 @@ production entry point rejects non-loopback `WMRM_HOST` values, disables develop
 that `index.html` and the asset directory exist, provides SPA history fallback and applies same-origin
 CSP, frame, referrer and content-type protections.
 
+The optional local Florence-2 photo suggestion path remains disabled unless
+`WMRM_VLM_ENABLED=true`, `WMRM_VLM_MODEL_DIR` and `WMRM_VLM_MODEL_MANIFEST` are all set by the
+local operator. It never downloads model files during Web requests. See
+[`VLM_LOCALIZATION.md`](VLM_LOCALIZATION.md) for the reviewed model setup and manual-review contract.
+
 The frontend contains no server shutdown action. Service lifecycle remains under the terminal or
 process supervisor that launched FastAPI. Uploaded files, the SQLite database and generated outputs
 remain in the configured local data directory.

@@ -43,6 +43,10 @@ class Settings(BaseSettings):
     xhs_metadata_max_redirects: int = Field(default=3, ge=0, le=5)
     xhs_media_max_bytes: int = Field(default=25 * 1024 * 1024, ge=1024, le=100 * 1024 * 1024)
     xhs_https_proxy: str | None = None
+    vlm_enabled: bool = False
+    vlm_model_dir: Path | None = None
+    vlm_model_manifest: Path | None = None
+    vlm_device: Literal["auto", "cpu", "mps", "cuda"] = "auto"
     dev_cors: bool = False
 
     @property

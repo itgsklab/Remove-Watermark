@@ -7,9 +7,11 @@ import {
   createAnalysis,
   createTask,
   getAsset,
+  getCapabilities,
   getTask,
   previewImageMasks,
   previewRedactions,
+  suggestImageMasks,
   type Analysis,
   type ImageMaskPreview,
   type ImageMaskRegion,
@@ -52,6 +54,8 @@ const imageMaskPreview = ref<ImageMaskPreview | null>(null)
 const imageRadius = ref(3)
 const imagePlanWarnings = ref<PlanWarning[]>([])
 const confirmedImageWarnings = ref<string[]>([])
+const vlmBusy = ref(false)
+const vlmWarnings = ref<string[]>([])
 const assetId = computed(() => String(route.params.assetId))
 const isDocx = computed(() => store.currentAsset?.kind === 'docx')
 const isCodeCvPdf = computed(() => store.currentAsset?.kind === 'pdf')
@@ -76,6 +80,9 @@ const complexityLabels = {
 
 onMounted(async () => {
   try {
+    if (!store.capabilities) {
+      store.capabilities = await getCapabilities()
+    }
     if (store.currentAsset?.id !== assetId.value) {
       store.currentAsset = await getAsset(assetId.value)
     }
@@ -107,6 +114,7 @@ async function inspect() {
     imageMaskPreview.value = null
     imagePlanWarnings.value = []
     confirmedImageWarnings.value = []
+    vlmWarnings.value = []
     const firstPage = analysis.value.pdf_pages[0]
     if (analysis.value.preset === 'general' && firstPage) {
       redactionPage.value = firstPage.page_number
@@ -216,6 +224,29 @@ function updateImageMasks(regions: ImageMaskRegion[]) {
   imageMaskPreview.value = null
   imagePlanWarnings.value = []
   confirmedImageWarnings.value = []
+}
+
+async function requestVlmSuggestions() {
+  if (!analysis.value || !store.capabilities?.vlm_localization.available) return
+  vlmBusy.value = true
+  message.value = ''
+  vlmWarnings.value = []
+  try {
+    const result = await suggestImageMasks(analysis.value)
+    vlmWarnings.value = result.warnings
+    if (result.status === 'suggested') {
+      updateImageMasks(result.regions)
+      message.value = `本地模型提出 ${result.regions.length} 个候选区域。请逐个检查、调整并验证蒙版。`
+    } else if (result.status === 'photo_gate_rejected') {
+      message.value = '图片未通过照片场景门禁，模型没有运行；请继续手工框选。'
+    } else {
+      message.value = '本地模型没有提出候选区域；请继续手工框选。'
+    }
+  } catch (error) {
+    message.value = error instanceof ApiError ? error.message : '本地模型候选建议失败，请继续手工框选。'
+  } finally {
+    vlmBusy.value = false
+  }
 }
 
 async function previewImageMaskRisk() {
@@ -508,6 +539,22 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
           <div><dt>ICC 配置</dt><dd>{{ analysis.image_metadata.has_icc_profile ? '有' : '无' }}</dd></div>
         </dl>
       </div>
+      <section class="vlm-suggestion-panel">
+        <div>
+          <p class="eyebrow">可选本地模型</p>
+          <h3>照片水印候选区域</h3>
+          <p>{{ store.capabilities?.vlm_localization.message || '正在读取本地模型状态…' }}</p>
+          <p class="hint">不会自动下载模型或修改图片；候选框只会填入下方蒙版草稿。</p>
+        </div>
+        <button
+          class="secondary-button"
+          :disabled="busy || vlmBusy || !store.capabilities?.vlm_localization.available"
+          @click="requestVlmSuggestions"
+        >
+          {{ vlmBusy ? '正在生成建议…' : '使用本地模型建议区域' }}
+        </button>
+      </section>
+      <p v-for="warning in vlmWarnings" :key="warning" class="warning">{{ warning }}</p>
       <ImageMaskEditor
         :asset-id="assetId"
         :metadata="analysis.image_metadata"

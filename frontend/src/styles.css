@@ -130,6 +130,10 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .image-metadata-grid div { padding: 10px 12px; border-radius: 10px; background: #f1f4ef; }
 .image-metadata-grid dt { color: #738078; font-size: .74rem; }
 .image-metadata-grid dd { margin: 4px 0 0; font-size: .9rem; font-weight: 650; }
+.vlm-suggestion-panel { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 18px 0; padding: 16px; border: 1px solid #cbd8cf; border-radius: 12px; background: #f6f9f5; }
+.vlm-suggestion-panel h3 { margin: 4px 0 6px; }
+.vlm-suggestion-panel p { margin: 4px 0; color: #536057; }
+.vlm-suggestion-panel button { flex: 0 0 auto; }
 .mask-coverage { margin-top: 18px; color: #315143; font-weight: 650; }
 .complexity-summary { margin-top: 16px; padding: 18px; border: 1px solid #b9cfc3; border-radius: 14px; background: #f0f7f3; }
 .selection-risk-summary { margin-top: 16px; padding: 18px; border: 1px solid #b9cfc3; border-radius: 14px; background: #f0f7f3; }

@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 from wmrm.adapters.images.detection import LocalizationBox
 
@@ -124,7 +124,7 @@ class Florence2Localizer:
         if not prompt.strip():
             raise ValueError("Florence-2 localization prompt must not be empty.")
         with Image.open(image_path) as source:
-            image = source.convert("RGB")
+            image = ImageOps.exif_transpose(source).convert("RGB")
         width, height = image.size
         boxes = []
         for candidate in self._runtime.predict(image, prompt.strip()):

@@ -22,6 +22,15 @@ export interface Capabilities {
   version: string
   max_upload_bytes: number
   formats: CapabilityItem[]
+  vlm_localization: {
+    enabled: boolean
+    available: boolean
+    status: 'disabled' | 'configuration_invalid' | 'runtime_missing' | 'ready'
+    model_id: string | null
+    automatic_download: false
+    requires_manual_review: true
+    message: string
+  }
 }
 
 export interface XiaohongshuPreview {
@@ -188,6 +197,19 @@ export interface ImageMaskRegion {
   x1: number
   y1: number
   transform_id: string
+}
+
+export interface VlmSuggestion {
+  asset_id: string
+  analysis_id: string
+  status: 'suggested' | 'no_candidates' | 'photo_gate_rejected'
+  regions: ImageMaskRegion[]
+  photo_scene: {
+    eligible: boolean
+    matched_routes: string[]
+    reasons: string[]
+  }
+  warnings: string[]
 }
 
 export interface ImageMaskPreview {
@@ -363,6 +385,17 @@ export async function previewImageMasks(
       asset_id: analysis.asset_id,
       analysis_id: analysis.id,
       regions,
+    }),
+  }))
+}
+
+export async function suggestImageMasks(analysis: Analysis): Promise<VlmSuggestion> {
+  return parse<VlmSuggestion>(await fetch('/api/v1/image-suggestions/vlm', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      asset_id: analysis.asset_id,
+      analysis_id: analysis.id,
     }),
   }))
 }

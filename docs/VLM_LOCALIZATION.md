@@ -90,7 +90,8 @@ Recall 0.792、F1 0.603。新增难例继续暴露无水印照片上的误报，
 排版场景中的误报。证据门禁通过，指标门禁失败。此前对 `transparent watermark`、
 `watermark overlay`、`logo watermark` 和 `overlaid watermark` 的本地对照也没有同时改善
 误报与漏报。因此
-`release_claim_allowed=false`，适配器仍仅用于显式离线评估，不进入 API 或 Web 自动选择。
+`release_claim_allowed=false`，因此它不能作为全场景自动定位器。Web 只在本机管理员显式启用、
+固定模型文件校验通过且照片场景门禁通过时提供人工复核的蒙版草稿。
 
 ## 自然照片场景门禁
 
@@ -112,13 +113,39 @@ Recall 和 Specificity 均为 1.000，21 组配对在加水印前后全部保持
 [`vlm_photo_sources/manifest.json`](../backend/tests/fixtures/vlm_photo_sources/manifest.json)。当前
 照片专用门禁已经达到分类、来源、配对稳定性和照片范围定位要求，因此照片门禁报告设置
 `release_claim_allowed=true`。全场景报告仍为 `false`，因为照片专用策略会主动放弃非照片
-内容，不应作为通用自动定位器。API/Web 尚未接入这一可选模型路径；该用户可见合同需要在
-下一开发切片中单独实现和复核。当前可以在本机显式评估，并且非照片样本不会执行模型推理：
+内容，不应作为通用自动定位器。API/Web 通过显式本地配置接入这一可选模型路径。它默认关闭，
+不接受客户端提供模型路径，不自动下载模型；非照片样本不会加载模型或执行推理。返回的候选框
+只会填入现有蒙版编辑器，用户仍需逐个检查、调整、验证风险并主动创建处理任务。当前也可以
+在本机显式复现评估：
 
 ```bash
 make vlm-localization-model-photo-gated
 make vlm-photo-gate
 ```
+
+## Web 显式启用
+
+先安装可选依赖并通过显式命令获取固定模型文件：
+
+```bash
+cd backend
+.venv/bin/pip install -e '.[vlm]'
+cd ..
+make vlm-model-fetch
+```
+
+然后只在启动本地 Web 服务时设置以下配置：
+
+```bash
+WMRM_VLM_ENABLED=true \
+WMRM_VLM_MODEL_DIR="$PWD/work/models/florence-2-base" \
+WMRM_VLM_MODEL_MANIFEST="$PWD/docs/models/florence-2-base.json" \
+make web-run
+```
+
+`WMRM_VLM_DEVICE` 可设为 `auto`（默认）、`cpu`、`mps` 或 `cuda`。能力状态接口只公开是否
+就绪和固定模型 ID，不公开本机目录。模型在第一次通过照片门禁的建议请求中才懒加载；配置
+错误、缺少运行依赖和推理失败都会返回可恢复状态，原有手工框选始终可用。
 
 复现合同评分：
 

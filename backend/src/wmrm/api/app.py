@@ -46,6 +46,8 @@ from wmrm.api.schemas import (
     ValidateImagePlanRequest,
     ValidatePlanRequest,
     ValidateRedactionPlanRequest,
+    VlmSuggestionRequest,
+    VlmSuggestionResponse,
     XiaohongshuImportRequest,
     XiaohongshuPreviewRequest,
     XiaohongshuPreviewResponse,
@@ -59,6 +61,7 @@ from wmrm.application.redaction_plans import RedactionPlanService
 from wmrm.application.redactions import RedactionService
 from wmrm.application.retention import RetentionService
 from wmrm.application.tasks import TaskService
+from wmrm.application.vlm_suggestions import LocalizerFactory, VlmSuggestionService
 from wmrm.application.xiaohongshu_links import XiaohongshuLinkService
 from wmrm.persistence.database import Database
 from wmrm.settings import Settings, load_settings
@@ -70,6 +73,7 @@ def create_app(
     xiaohongshu_transport: MetadataTransport | None = None,
     xiaohongshu_media_transport: MediaTransport | None = None,
     frontend_dir: Path | None = None,
+    vlm_localizer_factory: LocalizerFactory | None = None,
 ) -> FastAPI:
     config = settings or load_settings()
     database = Database(config.database_path)
@@ -115,6 +119,14 @@ def create_app(
     redaction_plans = RedactionPlanService(assets, redactions)
     image_masks = ImageMaskService(assets)
     image_plans = ImagePlanService(assets, image_masks)
+    vlm_suggestions = VlmSuggestionService(
+        assets,
+        enabled=config.vlm_enabled,
+        model_dir=config.vlm_model_dir,
+        model_manifest=config.vlm_model_manifest,
+        device=config.vlm_device,
+        localizer_factory=vlm_localizer_factory,
+    )
     xiaohongshu_links = XiaohongshuLinkService(
         metadata_enabled=config.xhs_metadata_enabled,
         media_import_enabled=config.xhs_media_import_enabled,
@@ -154,6 +166,7 @@ def create_app(
     app.state.redaction_plans = redaction_plans
     app.state.image_masks = image_masks
     app.state.image_plans = image_plans
+    app.state.vlm_suggestions = vlm_suggestions
     app.state.xiaohongshu_links = xiaohongshu_links
     app.add_middleware(
         TrustedHostMiddleware,
@@ -289,6 +302,7 @@ def create_app(
                     strategies=["share-link-parse", "metadata-preview", "safe-page-image-import"],
                 ),
             ],
+            vlm_localization=vlm_suggestions.capability(),
         )
 
     @app.post("/api/v1/xiaohongshu/preview", response_model=XiaohongshuPreviewResponse)
@@ -418,6 +432,13 @@ def create_app(
         session: Annotated[Session, Depends(get_session)],
     ) -> ImageMaskPreviewResponse:
         return image_masks.preview(session, request)
+
+    @app.post("/api/v1/image-suggestions/vlm", response_model=VlmSuggestionResponse)
+    def suggest_image_masks(
+        request: VlmSuggestionRequest,
+        session: Annotated[Session, Depends(get_session)],
+    ) -> VlmSuggestionResponse:
+        return vlm_suggestions.suggest(session, request)
 
     @app.post("/api/v1/image-plans/validate", response_model=ImagePlanResponse)
     async def validate_image_plan(

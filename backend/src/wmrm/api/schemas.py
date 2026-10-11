@@ -27,10 +27,21 @@ class CapabilityItem(BaseModel):
     strategies: list[str]
 
 
+class OptionalModelCapability(BaseModel):
+    enabled: bool
+    available: bool
+    status: Literal["disabled", "configuration_invalid", "runtime_missing", "ready"]
+    model_id: str | None = None
+    automatic_download: Literal[False] = False
+    requires_manual_review: Literal[True] = True
+    message: str
+
+
 class CapabilitiesResponse(BaseModel):
     version: str
     max_upload_bytes: int
     formats: list[CapabilityItem]
+    vlm_localization: OptionalModelCapability
 
 
 class XiaohongshuPreviewRequest(BaseModel):
@@ -223,6 +234,26 @@ class ImageMaskRegion(BaseModel):
     x1: float
     y1: float
     transform_id: str = Field(min_length=1, max_length=64)
+
+
+class VlmSuggestionRequest(BaseModel):
+    asset_id: str
+    analysis_id: str
+
+
+class PhotoSceneAssessmentResponse(BaseModel):
+    eligible: bool
+    matched_routes: list[str]
+    reasons: list[str]
+
+
+class VlmSuggestionResponse(BaseModel):
+    asset_id: str
+    analysis_id: str
+    status: Literal["suggested", "no_candidates", "photo_gate_rejected"]
+    regions: list[ImageMaskRegion]
+    photo_scene: PhotoSceneAssessmentResponse
+    warnings: list[str]
 
 
 class PreviewImageMasksRequest(BaseModel):

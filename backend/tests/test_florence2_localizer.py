@@ -27,6 +27,15 @@ class HugeBoxRuntime:
         return ({"bbox": [0, 0, image.width, image.height], "label": "watermark"},)
 
 
+class SizeRuntime(FakeRuntime):
+    def __init__(self) -> None:
+        self.image_size = None
+
+    def predict(self, image: Image.Image, prompt: str) -> tuple[dict, ...]:
+        self.image_size = image.size
+        return super().predict(image, prompt)
+
+
 class FakeLocalizer:
     model_id = "test/model"
     model_revision = "a" * 40
@@ -110,6 +119,22 @@ def test_localizer_filters_oversized_candidates(tmp_path: Path) -> None:
     localizer = Florence2Localizer(model_dir, manifest_path, runtime=HugeBoxRuntime())
 
     assert localizer.localize(image_path, "watermark") == ()
+
+
+def test_localizer_uses_display_orientation_for_web_mask_coordinates(tmp_path: Path) -> None:
+    model_dir, manifest_path = _model_fixture(tmp_path)
+    image_path = tmp_path / "rotated.jpg"
+    image = Image.new("RGB", (40, 20), "white")
+    exif = Image.Exif()
+    exif[274] = 6
+    image.save(image_path, exif=exif)
+    runtime = SizeRuntime()
+
+    Florence2Localizer(model_dir, manifest_path, runtime=runtime).localize(
+        image_path, "watermark"
+    )
+
+    assert runtime.image_size == (20, 40)
 
 
 def test_prediction_file_is_marked_as_real_model_output(tmp_path: Path) -> None:

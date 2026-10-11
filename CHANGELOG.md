@@ -46,6 +46,9 @@ All notable changes to this project are documented in this file. The format foll
   typography images, with color-diversity, continuous-tone and distributed-detail evidence routes
   plus reproducible classification, pair-stability and independent-source reports. The scene gate
   passes its fixed corpus, while Florence-2 photo precision remains below the release threshold.
+- An explicit local Web opt-in for photo-gated Florence-2 mask suggestions. It verifies the pinned
+  local model, loads it only after the gate passes, never downloads weights, and keeps every model
+  box inside the existing editable preview and manual-confirmation workflow.
 
 ### Security
 
