@@ -63,12 +63,12 @@ def test_contract_fixture_scores_positive_and_negative_samples(tmp_path: Path) -
     )
 
     assert report["evaluation_kind"] == "contract_fixture"
-    assert report["summary"]["sample_count"] == 20
-    assert report["summary"]["positive_count"] == 10
-    assert report["summary"]["negative_count"] == 10
+    assert report["summary"]["sample_count"] == 36
+    assert report["summary"]["positive_count"] == 18
+    assert report["summary"]["negative_count"] == 18
     assert report["summary"]["scene_kind_count"] == 4
-    assert report["summary"]["paired_scene_count"] == 7
-    assert report["summary"]["true_positive"] == 10
+    assert report["summary"]["paired_scene_count"] == 15
+    assert report["summary"]["true_positive"] == 18
     assert report["summary"]["false_positive"] == 0
     assert report["summary"]["false_negative"] == 0
     assert report["summary"]["metric_gate"] == "pass"
@@ -145,7 +145,7 @@ def test_benchmark_counts_negative_false_positive(tmp_path: Path) -> None:
     )
 
     assert report["summary"]["false_positive"] == 1
-    assert report["summary"]["precision"] == pytest.approx(10 / 11)
+    assert report["summary"]["precision"] == pytest.approx(18 / 19)
 
 
 def test_report_exposes_scene_and_pair_diagnostics(tmp_path: Path) -> None:
@@ -162,7 +162,7 @@ def test_report_exposes_scene_and_pair_diagnostics(tmp_path: Path) -> None:
         "ordinary_ui",
         "typography",
     }
-    assert len(report["pair_diagnostics"]) == 7
+    assert len(report["pair_diagnostics"]) == 15
     assert all(row["pair_passed"] for row in report["pair_diagnostics"])
     markdown = (tmp_path / "report.md").read_text()
     assert "## Scene breakdown" in markdown

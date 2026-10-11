@@ -8,34 +8,34 @@
     "color_quantization_step": 16
   },
   "summary": {
-    "sample_count": 20,
-    "expected_photo_count": 9,
+    "sample_count": 36,
+    "expected_photo_count": 25,
     "expected_non_photo_count": 11,
-    "true_positive": 9,
+    "true_positive": 17,
     "false_positive": 0,
     "true_negative": 11,
-    "false_negative": 0,
+    "false_negative": 8,
     "precision": 1.0,
-    "recall": 1.0,
+    "recall": 0.68,
     "specificity": 1.0,
-    "stable_pair_count": 7,
-    "pair_count": 7,
-    "independent_photo_source_count": 2,
+    "stable_pair_count": 13,
+    "pair_count": 15,
+    "independent_photo_source_count": 10,
     "minimum_independent_photo_sources": 10,
-    "source_evidence_gate": "fail",
+    "source_evidence_gate": "pass",
     "release_claim_allowed": false
   },
   "eligible_localization": {
     "scene_kind": "natural_scene",
-    "sample_count": 9,
-    "positive_count": 5,
-    "negative_count": 4,
-    "true_positive": 5,
-    "false_positive": 0,
-    "false_negative": 0,
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1": 1.0
+    "sample_count": 25,
+    "positive_count": 13,
+    "negative_count": 12,
+    "true_positive": 10,
+    "false_positive": 1,
+    "false_negative": 3,
+    "precision": 0.909091,
+    "recall": 0.769231,
+    "f1": 0.833333
   },
   "samples": [
     {
@@ -136,6 +136,166 @@
       "eligible": true,
       "luminance_entropy": 5.8327,
       "quantized_color_count": 389,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-pia24642-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia24642",
+      "expected_photo": true,
+      "eligible": false,
+      "luminance_entropy": 6.4548,
+      "quantized_color_count": 93,
+      "classification_correct": false
+    },
+    {
+      "sample_id": "paired-pia24642-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia24642",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 6.5462,
+      "quantized_color_count": 128,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-as11-40-5878-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-as11-40-5878",
+      "expected_photo": true,
+      "eligible": false,
+      "luminance_entropy": 7.1603,
+      "quantized_color_count": 16,
+      "classification_correct": false
+    },
+    {
+      "sample_id": "paired-as11-40-5878-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-as11-40-5878",
+      "expected_photo": true,
+      "eligible": false,
+      "luminance_entropy": 7.1624,
+      "quantized_color_count": 27,
+      "classification_correct": false
+    },
+    {
+      "sample_id": "paired-iss042e097549-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss042e097549",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 6.7489,
+      "quantized_color_count": 197,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-iss042e097549-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss042e097549",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 6.7876,
+      "quantized_color_count": 205,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-pia11141-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia11141",
+      "expected_photo": true,
+      "eligible": false,
+      "luminance_entropy": 3.5689,
+      "quantized_color_count": 113,
+      "classification_correct": false
+    },
+    {
+      "sample_id": "paired-pia11141-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia11141",
+      "expected_photo": true,
+      "eligible": false,
+      "luminance_entropy": 3.6777,
+      "quantized_color_count": 113,
+      "classification_correct": false
+    },
+    {
+      "sample_id": "paired-pia00254-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia00254",
+      "expected_photo": true,
+      "eligible": false,
+      "luminance_entropy": 6.3973,
+      "quantized_color_count": 115,
+      "classification_correct": false
+    },
+    {
+      "sample_id": "paired-pia00254-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia00254",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 6.4266,
+      "quantized_color_count": 143,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-pia20284-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia20284",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.6705,
+      "quantized_color_count": 228,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-pia20284-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia20284",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.6715,
+      "quantized_color_count": 228,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-pia17792-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia17792",
+      "expected_photo": true,
+      "eligible": false,
+      "luminance_entropy": 3.5691,
+      "quantized_color_count": 317,
+      "classification_correct": false
+    },
+    {
+      "sample_id": "paired-pia17792-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia17792",
+      "expected_photo": true,
+      "eligible": false,
+      "luminance_entropy": 3.6489,
+      "quantized_color_count": 317,
+      "classification_correct": false
+    },
+    {
+      "sample_id": "paired-pia11727-negative",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia11727",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.2844,
+      "quantized_color_count": 764,
+      "classification_correct": true
+    },
+    {
+      "sample_id": "paired-pia11727-positive",
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia11727",
+      "expected_photo": true,
+      "eligible": true,
+      "luminance_entropy": 7.289,
+      "quantized_color_count": 790,
       "classification_correct": true
     },
     {

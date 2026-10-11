@@ -109,7 +109,7 @@
       "file": "paired-photo-horizon-clean.png",
       "sha256": "6d624d9e630908168a4ab3642d4dac8d1366016be9b11ff944156fc526ffa992",
       "expected_regions": [],
-      "provenance": "Deterministic repository-generated clean scene with no user or third-party data.",
+      "provenance": "NASA ISS source photograph with repository-generated normalization and overlay.",
       "width": 720,
       "height": 480,
       "scene_kind": "natural_scene",
@@ -130,7 +130,7 @@
           "label": "watermark"
         }
       ],
-      "provenance": "Paired clean scene with deterministic repository-generated opaque lower-right badge.",
+      "provenance": "NASA ISS source photograph with repository-generated normalization and overlay. Paired with deterministic repository-generated opaque lower-right badge.",
       "width": 720,
       "height": 480,
       "scene_kind": "natural_scene",
@@ -143,7 +143,7 @@
       "file": "paired-photo-night-clean.png",
       "sha256": "7cb017fd2f31f8b2fbbadec49972732bb9a5931c586f6d2d212fa9159a8f510f",
       "expected_regions": [],
-      "provenance": "Deterministic repository-generated clean scene with no user or third-party data.",
+      "provenance": "NASA ISS source photograph with repository-generated normalization and overlay.",
       "width": 720,
       "height": 480,
       "scene_kind": "natural_scene",
@@ -164,13 +164,301 @@
           "label": "watermark"
         }
       ],
-      "provenance": "Paired clean scene with deterministic repository-generated translucent top-center text overlay.",
+      "provenance": "NASA ISS source photograph with repository-generated normalization and overlay. Paired with deterministic repository-generated translucent top-center text overlay.",
       "width": 720,
       "height": 480,
       "scene_kind": "natural_scene",
       "source_group": "nasa-iss045e013851",
       "pair_id": "photo-night",
       "review_required": false
+    },
+    {
+      "id": "paired-pia24642-negative",
+      "file": "paired-pia24642-clean.png",
+      "sha256": "a14dc1d2ff760489d886d4bd885a33eca401c2cfee5463b942fdf6d19f8cb803",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Perseverance hazard-camera view of Ingenuity' (NASA/JPL-Caltech), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia24642",
+      "pair_id": "pia24642",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA24642"
+    },
+    {
+      "id": "paired-pia24642-positive",
+      "file": "paired-pia24642-watermark.png",
+      "sha256": "0356b1d64f00ffa6d3fa27d059a13d55b20158c66aaf98adc77d1e678d19e7f5",
+      "expected_regions": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Perseverance hazard-camera view of Ingenuity' (NASA/JPL-Caltech), normalized by the repository without user data. Paired with deterministic repository-generated opaque lower-right badge.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia24642",
+      "pair_id": "pia24642",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA24642"
+    },
+    {
+      "id": "paired-as11-40-5878-negative",
+      "file": "paired-as11-40-5878-clean.png",
+      "sha256": "e5bffe284324ee64b610e838000e79554a4a63568df59144fc5f6f0f0e6e4915",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Apollo 11 bootprint in lunar soil' (NASA Johnson Space Center), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-as11-40-5878",
+      "pair_id": "as11-40-5878",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/as11-40-5878"
+    },
+    {
+      "id": "paired-as11-40-5878-positive",
+      "file": "paired-as11-40-5878-watermark.png",
+      "sha256": "9e9e65bbb13e3e4580f39f293ce2122807305863f4cea6c060c1c65c2dd2d646",
+      "expected_regions": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Apollo 11 bootprint in lunar soil' (NASA Johnson Space Center), normalized by the repository without user data. Paired with deterministic repository-generated translucent top-center text overlay.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-as11-40-5878",
+      "pair_id": "as11-40-5878",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/as11-40-5878"
+    },
+    {
+      "id": "paired-iss042e097549-negative",
+      "file": "paired-iss042e097549-clean.png",
+      "sha256": "3ae11c913e60c37fb9127c014604e35d3d930de20fc5f032d3ed09437325f9a5",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Full moon viewed from the ISS' (NASA Johnson Space Center), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss042e097549",
+      "pair_id": "iss042e097549",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/iss042e097549"
+    },
+    {
+      "id": "paired-iss042e097549-positive",
+      "file": "paired-iss042e097549-watermark.png",
+      "sha256": "f1f592a3af619a9da647c1765e4c9b7d17a7f30c34041a2d06ca562d5fa9b58a",
+      "expected_regions": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Full moon viewed from the ISS' (NASA Johnson Space Center), normalized by the repository without user data. Paired with deterministic repository-generated opaque lower-right badge.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-iss042e097549",
+      "pair_id": "iss042e097549",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/iss042e097549"
+    },
+    {
+      "id": "paired-pia11141-negative",
+      "file": "paired-pia11141-clean.png",
+      "sha256": "4b74ec3de543925ef5394c0810e4af8d37f2f6c71d5af5082b8831f6ead03172",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Saturn, four years into the Cassini mission' (NASA/JPL/Space Science Institute), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia11141",
+      "pair_id": "pia11141",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA11141"
+    },
+    {
+      "id": "paired-pia11141-positive",
+      "file": "paired-pia11141-watermark.png",
+      "sha256": "4ec9bea2028185a8e0a0caddab2a74e8b105a47e0baf622a2cecdeb3db28ad74",
+      "expected_regions": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Saturn, four years into the Cassini mission' (NASA/JPL/Space Science Institute), normalized by the repository without user data. Paired with deterministic repository-generated translucent top-center text overlay.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia11141",
+      "pair_id": "pia11141",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA11141"
+    },
+    {
+      "id": "paired-pia00254-negative",
+      "file": "paired-pia00254-clean.png",
+      "sha256": "75f84eccee55e1796a0c14f9029df2787e61b8cc77215550dab49853daf0f051",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Magellan perspective view of Maat Mons on Venus' (NASA/JPL), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia00254",
+      "pair_id": "pia00254",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA00254"
+    },
+    {
+      "id": "paired-pia00254-positive",
+      "file": "paired-pia00254-watermark.png",
+      "sha256": "972548c1102d3002a817c6db1f0ad3ae96a6ef4d46602a6466f3a82236d262f6",
+      "expected_regions": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Magellan perspective view of Maat Mons on Venus' (NASA/JPL), normalized by the repository without user data. Paired with deterministic repository-generated opaque lower-right badge.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia00254",
+      "pair_id": "pia00254",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA00254"
+    },
+    {
+      "id": "paired-pia20284-negative",
+      "file": "paired-pia20284-clean.png",
+      "sha256": "379961025c198c8ae27b803023e0865ecc7bf466ba203ddf03e57fd71ae50695",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Curiosity panorama beside Namib Dune on Mars' (NASA/JPL-Caltech/MSSS), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia20284",
+      "pair_id": "pia20284",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA20284"
+    },
+    {
+      "id": "paired-pia20284-positive",
+      "file": "paired-pia20284-watermark.png",
+      "sha256": "4408c066600d9d45490c4ce786bcf94f652a211bb71f19a38f257a202be6e387",
+      "expected_regions": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Curiosity panorama beside Namib Dune on Mars' (NASA/JPL-Caltech/MSSS), normalized by the repository without user data. Paired with deterministic repository-generated translucent top-center text overlay.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia20284",
+      "pair_id": "pia20284",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA20284"
+    },
+    {
+      "id": "paired-pia17792-negative",
+      "file": "paired-pia17792-clean.png",
+      "sha256": "b91e0ec0b450d3e75db82fffead30b1415d0551ee724da5d193101759d89bda5",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Goldstone 70 m antenna tracking under a full moon' (NASA/JPL-Caltech), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia17792",
+      "pair_id": "pia17792",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA17792"
+    },
+    {
+      "id": "paired-pia17792-positive",
+      "file": "paired-pia17792-watermark.png",
+      "sha256": "688ecdf8737998f51656a7ac5f2ff394e3deb7f6442f0170b63d30ba40c6b6db",
+      "expected_regions": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Goldstone 70 m antenna tracking under a full moon' (NASA/JPL-Caltech), normalized by the repository without user data. Paired with deterministic repository-generated opaque lower-right badge.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia17792",
+      "pair_id": "pia17792",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA17792"
+    },
+    {
+      "id": "paired-pia11727-negative",
+      "file": "paired-pia11727-clean.png",
+      "sha256": "88ef2ac635c7f7539158cee808da8fac5e51bdbdbeadb423a4d64ef4cbd99b3d",
+      "expected_regions": [],
+      "provenance": "Pinned NASA image-library source 'Moon Mineralogy Mapper composite of Orientale Basin' (NASA/JPL/Brown), normalized by the repository without user data.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia11727",
+      "pair_id": "pia11727",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA11727"
+    },
+    {
+      "id": "paired-pia11727-positive",
+      "file": "paired-pia11727-watermark.png",
+      "sha256": "b598fe4792361d450bb3e1671afcac225a28890f23ae294b7ca4e6ed4e0669f3",
+      "expected_regions": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark"
+        }
+      ],
+      "provenance": "Pinned NASA image-library source 'Moon Mineralogy Mapper composite of Orientale Basin' (NASA/JPL/Brown), normalized by the repository without user data. Paired with deterministic repository-generated translucent top-center text overlay.",
+      "width": 720,
+      "height": 480,
+      "scene_kind": "natural_scene",
+      "source_group": "nasa-pia11727",
+      "pair_id": "pia11727",
+      "review_required": false,
+      "source_record": "https://images.nasa.gov/details/PIA11727"
     },
     {
       "id": "paired-dashboard-negative",
@@ -198,7 +486,7 @@
           "label": "watermark"
         }
       ],
-      "provenance": "Paired clean scene with deterministic repository-generated rotated translucent center text overlay.",
+      "provenance": "Deterministic repository-generated clean scene with no user or third-party data. Paired with deterministic repository-generated rotated translucent center text overlay.",
       "width": 720,
       "height": 540,
       "scene_kind": "ordinary_ui",
@@ -232,7 +520,7 @@
           "label": "watermark"
         }
       ],
-      "provenance": "Paired clean scene with deterministic repository-generated rotated translucent document text overlay.",
+      "provenance": "Deterministic repository-generated clean scene with no user or third-party data. Paired with deterministic repository-generated rotated translucent document text overlay.",
       "width": 720,
       "height": 540,
       "scene_kind": "document",
@@ -266,7 +554,7 @@
           "label": "watermark"
         }
       ],
-      "provenance": "Paired clean scene with deterministic repository-generated opaque top-right status badge.",
+      "provenance": "Deterministic repository-generated clean scene with no user or third-party data. Paired with deterministic repository-generated opaque top-right status badge.",
       "width": 720,
       "height": 540,
       "scene_kind": "ordinary_ui",
@@ -300,7 +588,7 @@
           "label": "watermark"
         }
       ],
-      "provenance": "Paired clean scene with deterministic repository-generated semi-transparent lower-right text overlay.",
+      "provenance": "Deterministic repository-generated clean scene with no user or third-party data. Paired with deterministic repository-generated semi-transparent lower-right text overlay.",
       "width": 720,
       "height": 540,
       "scene_kind": "typography",
@@ -334,7 +622,7 @@
           "label": "watermark"
         }
       ],
-      "provenance": "Paired clean scene with deterministic repository-generated outlined lower-right creator mark.",
+      "provenance": "Deterministic repository-generated clean scene with no user or third-party data. Paired with deterministic repository-generated outlined lower-right creator mark.",
       "width": 540,
       "height": 720,
       "scene_kind": "ordinary_ui",

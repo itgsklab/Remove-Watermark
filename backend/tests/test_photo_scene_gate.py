@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 
@@ -9,6 +10,7 @@ from wmrm.adapters.images.photo_scene import PhotoGatedLocalizer, PhotoSceneGate
 from wmrm.benchmarks.vlm_photo_gate import evaluate_photo_gate
 
 FIXTURES = Path(__file__).parent / "fixtures" / "vlm_localization"
+PHOTO_SOURCES = Path(__file__).parent / "fixtures" / "vlm_photo_sources"
 
 
 def test_photo_scene_gate_uses_pixel_diversity(tmp_path: Path) -> None:
@@ -28,7 +30,22 @@ def test_photo_scene_gate_uses_pixel_diversity(tmp_path: Path) -> None:
     assert flat_result.quantized_color_count < photo_result.quantized_color_count
 
 
-def test_fixed_corpus_gate_reports_scope_and_source_limit(tmp_path: Path) -> None:
+def test_photo_source_manifest_pins_eight_independent_nasa_assets() -> None:
+    manifest = json.loads((PHOTO_SOURCES / "manifest.json").read_text())
+
+    assert manifest["schema_version"] == 1
+    assert len(manifest["sources"]) == 8
+    assert len({source["source_group"] for source in manifest["sources"]}) == 8
+    for source in manifest["sources"]:
+        path = PHOTO_SOURCES / source["file"]
+        assert path.is_file()
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == source["sha256"]
+        assert source["record_url"].startswith("https://images.nasa.gov/details/")
+        assert source["asset_url"].startswith("https://images-assets.nasa.gov/image/")
+        assert source["review_required"] is False
+
+
+def test_expanded_corpus_gate_exposes_low_entropy_photo_limit(tmp_path: Path) -> None:
     predictions = json.loads((FIXTURES / "contract-predictions.json").read_text())
     predictions["detector"]["is_model_output"] = True
     predictions_path = tmp_path / "predictions.json"
@@ -45,17 +62,17 @@ def test_fixed_corpus_gate_reports_scope_and_source_limit(tmp_path: Path) -> Non
     )
 
     summary = report["summary"]
-    assert summary["sample_count"] == 20
-    assert summary["true_positive"] == 9
+    assert summary["sample_count"] == 36
+    assert summary["true_positive"] == 17
     assert summary["true_negative"] == 11
     assert summary["false_positive"] == 0
-    assert summary["false_negative"] == 0
-    assert summary["stable_pair_count"] == 7
-    assert summary["independent_photo_source_count"] == 2
-    assert summary["source_evidence_gate"] == "fail"
+    assert summary["false_negative"] == 8
+    assert summary["stable_pair_count"] == 13
+    assert summary["independent_photo_source_count"] == 10
+    assert summary["source_evidence_gate"] == "pass"
     assert summary["release_claim_allowed"] is False
     assert report["eligible_localization"]["precision"] == 1.0
-    assert report["eligible_localization"]["recall"] == 1.0
+    assert report["eligible_localization"]["recall"] == 0.769231
 
 
 def test_photo_gated_localizer_skips_non_photo_pixels(tmp_path: Path) -> None:

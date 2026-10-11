@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "description": "Pinned NASA image-library sources reviewed for the photo-scene gate corpus. The benchmark adds repository-generated watermark overlays; source images remain unchanged in this directory.",
+  "sources": [
+    {
+      "source_group": "nasa-pia24642",
+      "nasa_id": "PIA24642",
+      "file": "PIA24642.jpg",
+      "sha256": "afb378142e6ec837345053c8b4bd7793a69a0b3e0f054f715654f437769fc983",
+      "title": "Perseverance hazard-camera view of Ingenuity",
+      "credit": "NASA/JPL-Caltech",
+      "record_url": "https://images.nasa.gov/details/PIA24642",
+      "asset_url": "https://images-assets.nasa.gov/image/PIA24642/PIA24642~small.jpg",
+      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "review_required": false
+    },
+    {
+      "source_group": "nasa-as11-40-5878",
+      "nasa_id": "as11-40-5878",
+      "file": "as11-40-5878.jpg",
+      "sha256": "f85a6d5e77b18badaa04bd2971722022d34da31d7bdc0bd65417c8c80a7bf3af",
+      "title": "Apollo 11 bootprint in lunar soil",
+      "credit": "NASA Johnson Space Center",
+      "record_url": "https://images.nasa.gov/details/as11-40-5878",
+      "asset_url": "https://images-assets.nasa.gov/image/as11-40-5878/as11-40-5878~medium.jpg",
+      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "review_required": false
+    },
+    {
+      "source_group": "nasa-iss042e097549",
+      "nasa_id": "iss042e097549",
+      "file": "iss042e097549.jpg",
+      "sha256": "bac8f7f901e588b4382b424eca14e32d726b357fdb7943e74fab46a106193a0c",
+      "title": "Full moon viewed from the ISS",
+      "credit": "NASA Johnson Space Center",
+      "record_url": "https://images.nasa.gov/details/iss042e097549",
+      "asset_url": "https://images-assets.nasa.gov/image/iss042e097549/iss042e097549~medium.jpg",
+      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "review_required": false
+    },
+    {
+      "source_group": "nasa-pia11141",
+      "nasa_id": "PIA11141",
+      "file": "PIA11141.jpg",
+      "sha256": "8a4c8f1b71ce9e397490a2499e421c8d4507ca4e3417c6c5f233cbe79980e84b",
+      "title": "Saturn, four years into the Cassini mission",
+      "credit": "NASA/JPL/Space Science Institute",
+      "record_url": "https://images.nasa.gov/details/PIA11141",
+      "asset_url": "https://images-assets.nasa.gov/image/PIA11141/PIA11141~medium.jpg",
+      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "review_required": false
+    },
+    {
+      "source_group": "nasa-pia00254",
+      "nasa_id": "PIA00254",
+      "file": "PIA00254.jpg",
+      "sha256": "fab28a95be09c785d5a0e4f627a126ea6a787e4fe85914059f05b7e15bfc5f7e",
+      "title": "Magellan perspective view of Maat Mons on Venus",
+      "credit": "NASA/JPL",
+      "record_url": "https://images.nasa.gov/details/PIA00254",
+      "asset_url": "https://images-assets.nasa.gov/image/PIA00254/PIA00254~medium.jpg",
+      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "review_required": false
+    },
+    {
+      "source_group": "nasa-pia20284",
+      "nasa_id": "PIA20284",
+      "file": "PIA20284.jpg",
+      "sha256": "17a52d8d3f6ff6329d470dc57e54edc37bedc03d416abfcf8eaea4ddd05a0fe2",
+      "title": "Curiosity panorama beside Namib Dune on Mars",
+      "credit": "NASA/JPL-Caltech/MSSS",
+      "record_url": "https://images.nasa.gov/details/PIA20284",
+      "asset_url": "https://images-assets.nasa.gov/image/PIA20284/PIA20284~medium.jpg",
+      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "review_required": false
+    },
+    {
+      "source_group": "nasa-pia17792",
+      "nasa_id": "PIA17792",
+      "file": "PIA17792.jpg",
+      "sha256": "1527243fffe331e340da778903c02ad3f375d2f3bc6daa5ec9e1f971eb060233",
+      "title": "Goldstone 70 m antenna tracking under a full moon",
+      "credit": "NASA/JPL-Caltech",
+      "record_url": "https://images.nasa.gov/details/PIA17792",
+      "asset_url": "https://images-assets.nasa.gov/image/PIA17792/PIA17792~medium.jpg",
+      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "review_required": false
+    },
+    {
+      "source_group": "nasa-pia11727",
+      "nasa_id": "PIA11727",
+      "file": "PIA11727.jpg",
+      "sha256": "54ecb6dcc8a1207324270e656a1dca7e02cc797fa410f98e4f16a1c99f3116c5",
+      "title": "Moon Mineralogy Mapper composite of Orientale Basin",
+      "credit": "NASA/JPL/Brown",
+      "record_url": "https://images.nasa.gov/details/PIA11727",
+      "asset_url": "https://images-assets.nasa.gov/image/PIA11727/PIA11727~orig.jpg",
+      "usage_guideline_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "review_required": false
+    }
+  ]
+}

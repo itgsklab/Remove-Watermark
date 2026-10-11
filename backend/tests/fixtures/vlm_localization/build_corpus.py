@@ -4,12 +4,13 @@ import hashlib
 import json
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parent
 FIXTURE_ROOT = ROOT.parent
 IMAGE_ROOT = FIXTURE_ROOT / "image_complexity"
 MOBILE_ROOT = FIXTURE_ROOT / "mobile_selection_corpus"
+PHOTO_SOURCE_ROOT = FIXTURE_ROOT / "vlm_photo_sources"
 
 
 def main() -> None:
@@ -20,6 +21,9 @@ def main() -> None:
             "nasa-iss074e0089803",
             _horizon_scene(),
             _corner_badge,
+            provenance=(
+                "NASA ISS source photograph with repository-generated normalization and overlay."
+            ),
         ),
         _pair(
             "photo-night",
@@ -27,7 +31,27 @@ def main() -> None:
             "nasa-iss045e013851",
             _night_scene(),
             _top_preview,
+            provenance=(
+                "NASA ISS source photograph with repository-generated normalization and overlay."
+            ),
         ),
+        *[
+            _photo_source_pair(source, painter)
+            for source, painter in zip(
+                _photo_sources(),
+                (
+                    _corner_badge,
+                    _top_preview,
+                    _corner_badge,
+                    _top_preview,
+                    _corner_badge,
+                    _top_preview,
+                    _corner_badge,
+                    _top_preview,
+                ),
+                strict=True,
+            )
+        ],
         _pair("dashboard", "ordinary_ui", "generated-dashboard", _dashboard_scene(), _center_demo),
         _pair("document", "document", "generated-document", _document_scene(), _diagonal_draft),
         _pair(
@@ -160,6 +184,9 @@ def _pair(
     source_group: str,
     clean: Image.Image,
     painter,
+    *,
+    provenance: str | None = None,
+    source_record: str | None = None,
 ) -> tuple[dict, dict]:
     clean_name = f"paired-{sample_id}-clean.png"
     marked_name = f"paired-{sample_id}-watermark.png"
@@ -176,14 +203,17 @@ def _pair(
         "pair_id": sample_id,
         "review_required": False,
     }
+    if source_record is not None:
+        common["source_record"] = source_record
+    clean_provenance = provenance or (
+        "Deterministic repository-generated clean scene with no user or third-party data."
+    )
     negative = {
         "id": f"paired-{sample_id}-negative",
         "file": clean_name,
         "sha256": _sha256(clean_path),
         "expected_regions": [],
-        "provenance": (
-            "Deterministic repository-generated clean scene with no user or third-party data."
-        ),
+        "provenance": clean_provenance,
         **common,
     }
     positive = {
@@ -191,10 +221,60 @@ def _pair(
         "file": marked_name,
         "sha256": _sha256(marked_path),
         "expected_regions": [{**region, "label": "watermark"}],
-        "provenance": f"Paired clean scene with deterministic repository-generated {description}.",
+        "provenance": (
+            f"{clean_provenance} Paired with deterministic repository-generated {description}."
+        ),
         **common,
     }
     return negative, positive
+
+
+def _photo_sources() -> list[dict]:
+    manifest_path = PHOTO_SOURCE_ROOT / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    sources = manifest.get("sources")
+    if manifest.get("schema_version") != 1 or not isinstance(sources, list):
+        raise ValueError("Unsupported VLM photo-source manifest.")
+    if len(sources) != 8:
+        raise ValueError("The VLM photo-source expansion must contain exactly eight sources.")
+    return sources
+
+
+def _photo_source_pair(source: dict, painter) -> tuple[dict, dict]:
+    source_group = source.get("source_group")
+    filename = source.get("file")
+    expected_sha = source.get("sha256")
+    record_url = source.get("record_url")
+    title = source.get("title")
+    credit = source.get("credit")
+    if not all(
+        isinstance(value, str) and value.strip()
+        for value in (source_group, filename, expected_sha, record_url, title, credit)
+    ):
+        raise ValueError("Invalid VLM photo-source record.")
+    path = (PHOTO_SOURCE_ROOT / filename).resolve()
+    if PHOTO_SOURCE_ROOT.resolve() not in path.parents or not path.is_file():
+        raise ValueError(f"Invalid VLM photo source: {filename}")
+    if _sha256(path) != expected_sha:
+        raise ValueError(f"VLM photo-source digest mismatch: {filename}")
+    with Image.open(path) as source_image:
+        clean = ImageOps.fit(
+            ImageOps.exif_transpose(source_image).convert("RGB"),
+            (720, 480),
+            method=Image.Resampling.LANCZOS,
+        )
+    return _pair(
+        source_group.removeprefix("nasa-"),
+        "natural_scene",
+        source_group,
+        clean,
+        painter,
+        provenance=(
+            f"Pinned NASA image-library source '{title}' ({credit}), normalized by the "
+            "repository without user data."
+        ),
+        source_record=record_url,
+    )
 
 
 def _font(size: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:

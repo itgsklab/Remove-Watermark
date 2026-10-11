@@ -95,6 +95,142 @@
       ]
     },
     {
+      "sample_id": "paired-pia24642-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia24642-positive",
+      "boxes": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-as11-40-5878-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-as11-40-5878-positive",
+      "boxes": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-iss042e097549-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-iss042e097549-positive",
+      "boxes": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia11141-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia11141-positive",
+      "boxes": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia00254-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia00254-positive",
+      "boxes": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia20284-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia20284-positive",
+      "boxes": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia17792-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia17792-positive",
+      "boxes": [
+        {
+          "x0": 500,
+          "y0": 390,
+          "x1": 692,
+          "y1": 448,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia11727-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia11727-positive",
+      "boxes": [
+        {
+          "x0": 254,
+          "y0": 36,
+          "x1": 436,
+          "y1": 68,
+          "label": "watermark",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
       "sample_id": "paired-dashboard-negative",
       "boxes": []
     },

@@ -209,7 +209,10 @@ def _markdown(report: dict[str, Any]) -> str:
             "",
             *rows,
             "",
-            "The gate is not release-ready until independent photo-source evidence passes.",
+            (
+                "The gate is release-ready only when source evidence, classification, pair "
+                "stability, and eligible-photo localization requirements all pass."
+            ),
             "",
         ]
     )

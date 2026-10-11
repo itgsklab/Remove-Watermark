@@ -20,18 +20,18 @@
     "minimum_paired_scene_count": 7
   },
   "summary": {
-    "sample_count": 20,
-    "positive_count": 10,
-    "negative_count": 10,
+    "sample_count": 36,
+    "positive_count": 18,
+    "negative_count": 18,
     "scene_kind_count": 4,
-    "paired_scene_count": 7,
-    "true_positive": 10,
+    "paired_scene_count": 15,
+    "true_positive": 18,
     "false_positive": 0,
     "false_negative": 0,
     "precision": 1.0,
     "recall": 1.0,
     "f1": 1.0,
-    "mean_matched_iou": 0.957213,
+    "mean_matched_iou": 0.97623,
     "metric_gate": "pass",
     "evidence_gate": "pass",
     "release_claim_allowed": false
@@ -51,10 +51,10 @@
     },
     {
       "scene_kind": "natural_scene",
-      "sample_count": 9,
-      "positive_count": 5,
-      "negative_count": 4,
-      "true_positive": 5,
+      "sample_count": 25,
+      "positive_count": 13,
+      "negative_count": 12,
+      "true_positive": 13,
       "false_positive": 0,
       "false_negative": 0,
       "precision": 1.0,
@@ -88,6 +88,15 @@
   ],
   "pair_diagnostics": [
     {
+      "pair_id": "as11-40-5878",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-as11-40-5878-negative",
+      "positive_sample_id": "paired-as11-40-5878-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
       "pair_id": "code-editor",
       "scene_kind": "ordinary_ui",
       "negative_sample_id": "paired-code-editor-negative",
@@ -115,6 +124,15 @@
       "pair_passed": true
     },
     {
+      "pair_id": "iss042e097549",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-iss042e097549-negative",
+      "positive_sample_id": "paired-iss042e097549-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
       "pair_id": "mobile-feed",
       "scene_kind": "ordinary_ui",
       "negative_sample_id": "paired-mobile-feed-negative",
@@ -137,6 +155,60 @@
       "scene_kind": "natural_scene",
       "negative_sample_id": "paired-photo-night-negative",
       "positive_sample_id": "paired-photo-night-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "pia00254",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-pia00254-negative",
+      "positive_sample_id": "paired-pia00254-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "pia11141",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-pia11141-negative",
+      "positive_sample_id": "paired-pia11141-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "pia11727",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-pia11727-negative",
+      "positive_sample_id": "paired-pia11727-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "pia17792",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-pia17792-negative",
+      "positive_sample_id": "paired-pia17792-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "pia20284",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-pia20284-negative",
+      "positive_sample_id": "paired-pia20284-positive",
+      "negative_clean": true,
+      "positive_detected": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "pia24642",
+      "scene_kind": "natural_scene",
+      "negative_sample_id": "paired-pia24642-negative",
+      "positive_sample_id": "paired-pia24642-positive",
       "negative_clean": true,
       "positive_detected": true,
       "pair_passed": true
@@ -273,6 +345,214 @@
       "kind": "positive",
       "scene_kind": "natural_scene",
       "pair_id": "photo-night",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        1.0
+      ]
+    },
+    {
+      "sample_id": "paired-pia24642-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia24642",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-pia24642-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia24642",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        1.0
+      ]
+    },
+    {
+      "sample_id": "paired-as11-40-5878-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "as11-40-5878",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-as11-40-5878-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "as11-40-5878",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        1.0
+      ]
+    },
+    {
+      "sample_id": "paired-iss042e097549-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "iss042e097549",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-iss042e097549-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "iss042e097549",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        1.0
+      ]
+    },
+    {
+      "sample_id": "paired-pia11141-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia11141",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-pia11141-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia11141",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        1.0
+      ]
+    },
+    {
+      "sample_id": "paired-pia00254-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia00254",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-pia00254-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia00254",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        1.0
+      ]
+    },
+    {
+      "sample_id": "paired-pia20284-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia20284",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-pia20284-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia20284",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        1.0
+      ]
+    },
+    {
+      "sample_id": "paired-pia17792-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia17792",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-pia17792-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia17792",
+      "expected_count": 1,
+      "predicted_count": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": [
+        1.0
+      ]
+    },
+    {
+      "sample_id": "paired-pia11727-negative",
+      "kind": "negative",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia11727",
+      "expected_count": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "matched_ious": []
+    },
+    {
+      "sample_id": "paired-pia11727-positive",
+      "kind": "positive",
+      "scene_kind": "natural_scene",
+      "pair_id": "pia11727",
       "expected_count": 1,
       "predicted_count": 1,
       "true_positive": 1,
