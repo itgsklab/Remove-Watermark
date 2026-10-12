@@ -51,6 +51,8 @@ jobs:
           python packaging/tests/test_release_metadata.py
           python packaging/tests/test_verify_release_evidence.py
           python packaging/tests/test_prepare_release_candidate.py
+          python packaging/tests/test_verify_stable_release.py
+          python packaging/verify_stable_release.py
       - name: Download platform evidence
         uses: actions/download-artifact@v8
         with:

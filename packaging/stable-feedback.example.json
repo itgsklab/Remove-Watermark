@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "target_version": "0.1.0",
+  "candidate_tag": "v0.1.0rc2",
+  "reviewed_at": "",
+  "sources": [],
+  "issues": [],
+  "verification": {
+    "clean_install": false,
+    "browser_routes": [],
+    "privacy_scan": false,
+    "vlm_enabled_by_default": false,
+    "vlm_automatic_download": false,
+    "vlm_manual_review_required": true
+  },
+  "approval": {
+    "approved": false,
+    "reviewer": "",
+    "approved_at": ""
+  }
+}

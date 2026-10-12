@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "target_version": "0.1.0",
+  "delivery": {
+    "interface": "web",
+    "native_applications": false
+  },
+  "required_platforms": [
+    "Linux-X64",
+    "macOS-ARM64",
+    "Windows-X64"
+  ],
+  "required_release_candidates": [
+    {
+      "tag": "v0.1.0rc1",
+      "source_commit": "bafd6bab2947d6383d1bcd83dd0eeec6ba87615e",
+      "published_at": "2026-10-09T06:42:36Z",
+      "assets": {
+        "SHA256SUMS": "87e3d4a935be01311064808cba1903e9a262040878f13f68ec9edb5de0c7f9f9",
+        "release-manifest.json": "3abd8b0e828ea1c53e314f18f9158579f2ba99be12cd60c8898b311de1e5dc1c",
+        "remove-watermark-web-0.1.0rc1.tar.gz": "6b309a65a61d12920153d00ccd08f3e4e2f14fd661595e140259296d63809601",
+        "wmrm-0.1.0rc1-py3-none-any.whl": "f22644b39938964406c84d1fefbbd32b35050b9c828c176fdfb2eb8c5ac2dd9f",
+        "wmrm-0.1.0rc1.tar.gz": "9937f3486852bd6a4adb8d7c21644f83802287fc327a7f2a237d1277f049234e"
+      }
+    },
+    {
+      "tag": "v0.1.0rc2",
+      "source_commit": "39fe766eb7ef835896389864ccddb6b972958f56",
+      "published_at": "2026-10-11T11:31:25Z",
+      "assets": {
+        "SHA256SUMS": "91d6a11ef85adc7d3c3a3fd94323e5a7b918cd3dbd0fe0c21069725f8be78122",
+        "release-manifest.json": "7fcd66eb4c856f6b52d38481c58e4809fbcf11e533bf9921be321784206c62f9",
+        "remove-watermark-web-0.1.0rc2.tar.gz": "80122376d3417a0c217097d39608e1af542f4d2b5732cf44f5c690d62d314508",
+        "wmrm-0.1.0rc2-py3-none-any.whl": "6d40ee75b26c047dff6ea276ba50ec076a0c0666733042c6a218e5f4fb08609d",
+        "wmrm-0.1.0rc2.tar.gz": "8b37a9a6d8bd3b431d43fc14959baa329dd27b46518bbdc826ec522d24436414"
+      }
+    }
+  ],
+  "security_contract": {
+    "vlm_enabled_by_default": false,
+    "vlm_automatic_download": false,
+    "vlm_manual_review_required": true,
+    "model_weights_in_release": false,
+    "private_planning_files_in_release": false
+  },
+  "feedback_gate": {
+    "minimum_sources": 1,
+    "blocking_severities": [
+      "critical",
+      "high"
+    ],
+    "require_reproducible_issue_triage": true,
+    "require_clean_install": true,
+    "require_browser_routes": [
+      "/",
+      "/settings"
+    ],
+    "require_privacy_scan": true
+  }
+}

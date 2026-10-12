@@ -63,6 +63,8 @@ make web-run
 约定和退出码见 [docs/CLI.md](docs/CLI.md)。
 首个公开版本的稳定命令、JSON 信封、退出码及计划 schema 约定见
 [docs/release/CLI_COMPATIBILITY_V1.md](docs/release/CLI_COMPATIBILITY_V1.md)。
+正式版不会仅凭 CI 通过自动发布；两个不可变 RC 的摘要、反馈记录和阻断条件见
+[docs/release/STABLE_RELEASE.md](docs/release/STABLE_RELEASE.md)。
 
 ## 当前可用 API
 

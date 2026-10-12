@@ -20,6 +20,7 @@ reports maintained in this repository:
 - `models/florence-2-base.json`
 - `release/CLI_COMPATIBILITY_V1.md`
 - `release/RELEASE_CANDIDATE.md`
+- `release/STABLE_RELEASE.md`
 - `benchmarks/opencv-telea-baseline.md`
 - `benchmarks/mobile-watermark-baseline.md`
 - `benchmarks/mobile-selection-corpus.md`
