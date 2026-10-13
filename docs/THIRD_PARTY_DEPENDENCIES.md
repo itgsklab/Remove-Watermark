@@ -4,7 +4,7 @@ This file is generated from the pinned Python packaging constraints and npm lock
 It records release inputs; it is not a legal opinion or a substitute for license review.
 Regenerate it with `make release-metadata` and verify it with `make release-metadata-check`.
 
-- Input digest: `0c03baffa205f0b5f7d7a70e0a60b11bc68d3d3a8937a2e8b80f36a2f0afeffb`
+- Input digest: `d42b1d968b0fa2d9b62097c83699eebb75793c7100cec0e74b43bcc5568752ea`
 - Python packages: 34
 - npm packages: 126
 - Vendored components: 1
@@ -118,7 +118,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `@rollup/rollup-win32-x64-gnu` | `4.63.4` | development | no | os=win32; cpu=x64 |
 | npm | `@rollup/rollup-win32-x64-msvc` | `4.63.4` | development | no | os=win32; cpu=x64 |
 | npm | `@types/estree` | `1.0.9` | development | no | — |
-| npm | `@types/node` | `24.13.6` | development | yes | — |
+| npm | `@types/node` | `24.19.2` | development | yes | — |
 | npm | `@vitejs/plugin-vue` | `6.0.10` | development | yes | — |
 | npm | `@volar/language-core` | `2.4.28` | development | no | — |
 | npm | `@volar/source-map` | `2.4.28` | development | no | — |
@@ -167,7 +167,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `superjson` | `2.2.6` | runtime | no | — |
 | npm | `tinyglobby` | `0.2.17` | development | no | — |
 | npm | `typescript` | `5.9.3` | runtime | yes | — |
-| npm | `undici-types` | `7.18.2` | development | no | — |
+| npm | `undici-types` | `7.24.6` | development | no | — |
 | npm | `vite` | `7.3.7` | development | yes | — |
 | npm | `vscode-uri` | `3.2.0` | development | no | — |
 | npm | `vue` | `3.5.43` | runtime | yes | — |

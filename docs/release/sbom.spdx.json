@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/0c03baffa205f0b5f7d7a70e0a60b11bc68d3d3a8937a2e8b80f36a2f0afeffb",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/d42b1d968b0fa2d9b62097c83699eebb75793c7100cec0e74b43bcc5568752ea",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {
@@ -2039,14 +2039,14 @@
       "versionInfo": "1.0.9"
     },
     {
-      "SPDXID": "SPDXRef-Package-npm-types-node-151fee3d59",
+      "SPDXID": "SPDXRef-Package-npm-types-node-f3e083b78c",
       "comment": "Ecosystem: npm; usage: development; direct: yes",
       "copyrightText": "NOASSERTION",
       "downloadLocation": "NOASSERTION",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:npm/%40types/node@24.13.6",
+          "referenceLocator": "pkg:npm/%40types/node@24.19.2",
           "referenceType": "purl"
         }
       ],
@@ -2055,7 +2055,7 @@
       "licenseDeclared": "NOASSERTION",
       "name": "@types/node",
       "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "24.13.6"
+      "versionInfo": "24.19.2"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-vitejs-plugin-vue-db31f3914f",
@@ -2970,14 +2970,14 @@
       "versionInfo": "5.9.3"
     },
     {
-      "SPDXID": "SPDXRef-Package-npm-undici-types-ca9c681b83",
+      "SPDXID": "SPDXRef-Package-npm-undici-types-86c8057eb1",
       "comment": "Ecosystem: npm; usage: development; direct: no",
       "copyrightText": "NOASSERTION",
       "downloadLocation": "NOASSERTION",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:npm/undici-types@7.18.2",
+          "referenceLocator": "pkg:npm/undici-types@7.24.6",
           "referenceType": "purl"
         }
       ],
@@ -2986,7 +2986,7 @@
       "licenseDeclared": "NOASSERTION",
       "name": "undici-types",
       "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "7.18.2"
+      "versionInfo": "7.24.6"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-vite-ae969cf26b",
@@ -3621,7 +3621,7 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Package-npm-types-node-151fee3d59",
+      "relatedSpdxElement": "SPDXRef-Package-npm-types-node-f3e083b78c",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3866,7 +3866,7 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Package-npm-undici-types-ca9c681b83",
+      "relatedSpdxElement": "SPDXRef-Package-npm-undici-types-86c8057eb1",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
