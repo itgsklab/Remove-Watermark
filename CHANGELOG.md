@@ -20,6 +20,11 @@ All notable changes to this project are documented in this file. The format foll
 - Pull Request dependency review that rejects newly introduced high/critical vulnerabilities, plus
   default exclusion of unplanned major-version Dependabot updates.
 
+### Changed
+
+- Refresh the supported Vue build toolchain within its current major versions and regenerate the
+  release dependency inventory and SPDX SBOM.
+
 ## [0.1.0] - 2026-10-13
 
 ### Added

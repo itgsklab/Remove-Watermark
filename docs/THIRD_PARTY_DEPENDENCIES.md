@@ -4,7 +4,7 @@ This file is generated from the pinned Python packaging constraints and npm lock
 It records release inputs; it is not a legal opinion or a substitute for license review.
 Regenerate it with `make release-metadata` and verify it with `make release-metadata-check`.
 
-- Input digest: `7c184e09b111679ab5916884cc64484b18aa6f9b61ef79c6f2ae82f487cb903e`
+- Input digest: `0c03baffa205f0b5f7d7a70e0a60b11bc68d3d3a8937a2e8b80f36a2f0afeffb`
 - Python packages: 34
 - npm packages: 126
 - Vendored components: 1
@@ -119,7 +119,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `@rollup/rollup-win32-x64-msvc` | `4.63.4` | development | no | os=win32; cpu=x64 |
 | npm | `@types/estree` | `1.0.9` | development | no | — |
 | npm | `@types/node` | `24.13.6` | development | yes | — |
-| npm | `@vitejs/plugin-vue` | `6.0.9` | development | yes | — |
+| npm | `@vitejs/plugin-vue` | `6.0.10` | development | yes | — |
 | npm | `@volar/language-core` | `2.4.28` | development | no | — |
 | npm | `@volar/source-map` | `2.4.28` | development | no | — |
 | npm | `@volar/typescript` | `2.4.28` | development | no | — |
@@ -131,13 +131,13 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `@vue/devtools-api` | `7.7.10` | runtime | no | — |
 | npm | `@vue/devtools-kit` | `7.7.10` | runtime | no | — |
 | npm | `@vue/devtools-shared` | `7.7.10` | runtime | no | — |
-| npm | `@vue/language-core` | `3.3.11` | development | no | — |
+| npm | `@vue/language-core` | `3.3.13` | development | no | — |
 | npm | `@vue/reactivity` | `3.5.43` | runtime | no | — |
 | npm | `@vue/runtime-core` | `3.5.43` | runtime | no | — |
 | npm | `@vue/runtime-dom` | `3.5.43` | runtime | no | — |
 | npm | `@vue/server-renderer` | `3.5.43` | runtime | no | — |
 | npm | `@vue/shared` | `3.5.43` | runtime | no | — |
-| npm | `@vue/tsconfig` | `0.8.1` | development | yes | — |
+| npm | `@vue/tsconfig` | `0.9.1` | development | yes | — |
 | npm | `alien-signals` | `3.2.1` | development | no | — |
 | npm | `birpc` | `2.9.0` | runtime | no | — |
 | npm | `copy-anything` | `4.1.1` | runtime | no | — |
@@ -168,8 +168,8 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `tinyglobby` | `0.2.17` | development | no | — |
 | npm | `typescript` | `5.9.3` | runtime | yes | — |
 | npm | `undici-types` | `7.18.2` | development | no | — |
-| npm | `vite` | `7.3.6` | development | yes | — |
+| npm | `vite` | `7.3.7` | development | yes | — |
 | npm | `vscode-uri` | `3.2.0` | development | no | — |
 | npm | `vue` | `3.5.43` | runtime | yes | — |
 | npm | `vue-router` | `4.6.4` | runtime | yes | — |
-| npm | `vue-tsc` | `3.3.11` | development | yes | — |
+| npm | `vue-tsc` | `3.3.13` | development | yes | — |

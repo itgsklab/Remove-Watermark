@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/7c184e09b111679ab5916884cc64484b18aa6f9b61ef79c6f2ae82f487cb903e",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/0c03baffa205f0b5f7d7a70e0a60b11bc68d3d3a8937a2e8b80f36a2f0afeffb",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {
@@ -2058,14 +2058,14 @@
       "versionInfo": "24.13.6"
     },
     {
-      "SPDXID": "SPDXRef-Package-npm-vitejs-plugin-vue-e7b9c1a74b",
+      "SPDXID": "SPDXRef-Package-npm-vitejs-plugin-vue-db31f3914f",
       "comment": "Ecosystem: npm; usage: development; direct: yes",
       "copyrightText": "NOASSERTION",
       "downloadLocation": "NOASSERTION",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:npm/%40vitejs/plugin-vue@6.0.9",
+          "referenceLocator": "pkg:npm/%40vitejs/plugin-vue@6.0.10",
           "referenceType": "purl"
         }
       ],
@@ -2074,7 +2074,7 @@
       "licenseDeclared": "NOASSERTION",
       "name": "@vitejs/plugin-vue",
       "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "6.0.9"
+      "versionInfo": "6.0.10"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-volar-language-core-2898ac65d8",
@@ -2286,14 +2286,14 @@
       "versionInfo": "7.7.10"
     },
     {
-      "SPDXID": "SPDXRef-Package-npm-vue-language-core-ec38100f05",
+      "SPDXID": "SPDXRef-Package-npm-vue-language-core-7b3833c7e5",
       "comment": "Ecosystem: npm; usage: development; direct: no",
       "copyrightText": "NOASSERTION",
       "downloadLocation": "NOASSERTION",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:npm/%40vue/language-core@3.3.11",
+          "referenceLocator": "pkg:npm/%40vue/language-core@3.3.13",
           "referenceType": "purl"
         }
       ],
@@ -2302,7 +2302,7 @@
       "licenseDeclared": "NOASSERTION",
       "name": "@vue/language-core",
       "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "3.3.11"
+      "versionInfo": "3.3.13"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-vue-reactivity-cff0b0e552",
@@ -2400,14 +2400,14 @@
       "versionInfo": "3.5.43"
     },
     {
-      "SPDXID": "SPDXRef-Package-npm-vue-tsconfig-b41b9bb278",
+      "SPDXID": "SPDXRef-Package-npm-vue-tsconfig-911cc1d4dd",
       "comment": "Ecosystem: npm; usage: development; direct: yes",
       "copyrightText": "NOASSERTION",
       "downloadLocation": "NOASSERTION",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:npm/%40vue/tsconfig@0.8.1",
+          "referenceLocator": "pkg:npm/%40vue/tsconfig@0.9.1",
           "referenceType": "purl"
         }
       ],
@@ -2416,7 +2416,7 @@
       "licenseDeclared": "NOASSERTION",
       "name": "@vue/tsconfig",
       "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "0.8.1"
+      "versionInfo": "0.9.1"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-alien-signals-442319d324",
@@ -2989,14 +2989,14 @@
       "versionInfo": "7.18.2"
     },
     {
-      "SPDXID": "SPDXRef-Package-npm-vite-45b66dc360",
+      "SPDXID": "SPDXRef-Package-npm-vite-ae969cf26b",
       "comment": "Ecosystem: npm; usage: development; direct: yes",
       "copyrightText": "NOASSERTION",
       "downloadLocation": "NOASSERTION",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:npm/vite@7.3.6",
+          "referenceLocator": "pkg:npm/vite@7.3.7",
           "referenceType": "purl"
         }
       ],
@@ -3005,7 +3005,7 @@
       "licenseDeclared": "NOASSERTION",
       "name": "vite",
       "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "7.3.6"
+      "versionInfo": "7.3.7"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-vscode-uri-493f359c47",
@@ -3065,14 +3065,14 @@
       "versionInfo": "4.6.4"
     },
     {
-      "SPDXID": "SPDXRef-Package-npm-vue-tsc-abbb88f57e",
+      "SPDXID": "SPDXRef-Package-npm-vue-tsc-d9d1f7a381",
       "comment": "Ecosystem: npm; usage: development; direct: yes",
       "copyrightText": "NOASSERTION",
       "downloadLocation": "NOASSERTION",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:npm/vue-tsc@3.3.11",
+          "referenceLocator": "pkg:npm/vue-tsc@3.3.13",
           "referenceType": "purl"
         }
       ],
@@ -3081,7 +3081,7 @@
       "licenseDeclared": "NOASSERTION",
       "name": "vue-tsc",
       "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "3.3.11"
+      "versionInfo": "3.3.13"
     }
   ],
   "relationships": [
@@ -3626,7 +3626,7 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Package-npm-vitejs-plugin-vue-e7b9c1a74b",
+      "relatedSpdxElement": "SPDXRef-Package-npm-vitejs-plugin-vue-db31f3914f",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3686,7 +3686,7 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Package-npm-vue-language-core-ec38100f05",
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-language-core-7b3833c7e5",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3716,7 +3716,7 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Package-npm-vue-tsconfig-b41b9bb278",
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-tsconfig-911cc1d4dd",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3871,7 +3871,7 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Package-npm-vite-45b66dc360",
+      "relatedSpdxElement": "SPDXRef-Package-npm-vite-ae969cf26b",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3891,7 +3891,7 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Package-npm-vue-tsc-abbb88f57e",
+      "relatedSpdxElement": "SPDXRef-Package-npm-vue-tsc-d9d1f7a381",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     }
