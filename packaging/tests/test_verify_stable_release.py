@@ -58,6 +58,22 @@ class StableReleaseTests(unittest.TestCase):
         result = stable.validate_feedback(self.feedback, stable.validate_policy(self.policy))
         self.assertEqual(result["status"], "ready")
 
+    def test_acceptance_can_be_recorded_before_approval(self) -> None:
+        feedback = copy.deepcopy(self.feedback)
+        feedback["approval"] = {"approved": False, "reviewer": "", "approved_at": ""}
+        result = stable.validate_feedback(
+            feedback,
+            stable.validate_policy(self.policy),
+            require_approval=False,
+        )
+        self.assertEqual(result["status"], "acceptance-passed-approval-pending")
+
+    def test_require_ready_rejects_pending_approval(self) -> None:
+        feedback = copy.deepcopy(self.feedback)
+        feedback["approval"] = {"approved": False, "reviewer": "", "approved_at": ""}
+        with self.assertRaisesRegex(stable.StableReleaseError, "explicitly approved"):
+            stable.validate_feedback(feedback, stable.validate_policy(self.policy))
+
     def test_rejects_missing_real_feedback_source(self) -> None:
         feedback = copy.deepcopy(self.feedback)
         feedback["sources"] = []

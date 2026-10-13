@@ -25,8 +25,17 @@ placeholder with actual review evidence. A source can be a GitHub issue, a docum
 acceptance run or another traceable test report. Do not put user files, personal information, local
 paths, tokens or private sample contents in the record.
 
+Validate completed technical acceptance while leaving approval pending:
+
 ```bash
-cp packaging/stable-feedback.example.json work/stable-feedback.json
+python packaging/verify_stable_release.py --feedback work/stable-feedback.json
+```
+
+This returns `acceptance-passed-approval-pending` when all evidence passes and the approval object is
+still empty. After the release maintainer explicitly approves the stable release, record that approval
+and run the final gate:
+
+```bash
 python packaging/verify_stable_release.py \
   --feedback work/stable-feedback.json \
   --require-ready \

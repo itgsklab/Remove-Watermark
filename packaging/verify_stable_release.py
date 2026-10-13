@@ -163,7 +163,12 @@ def validate_policy(policy: dict[str, Any]) -> dict[str, Any]:
     return policy
 
 
-def validate_feedback(feedback: dict[str, Any], policy: dict[str, Any]) -> dict[str, Any]:
+def validate_feedback(
+    feedback: dict[str, Any],
+    policy: dict[str, Any],
+    *,
+    require_approval: bool = True,
+) -> dict[str, Any]:
     expect_exact_keys(
         feedback,
         {
@@ -248,13 +253,21 @@ def validate_feedback(feedback: dict[str, Any], policy: dict[str, Any]) -> dict[
 
     approval = expect_object(feedback["approval"], "feedback.approval")
     expect_exact_keys(approval, {"approved", "reviewer", "approved_at"}, "feedback.approval")
-    if approval["approved"] is not True:
+    if not isinstance(approval["approved"], bool):
+        raise StableReleaseError("feedback.approval.approved must be boolean.")
+    if approval["approved"]:
+        expect_string(approval["reviewer"], "feedback.approval.reviewer")
+        expect_timestamp(approval["approved_at"], "feedback.approval.approved_at")
+        status = "ready"
+    elif require_approval:
         raise StableReleaseError("Stable release has not been explicitly approved.")
-    expect_string(approval["reviewer"], "feedback.approval.reviewer")
-    expect_timestamp(approval["approved_at"], "feedback.approval.approved_at")
+    else:
+        if approval["reviewer"] != "" or approval["approved_at"] != "":
+            raise StableReleaseError("Pending approval must not name a reviewer or approval time.")
+        status = "acceptance-passed-approval-pending"
     return {
         "schema_version": 1,
-        "status": "ready",
+        "status": status,
         "target_version": policy["target_version"],
         "candidate_tag": latest_tag,
         "feedback_sources": len(sources),
@@ -280,7 +293,11 @@ def main() -> int:
     try:
         policy = validate_policy(load_json(args.policy.resolve(), "policy"))
         if args.feedback:
-            result = validate_feedback(load_json(args.feedback.resolve(), "feedback"), policy)
+            result = validate_feedback(
+                load_json(args.feedback.resolve(), "feedback"),
+                policy,
+                require_approval=args.require_ready,
+            )
         elif args.require_ready:
             raise StableReleaseError("--require-ready needs a completed --feedback record.")
         else:
