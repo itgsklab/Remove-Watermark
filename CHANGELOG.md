@@ -11,6 +11,8 @@ All notable changes to this project are documented in this file. The format foll
   explicit privacy checks for user files, credentials, share links and local paths.
 - Contribution, security-disclosure and `0.1.x` maintenance guidance, including patch severity and
   release-gate requirements.
+- In-product links for structured issue intake, existing reports and private vulnerability
+  disclosure, with a visible warning against sharing private user files or credentials.
 
 ## [0.1.0] - 2026-10-13
 
