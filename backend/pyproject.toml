@@ -30,7 +30,7 @@ vlm = [
   "safetensors>=0.4,<1",
   "timm>=1.0,<2",
   "torch>=2.4,<3",
-  "transformers>=4.49,<4.50",
+  "transformers>=4.49,<5.20",
 ]
 dev = [
   "httpx>=0.28,<1",
