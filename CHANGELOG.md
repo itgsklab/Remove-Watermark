@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+### Added
+
+- Structured GitHub forms for reproducible bug, document-compatibility and feature reports, with
+  explicit privacy checks for user files, credentials, share links and local paths.
+- Contribution, security-disclosure and `0.1.x` maintenance guidance, including patch severity and
+  release-gate requirements.
+
 ## [0.1.0] - 2026-10-13
 
 ### Added

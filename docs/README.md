@@ -3,6 +3,7 @@
 Public compatibility notes, security boundaries, implementation details, and reproducible benchmark
 reports maintained in this repository:
 
+- `MAINTENANCE.md`
 - `THIRD_PARTY_DEPENDENCIES.md`
 - `release/sbom.spdx.json`
 - `DOCX_COMPATIBILITY.md`

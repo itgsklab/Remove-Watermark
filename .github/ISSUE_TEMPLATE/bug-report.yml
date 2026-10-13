@@ -1,0 +1,92 @@
+name: 缺陷报告
+description: 报告可以使用脱敏或生成样本复现的程序错误
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢报告问题。请只提交你有权处理的内容，并先删除姓名、账号、Cookie、令牌、分享链接、本地路径和其他私人信息。不要公开上传原始简历、合同或私人图片；请优先使用最小化的生成样本。
+  - type: input
+    id: version
+    attributes:
+      label: Watermark Remover 版本
+      description: 可从页面设置或 `wmrm --version` 获取。
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: input_type
+    attributes:
+      label: 输入类型
+      options:
+        - DOCX
+        - CodeCV PDF
+        - 通用 PDF
+        - PNG/JPEG/WebP
+        - 小红书公开页面导入
+        - Web 界面或 API
+        - CLI 或安装
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境
+      description: 请填写操作系统、浏览器，以及使用源码、Web bundle、wheel 或 sdist 的哪种安装方式。仅在相关时填写 Python 和外部工具版本。
+      placeholder: |
+        操作系统：macOS 15.0
+        浏览器：Chrome 140
+        安装方式：v0.1.0 Web bundle
+        Python：3.12.10
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 最小复现步骤
+      description: 从全新数据目录开始，列出能够稳定触发问题的最短步骤。
+      placeholder: |
+        1. 启动本地 Web 服务
+        2. 上传生成的 sample.pdf
+        3. 选择第 1 页区域并预览
+        4. 点击创建任务
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果
+      description: 可以粘贴已脱敏的错误信息；请把主目录、用户名和文件名替换为占位符。
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: 最小样本或生成脚本
+      description: 推荐提供能够生成测试文件的短脚本。若必须附加文件，请先确认它不含个人信息、隐藏元数据或第三方保密内容。
+  - type: textarea
+    id: frequency
+    attributes:
+      label: 复现频率和影响
+      placeholder: 每次发生；任务无法完成，但原文件未被修改。
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我已在最新正式版或当前 main 上复现，并搜索过现有 Issue。
+          required: true
+        - label: 我没有提交私人文件、凭据、有效分享链接或可识别个人的信息。
+          required: true
+        - label: 我对样本拥有处理和公开分享的权利。
+          required: true

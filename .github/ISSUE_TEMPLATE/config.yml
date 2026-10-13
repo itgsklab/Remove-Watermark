@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全漏洞私密报告
+    url: https://github.com/itgsklab/Remove-Watermark/security/advisories/new
+    about: 涉及安全边界、隐私泄露或可利用缺陷时，请勿创建公开 Issue。

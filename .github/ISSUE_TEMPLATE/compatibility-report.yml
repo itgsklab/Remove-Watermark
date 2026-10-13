@@ -1,0 +1,70 @@
+name: 文档兼容性报告
+description: 报告某类 DOCX、PDF 或图片无法识别、预览或正确处理
+title: "[Compatibility] "
+labels: [compatibility]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        兼容性问题需要可复现证据。请使用生成或彻底脱敏的最小文件，保留触发问题所需的结构，删除正文、姓名、联系方式、文档属性、批注、修订记录和隐藏附件。
+  - type: dropdown
+    id: format
+    attributes:
+      label: 文件类型
+      options:
+        - DOCX
+        - CodeCV PDF
+        - 通用 PDF
+        - 扫描 PDF
+        - PNG/JPEG/WebP
+    validations:
+      required: true
+  - type: input
+    id: producer
+    attributes:
+      label: 生成软件及版本
+      description: 例如 Microsoft Word 365、LibreOffice 25、Chrome 140、扫描仪型号或图片编辑器。
+    validations:
+      required: true
+  - type: input
+    id: wmrm_version
+    attributes:
+      label: Watermark Remover 版本
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: structure
+    attributes:
+      label: 水印和文档结构
+      description: 描述页数、水印类型、所在层级、是否平铺、是否覆盖正文，以及文件是否包含文字层、链接或表单。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期兼容行为
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: 可公开的最小夹具
+      description: 请附生成脚本或最小文件，并解释删除了哪些私人内容。无法公开分享时，请只描述结构，不要上传原件。
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我确认问题能在脱敏或生成样本上复现。
+          required: true
+        - label: 我没有公开提交真实简历、合同、账号、凭据、私人图片或有效分享链接。
+          required: true
+        - label: 我对所附样本拥有处理和公开分享的权利。
+          required: true

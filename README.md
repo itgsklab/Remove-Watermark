@@ -136,6 +136,12 @@ make wheel-check
 [docs/THIRD_PARTY_DEPENDENCIES.md](docs/THIRD_PARTY_DEPENDENCIES.md)，机器可读的 SPDX 2.3 SBOM 位于
 [docs/release/sbom.spdx.json](docs/release/sbom.spdx.json)。
 
+## 反馈与贡献
+
+可复现的程序错误、文档兼容性问题和功能建议请使用 GitHub 的结构化 Issue 表单。不要公开上传真实简历、合同、私人图片、有效分享链接、凭据、本地路径或其他个人信息；请优先提供脱敏的生成样本或生成脚本。贡献流程见 [CONTRIBUTING.md](CONTRIBUTING.md)，`0.1.x` 问题分级和补丁门禁见 [docs/MAINTENANCE.md](docs/MAINTENANCE.md)。
+
+涉及安全边界或隐私泄露的问题请勿创建公开 Issue，改用 [私密漏洞报告](https://github.com/itgsklab/Remove-Watermark/security/advisories/new)。支持版本和披露流程见 [SECURITY.md](SECURITY.md)。
+
 重新生成不含第三方素材的图片修复基准和报告：
 
 ```bash
