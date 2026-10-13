@@ -91,7 +91,7 @@ async function importCandidate(candidateId: string) {
 
 <template>
   <section class="hero">
-    <p class="eyebrow">本地优先 · 0.1.0 发布候选</p>
+    <p class="eyebrow">本地优先 · 0.1.0 正式 Web 版</p>
     <h1>看清改动，再处理水印</h1>
     <p class="intro">支持 DOCX、PDF、CodeCV 简历和本地图片。原件默认保留，处理前确认候选与影响范围。</p>
   </section>

@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/73d20babf88ef942695f44860ff56a64e6cb86b1afb747ae131ddb2ac4e0756a",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/7c184e09b111679ab5916884cc64484b18aa6f9b61ef79c6f2ae82f487cb903e",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {
@@ -22,7 +22,7 @@
       "licenseDeclared": "AGPL-3.0-only",
       "name": "Remove Watermark",
       "primaryPackagePurpose": "APPLICATION",
-      "versionInfo": "0.1.0rc2"
+      "versionInfo": "0.1.0"
     },
     {
       "SPDXID": "SPDXRef-Package-Python-PyYAML-18eefed00a",

@@ -1,7 +1,7 @@
 # CLI compatibility contract v1
 
 This contract defines the automation surface targeted for the first public `0.1.0` release. The
-package is on `0.1.0rc2` after passing the Linux, macOS and Windows release-candidate evidence gate.
+package is on stable `0.1.0` after two immutable release candidates and the Linux, macOS and Windows evidence gates passed.
 The machine-readable source of truth is
 [`packaging/cli-contract-v1.json`](../../packaging/cli-contract-v1.json).
 

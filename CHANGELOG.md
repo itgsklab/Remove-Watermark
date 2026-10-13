@@ -5,6 +5,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-13
+
 ### Added
 
 - Local-first Vue and FastAPI application for inspecting and removing supported watermarks.
@@ -61,4 +63,5 @@ All notable changes to this project are documented in this file. The format foll
 - Optional Xiaohongshu proxy mode accepts only an explicit loopback HTTP CONNECT endpoint, keeps
   target allowlists and TLS validation, and avoids fake-IP DNS without inheriting system proxies.
 
-[Unreleased]: https://github.com/itgsklab/Remove-Watermark/commits/main
+[Unreleased]: https://github.com/itgsklab/Remove-Watermark/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/itgsklab/Remove-Watermark/releases/tag/v0.1.0

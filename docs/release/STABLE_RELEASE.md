@@ -1,8 +1,8 @@
 # Stable release gate for v0.1.0
 
-`v0.1.0` remains pending after the immutable `v0.1.0rc1` and `v0.1.0rc2` Web prereleases. A stable
-tag must not be created only because CI is green. The release maintainer must supply a reviewable
-feedback record and pass the machine-readable gate.
+The `v0.1.0` stable release is derived from the immutable `v0.1.0rc1` and `v0.1.0rc2` Web
+prereleases. A stable tag must not be created only because CI is green. The release maintainer must
+supply a reviewable feedback record and pass the machine-readable gate.
 
 The committed policy in `packaging/stable-release-policy.json` pins both RC source commits and every
 published release-asset SHA-256 digest. It also preserves these contracts:
