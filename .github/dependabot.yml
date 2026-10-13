@@ -17,6 +17,15 @@ updates:
       - dependency-name: "*"
         update-types:
           - version-update:semver-major
+      - dependency-name: pytest
+        versions:
+          - ">=9"
+      - dependency-name: pytest-cov
+        versions:
+          - ">=7"
+      - dependency-name: transformers
+        versions:
+          - ">=4.50"
 
   - package-ecosystem: npm
     directory: /frontend
@@ -35,6 +44,9 @@ updates:
       - dependency-name: "*"
         update-types:
           - version-update:semver-major
+      - dependency-name: pdfjs-dist
+        versions:
+          - "5.7.284"
 
   - package-ecosystem: github-actions
     directory: /
@@ -49,3 +61,7 @@ updates:
       - maintenance
     commit-message:
       prefix: deps(actions)
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
