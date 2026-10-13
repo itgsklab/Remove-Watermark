@@ -15,6 +15,8 @@ All notable changes to this project are documented in this file. The format foll
   disclosure, with a visible warning against sharing private user files or credentials.
 - A preview-before-copy diagnostics summary containing only release version, supported formats,
   processing strategies and feature flags, with user files, paths and task history excluded.
+- Weekly Dependabot checks for Python, npm and GitHub Actions dependencies, backed by repository
+  vulnerability alerts and automated security-update Pull Requests.
 
 ## [0.1.0] - 2026-10-13
 
