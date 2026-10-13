@@ -17,6 +17,8 @@ All notable changes to this project are documented in this file. The format foll
   processing strategies and feature flags, with user files, paths and task history excluded.
 - Weekly Dependabot checks for Python, npm and GitHub Actions dependencies, backed by repository
   vulnerability alerts and automated security-update Pull Requests.
+- Pull Request dependency review that rejects newly introduced high/critical vulnerabilities, plus
+  default exclusion of unplanned major-version Dependabot updates.
 
 ## [0.1.0] - 2026-10-13
 

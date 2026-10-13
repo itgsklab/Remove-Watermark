@@ -13,6 +13,10 @@ updates:
       - maintenance
     commit-message:
       prefix: deps(python)
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
 
   - package-ecosystem: npm
     directory: /frontend
@@ -27,6 +31,10 @@ updates:
       - maintenance
     commit-message:
       prefix: deps(frontend)
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
 
   - package-ecosystem: github-actions
     directory: /
