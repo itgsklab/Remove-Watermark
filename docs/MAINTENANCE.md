@@ -43,4 +43,4 @@ GitHub Dependabot 每周一按北京时间依次检查 Python、前端 npm 和 G
 
 常规 Dependabot 更新限制在当前主版本内；主版本升级需要单独设计、兼容性评估和明确计划。Pull Request 的依赖差异门禁会拒绝新增 High 或 Critical 已知漏洞，并且不会向 PR 自动发布评论。依赖清单或 SBOM 未同步时，现有发布门禁会直接失败。
 
-每次推送到 `main` 或创建 Pull Request 时，持续集成会独立执行 Python Ruff、全量后端测试与覆盖率采集，以及 Vue 类型检查、生产构建和 npm 高危漏洞审计。发行证据门禁继续单独验证三平台 wheel/CLI、依赖清单、SBOM 和聚合证据。
+每次推送到 `main` 或创建 Pull Request 时，持续集成会独立执行 Python Ruff、全量后端测试，以及 Vue 类型检查、生产构建和 npm 高危漏洞审计。覆盖率采集保留在本地 `make check`，避免在共享 CI runner 上为每个隔离工作进程注入 instrumentation 并造成启动超时。发行证据门禁继续单独验证三平台 wheel/CLI、依赖清单、SBOM 和聚合证据。
