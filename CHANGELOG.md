@@ -21,6 +21,8 @@ All notable changes to this project are documented in this file. The format foll
   default exclusion of unplanned major-version Dependabot updates.
 - Push and Pull Request continuous integration for Python linting, the full backend test suite,
   Vue type checking, production builds and high-severity npm vulnerability auditing.
+- Protected `main` branch requiring synchronized backend, frontend, dependency-review and aggregate
+  release-evidence checks, resolved review conversations, and no force pushes or branch deletion.
 
 ### Changed
 
