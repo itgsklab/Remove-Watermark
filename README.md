@@ -1,5 +1,8 @@
 # Watermark Remover
 
+[![Continuous integration](https://github.com/itgsklab/Remove-Watermark/actions/workflows/ci.yml/badge.svg)](https://github.com/itgsklab/Remove-Watermark/actions/workflows/ci.yml)
+[![Release readiness](https://github.com/itgsklab/Remove-Watermark/actions/workflows/release-readiness.yml/badge.svg)](https://github.com/itgsklab/Remove-Watermark/actions/workflows/release-readiness.yml)
+
 面向 DOCX、PDF、CodeCV 简历和小红书图片的本地优先水印处理工具。
 
 > 当前状态：`0.1.0` 正式 Web 版本。已完成 DOCX VML、CodeCV PDF 平铺水印、通用 PDF 区域物理删除、PDF Deep 栅格修复与可搜索文字层、静态图片矩形蒙版的处理闭环、小红书分享链接解析与公开页面图片安全导入，以及默认关闭的照片门禁 VLM 蒙版建议。用户界面采用 Vue Web 页面，不提供原生桌面 App。

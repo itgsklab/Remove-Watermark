@@ -19,6 +19,8 @@ All notable changes to this project are documented in this file. The format foll
   vulnerability alerts and automated security-update Pull Requests.
 - Pull Request dependency review that rejects newly introduced high/critical vulnerabilities, plus
   default exclusion of unplanned major-version Dependabot updates.
+- Push and Pull Request continuous integration for Python linting, the full backend test suite,
+  Vue type checking, production builds and high-severity npm vulnerability auditing.
 
 ### Changed
 
