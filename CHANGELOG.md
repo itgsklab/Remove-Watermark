@@ -25,6 +25,8 @@ All notable changes to this project are documented in this file. The format foll
   release-evidence checks, resolved review conversations, and no force pushes or branch deletion.
 - CodeQL scanning for Python and JavaScript/TypeScript on Pull Requests, `main` pushes and a weekly
   schedule, with results uploaded to GitHub code scanning.
+- Immutable commit pinning for every third-party GitHub Action, enforced by the required backend
+  check, with protected-branch documentation synchronized to all six required checks.
 
 ### Changed
 
