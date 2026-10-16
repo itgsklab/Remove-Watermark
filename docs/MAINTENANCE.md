@@ -46,3 +46,5 @@ GitHub Dependabot 每周一按北京时间依次检查 Python、前端 npm 和 G
 每次推送到 `main` 或创建 Pull Request 时，持续集成会独立执行 Python Ruff、全量后端测试，以及 Vue 类型检查、生产构建和 npm 高危漏洞审计。覆盖率采集保留在本地 `make check`，避免在共享 CI runner 上为每个隔离工作进程注入 instrumentation 并造成启动超时。发行证据门禁继续单独验证三平台 wheel/CLI、依赖清单、SBOM 和聚合证据。
 
 `main` 分支要求合并分支先同步最新主线，并通过 `backend`、`frontend`、`dependency-review` 和 `aggregate-evidence`。分支禁止强制推送和删除，Pull Request 讨论必须解决后才能合并。仓库按单人维护模式运行，不要求外部审批人数；维护者仍需根据本文件逐项审核证据。
+
+CodeQL 对每个 Pull Request、`main` 推送和每周定时任务分别分析 Python 与 JavaScript/TypeScript。分析使用解释型语言的无构建模式，不读取用户运行数据、私有测试材料或本机工作目录；发现的告警按安全策略分级处理。

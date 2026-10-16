@@ -2,6 +2,7 @@
 
 [![Continuous integration](https://github.com/itgsklab/Remove-Watermark/actions/workflows/ci.yml/badge.svg)](https://github.com/itgsklab/Remove-Watermark/actions/workflows/ci.yml)
 [![Release readiness](https://github.com/itgsklab/Remove-Watermark/actions/workflows/release-readiness.yml/badge.svg)](https://github.com/itgsklab/Remove-Watermark/actions/workflows/release-readiness.yml)
+[![CodeQL](https://github.com/itgsklab/Remove-Watermark/actions/workflows/codeql.yml/badge.svg)](https://github.com/itgsklab/Remove-Watermark/actions/workflows/codeql.yml)
 
 面向 DOCX、PDF、CodeCV 简历和小红书图片的本地优先水印处理工具。
 

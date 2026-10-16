@@ -23,6 +23,8 @@ All notable changes to this project are documented in this file. The format foll
   Vue type checking, production builds and high-severity npm vulnerability auditing.
 - Protected `main` branch requiring synchronized backend, frontend, dependency-review and aggregate
   release-evidence checks, resolved review conversations, and no force pushes or branch deletion.
+- CodeQL scanning for Python and JavaScript/TypeScript on Pull Requests, `main` pushes and a weekly
+  schedule, with results uploaded to GitHub code scanning.
 
 ### Changed
 
