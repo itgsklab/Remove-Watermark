@@ -108,6 +108,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .result-card h3 { margin: 5px 0 0; }
 .result-card .result-meta { margin: 8px 0 0; color: #536057; font-size: .84rem; }
 .download-button { display: inline-block; border-radius: 12px; padding: 12px 18px; background: #166b4c; color: white; white-space: nowrap; }
+.report-button { display: inline-block; border-radius: 12px; padding: 11px 17px; white-space: nowrap; }
 .comparison-panel { margin-top: 20px; }
 .comparison-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; }
 .comparison-heading h2 { margin: 5px 0 0; }
@@ -182,6 +183,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .task-title-row code { color: #738078; }
 .task-row h2 { margin: 10px 0 7px; font-size: 1.15rem; }
 .task-row p { margin: 0; color: #607068; font-size: .88rem; }
+.task-row .task-warning-count { margin-top: 7px; color: #8a5a12; }
 .task-status { border-radius: 999px; padding: 4px 9px; background: #e8eae7; font-size: .75rem; font-weight: 700; }
 .task-status.running, .task-status.queued, .task-status.cancelling { background: #fff0d5; color: #87550f; }
 .task-status.succeeded { background: #dcefe5; color: #075d3d; }

@@ -304,6 +304,12 @@ def test_image_plan_runs_opencv_and_preserves_pixels_outside_mask(
     artifact = task["artifacts"][0]
     assert artifact["role"] == "output"
     assert artifact["media_type"] == "image/png"
+    report = client.get(task["report_url"]).json()
+    assert report["processing"]["kind"] == "image_inpaint"
+    assert report["processing"]["output_kind"] == "png"
+    assert report["processing"]["selected_target_count"] == 1
+    assert report["processing"]["radius"] == 3
+    assert report["comparison"] is None
     downloaded = client.get(artifact["download_url"])
     assert downloaded.status_code == 200
     assert "cleaned.png" in downloaded.headers["content-disposition"]

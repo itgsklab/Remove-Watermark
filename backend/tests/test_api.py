@@ -293,6 +293,51 @@ def test_validates_plan_and_generates_clean_docx_copy(client: TestClient) -> Non
         "pages": [],
         "warning": "未能生成页面预览；无水印 DOCX 仍可正常下载。",
     }
+    assert task["report_url"] == f"/api/v1/tasks/{task['id']}/report"
+
+    report_response = client.get(task["report_url"])
+    assert report_response.status_code == 200
+    assert report_response.headers["content-type"].startswith("application/json")
+    assert report_response.headers["content-disposition"] == (
+        f'attachment; filename="task-{task["id"][:8]}-report.json"'
+    )
+    report = report_response.json()
+    assert report["schema_version"] == "1.0"
+    assert report["task_id"] == task["id"]
+    assert report["status"] == "succeeded"
+    assert report["duration_seconds"] >= 0
+    assert report["input"] == {
+        "asset_id": uploaded["id"],
+        "kind": "docx",
+        "media_type": (
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        "size_bytes": len(source_bytes),
+        "sha256": uploaded["sha256"],
+    }
+    assert report["processing"] == {
+        "kind": "object_removal",
+        "output_kind": "docx",
+        "selected_target_count": 1,
+        "warning_codes": [],
+        "radius": None,
+        "dpi": None,
+        "ocr_languages": None,
+    }
+    assert len(report["artifacts"]) == 1
+    assert report["artifacts"][0]["role"] == "output"
+    assert report["comparison"] == {
+        "available": False,
+        "removed_count": 1,
+        "source_page_count": 0,
+        "result_page_count": 0,
+    }
+    assert report["error"] is None
+    serialized_report = report_response.text
+    assert "draft.docx" not in serialized_report
+    assert "DRAFT" not in serialized_report
+    assert "relative_path" not in serialized_report
+    assert "download_url" not in serialized_report
 
     artifact = task["artifacts"][0]
     downloaded = client.get(artifact["download_url"])
@@ -304,6 +349,12 @@ def test_validates_plan_and_generates_clean_docx_copy(client: TestClient) -> Non
         assert output.read("word/document.xml") == source.read("word/document.xml")
         assert b"DRAFT" in source.read("word/header1.xml")
         assert b"DRAFT" not in output.read("word/header1.xml")
+
+
+def test_task_report_rejects_unknown_task(client: TestClient) -> None:
+    response = client.get("/api/v1/tasks/missing/report")
+    assert response.status_code == 404
+    assert response.json()["error"]["code"] == "TASK_NOT_FOUND"
 
 
 def test_ambiguous_candidate_requires_explicit_acknowledgement(client: TestClient) -> None:

@@ -311,9 +311,12 @@ export interface ProcessingTask {
   progress: number
   created_at: string
   updated_at: string
+  duration_seconds: number
+  warning_codes: string[]
   error: ApiErrorBody | null
   artifacts: Artifact[]
   comparison: Comparison | null
+  report_url: string
 }
 
 async function parse<T>(response: Response): Promise<T> {

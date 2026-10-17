@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- Downloadable task report schema v1 with duration, input and processing summaries, warning codes,
+  result digests and privacy-safe failure codes.
 - Structured GitHub forms for reproducible bug, document-compatibility and feature reports, with
   explicit privacy checks for user files, credentials, share links and local paths.
 - Contribution, security-disclosure and `0.1.x` maintenance guidance, including patch severity and

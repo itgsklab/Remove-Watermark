@@ -42,6 +42,7 @@ from wmrm.api.schemas import (
     PreviewRedactionsRequest,
     RedactionPlanResponse,
     RedactionPreviewResponse,
+    TaskReport,
     TaskResponse,
     ValidateImagePlanRequest,
     ValidatePlanRequest,
@@ -473,6 +474,18 @@ def create_app(
         session: Annotated[Session, Depends(get_session)],
     ) -> TaskResponse:
         return tasks.cancel(session, task_id)
+
+    @app.get("/api/v1/tasks/{task_id}/report", response_model=TaskReport)
+    async def download_task_report(
+        task_id: str,
+        session: Annotated[Session, Depends(get_session)],
+    ) -> JSONResponse:
+        report = tasks.report(session, task_id)
+        filename = f"task-{task_id[:8]}-report.json"
+        return JSONResponse(
+            report.model_dump(mode="json"),
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
 
     @app.get("/api/v1/tasks/{task_id}/artifacts/{artifact_id}")
     async def download_artifact(

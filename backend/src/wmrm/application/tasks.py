@@ -4,6 +4,7 @@ import shutil
 import uuid
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import datetime
 from multiprocessing import get_context
 from pathlib import Path
 from threading import Event, Lock, Thread
@@ -20,11 +21,17 @@ from wmrm.api.schemas import (
     ComparisonPage,
     ComparisonResponse,
     ErrorBody,
+    TaskReport,
+    TaskReportArtifact,
+    TaskReportComparison,
+    TaskReportError,
+    TaskReportInput,
+    TaskReportProcessing,
     TaskResponse,
 )
 from wmrm.application.assets import AssetError, AssetService
 from wmrm.application.worker import run_task_process
-from wmrm.persistence.database import ArtifactRecord, PlanRecord, TaskRecord
+from wmrm.persistence.database import ArtifactRecord, AssetRecord, PlanRecord, TaskRecord
 
 DOCX_MEDIA_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 PDF_MEDIA_TYPE = "application/pdf"
@@ -438,6 +445,7 @@ class TaskService:
         responses = [self._artifact_response(item) for item in artifacts]
         responses.sort(key=lambda item: (_role_order(item.role), item.page_number or 0))
         comparison = self._comparison(record, plan, responses)
+        warning_codes = _warning_codes(plan)
         return TaskResponse(
             id=record.id,
             plan_id=record.plan_id,
@@ -446,9 +454,95 @@ class TaskService:
             progress=record.progress,
             created_at=record.created_at,
             updated_at=record.updated_at,
+            duration_seconds=_duration_seconds(record),
+            warning_codes=warning_codes,
             error=error,
             artifacts=responses,
             comparison=comparison,
+            report_url=f"/api/v1/tasks/{record.id}/report",
+        )
+
+    def report(self, session: Session, task_id: str) -> TaskReport:
+        record = session.get(TaskRecord, task_id)
+        if record is None:
+            raise AssetError("TASK_NOT_FOUND", "找不到该处理任务。", 404)
+        plan = session.get(PlanRecord, record.plan_id)
+        if plan is None:
+            raise AssetError("PLAN_NOT_FOUND", "找不到该处理计划。", 404)
+        asset = session.get(AssetRecord, plan.asset_id)
+        if asset is None:
+            raise AssetError("ASSET_NOT_FOUND", "找不到该文件。", 404)
+
+        payload = json.loads(plan.plan_json)
+        plan_response = payload.get("response", {})
+        artifacts = session.scalars(
+            select(ArtifactRecord).where(ArtifactRecord.task_id == task_id)
+        ).all()
+        artifact_responses = [self._artifact_response(item) for item in artifacts]
+        artifact_responses.sort(
+            key=lambda item: (_role_order(item.role), item.page_number or 0)
+        )
+        comparison = self._comparison(record, plan, artifact_responses)
+        warning_codes = _warning_codes(plan)
+        selected_target_count = len(
+            payload.get("regions", payload.get("candidates", []))
+        )
+        error = None
+        if record.error_json:
+            error_payload = json.loads(record.error_json)
+            error = TaskReportError(code=str(error_payload.get("code", "UNKNOWN")))
+
+        return TaskReport(
+            task_id=record.id,
+            plan_id=record.plan_id,
+            status=record.status,
+            stage=record.stage,
+            progress=record.progress,
+            created_at=record.created_at,
+            updated_at=record.updated_at,
+            duration_seconds=_duration_seconds(record),
+            input=TaskReportInput(
+                asset_id=asset.id,
+                kind=asset.kind,
+                media_type=asset.media_type,
+                size_bytes=asset.size_bytes,
+                sha256=asset.sha256,
+            ),
+            processing=TaskReportProcessing(
+                kind=str(payload.get("kind", "object_removal")),
+                output_kind=str(plan_response.get("output_kind", asset.kind)),
+                selected_target_count=selected_target_count,
+                warning_codes=warning_codes,
+                radius=_optional_int(payload.get("radius")),
+                dpi=_optional_int(payload.get("dpi")),
+                ocr_languages=(
+                    str(payload["ocr_languages"])
+                    if payload.get("ocr_languages")
+                    else None
+                ),
+            ),
+            artifacts=[
+                TaskReportArtifact(
+                    id=item.id,
+                    role=item.role,
+                    media_type=item.media_type,
+                    size_bytes=item.size_bytes,
+                    sha256=item.sha256,
+                    page_number=item.page_number,
+                )
+                for item in artifact_responses
+            ],
+            comparison=(
+                TaskReportComparison(
+                    available=comparison.available,
+                    removed_count=comparison.removed_count,
+                    source_page_count=comparison.source_page_count,
+                    result_page_count=comparison.result_page_count,
+                )
+                if comparison is not None
+                else None
+            ),
+            error=error,
         )
 
     def _artifact_response(self, item: ArtifactRecord) -> ArtifactResponse:
@@ -564,3 +658,27 @@ def _artifact_role(item: ArtifactRecord) -> tuple[str, int | None]:
 
 def _role_order(role: str) -> int:
     return {"output": 0, "source_preview": 1, "result_preview": 2}[role]
+
+
+def _optional_int(value: Any) -> int | None:
+    return int(value) if value is not None else None
+
+
+def _warning_codes(plan: PlanRecord | None) -> list[str]:
+    if plan is None:
+        return []
+    response = json.loads(plan.plan_json).get("response", {})
+    return sorted(
+        {
+            str(item["code"])
+            for item in response.get("warnings", [])
+            if isinstance(item, dict) and item.get("code")
+        }
+    )
+
+
+def _duration_seconds(record: TaskRecord) -> float:
+    end = record.updated_at
+    if record.status not in TERMINAL_STATUSES:
+        end = datetime.now(record.created_at.tzinfo)
+    return max(0.0, (end - record.created_at).total_seconds())
