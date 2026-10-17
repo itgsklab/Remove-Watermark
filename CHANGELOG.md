@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- Playwright Chromium end-to-end coverage for the complete DOCX, general-PDF and image Web
+  workflows, including result and privacy-safe task-report downloads in a dedicated CI gate.
 - Downloadable task report schema v1 with duration, input and processing summaries, warning codes,
   result digests and privacy-safe failure codes.
 - Structured GitHub forms for reproducible bug, document-compatibility and feature reports, with
