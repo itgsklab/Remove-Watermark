@@ -52,6 +52,8 @@ const pdfDeepRadius = ref(3)
 const pdfOcrLanguages = ref('eng')
 const confirmedRasterization = ref(false)
 const imageMasks = ref<ImageMaskRegion[]>([])
+const imageMaskPast = ref<ImageMaskRegion[][]>([])
+const imageMaskFuture = ref<ImageMaskRegion[][]>([])
 const imageMaskPreview = ref<ImageMaskPreview | null>(null)
 const imageRadius = ref(3)
 const imagePlanWarnings = ref<PlanWarning[]>([])
@@ -83,6 +85,9 @@ const redactionOverlapCount = computed(() => redactionPreview.value?.regions.red
 const redactionDraftPageCount = computed(() => new Set(
   redactionRegions.value.map(region => region.page_number),
 ).size)
+const canUndoImageMasks = computed(() => imageMaskPast.value.length > 0)
+const canRedoImageMasks = computed(() => imageMaskFuture.value.length > 0)
+const imageMaskHistoryLimit = 50
 
 const complexityLabels = {
   low: '低风险',
@@ -123,10 +128,7 @@ async function inspect() {
     redactionRegions.value = []
     confirmedRedactionOverlap.value = false
     confirmedRasterization.value = false
-    imageMasks.value = []
-    imageMaskPreview.value = null
-    imagePlanWarnings.value = []
-    confirmedImageWarnings.value = []
+    resetImageMasks()
     vlmWarnings.value = []
     const firstPage = analysis.value.pdf_pages[0]
     if (analysis.value.preset === 'general' && firstPage) {
@@ -230,17 +232,72 @@ function clearAnalysis() {
   redactionPreview.value = null
   redactionRegions.value = []
   confirmedRedactionOverlap.value = false
+  resetImageMasks()
+}
+
+function updateImageMasks(regions: ImageMaskRegion[]) {
+  if (regions.length > 100) {
+    reportImageMaskLimit()
+    return
+  }
+  const next = cloneImageMasks(regions)
+  if (sameImageMasks(imageMasks.value, next)) return
+  imageMaskPast.value.push(cloneImageMasks(imageMasks.value))
+  if (imageMaskPast.value.length > imageMaskHistoryLimit) imageMaskPast.value.shift()
+  imageMaskFuture.value = []
+  imageMasks.value = next
+  clearImageMaskPreview()
+}
+
+function undoImageMasks() {
+  const previous = imageMaskPast.value.pop()
+  if (!previous) return
+  imageMaskFuture.value.push(cloneImageMasks(imageMasks.value))
+  imageMasks.value = cloneImageMasks(previous)
+  clearImageMaskPreview()
+  message.value = `已撤销蒙版编辑，当前有 ${imageMasks.value.length} 个区域。`
+}
+
+function redoImageMasks() {
+  const next = imageMaskFuture.value.pop()
+  if (!next) return
+  imageMaskPast.value.push(cloneImageMasks(imageMasks.value))
+  imageMasks.value = cloneImageMasks(next)
+  clearImageMaskPreview()
+  message.value = `已重做蒙版编辑，当前有 ${imageMasks.value.length} 个区域。`
+}
+
+function resetImageMasks() {
   imageMasks.value = []
+  imageMaskPast.value = []
+  imageMaskFuture.value = []
+  clearImageMaskPreview()
+}
+
+function clearImageMaskPreview() {
   imageMaskPreview.value = null
   imagePlanWarnings.value = []
   confirmedImageWarnings.value = []
 }
 
-function updateImageMasks(regions: ImageMaskRegion[]) {
-  imageMasks.value = regions
-  imageMaskPreview.value = null
-  imagePlanWarnings.value = []
-  confirmedImageWarnings.value = []
+function cloneImageMasks(regions: ImageMaskRegion[]) {
+  return regions.map(region => ({ ...region }))
+}
+
+function sameImageMasks(left: ImageMaskRegion[], right: ImageMaskRegion[]) {
+  return left.length === right.length && left.every((region, index) => {
+    const other = right[index]
+    return other !== undefined
+      && region.x0 === other.x0
+      && region.y0 === other.y0
+      && region.x1 === other.x1
+      && region.y1 === other.y1
+      && region.transform_id === other.transform_id
+  })
+}
+
+function reportImageMaskLimit() {
+  message.value = '一个图片蒙版草稿最多包含 100 个区域。'
 }
 
 async function requestVlmSuggestions() {
@@ -635,7 +692,12 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         :asset-id="assetId"
         :metadata="analysis.image_metadata"
         :regions="imageMasks"
+        :can-undo="canUndoImageMasks"
+        :can-redo="canRedoImageMasks"
         @update:regions="updateImageMasks"
+        @undo="undoImageMasks"
+        @redo="redoImageMasks"
+        @limit-reached="reportImageMaskLimit"
       />
       <div class="process-actions">
         <button :disabled="busy || imageMasks.length === 0" @click="previewImageMaskRisk">
