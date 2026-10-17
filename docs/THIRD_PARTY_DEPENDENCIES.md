@@ -4,9 +4,9 @@ This file is generated from the pinned Python packaging constraints and npm lock
 It records release inputs; it is not a legal opinion or a substitute for license review.
 Regenerate it with `make release-metadata` and verify it with `make release-metadata-check`.
 
-- Input digest: `d42b1d968b0fa2d9b62097c83699eebb75793c7100cec0e74b43bcc5568752ea`
+- Input digest: `368b925d056f6205eb3356617d0d778321808e3ed975fbd571db9bcd9b55e100`
 - Python packages: 34
-- npm packages: 126
+- npm packages: 129
 - Vendored components: 1
 - License fields: `NOASSERTION` until an authoritative package-by-package review is recorded
 
@@ -91,6 +91,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `@napi-rs/canvas-win32-arm64-msvc` | `0.1.100` | optional runtime | no | os=win32; cpu=arm64 |
 | npm | `@napi-rs/canvas-win32-x64-msvc` | `0.1.100` | optional runtime | no | os=win32; cpu=x64 |
 | npm | `@napi-rs/lzma-linux-x64-gnu` | `1.5.1` | development | no | os=linux; cpu=x64 |
+| npm | `@playwright/test` | `1.64.1` | development | yes | — |
 | npm | `@rolldown/pluginutils` | `1.0.1` | development | no | — |
 | npm | `@rollup/rollup-android-arm-eabi` | `4.63.4` | development | no | os=android; cpu=arm |
 | npm | `@rollup/rollup-android-arm64` | `4.63.4` | development | no | os=android; cpu=arm64 |
@@ -159,6 +160,8 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `picocolors` | `1.1.1` | runtime | no | — |
 | npm | `picomatch` | `4.0.7` | development | no | — |
 | npm | `pinia` | `3.0.4` | runtime | yes | — |
+| npm | `playwright` | `1.64.1` | development | no | — |
+| npm | `playwright-core` | `1.64.1` | development | no | — |
 | npm | `postcss` | `8.5.28` | runtime | no | — |
 | npm | `rfdc` | `1.4.1` | runtime | no | — |
 | npm | `rollup` | `4.63.4` | development | no | — |

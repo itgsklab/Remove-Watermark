@@ -29,7 +29,7 @@ make release-metadata-check
 1. 从最新 `main` 创建范围单一的短期分支，不直接在主分支开发；
 2. 提交前检查变更中没有真实用户文件、凭据、有效分享链接、本地路径、内部计划或工作目录；
 3. 创建 Pull Request，并按照模板写明触发条件、最终行为、验证命令和剩余限制；
-4. 等待 `backend`、`frontend`、`dependency-review`、`aggregate-evidence`、`Analyze (javascript-typescript)` 和 `Analyze (python)` 全部通过；
+4. 等待 `backend`、`frontend`、`browser-e2e`、`dependency-review`、`aggregate-evidence`、`Analyze (javascript-typescript)` 和 `Analyze (python)` 全部通过；
 5. 如果 GitHub 提示分支落后，先同步最新 `main` 并重新通过检查；
 6. 解决所有审查对话后再合并，合并完成后删除短期分支。
 

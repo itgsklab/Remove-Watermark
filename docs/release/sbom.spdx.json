@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/d42b1d968b0fa2d9b62097c83699eebb75793c7100cec0e74b43bcc5568752ea",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/368b925d056f6205eb3356617d0d778321808e3ed975fbd571db9bcd9b55e100",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {
@@ -1526,6 +1526,25 @@
       "versionInfo": "1.5.1"
     },
     {
+      "SPDXID": "SPDXRef-Package-npm-playwright-test-23425204e9",
+      "comment": "Ecosystem: npm; usage: development; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40playwright/test@1.64.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@playwright/test",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.64.1"
+    },
+    {
       "SPDXID": "SPDXRef-Package-npm-rolldown-pluginutils-95ae35fc7f",
       "comment": "Ecosystem: npm; usage: development; direct: no",
       "copyrightText": "NOASSERTION",
@@ -2818,6 +2837,44 @@
       "versionInfo": "3.0.4"
     },
     {
+      "SPDXID": "SPDXRef-Package-npm-playwright-5549f2d43b",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/playwright@1.64.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "playwright",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.64.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-playwright-core-1fe3a46fcd",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/playwright-core@1.64.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "playwright-core",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.64.1"
+    },
+    {
       "SPDXID": "SPDXRef-Package-npm-postcss-854ad1542f",
       "comment": "Ecosystem: npm; usage: runtime; direct: no",
       "copyrightText": "NOASSERTION",
@@ -3486,6 +3543,11 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
+      "relatedSpdxElement": "SPDXRef-Package-npm-playwright-test-23425204e9",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-Package-npm-rolldown-pluginutils-95ae35fc7f",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
@@ -3822,6 +3884,16 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-npm-pinia-f4512373a4",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-playwright-5549f2d43b",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-playwright-core-1fe3a46fcd",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },

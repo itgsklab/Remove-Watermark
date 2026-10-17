@@ -130,6 +130,15 @@ PNG、JPEG 和 WebP 可以进行元数据检查和矩形蒙版编辑。蒙版预
 make check
 ```
 
+首次安装 Chromium 测试运行时并执行 DOCX、通用 PDF 和图片的真实浏览器流程：
+
+```bash
+make browser-install
+make browser-check
+```
+
+浏览器测试只使用运行时生成的公开合成夹具，数据写入 Git 忽略的 `work/e2e-data`，并在每次运行前清空。
+
 验证发布依赖清单、SPDX SBOM 和全新虚拟环境中的 wheel 安装：
 
 ```bash

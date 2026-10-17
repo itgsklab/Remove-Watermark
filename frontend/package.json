@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vue-tsc -b && vite build",
-    "typecheck": "vue-tsc -b --noEmit"
+    "typecheck": "vue-tsc -b --noEmit",
+    "e2e": "npm run e2e:typecheck && playwright test",
+    "e2e:typecheck": "tsc --noEmit -p tsconfig.e2e.json",
+    "e2e:serve": "sh e2e/serve.sh"
   },
   "dependencies": {
     "pdfjs-dist": "5.4.624",
@@ -15,6 +18,7 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.64.1",
     "@types/node": "^24.19.2",
     "@vitejs/plugin-vue": "^6.0.10",
     "@vue/tsconfig": "^0.9.1",
