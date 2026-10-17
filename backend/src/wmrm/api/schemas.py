@@ -150,6 +150,10 @@ class SourceLocator(BaseModel):
     generation_number: int | None = Field(default=None, ge=0)
     operation_index: int | None = Field(default=None, ge=0)
     annotation_index: int | None = Field(default=None, ge=0)
+    drawing_index: int | None = Field(default=None, ge=0)
+    relationship_id: str | None = None
+    media_part_name: str | None = None
+    media_sha256: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
 
 
 class CandidateResponse(BaseModel):
@@ -163,6 +167,8 @@ class CandidateResponse(BaseModel):
     allowed_strategies: list[str]
     region: CandidateRegion | None = None
     overlaps_protected_content: bool | None = None
+    preview_url: str | None = None
+    preview_media_type: Literal["image/png", "image/jpeg", "image/gif", "image/webp"] | None = None
 
 
 class AnalysisResponse(BaseModel):

@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- Read-only DOCX DrawingML image candidate detection with relationship evidence, browser-safe
+  embedded previews, explicit unsupported-format warnings and no automatic deletion path.
 - Playwright Chromium end-to-end coverage for the complete DOCX, general-PDF and image Web
   workflows, including result and privacy-safe task-report downloads in a dedicated CI gate.
 - Downloadable task report schema v1 with duration, input and processing summaries, warning codes,
@@ -30,7 +32,7 @@ All notable changes to this project are documented in this file. The format foll
 - CodeQL scanning for Python and JavaScript/TypeScript on Pull Requests, `main` pushes and a weekly
   schedule, with results uploaded to GitHub code scanning.
 - Immutable commit pinning for every third-party GitHub Action, enforced by the required backend
-  check, with protected-branch documentation synchronized to all six required checks.
+  check, with protected-branch documentation synchronized to all seven required checks.
 
 ### Changed
 

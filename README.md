@@ -6,7 +6,7 @@
 
 面向 DOCX、PDF、CodeCV 简历和小红书图片的本地优先水印处理工具。
 
-> 当前状态：`0.1.0` 正式 Web 版本。已完成 DOCX VML、CodeCV PDF 平铺水印、通用 PDF 区域物理删除、PDF Deep 栅格修复与可搜索文字层、静态图片矩形蒙版的处理闭环、小红书分享链接解析与公开页面图片安全导入，以及默认关闭的照片门禁 VLM 蒙版建议。用户界面采用 Vue Web 页面，不提供原生桌面 App。
+> 当前状态：`0.1.0` 正式 Web 版本。已完成 DOCX VML 处理和 DrawingML 图片候选只读预览、CodeCV PDF 平铺水印、通用 PDF 区域物理删除、PDF Deep 栅格修复与可搜索文字层、静态图片矩形蒙版的处理闭环、小红书分享链接解析与公开页面图片安全导入，以及默认关闭的照片门禁 VLM 蒙版建议。用户界面采用 Vue Web 页面，不提供原生桌面 App。
 
 ## 技术栈
 
@@ -80,8 +80,9 @@ make web-run
 - `GET /api/v1/assets/{asset_id}`
 - `GET /api/v1/assets/{asset_id}/content`（受控提供本地预览源文件）
 - `DELETE /api/v1/assets/{asset_id}`
-- `POST /api/v1/analyses`（支持 DOCX VML、`codecv` / `general` PDF 预设和 `image` 图片预设）
+- `POST /api/v1/analyses`（支持 DOCX VML 与 DrawingML 图片候选、`codecv` / `general` PDF 预设和 `image` 图片预设）
 - `GET /api/v1/analyses/{analysis_id}`
+- `GET /api/v1/analyses/{analysis_id}/candidates/{candidate_id}/preview`（受控读取可安全显示的 DOCX 内嵌图片候选）
 - `POST /api/v1/plans/validate`（校验 DOCX/CodeCV PDF 候选、策略、文件摘要与风险确认）
 - `POST /api/v1/redactions/preview`（校验通用 PDF 区域并列出正文、图形和交互对象重叠）
 - `POST /api/v1/redaction-plans/validate`（创建对象级删除或 Deep 栅格修复计划）
@@ -97,14 +98,14 @@ make web-run
 ## DOCX 当前处理流程
 
 1. 上传 DOCX 并进行只读扫描。
-2. 选择页眉或页脚中的 VML 文字水印候选。
+2. 选择页眉或页脚中的 VML 文字水印候选；DrawingML 图片候选仅供预览复核。
 3. 对未与目标文字完全匹配的候选进行显式确认。
 4. 服务端再次校验文件摘要和候选定位信息。
 5. worker 生成新 DOCX，仅重写包含所选形状的 XML 部件。
 6. 校验压缩包结构、必需部件、修改部件 XML，以及所有非目标部件的字节一致性。
 7. 使用本机 LibreOffice 和 Poppler 渲染原件与结果，按页并排检查。
 
-原始上传文件不会被覆盖。当前版本只识别 Word 页眉/页脚中的 VML `textpath` 文字形状，无法处理图片水印、正文背景或旧版 `.doc`。
+原始上传文件不会被覆盖。当前版本可识别 Word 页眉/页脚中的 VML `textpath` 文字形状，以及通过内部图片关系嵌入的 DrawingML 图片。DrawingML 图片保持只读，不会进入删除计划；正文背景、外部图片关系、旧版 `.doc` 和浏览器不支持的图片格式不会被猜测性处理。
 
 页面预览属于可选能力。缺少渲染工具或转换失败时，DOCX 处理任务仍会成功，界面会保留结果下载并说明预览不可用。可通过 `WMRM_DOCX_PREVIEW_ENABLED=false` 关闭预览。
 

@@ -25,7 +25,7 @@ const importingCandidate = ref<string | null>(null)
 const maxSize = computed(() => store.capabilities?.max_upload_bytes ?? 0)
 const capabilityDescriptions: Record<string, string> = {
   codecv_pdf: '识别 CodeCV 简历中的平铺水印，确认候选后生成新的 PDF。',
-  docx: '扫描页眉和页脚中的文字水印，确认后生成新的 DOCX。',
+  docx: '扫描页眉和页脚中的文字水印，并只读预览 DrawingML 图片候选。',
   pdf: '支持区域物理删除与栅格修复，并尽可能保留可搜索文字。',
   image: '框选图片水印区域，预览背景风险后使用 OpenCV 修复。',
   xiaohongshu_link: '解析分享链接并安全导入公开图片，再进入图片检查流程。',

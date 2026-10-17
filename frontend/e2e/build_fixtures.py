@@ -18,6 +18,11 @@ def main() -> None:
 
 
 def _docx() -> bytes:
+    image_buffer = BytesIO()
+    image = Image.new("RGB", (120, 48), "#d8c6a8")
+    draw = ImageDraw.Draw(image)
+    draw.text((28, 15), "DRAFT", fill="#4b5a60")
+    image.save(image_buffer, format="PNG", optimize=False)
     output = BytesIO()
     with ZipFile(output, "w", ZIP_DEFLATED) as package:
         package.writestr(
@@ -44,10 +49,22 @@ def _docx() -> bytes:
             "word/header1.xml",
             '<?xml version="1.0"?><w:hdr '
             'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
-            'xmlns:v="urn:schemas-microsoft-com:vml"><w:p><w:r><w:pict>'
+            'xmlns:v="urn:schemas-microsoft-com:vml" '
+            'xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" '
+            'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+            'xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" '
+            'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            '<w:p><w:r><w:pict>'
             '<v:shape id="PowerPlusWaterMarkObject1" type="#_x0000_t136" '
             'style="rotation:315;position:absolute"><v:textpath string="DRAFT"/>'
-            '</v:shape></w:pict></w:r></w:p></w:hdr>',
+            '</v:shape></w:pict></w:r><w:r><w:drawing><wp:anchor behindDoc="1">'
+            '<wp:extent cx="1143000" cy="457200"/>'
+            '<wp:docPr id="2" name="Browser watermark" descr="DRAFT image"/>'
+            '<a:graphic><a:graphicData><pic:pic><pic:nvPicPr>'
+            '<pic:cNvPr id="3" name="browser-watermark.png"/>'
+            '</pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdImage"/>'
+            '</pic:blipFill></pic:pic></a:graphicData></a:graphic>'
+            '</wp:anchor></w:drawing></w:r></w:p></w:hdr>',
         )
         package.writestr(
             "word/_rels/document.xml.rels",
@@ -57,6 +74,15 @@ def _docx() -> bytes:
             'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" '
             'Target="header1.xml"/></Relationships>',
         )
+        package.writestr(
+            "word/_rels/header1.xml.rels",
+            '<?xml version="1.0"?>'
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rIdImage" '
+            'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" '
+            'Target="media/browser-watermark.png"/></Relationships>',
+        )
+        package.writestr("word/media/browser-watermark.png", image_buffer.getvalue())
     return output.getvalue()
 
 

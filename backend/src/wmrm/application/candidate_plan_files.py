@@ -87,9 +87,14 @@ def create_candidate_plan(
                         shape_index=item.shape_index,
                         shape_id=item.shape_id,
                         shape_type=item.shape_type,
+                        drawing_index=item.drawing_index,
+                        relationship_id=item.relationship_id,
+                        media_part_name=item.media_part_name,
+                        media_sha256=item.media_sha256,
                     ),
                     style=item.style,
                     allowed_strategies=list(item.allowed_strategies),
+                    preview_media_type=item.preview_media_type,
                 )
                 for item in inspection.candidates
             ]
@@ -140,7 +145,7 @@ def create_candidate_plan(
             message="该候选证据不足，删除前需要人工核对并明确确认。",
         )
         for item in candidates
-        if item.classification == "ambiguous"
+        if item.classification == "ambiguous" and "object" in item.allowed_strategies
     ]
     payload = {
         "schema_version": 1,

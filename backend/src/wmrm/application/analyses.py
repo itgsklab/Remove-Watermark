@@ -4,7 +4,7 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from wmrm.adapters.documents.docx import DocxInspector
+from wmrm.adapters.documents.docx import DocxInspector, read_docx_image_preview
 from wmrm.adapters.images.metadata import ImageInspector
 from wmrm.adapters.pdf.codecv import CodeCvPdfInspector
 from wmrm.adapters.pdf.general import GeneralPdfInspector
@@ -41,6 +41,7 @@ class AnalysisService:
         preset: str | None = None,
     ) -> AnalysisResponse:
         asset = self.assets.get(session, asset_id)
+        analysis_id = str(uuid.uuid4())
         image_metadata = None
         if asset.kind == "docx" and preset is None:
             inspection = self.docx_inspector.inspect(
@@ -60,9 +61,20 @@ class AnalysisService:
                         shape_index=item.shape_index,
                         shape_id=item.shape_id,
                         shape_type=item.shape_type,
+                        drawing_index=item.drawing_index,
+                        relationship_id=item.relationship_id,
+                        media_part_name=item.media_part_name,
+                        media_sha256=item.media_sha256,
                     ),
                     style=item.style,
                     allowed_strategies=list(item.allowed_strategies),
+                    preview_url=(
+                        f"/api/v1/analyses/{analysis_id}/candidates/"
+                        f"{item.candidate_id}/preview"
+                        if item.preview_media_type
+                        else None
+                    ),
+                    preview_media_type=item.preview_media_type,
                 )
                 for item in inspection.candidates
             ]
@@ -165,7 +177,6 @@ class AnalysisService:
                 message,
                 409,
             )
-        analysis_id = str(uuid.uuid4())
         response = AnalysisResponse(
             id=analysis_id,
             asset_id=asset_id,
@@ -198,3 +209,32 @@ class AnalysisService:
         if record is None:
             raise AssetError("ANALYSIS_NOT_FOUND", "找不到该扫描结果。", 404)
         return AnalysisResponse.model_validate(json.loads(record.result_json))
+
+    def image_preview(
+        self, session: Session, analysis_id: str, candidate_id: str
+    ) -> tuple[bytes, str]:
+        analysis = self.get(session, analysis_id)
+        candidate = next(
+            (item for item in analysis.candidates if item.candidate_id == candidate_id),
+            None,
+        )
+        if candidate is None:
+            raise AssetError("CANDIDATE_NOT_FOUND", "找不到该候选。", 404)
+        locator = candidate.source_locator
+        if (
+            candidate.kind != "image"
+            or candidate.preview_media_type is None
+            or locator.media_part_name is None
+            or locator.media_sha256 is None
+        ):
+            raise AssetError("PREVIEW_NOT_AVAILABLE", "该候选没有安全预览。", 404)
+        asset = self.assets.get(session, analysis.asset_id)
+        if asset.kind != "docx" or asset.sha256 != analysis.asset_sha256:
+            raise AssetError("PREVIEW_STALE", "图片预览与当前文件不一致，请重新扫描。", 409)
+        data = read_docx_image_preview(
+            self.assets.path_for(asset),
+            locator.media_part_name,
+            locator.media_sha256,
+            candidate.preview_media_type,
+        )
+        return data, candidate.preview_media_type

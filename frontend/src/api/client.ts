@@ -73,6 +73,10 @@ export interface SourceLocator {
   generation_number: number | null
   operation_index: number | null
   annotation_index: number | null
+  drawing_index: number | null
+  relationship_id: string | null
+  media_part_name: string | null
+  media_sha256: string | null
 }
 
 export interface CandidateRegion {
@@ -132,6 +136,8 @@ export interface Candidate {
   allowed_strategies: string[]
   region: CandidateRegion | null
   overlaps_protected_content: boolean | null
+  preview_url: string | null
+  preview_media_type: 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp' | null
 }
 
 export interface Analysis {
