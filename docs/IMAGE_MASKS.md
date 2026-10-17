@@ -15,6 +15,13 @@ The editor uses top-left-origin display pixels after applying EXIF orientation:
 - all values must remain within `display_width × display_height`;
 - every region carries the server-issued `transform_id`.
 
+The Vue editor keeps manual additions, individual removals, clearing and accepted local-model
+suggestions in one undo/redo history. The toolbar exposes both actions; while the editor has focus,
+`Command/Ctrl+Z` undoes and `Shift+Command/Ctrl+Z` (or `Ctrl+Y`) redoes. History is limited to 50
+states, resets when a new analysis starts and cannot restore masks from another asset. A draft may
+contain at most 100 regions. Every edit invalidates the previous risk preview and its confirmations,
+so execution always depends on the currently visible regions.
+
 `POST /api/v1/image-masks/preview` rejects stale transforms, non-finite values, empty rectangles and out-of-bounds regions. It calculates the exact union area of all rectangles, so overlapping masks are not counted twice. Covering more than 25% of the image requires explicit acknowledgement in the processing plan.
 
 The same preview measures the pixels around each mask and returns an explainable complexity assessment. It reports normalized texture, edge-density, periodicity and long-structure scores for every region. The selected pixels are excluded from feature extraction, so the watermark itself does not inflate the assessment. Smooth backgrounds are marked `low`; moderate texture is marked `review`; repeated patterns, dense detail or long crossing edges are marked `high`. High-complexity plans require explicit acknowledgement before a task can be created.

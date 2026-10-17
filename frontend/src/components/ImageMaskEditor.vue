@@ -6,12 +6,18 @@ const props = defineProps<{
   assetId: string
   metadata: ImageMetadata
   regions: ImageMaskRegion[]
+  canUndo: boolean
+  canRedo: boolean
 }>()
 
 const emit = defineEmits<{
   'update:regions': [regions: ImageMaskRegion[]]
+  undo: []
+  redo: []
+  'limit-reached': []
 }>()
 
+const editorElement = ref<HTMLDivElement | null>(null)
 const imageElement = ref<HTMLImageElement | null>(null)
 const loading = ref(true)
 const error = ref('')
@@ -52,6 +58,7 @@ function point(event: PointerEvent) {
 
 function begin(event: PointerEvent) {
   if (loading.value || error.value) return
+  editorElement.value?.focus()
   const selected = point(event)
   if (!selected) return
   start.value = selected
@@ -85,6 +92,12 @@ function finish(event: PointerEvent) {
     end.value = null
     return
   }
+  if (props.regions.length >= 100) {
+    emit('limit-reached')
+    start.value = null
+    end.value = null
+    return
+  }
   emit('update:regions', [...props.regions, roundRegion(region)])
   start.value = null
   end.value = null
@@ -103,6 +116,23 @@ function remove(index: number) {
 
 function clear() {
   emit('update:regions', [])
+}
+
+function handleKeydown(event: KeyboardEvent) {
+  const modifier = event.metaKey || event.ctrlKey
+  if (!modifier) return
+  if (event.key.toLowerCase() === 'z') {
+    const redo = event.shiftKey
+    if ((redo && !props.canRedo) || (!redo && !props.canUndo)) return
+    event.preventDefault()
+    if (redo) emit('redo')
+    else emit('undo')
+    return
+  }
+  if (event.ctrlKey && event.key.toLowerCase() === 'y' && props.canRedo) {
+    event.preventDefault()
+    emit('redo')
+  }
 }
 
 function regionStyle(region: ImageMaskRegion) {
@@ -126,7 +156,13 @@ function roundRegion(region: ImageMaskRegion): ImageMaskRegion {
 </script>
 
 <template>
-  <div class="image-mask-editor">
+  <div
+    ref="editorElement"
+    class="image-mask-editor"
+    tabindex="0"
+    aria-label="图片蒙版编辑器"
+    @keydown="handleKeydown"
+  >
     <p v-if="loading" class="hint">正在加载图片预览…</p>
     <p v-if="error" class="warning">{{ error }}</p>
     <div class="image-mask-canvas" :class="{ loading }">
@@ -151,10 +187,18 @@ function roundRegion(region: ImageMaskRegion): ImageMaskRegion {
       <div v-if="draftStyle" class="image-mask-region draft" :style="draftStyle" />
     </div>
     <div class="image-mask-toolbar">
-      <p class="hint">在图片上拖拽矩形，可添加多个蒙版区域。</p>
-      <button v-if="regions.length" class="secondary-button" type="button" @click="clear">
-        清空蒙版
-      </button>
+      <p class="hint">在图片上拖拽矩形，最多添加 100 个区域；编辑器聚焦时可用 ⌘/Ctrl+Z 撤销。</p>
+      <div class="image-mask-actions">
+        <button class="secondary-button" type="button" :disabled="!canUndo" @click="emit('undo')">
+          撤销
+        </button>
+        <button class="secondary-button" type="button" :disabled="!canRedo" @click="emit('redo')">
+          重做
+        </button>
+        <button class="secondary-button" type="button" :disabled="!regions.length" @click="clear">
+          清空蒙版
+        </button>
+      </div>
     </div>
     <ol v-if="regions.length" class="mask-region-list">
       <li v-for="(region, index) in regions" :key="`mask-${index}`">
@@ -169,7 +213,8 @@ function roundRegion(region: ImageMaskRegion): ImageMaskRegion {
 </template>
 
 <style scoped>
-.image-mask-editor { margin-top: 18px; }
+.image-mask-editor { margin-top: 18px; border-radius: 14px; outline: none; }
+.image-mask-editor:focus-visible { box-shadow: 0 0 0 3px rgba(32, 92, 67, .22); }
 .image-mask-canvas { position: relative; width: min(100%, 920px); line-height: 0; overflow: hidden; border: 1px solid #c8d0c8; border-radius: 12px; background: #eef0eb; touch-action: none; }
 .image-mask-canvas.loading { min-height: 240px; opacity: .55; }
 .image-mask-canvas img { display: block; width: 100%; height: auto; cursor: crosshair; user-select: none; }
@@ -177,6 +222,7 @@ function roundRegion(region: ImageMaskRegion): ImageMaskRegion {
 .image-mask-region.draft { border-style: dashed; }
 .image-mask-region span { position: absolute; top: 4px; left: 4px; min-width: 22px; height: 22px; display: grid; place-items: center; border-radius: 999px; color: white; background: #b73524; font: 700 12px/1 system-ui; }
 .image-mask-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.image-mask-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .mask-region-list { display: grid; gap: 8px; padding-left: 22px; }
 .mask-region-list li { padding-left: 4px; color: #536057; }
 .mask-region-list li::marker { color: #b73524; font-weight: 700; }
