@@ -274,13 +274,13 @@ def create_app(
                 CapabilityItem(
                     id="docx",
                     label="Word DOCX",
-                    status="experimental",
+                    status="available",
                     strategies=["inspect", "object"],
                 ),
                 CapabilityItem(
                     id="pdf",
                     label="PDF",
-                    status="experimental",
+                    status="available",
                     strategies=[
                         "inspect",
                         "region-redaction",
@@ -292,13 +292,13 @@ def create_app(
                 CapabilityItem(
                     id="image",
                     label="PNG / JPEG / WebP",
-                    status="experimental",
+                    status="available",
                     strategies=["inspect", "mask-preview", "opencv-telea"],
                 ),
                 CapabilityItem(
                     id="xiaohongshu_link",
                     label="小红书分享链接",
-                    status="experimental",
+                    status="available",
                     strategies=["share-link-parse", "metadata-preview", "safe-page-image-import"],
                 ),
             ],

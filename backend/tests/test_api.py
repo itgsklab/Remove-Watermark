@@ -60,6 +60,20 @@ def test_health(client: TestClient) -> None:
     assert response.headers["x-request-id"]
 
 
+def test_capability_maturity_matches_supported_workflows(client: TestClient) -> None:
+    response = client.get("/api/v1/capabilities")
+
+    assert response.status_code == 200
+    formats = {item["id"]: item["status"] for item in response.json()["formats"]}
+    assert formats == {
+        "codecv_pdf": "experimental",
+        "docx": "available",
+        "pdf": "available",
+        "image": "available",
+        "xiaohongshu_link": "available",
+    }
+
+
 def test_upload_and_delete_pdf(client: TestClient) -> None:
     source = b"%PDF-1.7\n%%EOF"
     response = client.post(

@@ -23,6 +23,21 @@ const linkMessage = ref('')
 const linkPreview = ref<XiaohongshuPreview | null>(null)
 const importingCandidate = ref<string | null>(null)
 const maxSize = computed(() => store.capabilities?.max_upload_bytes ?? 0)
+const capabilityDescriptions: Record<string, string> = {
+  codecv_pdf: '识别 CodeCV 简历中的平铺水印，确认候选后生成新的 PDF。',
+  docx: '扫描页眉和页脚中的文字水印，确认后生成新的 DOCX。',
+  pdf: '支持区域物理删除与栅格修复，并尽可能保留可搜索文字。',
+  image: '框选图片水印区域，预览背景风险后使用 OpenCV 修复。',
+  xiaohongshu_link: '解析分享链接并安全导入公开图片，再进入图片检查流程。',
+}
+
+function capabilityStatusLabel(status: 'available' | 'planned' | 'experimental') {
+  return {
+    available: '已支持',
+    experimental: '验证中',
+    planned: '规划中',
+  }[status]
+}
 
 onMounted(async () => {
   try {
@@ -186,11 +201,21 @@ async function importCandidate(candidateId: string) {
     </article>
   </section>
 
-  <section v-if="store.capabilities" class="capabilities">
-    <article v-for="item in store.capabilities.formats" :key="item.id" class="panel">
-      <span class="status">{{ item.status === 'planned' ? '规划中' : item.status === 'experimental' ? '实验性' : '可用' }}</span>
-      <h2>{{ item.label }}</h2>
-      <p>{{ item.strategies.join(' · ') }}</p>
-    </article>
+  <section v-if="store.capabilities" class="capability-section">
+    <div class="capability-heading">
+      <div>
+        <p class="eyebrow">处理能力</p>
+        <h2>当前支持的文件与入口</h2>
+      </div>
+      <p>从上方选择文件或粘贴分享链接，系统会自动进入对应流程。</p>
+    </div>
+    <div class="capabilities">
+      <article v-for="item in store.capabilities.formats" :key="item.id" class="panel capability-card">
+        <span :class="['status', item.status]">{{ capabilityStatusLabel(item.status) }}</span>
+        <h2>{{ item.label }}</h2>
+        <p>{{ capabilityDescriptions[item.id] || '上传后检查可用的处理方式。' }}</p>
+        <small v-if="item.id === 'codecv_pdf'">跨模板兼容性仍在扩充，处理前会显示匹配证据并要求确认。</small>
+      </article>
+    </div>
   </section>
 </template>

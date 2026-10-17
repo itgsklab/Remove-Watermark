@@ -32,6 +32,8 @@ All notable changes to this project are documented in this file. The format foll
 
 - Refresh the supported Vue build toolchain within its current major versions and regenerate the
   release dependency inventory and SPDX SBOM.
+- Replace internal capability strategy labels on the home page with user-facing Chinese workflow
+  descriptions, and distinguish supported formats from the CodeCV compatibility-validation status.
 
 ## [0.1.0] - 2026-10-13
 
