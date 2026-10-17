@@ -782,6 +782,7 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         class="download-button"
         :href="artifact.download_url"
       >下载 {{ artifact.display_name }}</a>
+      <a class="secondary-button report-button" :href="task.report_url">下载处理报告</a>
     </article>
     <section v-if="isImage && task?.status === 'succeeded' && imageOutput" class="comparison-panel panel">
       <div class="comparison-heading">

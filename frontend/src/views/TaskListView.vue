@@ -65,6 +65,14 @@ function formatTime(value: string) {
     timeStyle: 'short',
   }).format(new Date(value))
 }
+
+function formatDuration(seconds: number) {
+  if (seconds < 1) return '不足 1 秒'
+  if (seconds < 60) return `${Math.round(seconds)} 秒`
+  const minutes = Math.floor(seconds / 60)
+  const remaining = Math.round(seconds % 60)
+  return `${minutes} 分 ${remaining} 秒`
+}
 </script>
 
 <template>
@@ -87,7 +95,13 @@ function formatTime(value: string) {
           <code>{{ task.id.slice(0, 8) }}</code>
         </div>
         <h2>{{ task.stage }}</h2>
-        <p>{{ formatTime(task.created_at) }} · {{ Math.round(task.progress * 100) }}%</p>
+        <p>
+          {{ formatTime(task.created_at) }} · 用时 {{ formatDuration(task.duration_seconds) }} ·
+          {{ Math.round(task.progress * 100) }}%
+        </p>
+        <p v-if="task.warning_codes.length" class="task-warning-count">
+          {{ task.warning_codes.length }} 项处理风险已确认
+        </p>
         <div class="progress-track" aria-hidden="true">
           <span :style="{ width: `${task.progress * 100}%` }"></span>
         </div>
@@ -105,6 +119,11 @@ function formatTime(value: string) {
           class="download-button"
           :href="artifact.download_url"
         >下载结果</a>
+        <a
+          v-if="['cancelled', 'succeeded', 'failed'].includes(task.status)"
+          class="secondary-button report-button"
+          :href="task.report_url"
+        >下载报告</a>
       </div>
     </article>
   </section>

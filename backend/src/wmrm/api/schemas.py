@@ -412,6 +412,64 @@ class TaskResponse(BaseModel):
     progress: float = Field(ge=0, le=1)
     created_at: datetime
     updated_at: datetime
+    duration_seconds: float = Field(ge=0)
+    warning_codes: list[str] = Field(default_factory=list)
     error: ErrorBody | None = None
     artifacts: list[ArtifactResponse] = Field(default_factory=list)
     comparison: ComparisonResponse | None = None
+    report_url: str
+
+
+class TaskReportInput(BaseModel):
+    asset_id: str
+    kind: str
+    media_type: str
+    size_bytes: int
+    sha256: str
+
+
+class TaskReportProcessing(BaseModel):
+    kind: str
+    output_kind: str
+    selected_target_count: int = Field(ge=0)
+    warning_codes: list[str] = Field(default_factory=list)
+    radius: int | None = None
+    dpi: int | None = None
+    ocr_languages: str | None = None
+
+
+class TaskReportArtifact(BaseModel):
+    id: str
+    role: Literal["output", "source_preview", "result_preview"]
+    media_type: str
+    size_bytes: int
+    sha256: str
+    page_number: int | None = None
+
+
+class TaskReportComparison(BaseModel):
+    available: bool
+    removed_count: int
+    source_page_count: int
+    result_page_count: int
+
+
+class TaskReportError(BaseModel):
+    code: str
+
+
+class TaskReport(BaseModel):
+    schema_version: Literal["1.0"] = "1.0"
+    task_id: str
+    plan_id: str
+    status: Literal["queued", "running", "cancelling", "cancelled", "succeeded", "failed"]
+    stage: str
+    progress: float = Field(ge=0, le=1)
+    created_at: datetime
+    updated_at: datetime
+    duration_seconds: float = Field(ge=0)
+    input: TaskReportInput
+    processing: TaskReportProcessing
+    artifacts: list[TaskReportArtifact] = Field(default_factory=list)
+    comparison: TaskReportComparison | None = None
+    error: TaskReportError | None = None

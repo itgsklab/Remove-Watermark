@@ -393,6 +393,17 @@ def test_general_pdf_redaction_plan_executes_in_worker(client: TestClient) -> No
     assert "物理删除 1 个 PDF 区域" in task["stage"]
     assert task["comparison"]["removed_count"] == 1
     assert task["comparison"]["changed_parts"] == ["page:1"]
+    assert task["warning_codes"] == [
+        "PDF_REDACTION_IRREVERSIBLE",
+        "PDF_REDACTION_OVERLAP",
+    ]
+
+    report = client.get(task["report_url"]).json()
+    assert report["processing"]["kind"] == "pdf_redaction"
+    assert report["processing"]["output_kind"] == "pdf"
+    assert report["processing"]["selected_target_count"] == 1
+    assert report["processing"]["warning_codes"] == task["warning_codes"]
+    assert report["comparison"]["removed_count"] == 1
 
     artifact = next(item for item in task["artifacts"] if item["role"] == "output")
     downloaded = client.get(artifact["download_url"])
