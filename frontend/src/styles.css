@@ -67,8 +67,18 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 }
 .xhs-media-candidate > div { min-width: 0; }
 .xhs-media-candidate p { margin: 4px 0 0; color: #607068; font-size: .8rem; }
-.capabilities { margin-top: 26px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-.status { float: right; color: #9a6114; background: #fff0d5; border-radius: 999px; padding: 4px 9px; font-size: .74rem; }
+.capability-section { margin-top: 38px; }
+.capability-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 18px; }
+.capability-heading h2 { margin: 6px 0 0; font-size: clamp(1.65rem, 3vw, 2.35rem); }
+.capability-heading > p { max-width: 440px; margin: 0; color: #607068; line-height: 1.6; }
+.capabilities { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.capability-card { min-height: 180px; }
+.capability-card > p { max-width: 34rem; margin: 12px 0 0; color: #536057; line-height: 1.6; }
+.capability-card small { display: block; margin-top: 14px; color: #8a5a18; line-height: 1.55; }
+.status { float: right; border-radius: 999px; padding: 4px 9px; font-size: .74rem; font-weight: 700; }
+.status.available { color: #075d3d; background: #dcefe5; }
+.status.experimental { color: #9a6114; background: #fff0d5; }
+.status.planned { color: #4f5751; background: #e8eae7; }
 .empty-state { min-height: 55vh; display: grid; align-content: center; }
 .empty-state h1 { margin-bottom: 6px; }
 .workspace-head h1 { font-size: clamp(2rem, 5vw, 4.2rem); }
@@ -219,6 +229,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   nav { gap: 14px; font-size: .9rem; }
   main { width: min(92vw, 1120px); padding-top: 48px; }
   .capabilities { grid-template-columns: 1fr; }
+  .capability-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
   .workspace-grid, .candidate-card { grid-template-columns: 1fr; }
   .result-card { align-items: flex-start; flex-direction: column; }
   .comparison-heading { align-items: flex-start; flex-direction: column; }
