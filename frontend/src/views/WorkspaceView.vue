@@ -18,6 +18,7 @@ import {
   type PlanWarning,
   type ProcessingTask,
   type RedactionPreview,
+  type RedactionRegion,
   validateImagePlan,
   validatePlan,
   validateRedactionPlan,
@@ -43,6 +44,7 @@ const redactionX0 = ref(0)
 const redactionY0 = ref(0)
 const redactionX1 = ref(100)
 const redactionY1 = ref(100)
+const redactionRegions = ref<RedactionRegion[]>([])
 const confirmedRedactionOverlap = ref(false)
 const pdfRegionStrategy = ref<'pymupdf_redaction' | 'raster_inpaint'>('pymupdf_redaction')
 const pdfDeepDpi = ref(144)
@@ -74,6 +76,13 @@ const imageOutput = computed(() => outputArtifacts.value[0] || null)
 const selectedPdfPage = computed(() => (
   analysis.value?.pdf_pages.find(page => page.page_number === redactionPage.value) || null
 ))
+const redactionOverlapCount = computed(() => redactionPreview.value?.regions.reduce(
+  (total, region) => total + region.overlaps.length,
+  0,
+) ?? 0)
+const redactionDraftPageCount = computed(() => new Set(
+  redactionRegions.value.map(region => region.page_number),
+).size)
 
 const complexityLabels = {
   low: '低风险',
@@ -111,6 +120,7 @@ async function inspect() {
     planWarnings.value = []
     task.value = null
     redactionPreview.value = null
+    redactionRegions.value = []
     confirmedRedactionOverlap.value = false
     confirmedRasterization.value = false
     imageMasks.value = []
@@ -218,6 +228,7 @@ function clearAnalysis() {
   selectedCandidates.value = []
   message.value = ''
   redactionPreview.value = null
+  redactionRegions.value = []
   confirmedRedactionOverlap.value = false
   imageMasks.value = []
   imageMaskPreview.value = null
@@ -318,28 +329,78 @@ function clearRedactionDraft() {
   confirmedRasterization.value = false
 }
 
+function currentRedactionRegion(): RedactionRegion | null {
+  const page = selectedPdfPage.value
+  if (!page) return null
+  const values = [redactionX0.value, redactionY0.value, redactionX1.value, redactionY1.value]
+  if (
+    !values.every(Number.isFinite)
+    || redactionX0.value < 0
+    || redactionY0.value < 0
+    || redactionX1.value > page.width
+    || redactionY1.value > page.height
+    || redactionX0.value >= redactionX1.value
+    || redactionY0.value >= redactionY1.value
+  ) return null
+  return {
+    page_number: page.page_number,
+    x0: redactionX0.value,
+    y0: redactionY0.value,
+    x1: redactionX1.value,
+    y1: redactionY1.value,
+    transform_id: page.transform_id,
+  }
+}
+
+function addRedactionRegion() {
+  const region = currentRedactionRegion()
+  if (!region) {
+    message.value = '区域坐标无效或超出当前页面范围。'
+    return
+  }
+  if (redactionRegions.value.length >= 100) {
+    message.value = '一个 PDF 计划最多包含 100 个区域。'
+    return
+  }
+  const duplicate = redactionRegions.value.some(item => (
+    item.page_number === region.page_number
+    && item.x0 === region.x0
+    && item.y0 === region.y0
+    && item.x1 === region.x1
+    && item.y1 === region.y1
+  ))
+  if (duplicate) {
+    message.value = '该区域已经在计划草稿中。'
+    return
+  }
+  redactionRegions.value.push(region)
+  clearRedactionDraft()
+  message.value = `已加入第 ${region.page_number} 页区域，草稿共 ${redactionRegions.value.length} 项。`
+}
+
+function removeRedactionRegion(index: number) {
+  redactionRegions.value.splice(index, 1)
+  clearRedactionDraft()
+  message.value = redactionRegions.value.length
+    ? `已移除区域，草稿还剩 ${redactionRegions.value.length} 项。`
+    : 'PDF 区域计划草稿已清空。'
+}
+
 async function previewRedactionRisk() {
-  if (!analysis.value || !selectedPdfPage.value) return
+  if (!analysis.value || redactionRegions.value.length === 0) return
   busy.value = true
   message.value = ''
   try {
     redactionPreview.value = await previewRedactions(
       analysis.value,
-      {
-        page_number: redactionPage.value,
-        x0: redactionX0.value,
-        y0: redactionY0.value,
-        x1: redactionX1.value,
-        y1: redactionY1.value,
-        transform_id: selectedPdfPage.value.transform_id,
-      },
+      redactionRegions.value,
       pdfRegionStrategy.value,
     )
     confirmedRedactionOverlap.value = false
-    const count = redactionPreview.value.regions[0]?.overlaps.length || 0
+    const count = redactionOverlapCount.value
     message.value = count
-      ? `区域与 ${count} 个正文或交互对象相交，请检查下方风险。`
-      : '结构扫描未发现区域重叠；复杂 PDF 仍可能存在未列出的内容。'
+      ? `${redactionRegions.value.length} 个区域与 ${count} 个正文或交互对象相交，请检查下方风险。`
+      : `${redactionRegions.value.length} 个区域未发现结构重叠；复杂 PDF 仍可能存在未列出的内容。`
   } catch (error) {
     message.value = error instanceof ApiError ? error.message : '无法生成区域风险预览。'
   } finally {
@@ -348,15 +409,15 @@ async function previewRedactionRisk() {
 }
 
 async function processRedaction() {
-  const region = redactionPreview.value?.regions[0]?.region
-  if (!analysis.value || !redactionPreview.value?.executable || !region) return
+  const regions = redactionPreview.value?.regions.map(item => item.region) || []
+  if (!analysis.value || !redactionPreview.value?.executable || regions.length === 0) return
   busy.value = true
   message.value = ''
   try {
     const acknowledgements: string[] = []
     if (confirmedRedactionOverlap.value) acknowledgements.push('PDF_REDACTION_OVERLAP')
     if (confirmedRasterization.value) acknowledgements.push('PDF_RASTERIZATION')
-    const plan = await validateRedactionPlan(analysis.value, [region], acknowledgements, {
+    const plan = await validateRedactionPlan(analysis.value, regions, acknowledgements, {
       strategy: pdfRegionStrategy.value,
       dpi: pdfDeepDpi.value,
       radius: pdfDeepRadius.value,
@@ -715,12 +776,13 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         v-if="selectedPdfPage"
         :asset-id="assetId"
         :page="selectedPdfPage"
+        :regions="redactionRegions"
         @select="useVisualRegion"
       />
       <div class="redaction-fields">
-        <label>
+        <label for="pdf-redaction-page">
           页面
-          <select v-model.number="redactionPage" @change="clearRedactionDraft">
+          <select id="pdf-redaction-page" v-model.number="redactionPage" @change="clearRedactionDraft">
             <option v-for="page in analysis.pdf_pages" :key="page.page_number" :value="page.page_number">
               第 {{ page.page_number }} 页（{{ page.width.toFixed(0) }} × {{ page.height.toFixed(0) }}）
             </option>
@@ -731,17 +793,51 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         <label>X1 <input v-model.number="redactionX1" type="number" min="0" step="0.1" @input="clearRedactionDraft" /></label>
         <label>Y1 <input v-model.number="redactionY1" type="number" min="0" step="0.1" @input="clearRedactionDraft" /></label>
       </div>
-      <button :disabled="busy" @click="previewRedactionRisk">
-        {{ busy ? '正在分析…' : '检查区域重叠风险' }}
-      </button>
+      <div class="process-actions">
+        <button :disabled="busy" @click="addRedactionRegion">加入计划草稿</button>
+        <button
+          class="secondary-button"
+          :disabled="busy || redactionRegions.length === 0"
+          @click="previewRedactionRisk"
+        >
+          {{ busy ? '正在分析…' : `检查 ${redactionRegions.length} 个区域的重叠风险` }}
+        </button>
+        <p>可切换页面继续框选，一个计划最多包含 100 个区域。</p>
+      </div>
+      <section v-if="redactionRegions.length" class="redaction-draft" aria-label="PDF 区域计划草稿">
+        <div class="redaction-draft-heading">
+          <div>
+            <p class="eyebrow">计划草稿</p>
+            <h3>{{ redactionRegions.length }} 个区域 · {{ redactionDraftPageCount }} 页</h3>
+          </div>
+        </div>
+        <ol>
+          <li v-for="(region, index) in redactionRegions" :key="`${region.page_number}-${index}`">
+            <span>
+              第 {{ region.page_number }} 页 ·
+              {{ region.x0.toFixed(1) }}, {{ region.y0.toFixed(1) }} →
+              {{ region.x1.toFixed(1) }}, {{ region.y1.toFixed(1) }}
+            </span>
+            <button
+              class="text-button"
+              :disabled="busy"
+              :aria-label="`移除第 ${index + 1} 个 PDF 区域`"
+              @click="removeRedactionRegion(index)"
+            >移除</button>
+          </li>
+        </ol>
+      </section>
       <template v-if="redactionPreview">
-        <div v-if="redactionPreview.regions[0]?.overlaps.length" class="overlap-list">
+        <div v-if="redactionOverlapCount" class="overlap-list">
           <h3>相交对象</h3>
-          <ul>
-            <li v-for="item in redactionPreview.regions[0].overlaps" :key="item.content_id">
-              <strong>{{ item.kind }}</strong> · {{ item.summary }} · 相交面积 {{ item.intersection_area.toFixed(1) }}
-            </li>
-          </ul>
+          <template v-for="(region, regionIndex) in redactionPreview.regions" :key="regionIndex">
+            <h4 v-if="region.overlaps.length">区域 {{ regionIndex + 1 }} · 第 {{ region.region.page_number }} 页</h4>
+            <ul v-if="region.overlaps.length">
+              <li v-for="item in region.overlaps" :key="`${regionIndex}-${item.content_id}`">
+                <strong>{{ item.kind }}</strong> · {{ item.summary }} · 相交面积 {{ item.intersection_area.toFixed(1) }}
+              </li>
+            </ul>
+          </template>
         </div>
         <p v-for="warning in redactionPreview.warnings" :key="warning" class="warning">{{ warning }}</p>
         <label v-if="redactionPreview.requires_acknowledgement" class="risk-confirm">

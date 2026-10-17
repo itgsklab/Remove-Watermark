@@ -449,7 +449,7 @@ export async function validateImagePlan(
 
 export async function previewRedactions(
   analysis: Analysis,
-  region: RedactionRegion,
+  regions: RedactionRegion[],
   strategy: 'pymupdf_redaction' | 'raster_inpaint' = 'pymupdf_redaction',
 ): Promise<RedactionPreview> {
   return parse<RedactionPreview>(await fetch('/api/v1/redactions/preview', {
@@ -458,7 +458,7 @@ export async function previewRedactions(
     body: JSON.stringify({
       asset_id: analysis.asset_id,
       analysis_id: analysis.id,
-      regions: [region],
+      regions,
       strategy,
     }),
   }))

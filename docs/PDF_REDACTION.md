@@ -4,7 +4,7 @@
 
 `POST /api/v1/redactions/preview` accepts an asset ID, a persisted `general` PDF analysis and up to 100 rectangles. Each rectangle contains a one-based page number, crop-box-relative PDF-point XYXY bounds and the `transform_id` returned for that page.
 
-The Vue workspace loads the source through the controlled asset-content endpoint and renders the selected page with PDF.js. Pointer coordinates are converted through the PDF.js viewport, adjusted for the crop-box origin and submitted with the server-issued transform ID. The editor supports page rotation because conversion uses the rendered page viewport rather than hand-written screen-axis formulas.
+The Vue workspace loads the source through the controlled asset-content endpoint and renders the selected page with PDF.js. Pointer coordinates are converted through the PDF.js viewport, adjusted for the crop-box origin and added to a multi-page draft with the server-issued transform ID. Existing draft rectangles are overlaid when their page is displayed, and the whole draft is submitted together. The editor supports page rotation because conversion uses the rendered page viewport rather than hand-written screen-axis formulas.
 
 The backend rejects:
 

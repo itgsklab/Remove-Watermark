@@ -7,6 +7,7 @@ import type { PdfPageGeometry, RedactionRegion } from '@/api/client'
 const props = defineProps<{
   assetId: string
   page: PdfPageGeometry
+  regions: RedactionRegion[]
 }>()
 
 const emit = defineEmits<{
@@ -19,6 +20,7 @@ const error = ref('')
 const dragStart = ref<{ x: number; y: number } | null>(null)
 const dragEnd = ref<{ x: number; y: number } | null>(null)
 const dragging = ref(false)
+const renderVersion = ref(0)
 let documentProxy: PDFDocumentProxy | null = null
 let pageProxy: PDFPageProxy | null = null
 let viewport: ReturnType<PDFPageProxy['getViewport']> | null = null
@@ -40,6 +42,36 @@ const selectionStyle = computed(() => {
     width: `${(x1 - x0) / element.width * 100}%`,
     height: `${(y1 - y0) / element.height * 100}%`,
   }
+})
+
+const draftStyles = computed(() => {
+  renderVersion.value
+  const element = canvas.value
+  if (!viewport || !element || !element.width || !element.height) return []
+  return props.regions
+    .map((region, index) => ({ region, index }))
+    .filter(item => item.region.page_number === props.page.page_number)
+    .map(({ region, index }) => {
+      const rectangle = viewport!.convertToViewportRectangle([
+        region.x0 + props.page.crop_x,
+        region.y0 + props.page.crop_y,
+        region.x1 + props.page.crop_x,
+        region.y1 + props.page.crop_y,
+      ])
+      const x0 = Math.min(rectangle[0], rectangle[2])
+      const y0 = Math.min(rectangle[1], rectangle[3])
+      const x1 = Math.max(rectangle[0], rectangle[2])
+      const y1 = Math.max(rectangle[1], rectangle[3])
+      return {
+        index,
+        style: {
+          left: `${x0 / element.width * 100}%`,
+          top: `${y0 / element.height * 100}%`,
+          width: `${(x1 - x0) / element.width * 100}%`,
+          height: `${(y1 - y0) / element.height * 100}%`,
+        },
+      }
+    })
 })
 
 async function loadDocument() {
@@ -77,6 +109,7 @@ async function renderPage() {
     canvas.value.width = Math.ceil(viewport.width)
     canvas.value.height = Math.ceil(viewport.height)
     await pageProxy.render({ canvas: canvas.value, viewport }).promise
+    renderVersion.value += 1
   } catch (cause) {
     error.value = cause instanceof Error ? cause.message : '页面渲染失败。'
   } finally {
@@ -160,6 +193,12 @@ onBeforeUnmount(async () => {
         @pointerup="finishSelection"
         @pointercancel="finishSelection"
       />
+      <div
+        v-for="draft in draftStyles"
+        :key="draft.index"
+        class="pdf-draft-selection"
+        :style="draft.style"
+      >{{ draft.index + 1 }}</div>
       <div v-if="selectionStyle" class="pdf-selection" :style="selectionStyle" />
     </div>
     <p class="hint">在页面上拖拽矩形。框选坐标会转换为 PDF crop-box 点坐标。</p>
@@ -172,5 +211,6 @@ onBeforeUnmount(async () => {
 .pdf-canvas-wrap.loading { opacity: .55; }
 canvas { display: block; width: 100%; height: auto; cursor: crosshair; }
 .pdf-selection { position: absolute; border: 2px solid #d24832; background: rgba(210, 72, 50, .18); pointer-events: none; }
+.pdf-draft-selection { position: absolute; display: grid; place-items: center; border: 2px solid #166b4c; background: rgba(22, 107, 76, .18); color: #075d3d; font-size: .75rem; font-weight: 800; pointer-events: none; }
 .pdf-canvas-state { color: #536057; }
 </style>

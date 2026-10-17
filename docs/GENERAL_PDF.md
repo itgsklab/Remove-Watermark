@@ -35,8 +35,8 @@ Image and Form bounds come from the current transformation matrix at the `Do` op
 - Form XObjects are recursively inventoried to a maximum depth of eight. Cycles or deeper trees produce an explicit incomplete-scan warning; recursive editing is not implemented.
 - No OCR is attempted, so image-only and scanned text watermarks are outside this stage.
 
-The current UI renders pages with PDF.js and converts drag selections back to crop-box-relative PDF points. Numeric coordinates remain visible and editable for inspection. The backend then reports overlap with inventoried text, images, Forms, vector graphics, links and annotations.
+The current UI renders pages with PDF.js and converts drag selections back to crop-box-relative PDF points. Numeric coordinates remain visible and editable for inspection. Users can add up to 100 rectangles across multiple pages to one draft, remove individual rectangles and preview the full draft before plan creation. Saved rectangles remain overlaid when returning to a page. The backend reports overlap per rectangle with inventoried text, images, Forms, vector graphics, links and annotations.
 
-PDF.js is dynamically imported only when the visual editor is opened, keeping the initial application bundle separate from the PDF parser and worker. A reviewed rectangle can now enter a persisted PyMuPDF redaction plan; any inventoried overlap requires explicit acknowledgement before the isolated worker generates a new PDF.
+PDF.js is dynamically imported only when the visual editor is opened, keeping the initial application bundle separate from the PDF parser and worker. A reviewed multi-page draft can enter one persisted PyMuPDF redaction plan; any inventoried overlap requires explicit acknowledgement before the isolated worker generates a new PDF.
 
 Object deletion will only be enabled for additional structures after each locator can be revalidated and output preservation has regression coverage.
