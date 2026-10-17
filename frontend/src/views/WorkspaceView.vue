@@ -64,6 +64,9 @@ const canInspect = computed(() => isDocx.value || isCodeCvPdf.value || isImage.v
 const canProcess = computed(() => (
   isDocx.value || (isCodeCvPdf.value && analysis.value?.preset === 'codecv')
 ))
+const hasObjectCandidates = computed(() => analysis.value?.candidates.some(
+  candidate => candidate.allowed_strategies.includes('object'),
+) ?? false)
 const outputArtifacts = computed(() => (
   task.value?.artifacts.filter(artifact => artifact.role === 'output') || []
 ))
@@ -133,7 +136,7 @@ async function inspect() {
     } else if (isCodeCvPdf.value) {
       message.value = '没有发现需要复核的通用 PDF 水印结构。'
     } else {
-      message.value = '没有识别到受支持的 VML 文字水印候选。'
+      message.value = '没有识别到受支持的页眉或页脚 VML 文字、DrawingML 图片候选。'
     }
   } catch (error) {
     message.value = error instanceof ApiError ? error.message : '扫描失败。'
@@ -200,6 +203,9 @@ async function requestCancellation() {
 }
 
 function classificationLabel(candidate: Analysis['candidates'][number]) {
+  if (candidate.kind === 'image' && candidate.allowed_strategies.length === 0) {
+    return '图片待复核 · 只读'
+  }
   if (candidate.classification === 'confirmed') {
     return analysis.value?.preset === 'general' ? '结构明确' : '与目标匹配'
   }
@@ -416,7 +422,7 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
           maxlength="200"
           placeholder="例如 DRAFT、草稿"
         />
-        <p class="hint">完全匹配目标文字且符合 Word 水印形状时，候选会标记为已确认。</p>
+        <p class="hint">同时扫描 DrawingML 嵌入图片；图片候选只供预览和复核，当前不会删除。</p>
         <button :disabled="busy" @click="inspect">{{ busy ? '正在扫描…' : '开始扫描' }}</button>
       </template>
       <template v-else-if="isCodeCvPdf">
@@ -468,6 +474,10 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
     </div>
     <article v-for="candidate in analysis.candidates" :key="candidate.candidate_id" class="candidate-card">
       <div>
+        <figure v-if="candidate.preview_url" class="candidate-image-preview">
+          <img :src="candidate.preview_url" :alt="`${candidate.content || 'DrawingML 图片'}候选预览`" />
+          <figcaption>DOCX 内嵌图片只读预览</figcaption>
+        </figure>
         <label v-if="canProcess && candidate.allowed_strategies.includes('object')" class="candidate-select">
           <input
             v-model="selectedCandidates"
@@ -499,6 +509,11 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         <dt>来源</dt><dd>{{ sourceLabel(candidate) }}</dd>
         <template v-if="candidate.source_locator.shape_id">
           <dt>形状 ID</dt><dd>{{ candidate.source_locator.shape_id }}</dd>
+        </template>
+        <template v-if="candidate.source_locator.drawing_index !== null">
+          <dt>绘图序号</dt><dd>{{ candidate.source_locator.drawing_index + 1 }}</dd>
+          <dt>图片关系</dt><dd>{{ candidate.source_locator.relationship_id }}</dd>
+          <dt>内嵌资源</dt><dd>{{ candidate.source_locator.media_part_name }}</dd>
         </template>
         <template v-if="candidate.source_locator.resource_name">
           <dt>图案资源</dt><dd>{{ candidate.source_locator.resource_name }}</dd>
@@ -754,7 +769,7 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         </div>
       </template>
     </section>
-    <div v-if="canProcess && analysis.candidates.length" class="process-actions">
+    <div v-if="canProcess && hasObjectCandidates" class="process-actions">
       <button :disabled="busy || selectedCandidates.length === 0" @click="processSelection">
         {{ busy ? '正在处理…' : `生成无水印${isCodeCvPdf ? ' PDF' : ''}副本（已选 ${selectedCandidates.length} 项）` }}
       </button>

@@ -276,7 +276,7 @@ def create_app(
                     id="docx",
                     label="Word DOCX",
                     status="available",
-                    strategies=["inspect", "object"],
+                    strategies=["inspect", "drawingml-image-preview", "object"],
                 ),
                 CapabilityItem(
                     id="pdf",
@@ -403,6 +403,23 @@ def create_app(
         session: Annotated[Session, Depends(get_session)],
     ) -> AnalysisResponse:
         return analyses.get(session, analysis_id)
+
+    @app.get("/api/v1/analyses/{analysis_id}/candidates/{candidate_id}/preview")
+    async def get_analysis_candidate_preview(
+        analysis_id: str,
+        candidate_id: str,
+        session: Annotated[Session, Depends(get_session)],
+    ) -> Response:
+        content, media_type = analyses.image_preview(session, analysis_id, candidate_id)
+        return Response(
+            content=content,
+            media_type=media_type,
+            headers={
+                "Cache-Control": "no-store",
+                "Content-Disposition": "inline",
+                "X-Content-Type-Options": "nosniff",
+            },
+        )
 
     @app.post("/api/v1/plans/validate", response_model=PlanResponse)
     async def validate_plan(

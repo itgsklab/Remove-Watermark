@@ -12,8 +12,10 @@ test('DOCX watermark workflow reaches verified result and report', async ({ page
 
   await page.getByLabel('目标文字（可选）').fill('DRAFT')
   await page.getByRole('button', { name: '开始扫描' }).click()
-  await expect(page.getByRole('heading', { name: 'DRAFT' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'DRAFT', exact: true })).toBeVisible()
   await expect(page.getByText('与目标匹配', { exact: true })).toBeVisible()
+  await expect(page.getByText('图片待复核 · 只读', { exact: true })).toBeVisible()
+  await expect(page.getByAltText(/候选预览/)).toBeVisible()
   await page.getByRole('button', { name: /生成无水印副本/ }).click()
 
   await expectCompleted(page)
