@@ -88,9 +88,20 @@ def _docx() -> bytes:
 
 def _write_pdf(path: Path) -> None:
     document = pymupdf.open()
-    page = document.new_page(width=612, height=792)
-    page.insert_text((100, 100), "REMOVE-ME", fontsize=24, color=(0.45, 0.45, 0.45))
-    page.insert_text((100, 210), "KEEP-ME", fontsize=16, color=(0.1, 0.1, 0.1))
+    for page_number in (1, 2):
+        page = document.new_page(width=612, height=792)
+        page.insert_text(
+            (100, 100),
+            f"REMOVE-ME-{page_number}",
+            fontsize=24,
+            color=(0.45, 0.45, 0.45),
+        )
+        page.insert_text(
+            (100, 210),
+            f"KEEP-ME-{page_number}",
+            fontsize=16,
+            color=(0.1, 0.1, 0.1),
+        )
     document.set_metadata({"title": "Generated browser PDF fixture"})
     document.save(path)
     document.close()

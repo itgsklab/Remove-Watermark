@@ -135,6 +135,15 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .redaction-fields { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 10px; margin: 18px 0; }
 .redaction-fields label { display: grid; gap: 6px; color: #536057; font-size: .82rem; }
 .redaction-fields input, .redaction-fields select { width: 100%; padding: 9px 10px; border: 1px solid #c8d0c8; border-radius: 9px; background: white; color: inherit; }
+.redaction-draft { margin-top: 16px; padding: 16px; border: 1px solid #c8d0c8; border-radius: 12px; background: #f7faf6; }
+.redaction-draft-heading h3 { margin: 4px 0 0; }
+.redaction-draft ol { display: grid; gap: 8px; margin: 14px 0 0; padding-left: 24px; }
+.redaction-draft li { padding-left: 4px; }
+.redaction-draft li::marker { color: #166b4c; font-weight: 800; }
+.redaction-draft li span { overflow-wrap: anywhere; }
+.redaction-draft .text-button { margin-left: 10px; border: 0; padding: 2px 4px; background: transparent; color: #a23b2a; font: inherit; font-size: .82rem; text-decoration: underline; }
+.redaction-draft .text-button:hover { transform: none; }
+.overlap-list h4 { margin-bottom: 4px; }
 .overlap-list { margin-top: 18px; }
 .overlap-list li { margin: 7px 0; color: #536057; }
 .image-mask-panel { margin-top: 20px; }

@@ -9,6 +9,8 @@ All notable changes to this project are documented in this file. The format foll
 
 - Read-only DOCX DrawingML image candidate detection with relationship evidence, browser-safe
   embedded previews, explicit unsupported-format warnings and no automatic deletion path.
+- Multi-page, multi-region PDF plan drafts with per-page overlays, removable regions, aggregate
+  overlap review and one-task execution for up to 100 rectangles.
 - Playwright Chromium end-to-end coverage for the complete DOCX, general-PDF and image Web
   workflows, including result and privacy-safe task-report downloads in a dedicated CI gate.
 - Downloadable task report schema v1 with duration, input and processing summaries, warning codes,

@@ -412,6 +412,56 @@ def test_general_pdf_redaction_plan_executes_in_worker(client: TestClient) -> No
     assert "Body paragraph" not in (result.pages[0].extract_text() or "")
 
 
+def test_multi_page_multi_region_redaction_plan_executes_as_one_task(
+    client: TestClient,
+) -> None:
+    asset = upload(client, make_general_pdf(pages=2))
+    analysis = client.post(
+        "/api/v1/analyses",
+        json={"asset_id": asset["id"], "preset": "general"},
+    ).json()
+    regions = [
+        {
+            "page_number": page["page_number"],
+            "x0": 190,
+            "y0": 490,
+            "x1": 380,
+            "y1": 535,
+            "transform_id": page["transform_id"],
+        }
+        for page in analysis["pdf_pages"]
+    ]
+    plan = client.post(
+        "/api/v1/redaction-plans/validate",
+        json={
+            "asset_id": asset["id"],
+            "asset_sha256": asset["sha256"],
+            "analysis_id": analysis["id"],
+            "regions": regions,
+            "acknowledged_warnings": ["PDF_REDACTION_OVERLAP"],
+        },
+    )
+    assert plan.status_code == 200
+    assert plan.json()["valid"] is True
+    assert [item["page_number"] for item in plan.json()["regions"]] == [1, 2]
+
+    task = client.post("/api/v1/tasks", json={"plan_id": plan.json()["id"]}).json()
+    deadline = monotonic() + 10
+    while task["status"] not in {"succeeded", "failed"} and monotonic() < deadline:
+        sleep(0.02)
+        task = client.get(f"/api/v1/tasks/{task['id']}").json()
+
+    assert task["status"] == "succeeded", task.get("error")
+    assert task["comparison"]["removed_count"] == 2
+    assert task["comparison"]["changed_parts"] == ["page:1", "page:2"]
+    report = client.get(task["report_url"]).json()
+    assert report["processing"]["selected_target_count"] == 2
+
+    artifact = next(item for item in task["artifacts"] if item["role"] == "output")
+    result = PdfReader(BytesIO(client.get(artifact["download_url"]).content), strict=True)
+    assert all("DRAFT" not in (page.extract_text() or "") for page in result.pages)
+
+
 def test_general_pdf_raster_inpaint_reinjects_searchable_text(client: TestClient) -> None:
     asset = upload(client, _fixture_pdf())
     analysis = client.post(
