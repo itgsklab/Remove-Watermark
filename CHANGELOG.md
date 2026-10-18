@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- Installed-language selection for PDF Deep OCR, including multi-language combinations, an explicit
+  OCR-off path and backend rejection of unavailable or duplicated Tesseract language packs.
 - Privacy-safe Web settings diagnostics for Tesseract version and language packs, Xiaohongshu
   network feature gates and local VLM readiness, backed by a read-only diagnostics endpoint.
 - Undoable image-mask editing for manual rectangles, removals, clearing and local-model suggestions,

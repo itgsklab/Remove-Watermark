@@ -132,6 +132,13 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .pdf-strategy-options { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 10px; margin: 18px 0 10px; }
 .pdf-strategy-options label { display: grid; gap: 6px; color: #536057; font-size: .82rem; }
 .pdf-strategy-options input, .pdf-strategy-options select { width: 100%; padding: 9px 10px; border: 1px solid #c8d0c8; border-radius: 9px; background: white; color: inherit; }
+.pdf-ocr-panel { margin: 12px 0; padding: 16px; border: 1px solid #cbd8cf; border-radius: 12px; background: #f6f9f5; }
+.pdf-ocr-panel h3 { margin: 4px 0 6px; }
+.pdf-ocr-panel p { margin: 5px 0; color: #536057; line-height: 1.5; }
+.pdf-ocr-toggle { display: flex; align-items: center; gap: 9px; margin-top: 14px; color: #315143; font-size: .88rem; font-weight: 650; }
+.pdf-ocr-toggle input { width: auto; }
+.pdf-ocr-languages { display: grid; gap: 7px; margin-top: 14px; color: #536057; font-size: .82rem; }
+.pdf-ocr-languages select { width: min(100%, 420px); padding: 9px 10px; border: 1px solid #c8d0c8; border-radius: 9px; background: white; color: inherit; }
 .redaction-fields { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 10px; margin: 18px 0; }
 .redaction-fields label { display: grid; gap: 6px; color: #536057; font-size: .82rem; }
 .redaction-fields input, .redaction-fields select { width: 100%; padding: 9px 10px; border: 1px solid #c8d0c8; border-radius: 9px; background: white; color: inherit; }

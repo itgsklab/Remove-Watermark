@@ -2,6 +2,7 @@ import json
 import subprocess
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 import wmrm.api.app as app_module
@@ -12,6 +13,8 @@ from wmrm.api.schemas import (
     RuntimeDiagnosticsResponse,
     XiaohongshuRuntimeDiagnostic,
 )
+from wmrm.application.assets import AssetError
+from wmrm.application.redaction_plans import _validate_ocr_languages
 from wmrm.application.runtime_diagnostics import build_runtime_diagnostics
 from wmrm.settings import Settings
 
@@ -23,6 +26,20 @@ def _disabled_vlm() -> OptionalModelCapability:
         status="disabled",
         message="本地图片模型未启用；可以继续手工框选。",
     )
+
+
+def test_ocr_language_validation_accepts_installed_multi_language_expression() -> None:
+    assert (
+        _validate_ocr_languages("chi_sim+eng", "ready", {"chi_sim", "eng", "osd"})
+        == "chi_sim+eng"
+    )
+
+
+def test_ocr_language_validation_rejects_duplicates() -> None:
+    with pytest.raises(AssetError) as raised:
+        _validate_ocr_languages("eng+eng", "ready", {"eng"})
+
+    assert raised.value.code == "OCR_LANGUAGES_DUPLICATED"
 
 
 def test_runtime_diagnostics_report_languages_without_executable_or_proxy(

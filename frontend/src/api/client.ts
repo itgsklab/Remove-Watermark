@@ -496,7 +496,7 @@ export async function validateRedactionPlan(
     strategy: 'pymupdf_redaction' | 'raster_inpaint'
     dpi?: number
     radius?: number
-    ocr_languages?: string
+    ocr_languages?: string | null
   } = { strategy: 'pymupdf_redaction' },
 ): Promise<RedactionPlan> {
   return parse<RedactionPlan>(await fetch('/api/v1/redaction-plans/validate', {

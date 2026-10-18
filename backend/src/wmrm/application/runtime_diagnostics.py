@@ -21,13 +21,13 @@ def build_runtime_diagnostics(
     vlm_capability: OptionalModelCapability,
 ) -> RuntimeDiagnosticsResponse:
     return RuntimeDiagnosticsResponse(
-        ocr=_probe_ocr(),
+        ocr=probe_ocr_runtime(),
         xiaohongshu=_xiaohongshu_diagnostic(settings),
         vlm_localization=vlm_capability,
     )
 
 
-def _probe_ocr() -> OcrRuntimeDiagnostic:
+def probe_ocr_runtime() -> OcrRuntimeDiagnostic:
     probe = probe_tesseract()
     executable = probe.get("executable")
     if not probe.get("available") or not isinstance(executable, str):
@@ -70,7 +70,7 @@ def _probe_ocr() -> OcrRuntimeDiagnostic:
             for line in language_result.stdout.splitlines()
             if _LANGUAGE.fullmatch(line.strip())
         }
-    )[:200]
+    )
     if not languages:
         return OcrRuntimeDiagnostic(
             available=True,

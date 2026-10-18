@@ -14,6 +14,7 @@ from pypdf.generic import (
 )
 from test_codecv_pdf import make_pdf as make_pattern_pdf
 
+from wmrm.api.schemas import OcrRuntimeDiagnostic
 from wmrm.benchmarks.pdf_redaction_probe import _fixture_pdf
 
 
@@ -462,7 +463,19 @@ def test_multi_page_multi_region_redaction_plan_executes_as_one_task(
     assert all("DRAFT" not in (page.extract_text() or "") for page in result.pages)
 
 
-def test_general_pdf_raster_inpaint_reinjects_searchable_text(client: TestClient) -> None:
+def test_general_pdf_raster_inpaint_reinjects_searchable_text(
+    client: TestClient, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        "wmrm.application.redaction_plans.probe_ocr_runtime",
+        lambda: OcrRuntimeDiagnostic(
+            available=True,
+            status="ready",
+            version="5.5.0",
+            languages=["eng"],
+            message="ready",
+        ),
+    )
     asset = upload(client, _fixture_pdf())
     analysis = client.post(
         "/api/v1/analyses",
@@ -510,6 +523,98 @@ def test_general_pdf_raster_inpaint_reinjects_searchable_text(client: TestClient
     text = result.pages[0].extract_text() or ""
     assert "REMOVE-ME" not in text
     assert "KEEP-ME" in text
+
+
+def test_raster_plan_rejects_an_ocr_language_that_is_not_installed(
+    client: TestClient, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        "wmrm.application.redaction_plans.probe_ocr_runtime",
+        lambda: OcrRuntimeDiagnostic(
+            available=True,
+            status="ready",
+            version="5.5.0",
+            languages=["eng", "chi_sim"],
+            message="ready",
+        ),
+    )
+    asset = upload(client, _fixture_pdf())
+    analysis = client.post(
+        "/api/v1/analyses",
+        json={"asset_id": asset["id"], "preset": "general"},
+    ).json()
+    page = analysis["pdf_pages"][0]
+
+    response = client.post(
+        "/api/v1/redaction-plans/validate",
+        json={
+            "asset_id": asset["id"],
+            "asset_sha256": asset["sha256"],
+            "analysis_id": analysis["id"],
+            "regions": [
+                {
+                    "page_number": 1,
+                    "x0": 80,
+                    "y0": 660,
+                    "x1": 235,
+                    "y1": 715,
+                    "transform_id": page["transform_id"],
+                }
+            ],
+            "strategy": "raster_inpaint",
+            "ocr_languages": "eng+fra",
+            "acknowledged_warnings": ["PDF_RASTERIZATION", "PDF_REDACTION_OVERLAP"],
+        },
+    )
+
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "OCR_LANGUAGES_NOT_INSTALLED"
+    assert "fra" in response.json()["error"]["message"]
+
+
+def test_raster_plan_can_disable_ocr_when_tesseract_is_unavailable(
+    client: TestClient, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        "wmrm.application.redaction_plans.probe_ocr_runtime",
+        lambda: OcrRuntimeDiagnostic(
+            available=False,
+            status="unavailable",
+            message="unavailable",
+        ),
+    )
+    asset = upload(client, _fixture_pdf())
+    analysis = client.post(
+        "/api/v1/analyses",
+        json={"asset_id": asset["id"], "preset": "general"},
+    ).json()
+    page = analysis["pdf_pages"][0]
+
+    response = client.post(
+        "/api/v1/redaction-plans/validate",
+        json={
+            "asset_id": asset["id"],
+            "asset_sha256": asset["sha256"],
+            "analysis_id": analysis["id"],
+            "regions": [
+                {
+                    "page_number": 1,
+                    "x0": 80,
+                    "y0": 660,
+                    "x1": 235,
+                    "y1": 715,
+                    "transform_id": page["transform_id"],
+                }
+            ],
+            "strategy": "raster_inpaint",
+            "ocr_languages": None,
+            "acknowledged_warnings": ["PDF_RASTERIZATION", "PDF_REDACTION_OVERLAP"],
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["valid"] is True
+    assert response.json()["ocr_languages"] is None
 
 
 def test_redaction_preview_rejects_stale_page_transform(client: TestClient) -> None:

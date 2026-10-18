@@ -3,7 +3,6 @@ import uuid
 
 from sqlalchemy.orm import Session
 
-from wmrm.adapters.pdf.raster_inpaint import probe_tesseract
 from wmrm.api.schemas import (
     PlanWarning,
     RedactionPlanResponse,
@@ -11,6 +10,7 @@ from wmrm.api.schemas import (
 )
 from wmrm.application.assets import AssetError, AssetService
 from wmrm.application.redactions import RedactionService
+from wmrm.application.runtime_diagnostics import probe_ocr_runtime
 from wmrm.persistence.database import PlanRecord
 
 
@@ -35,13 +35,23 @@ class RedactionPlanService:
             )
 
         overlap_count = sum(len(region.overlaps) for region in preview.regions)
+        selected_ocr_languages: str | None = None
         if request.strategy == "raster_inpaint":
-            ocr = probe_tesseract()
-            ocr_note = (
-                "无原始文字层的页面会调用 Tesseract OCR。"
-                if ocr["available"]
-                else "本机未检测到 Tesseract；无原始文字层的页面可能无法搜索。"
+            ocr = probe_ocr_runtime()
+            selected_ocr_languages = _validate_ocr_languages(
+                request.ocr_languages,
+                ocr.status,
+                set(ocr.languages),
             )
+            if selected_ocr_languages:
+                ocr_note = (
+                    "无原始文字层的页面会调用 Tesseract OCR，语言为 "
+                    f"{selected_ocr_languages}。"
+                )
+            elif ocr.status == "unavailable":
+                ocr_note = "本机未检测到 Tesseract；无原始文字层的页面可能无法搜索。"
+            else:
+                ocr_note = "当前计划未启用 OCR；无原始文字层的页面可能无法搜索。"
             warnings = [
                 PlanWarning(
                     code="PDF_RASTERIZATION",
@@ -82,7 +92,7 @@ class RedactionPlanService:
             dpi=request.dpi if request.strategy == "raster_inpaint" else None,
             radius=request.radius if request.strategy == "raster_inpaint" else None,
             ocr_languages=(
-                request.ocr_languages if request.strategy == "raster_inpaint" else None
+                selected_ocr_languages if request.strategy == "raster_inpaint" else None
             ),
             warnings=warnings,
         )
@@ -108,7 +118,7 @@ class RedactionPlanService:
                         "license_mode": self.redactions.license_mode,
                         "dpi": request.dpi,
                         "radius": request.radius,
-                        "ocr_languages": request.ocr_languages,
+                        "ocr_languages": selected_ocr_languages,
                     },
                     ensure_ascii=False,
                 ),
@@ -116,3 +126,33 @@ class RedactionPlanService:
         )
         session.commit()
         return response
+
+
+def _validate_ocr_languages(
+    expression: str | None,
+    status: str,
+    installed: set[str],
+) -> str | None:
+    if expression is None:
+        return None
+    if status != "ready":
+        raise AssetError(
+            "OCR_LANGUAGES_UNAVAILABLE",
+            "无法确认本机 OCR 语言包，请重新检查运行环境或关闭 OCR。",
+            422,
+        )
+    requested = expression.split("+")
+    missing = sorted(set(requested) - installed)
+    if missing:
+        raise AssetError(
+            "OCR_LANGUAGES_NOT_INSTALLED",
+            f"本机未安装所选 OCR 语言包：{'、'.join(missing)}。",
+            422,
+        )
+    if len(requested) != len(set(requested)):
+        raise AssetError(
+            "OCR_LANGUAGES_DUPLICATED",
+            "OCR 语言组合不能包含重复项。",
+            422,
+        )
+    return "+".join(requested)
