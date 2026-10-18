@@ -38,7 +38,11 @@ def run_task_process(request: dict[str, Any], result_queue: Any, cancel_event: A
                     license_mode=cast(LicenseMode, str(request["license_mode"])),
                     dpi=int(request["dpi"]),
                     radius=int(request["radius"]),
-                    ocr_languages=str(request["ocr_languages"]),
+                    ocr_languages=(
+                        str(request["ocr_languages"])
+                        if request.get("ocr_languages")
+                        else None
+                    ),
                     should_cancel=cancel_event.is_set,
                 )
             else:

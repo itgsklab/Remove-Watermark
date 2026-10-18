@@ -73,7 +73,7 @@ def raster_inpaint_pdf_regions(
     license_mode: LicenseMode,
     dpi: int = 144,
     radius: int = 3,
-    ocr_languages: str = "eng",
+    ocr_languages: str | None = "eng",
     ocr_timeout_seconds: int = 60,
     should_cancel: Callable[[], bool] | None = None,
 ) -> dict[str, object]:
@@ -157,7 +157,7 @@ def raster_inpaint_pdf_regions(
                     )
                     repaired = cv2.inpaint(original, mask, float(radius), cv2.INPAINT_TELEA)
                     _raise_if_cancelled(should_cancel)
-                    if not words and tesseract["available"]:
+                    if not words and tesseract["available"] and ocr_languages:
                         words = _tesseract_words(
                             repaired,
                             width,

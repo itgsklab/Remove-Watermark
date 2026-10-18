@@ -252,8 +252,11 @@ class ValidateRedactionPlanRequest(PreviewRedactionsRequest):
     asset_sha256: str = Field(min_length=64, max_length=64)
     dpi: int = Field(default=144, ge=96, le=300)
     radius: int = Field(default=3, ge=1, le=10)
-    ocr_languages: str = Field(
-        default="eng", min_length=1, max_length=80, pattern=r"^[A-Za-z0-9_+-]+$"
+    ocr_languages: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=80,
+        pattern=r"^[A-Za-z0-9_]+(?:\+[A-Za-z0-9_]+)*$",
     )
     acknowledged_warnings: list[str] = Field(default_factory=list)
 

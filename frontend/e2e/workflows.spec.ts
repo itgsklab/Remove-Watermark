@@ -27,6 +27,27 @@ test('settings show privacy-safe local runtime diagnostics', async ({ page }) =>
   expect(JSON.stringify(payload)).not.toMatch(
     /display_name|relative_path|download_url|executable|proxy_url|model_dir|\/Users\//,
   )
+
+  await upload(page, 'browser-watermark.pdf')
+  await page.getByLabel('扫描模式').selectOption('general')
+  await page.getByRole('button', { name: '扫描通用 PDF' }).click()
+  await page.getByLabel('处理方式').selectOption('raster_inpaint')
+  const ocrToggle = page.getByLabel('为没有原始文字层的页面执行 OCR')
+  if (payload.ocr.status === 'ready') {
+    await expect(ocrToggle).toBeEnabled()
+    await expect(ocrToggle).toBeChecked()
+    const languageSelect = page.getByLabel('已安装语言包（可多选）')
+    await expect(languageSelect).toBeVisible()
+    expect(await languageSelect.locator('option').allTextContents()).toEqual(payload.ocr.languages)
+    if (payload.ocr.languages.length > 1) {
+      const selected = payload.ocr.languages.slice(0, 2)
+      await languageSelect.selectOption(selected)
+      await expect(page.getByText(`当前组合：${selected.join('+')}`)).toBeVisible()
+    }
+  } else {
+    await expect(ocrToggle).toBeDisabled()
+    await expect(page.getByLabel('已安装语言包（可多选）')).toHaveCount(0)
+  }
   expect(browserErrors).toEqual([])
 })
 

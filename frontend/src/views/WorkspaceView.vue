@@ -8,6 +8,7 @@ import {
   createTask,
   getAsset,
   getCapabilities,
+  getRuntimeDiagnostics,
   getTask,
   previewImageMasks,
   previewRedactions,
@@ -19,6 +20,7 @@ import {
   type ProcessingTask,
   type RedactionPreview,
   type RedactionRegion,
+  type RuntimeDiagnostics,
   validateImagePlan,
   validatePlan,
   validateRedactionPlan,
@@ -49,7 +51,10 @@ const confirmedRedactionOverlap = ref(false)
 const pdfRegionStrategy = ref<'pymupdf_redaction' | 'raster_inpaint'>('pymupdf_redaction')
 const pdfDeepDpi = ref(144)
 const pdfDeepRadius = ref(3)
-const pdfOcrLanguages = ref('eng')
+const runtimeDiagnostics = ref<RuntimeDiagnostics | null>(null)
+const pdfOcrEnabled = ref(false)
+const pdfOcrLanguages = ref<string[]>([])
+const ocrDiagnosticsError = ref('')
 const confirmedRasterization = ref(false)
 const imageMasks = ref<ImageMaskRegion[]>([])
 const imageMaskPast = ref<ImageMaskRegion[][]>([])
@@ -88,6 +93,11 @@ const redactionDraftPageCount = computed(() => new Set(
 const canUndoImageMasks = computed(() => imageMaskPast.value.length > 0)
 const canRedoImageMasks = computed(() => imageMaskFuture.value.length > 0)
 const imageMaskHistoryLimit = 50
+const ocrRuntimeReady = computed(() => runtimeDiagnostics.value?.ocr.status === 'ready')
+const installedOcrLanguages = computed(() => runtimeDiagnostics.value?.ocr.languages || [])
+const ocrSelectionValid = computed(() => (
+  !pdfOcrEnabled.value || pdfOcrLanguages.value.length > 0
+))
 
 const complexityLabels = {
   low: '低风险',
@@ -106,7 +116,28 @@ onMounted(async () => {
   } catch (error) {
     message.value = error instanceof ApiError ? error.message : '无法读取文件信息。'
   }
+  if (isCodeCvPdf.value) await loadOcrDiagnostics()
 })
+
+async function loadOcrDiagnostics() {
+  ocrDiagnosticsError.value = ''
+  try {
+    runtimeDiagnostics.value = await getRuntimeDiagnostics()
+    const available = installedOcrLanguages.value
+    if (runtimeDiagnostics.value.ocr.status === 'ready' && available.length) {
+      pdfOcrLanguages.value = [available.includes('eng') ? 'eng' : available[0]!]
+      pdfOcrEnabled.value = true
+    } else {
+      pdfOcrLanguages.value = []
+      pdfOcrEnabled.value = false
+    }
+  } catch {
+    runtimeDiagnostics.value = null
+    pdfOcrLanguages.value = []
+    pdfOcrEnabled.value = false
+    ocrDiagnosticsError.value = '无法读取 OCR 语言包状态；当前计划将不执行 OCR。'
+  }
+}
 
 async function inspect() {
   if (!canInspect.value) return
@@ -468,6 +499,10 @@ async function previewRedactionRisk() {
 async function processRedaction() {
   const regions = redactionPreview.value?.regions.map(item => item.region) || []
   if (!analysis.value || !redactionPreview.value?.executable || regions.length === 0) return
+  if (pdfRegionStrategy.value === 'raster_inpaint' && !ocrSelectionValid.value) {
+    message.value = '请至少选择一个已安装的 OCR 语言包，或关闭 OCR。'
+    return
+  }
   busy.value = true
   message.value = ''
   try {
@@ -478,7 +513,7 @@ async function processRedaction() {
       strategy: pdfRegionStrategy.value,
       dpi: pdfDeepDpi.value,
       radius: pdfDeepRadius.value,
-      ocr_languages: pdfOcrLanguages.value,
+      ocr_languages: pdfOcrEnabled.value ? pdfOcrLanguages.value.join('+') : null,
     })
     if (!plan.valid || !plan.id) {
       message.value = '请确认区域重叠与处理方式风险后再执行。'
@@ -825,12 +860,46 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
             修复半径
             <input v-model.number="pdfDeepRadius" type="number" min="1" max="10" @input="clearRedactionDraft" />
           </label>
-          <label>
-            OCR 语言
-            <input v-model="pdfOcrLanguages" type="text" maxlength="80" placeholder="eng 或 chi_sim+eng" @input="clearRedactionDraft" />
-          </label>
         </template>
       </div>
+      <section v-if="pdfRegionStrategy === 'raster_inpaint'" class="pdf-ocr-panel">
+        <div>
+          <p class="eyebrow">可搜索文字层</p>
+          <h3>Tesseract OCR</h3>
+          <p v-if="runtimeDiagnostics">{{ runtimeDiagnostics.ocr.message }}</p>
+          <p v-else>{{ ocrDiagnosticsError || '正在读取已安装语言包…' }}</p>
+        </div>
+        <label class="pdf-ocr-toggle">
+          <input
+            v-model="pdfOcrEnabled"
+            type="checkbox"
+            :disabled="!ocrRuntimeReady"
+            @change="clearRedactionDraft"
+          />
+          为没有原始文字层的页面执行 OCR
+        </label>
+        <label v-if="pdfOcrEnabled" for="pdf-ocr-languages" class="pdf-ocr-languages">
+          已安装语言包（可多选）
+          <select
+            id="pdf-ocr-languages"
+            v-model="pdfOcrLanguages"
+            multiple
+            :size="Math.min(6, Math.max(3, installedOcrLanguages.length))"
+            @change="clearRedactionDraft"
+          >
+            <option v-for="language in installedOcrLanguages" :key="language" :value="language">
+              {{ language }}
+            </option>
+          </select>
+        </label>
+        <p v-if="pdfOcrEnabled && !ocrSelectionValid" class="warning">
+          请至少选择一个语言包；按住 Command 或 Ctrl 可以多选。
+        </p>
+        <p v-else-if="pdfOcrEnabled" class="hint">
+          当前组合：{{ pdfOcrLanguages.join('+') }}。按住 Command 或 Ctrl 可以多选。
+        </p>
+        <p v-else class="hint">OCR 已关闭；原本没有文字层的页面会在报告中标记为不可搜索。</p>
+      </section>
       <p v-if="pdfRegionStrategy === 'raster_inpaint'" class="hint">
         只栅格化被选中的页面；蒙版外原始文字会作为隐藏文字层回灌。图片型页面仅在本机安装 Tesseract 时执行 OCR。
       </p>
@@ -914,7 +983,7 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         </label>
         <div v-if="redactionPreview.executable" class="process-actions">
           <button
-            :disabled="busy || (redactionPreview.requires_acknowledgement && !confirmedRedactionOverlap) || (pdfRegionStrategy === 'raster_inpaint' && !confirmedRasterization)"
+            :disabled="busy || !ocrSelectionValid || (redactionPreview.requires_acknowledgement && !confirmedRedactionOverlap) || (pdfRegionStrategy === 'raster_inpaint' && !confirmedRasterization)"
             @click="processRedaction"
           >{{ busy ? '正在处理…' : pdfRegionStrategy === 'raster_inpaint' ? '生成栅格修复 PDF 副本' : '生成区域删除后的 PDF 副本' }}</button>
           <p>使用 AGPL 版 PyMuPDF；只生成新副本，不覆盖原文件。</p>
