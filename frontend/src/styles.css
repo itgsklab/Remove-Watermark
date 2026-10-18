@@ -210,8 +210,22 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .settings-head h1 { font-size: clamp(2.5rem, 6vw, 4.8rem); }
 .settings-panel { max-width: 760px; }
 .settings-panel h2 { margin-top: 0; }
-.feedback-panel, .diagnostics-panel, .security-panel { margin-top: 18px; }
-.feedback-panel h2, .diagnostics-panel h2, .security-panel h2 { margin: 5px 0 8px; }
+.runtime-panel, .feedback-panel, .diagnostics-panel, .security-panel { margin-top: 18px; }
+.runtime-panel h2, .feedback-panel h2, .diagnostics-panel h2, .security-panel h2 { margin: 5px 0 8px; }
+.runtime-heading, .runtime-card-heading {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 18px;
+}
+.runtime-grid { display: grid; gap: 12px; margin-top: 18px; }
+.runtime-card { padding: 17px 18px; border: 1px solid #d9ded5; border-radius: 14px; background: #f7f9f4; }
+.runtime-card h3 { margin: 0; font-size: 1.02rem; }
+.runtime-card > p { margin: 10px 0 14px; color: #536057; line-height: 1.55; }
+.runtime-card dl { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 7px 12px; margin: 0; font-size: .84rem; }
+.runtime-card dt { color: #738078; }
+.runtime-card dd { margin: 0; overflow-wrap: anywhere; }
+.runtime-status { border-radius: 999px; padding: 4px 9px; font-size: .74rem; font-weight: 700; white-space: nowrap; }
+.runtime-status.ready { color: #075d3d; background: #dcefe5; }
+.runtime-status.review { color: #8a5a12; background: #fff0d5; }
+.runtime-status.inactive { color: #4f5751; background: #e8eae7; }
 .feedback-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .external-action {
   display: inline-flex; align-items: center; justify-content: center; border-radius: 12px;
@@ -259,6 +273,8 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   .xhs-media-candidate { align-items: stretch; flex-direction: column; }
   .xhs-media-candidate button { width: 100%; }
   .feedback-actions { align-items: stretch; flex-direction: column; }
+  .runtime-heading { align-items: stretch; flex-direction: column; }
+  .runtime-heading button { width: 100%; }
   .external-action { width: 100%; }
   .diagnostics-actions { align-items: stretch; flex-direction: column; }
   .diagnostics-actions button { width: 100%; }

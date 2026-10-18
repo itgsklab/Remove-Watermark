@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- Privacy-safe Web settings diagnostics for Tesseract version and language packs, Xiaohongshu
+  network feature gates and local VLM readiness, backed by a read-only diagnostics endpoint.
 - Undoable image-mask editing for manual rectangles, removals, clearing and local-model suggestions,
   with redo support, a 50-step history and an explicit 100-region draft limit.
 - Read-only DOCX DrawingML image candidate detection with relationship evidence, browser-safe
