@@ -26,6 +26,7 @@ from wmrm.api.schemas import (
     TaskReportComparison,
     TaskReportError,
     TaskReportInput,
+    TaskReportPdfPage,
     TaskReportProcessing,
     TaskResponse,
 )
@@ -277,6 +278,7 @@ class TaskService:
                     record.stage = "任务已取消"
                     record.progress = 1.0
                     record.error_json = None
+                    record.result_json = None
                     self._remove_task_files(task_id)
                 elif outcome["status"] == "succeeded":
                     result = outcome["result"]
@@ -322,6 +324,10 @@ class TaskService:
                         for image in preview["images"]
                     )
                     session.add_all(artifacts)
+                    record.result_json = json.dumps(
+                        {"pdf_pages": result.get("page_reports", [])},
+                        ensure_ascii=False,
+                    )
                     record.status = "succeeded"
                     record.stage = (
                         f"已修复 {result['removed_count']} 个蒙版区域并完成像素校验"
@@ -359,6 +365,7 @@ class TaskService:
                         {"code": "PROCESSING_FAILED", "message": str(exc)},
                         ensure_ascii=False,
                     )
+                    record.result_json = None
                 self._remove_task_files(task_id)
             session.commit()
 
@@ -412,11 +419,13 @@ class TaskService:
                     record.status = "cancelled"
                     record.stage = "服务重启后完成取消"
                     record.progress = 1.0
+                    record.result_json = None
                 else:
                     record.status = "queued"
                     record.stage = "服务重启后重新排队"
                     record.progress = 0.0
                     record.error_json = None
+                    record.result_json = None
                     resumable.append(record.id)
             session.commit()
         for task_id in resumable:
@@ -520,6 +529,7 @@ class TaskService:
                     if payload.get("ocr_languages")
                     else None
                 ),
+                pdf_pages=_pdf_page_reports(record),
             ),
             artifacts=[
                 TaskReportArtifact(
@@ -662,6 +672,19 @@ def _role_order(role: str) -> int:
 
 def _optional_int(value: Any) -> int | None:
     return int(value) if value is not None else None
+
+
+def _pdf_page_reports(record: TaskRecord) -> list[TaskReportPdfPage]:
+    if not record.result_json:
+        return []
+    try:
+        payload = json.loads(record.result_json)
+        reports = payload.get("pdf_pages", [])
+        if not isinstance(reports, list):
+            return []
+        return [TaskReportPdfPage.model_validate(item) for item in reports]
+    except (json.JSONDecodeError, TypeError, ValueError):
+        return []
 
 
 def _warning_codes(plan: PlanRecord | None) -> list[str]:

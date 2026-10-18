@@ -110,6 +110,16 @@ def test_raster_inpaint_rebuilds_searchable_text_without_masked_word(tmp_path: P
     assert report["source_text_pages"] == [1]
     assert report["unsearchable_pages"] == []
     assert report["inserted_word_count"] == 1
+    assert report["page_reports"] == [
+        {
+            "page_number": 1,
+            "text_source": "source_text",
+            "ocr_status": "not_needed",
+            "word_count": 1,
+            "searchable": True,
+            "unsearchable_reason": None,
+        }
+    ]
 
 
 def test_raster_inpaint_preserves_rotated_page_geometry(tmp_path: Path) -> None:
@@ -229,7 +239,85 @@ def test_raster_inpaint_uses_tesseract_for_image_only_page(
 
     assert report["ocr_pages"] == [1]
     assert report["unsearchable_pages"] == []
+    assert report["page_reports"] == [
+        {
+            "page_number": 1,
+            "text_source": "ocr",
+            "ocr_status": "succeeded",
+            "word_count": 1,
+            "searchable": True,
+            "unsearchable_reason": None,
+        }
+    ]
     assert "OCR-WORD" in (PdfReader(str(result)).pages[0].extract_text() or "")
+
+
+def test_raster_inpaint_reports_disabled_ocr_for_image_only_page(tmp_path: Path) -> None:
+    if not probe_pymupdf().available:
+        pytest.skip("PyMuPDF runtime dependency is not installed")
+    source = tmp_path / "image-only.pdf"
+    writer = PdfWriter()
+    writer.add_blank_page(width=300, height=400)
+    with source.open("wb") as output:
+        writer.write(output)
+
+    report = raster_inpaint_pdf_regions(
+        source,
+        tmp_path / "result.pdf",
+        [{"page_number": 1, "x0": 1, "y0": 1, "x1": 12, "y1": 12}],
+        license_mode="agpl",
+        dpi=96,
+        ocr_languages=None,
+    )
+
+    assert report["page_reports"] == [
+        {
+            "page_number": 1,
+            "text_source": "none",
+            "ocr_status": "disabled",
+            "word_count": 0,
+            "searchable": False,
+            "unsearchable_reason": "ocr_disabled",
+        }
+    ]
+
+
+def test_raster_inpaint_reports_failed_ocr_without_failing_task(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    if not probe_pymupdf().available:
+        pytest.skip("PyMuPDF runtime dependency is not installed")
+    source = tmp_path / "image-only.pdf"
+    writer = PdfWriter()
+    writer.add_blank_page(width=300, height=400)
+    with source.open("wb") as output:
+        writer.write(output)
+    executable = tmp_path / "failing-tesseract"
+    executable.write_text(f"#!{sys.executable}\nraise SystemExit(2)\n")
+    executable.chmod(0o755)
+    monkeypatch.setattr(
+        "wmrm.adapters.pdf.raster_inpaint.shutil.which", lambda _: str(executable)
+    )
+
+    report = raster_inpaint_pdf_regions(
+        source,
+        tmp_path / "result.pdf",
+        [{"page_number": 1, "x0": 1, "y0": 1, "x1": 12, "y1": 12}],
+        license_mode="agpl",
+        dpi=96,
+        ocr_languages="eng",
+    )
+
+    assert report["page_reports"] == [
+        {
+            "page_number": 1,
+            "text_source": "none",
+            "ocr_status": "failed",
+            "word_count": 0,
+            "searchable": False,
+            "unsearchable_reason": "ocr_failed",
+        }
+    ]
 
 
 def test_real_tesseract_pdf_ocr_probe() -> None:

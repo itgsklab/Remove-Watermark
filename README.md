@@ -92,7 +92,7 @@ make web-run
 - `POST /api/v1/tasks`（后台生成新的 DOCX、PDF 或图片副本）
 - `GET /api/v1/tasks`（读取本机任务记录）
 - `GET /api/v1/tasks/{task_id}`
-- `GET /api/v1/tasks/{task_id}/report`（下载不含文件名、本地路径和用户内容的任务报告）
+- `GET /api/v1/tasks/{task_id}/report`（下载不含文件名、本地路径和用户内容的任务报告；PDF Deep 报告包含逐页 OCR 状态、实际回灌文字数量和不可搜索原因码）
 - `POST /api/v1/tasks/{task_id}/cancel`
 - `GET /api/v1/tasks/{task_id}/artifacts/{artifact_id}`
 

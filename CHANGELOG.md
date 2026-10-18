@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- Per-page PDF Deep task-report evidence for OCR execution status, searchable word counts and
+  privacy-safe reasons when a selected page remains unsearchable.
 - Installed-language selection for PDF Deep OCR, including multi-language combinations, an explicit
   OCR-off path and backend rejection of unavailable or duplicated Tesseract language packs.
 - Privacy-safe Web settings diagnostics for Tesseract version and language packs, Xiaohongshu

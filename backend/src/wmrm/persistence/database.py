@@ -2,7 +2,7 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 
-from sqlalchemy import DateTime, Float, Integer, String, Text, create_engine
+from sqlalchemy import DateTime, Float, Integer, String, Text, create_engine, inspect, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 
@@ -58,6 +58,7 @@ class TaskRecord(Base):
     stage: Mapped[str] = mapped_column(String(64))
     progress: Mapped[float] = mapped_column(Float, default=0.0)
     error_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    result_json: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(UTC)
     )
@@ -93,6 +94,10 @@ class Database:
 
     def create_schema(self) -> None:
         Base.metadata.create_all(self.engine)
+        columns = {item["name"] for item in inspect(self.engine).get_columns("tasks")}
+        if "result_json" not in columns:
+            with self.engine.begin() as connection:
+                connection.execute(text("ALTER TABLE tasks ADD COLUMN result_json TEXT"))
 
     def session(self) -> Iterator[Session]:
         with self.session_factory() as session:

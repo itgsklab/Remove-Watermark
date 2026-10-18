@@ -516,6 +516,17 @@ def test_general_pdf_raster_inpaint_reinjects_searchable_text(
         task = client.get(f"/api/v1/tasks/{task['id']}").json()
     assert task["status"] == "succeeded", task.get("error")
     assert "栅格修复 1 个 PDF 区域并回灌文字层" in task["stage"]
+    report = client.get(task["report_url"]).json()
+    assert report["processing"]["pdf_pages"] == [
+        {
+            "page_number": 1,
+            "text_source": "source_text",
+            "ocr_status": "not_needed",
+            "word_count": 1,
+            "searchable": True,
+            "unsearchable_reason": None,
+        }
+    ]
 
     artifact = next(item for item in task["artifacts"] if item["role"] == "output")
     downloaded = client.get(artifact["download_url"])

@@ -461,6 +461,23 @@ class TaskReportInput(BaseModel):
     sha256: str
 
 
+class TaskReportPdfPage(BaseModel):
+    page_number: int = Field(ge=1)
+    text_source: Literal["source_text", "ocr", "none"]
+    ocr_status: Literal[
+        "not_needed", "succeeded", "disabled", "unavailable", "failed", "no_text"
+    ]
+    word_count: int = Field(ge=0)
+    searchable: bool
+    unsearchable_reason: Literal[
+        "ocr_disabled",
+        "ocr_unavailable",
+        "ocr_failed",
+        "ocr_no_text",
+        "text_layer_insert_failed",
+    ] | None = None
+
+
 class TaskReportProcessing(BaseModel):
     kind: str
     output_kind: str
@@ -469,6 +486,7 @@ class TaskReportProcessing(BaseModel):
     radius: int | None = None
     dpi: int | None = None
     ocr_languages: str | None = None
+    pdf_pages: list[TaskReportPdfPage] = Field(default_factory=list)
 
 
 class TaskReportArtifact(BaseModel):

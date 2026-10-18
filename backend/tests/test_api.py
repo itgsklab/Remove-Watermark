@@ -321,9 +321,10 @@ def test_validates_plan_and_generates_clean_docx_copy(client: TestClient) -> Non
         "selected_target_count": 1,
         "warning_codes": [],
         "radius": None,
-        "dpi": None,
-        "ocr_languages": None,
-    }
+            "dpi": None,
+            "ocr_languages": None,
+            "pdf_pages": [],
+        }
     assert len(report["artifacts"]) == 1
     assert report["artifacts"][0]["role"] == "output"
     assert report["comparison"] == {
