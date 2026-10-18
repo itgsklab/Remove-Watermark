@@ -11,7 +11,7 @@ from concurrent.futures import CancelledError
 from dataclasses import dataclass
 from importlib import import_module
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import cv2
 import numpy as np
@@ -39,6 +39,12 @@ class SearchableWord:
     y1: float
     text: str
     source: str
+
+
+@dataclass(frozen=True, slots=True)
+class OcrAttempt:
+    words: list[SearchableWord]
+    status: Literal["succeeded", "failed", "no_text"]
 
 
 def probe_tesseract() -> dict[str, str | bool | None]:
@@ -118,6 +124,7 @@ def raster_inpaint_pdf_regions(
         source_text_pages: list[int] = []
         ocr_pages: list[int] = []
         unsearchable_pages: list[int] = []
+        page_reports: list[dict[str, object]] = []
         inserted_word_count = 0
         try:
             for index in range(len(source)):
@@ -140,6 +147,9 @@ def raster_inpaint_pdf_regions(
                             f"第 {page_number} 页在 {dpi} DPI 下超过 5000 万像素限制。"
                         )
                     words = _source_words(page, page_regions, height)
+                    text_source = "source_text" if words else "none"
+                    ocr_status = "not_needed" if words else "disabled"
+                    unsearchable_reason: str | None = None
                     pixmap = page.get_pixmap(
                         matrix=pymupdf.Matrix(scale, scale),
                         colorspace=pymupdf.csRGB,
@@ -157,8 +167,8 @@ def raster_inpaint_pdf_regions(
                     )
                     repaired = cv2.inpaint(original, mask, float(radius), cv2.INPAINT_TELEA)
                     _raise_if_cancelled(should_cancel)
-                    if not words and tesseract["available"] and ocr_languages:
-                        words = _tesseract_words(
+                    if not words and ocr_languages and tesseract["available"]:
+                        ocr_attempt = _tesseract_words(
                             repaired,
                             width,
                             height,
@@ -166,12 +176,21 @@ def raster_inpaint_pdf_regions(
                             ocr_languages,
                             ocr_timeout_seconds,
                         )
+                        words = ocr_attempt.words
+                        ocr_status = ocr_attempt.status
                         if words:
-                            ocr_pages.append(page_number)
-                    elif words:
-                        source_text_pages.append(page_number)
-                    if not words:
-                        unsearchable_pages.append(page_number)
+                            text_source = "ocr"
+                        else:
+                            unsearchable_reason = (
+                                "ocr_failed"
+                                if ocr_attempt.status == "failed"
+                                else "ocr_no_text"
+                            )
+                    elif not words and not ocr_languages:
+                        unsearchable_reason = "ocr_disabled"
+                    elif not words:
+                        ocr_status = "unavailable"
+                        unsearchable_reason = "ocr_unavailable"
 
                     image_stream = io.BytesIO()
                     Image.fromarray(repaired, mode="RGB").save(
@@ -179,7 +198,28 @@ def raster_inpaint_pdf_regions(
                     )
                     rebuilt = output.new_page(width=width, height=height)
                     rebuilt.insert_image(rebuilt.rect, stream=image_stream.getvalue())
-                    inserted_word_count += _insert_hidden_words(rebuilt, words)
+                    page_word_count = _insert_hidden_words(rebuilt, words)
+                    inserted_word_count += page_word_count
+                    if page_word_count:
+                        if text_source == "source_text":
+                            source_text_pages.append(page_number)
+                        elif text_source == "ocr":
+                            ocr_pages.append(page_number)
+                    else:
+                        if words:
+                            ocr_status = "failed" if text_source == "ocr" else ocr_status
+                            unsearchable_reason = "text_layer_insert_failed"
+                        unsearchable_pages.append(page_number)
+                    page_reports.append(
+                        {
+                            "page_number": page_number,
+                            "text_source": text_source if page_word_count else "none",
+                            "ocr_status": ocr_status,
+                            "word_count": page_word_count,
+                            "searchable": page_word_count > 0,
+                            "unsearchable_reason": unsearchable_reason,
+                        }
+                    )
                     rebuilt.set_rotation(original_rotation)
                     changed_pages.append(page_number)
                 finally:
@@ -209,6 +249,7 @@ def raster_inpaint_pdf_regions(
             "source_text_pages": source_text_pages,
             "ocr_pages": ocr_pages,
             "unsearchable_pages": unsearchable_pages,
+            "page_reports": page_reports,
             "inserted_word_count": inserted_word_count,
             "dpi": dpi,
             "radius": radius,
@@ -290,26 +331,30 @@ def _tesseract_words(
     executable: str,
     languages: str,
     timeout_seconds: int,
-) -> list[SearchableWord]:
+) -> OcrAttempt:
     with tempfile.TemporaryDirectory(prefix="wmrm-pdf-ocr-") as temporary:
         image_path = Path(temporary) / "page.png"
         Image.fromarray(image, mode="RGB").save(image_path, format="PNG")
-        completed = subprocess.run(
-            [executable, str(image_path), "stdout", "-l", languages, "tsv"],
-            capture_output=True,
-            text=True,
-            timeout=timeout_seconds,
-            check=False,
-        )
+        try:
+            completed = subprocess.run(
+                [executable, str(image_path), "stdout", "-l", languages, "tsv"],
+                capture_output=True,
+                text=True,
+                timeout=timeout_seconds,
+                check=False,
+            )
+        except (OSError, subprocess.SubprocessError):
+            return OcrAttempt([], "failed")
     if completed.returncode != 0:
-        return []
-    return _parse_tesseract_tsv(
+        return OcrAttempt([], "failed")
+    words = _parse_tesseract_tsv(
         completed.stdout,
         image.shape[1],
         image.shape[0],
         page_width,
         page_height,
     )
+    return OcrAttempt(words, "succeeded" if words else "no_text")
 
 
 def _parse_tesseract_tsv(

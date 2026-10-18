@@ -19,8 +19,11 @@ separate PDF object. The workflow remains local and always writes a new PDF.
 8. The result is reopened strictly and checked for encryption, page count, crop-box size and page
    rotation before it becomes downloadable.
 
-The task result reports which pages used the source text layer, which used OCR and which remained
-unsearchable. Page previews are generated through the existing Poppler comparison path.
+The downloadable task report records every selected page separately. Each entry states whether the
+searchable words came from the source text layer or OCR, whether OCR was skipped, succeeded, disabled,
+unavailable, failed or returned no text, how many words were actually inserted, and a stable reason
+code when the page remains unsearchable. These entries contain no recognized text or local executable
+paths. Page previews are generated through the existing Poppler comparison path.
 
 ## OCR boundary
 
