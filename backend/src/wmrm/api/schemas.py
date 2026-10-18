@@ -37,6 +37,30 @@ class OptionalModelCapability(BaseModel):
     message: str
 
 
+class OcrRuntimeDiagnostic(BaseModel):
+    available: bool
+    status: Literal["unavailable", "ready", "probe_failed"]
+    version: str | None = None
+    languages: list[str] = Field(default_factory=list)
+    message: str
+
+
+class XiaohongshuRuntimeDiagnostic(BaseModel):
+    status: Literal["parse_only", "metadata_only", "ready", "configuration_invalid"]
+    share_link_parsing: Literal[True] = True
+    metadata_reading_enabled: bool
+    image_import_enabled: bool
+    proxy_configured: bool
+    message: str
+
+
+class RuntimeDiagnosticsResponse(BaseModel):
+    schema_version: Literal[1] = 1
+    ocr: OcrRuntimeDiagnostic
+    xiaohongshu: XiaohongshuRuntimeDiagnostic
+    vlm_localization: OptionalModelCapability
+
+
 class CapabilitiesResponse(BaseModel):
     version: str
     max_upload_bytes: int

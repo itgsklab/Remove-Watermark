@@ -42,6 +42,7 @@ from wmrm.api.schemas import (
     PreviewRedactionsRequest,
     RedactionPlanResponse,
     RedactionPreviewResponse,
+    RuntimeDiagnosticsResponse,
     TaskReport,
     TaskResponse,
     ValidateImagePlanRequest,
@@ -61,6 +62,7 @@ from wmrm.application.plans import PlanService
 from wmrm.application.redaction_plans import RedactionPlanService
 from wmrm.application.redactions import RedactionService
 from wmrm.application.retention import RetentionService
+from wmrm.application.runtime_diagnostics import build_runtime_diagnostics
 from wmrm.application.tasks import TaskService
 from wmrm.application.vlm_suggestions import LocalizerFactory, VlmSuggestionService
 from wmrm.application.xiaohongshu_links import XiaohongshuLinkService
@@ -304,6 +306,14 @@ def create_app(
                 ),
             ],
             vlm_localization=vlm_suggestions.capability(),
+        )
+
+    @app.get("/api/v1/diagnostics", response_model=RuntimeDiagnosticsResponse)
+    async def runtime_diagnostics() -> RuntimeDiagnosticsResponse:
+        return await run_in_threadpool(
+            build_runtime_diagnostics,
+            config,
+            vlm_suggestions.capability(),
         )
 
     @app.post("/api/v1/xiaohongshu/preview", response_model=XiaohongshuPreviewResponse)

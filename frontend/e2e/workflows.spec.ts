@@ -6,6 +6,30 @@ const fixture = (name: string) => fileURLToPath(new URL(`.generated/${name}`, im
 
 test.describe.configure({ mode: 'serial' })
 
+test('settings show privacy-safe local runtime diagnostics', async ({ page }) => {
+  const browserErrors = watchBrowserErrors(page)
+  await page.goto('/settings')
+
+  await expect(page.getByRole('heading', { name: '运行环境诊断' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'PDF OCR' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '小红书网络能力' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '本地 VLM' })).toBeVisible()
+  await page.getByRole('button', { name: '重新检查' }).click()
+  await expect(page.getByRole('button', { name: '重新检查' })).toBeEnabled()
+
+  const summary = page.getByLabel('安全诊断摘要')
+  await expect(summary).toBeVisible()
+  const payload = JSON.parse(await summary.inputValue())
+  expect(payload.schema_version).toBe(2)
+  expect(payload.ocr.status).toMatch(/^(unavailable|ready|probe_failed)$/)
+  expect(payload.xiaohongshu.status).toBe('parse_only')
+  expect(payload.vlm_localization.status).toBe('disabled')
+  expect(JSON.stringify(payload)).not.toMatch(
+    /display_name|relative_path|download_url|executable|proxy_url|model_dir|\/Users\//,
+  )
+  expect(browserErrors).toEqual([])
+})
+
 test('DOCX watermark workflow reaches verified result and report', async ({ page }) => {
   const browserErrors = watchBrowserErrors(page)
   await upload(page, 'browser-watermark.docx')

@@ -33,6 +33,26 @@ export interface Capabilities {
   }
 }
 
+export interface RuntimeDiagnostics {
+  schema_version: 1
+  ocr: {
+    available: boolean
+    status: 'unavailable' | 'ready' | 'probe_failed'
+    version: string | null
+    languages: string[]
+    message: string
+  }
+  xiaohongshu: {
+    status: 'parse_only' | 'metadata_only' | 'ready' | 'configuration_invalid'
+    share_link_parsing: true
+    metadata_reading_enabled: boolean
+    image_import_enabled: boolean
+    proxy_configured: boolean
+    message: string
+  }
+  vlm_localization: Capabilities['vlm_localization']
+}
+
 export interface XiaohongshuPreview {
   kind: 'direct' | 'short'
   normalized_url: string
@@ -333,6 +353,10 @@ async function parse<T>(response: Response): Promise<T> {
 
 export async function getCapabilities(): Promise<Capabilities> {
   return parse<Capabilities>(await fetch('/api/v1/capabilities'))
+}
+
+export async function getRuntimeDiagnostics(): Promise<RuntimeDiagnostics> {
+  return parse<RuntimeDiagnostics>(await fetch('/api/v1/diagnostics'))
 }
 
 export async function previewXiaohongshuLink(

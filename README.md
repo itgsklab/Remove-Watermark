@@ -74,6 +74,7 @@ make web-run
 
 - `GET /api/v1/health`
 - `GET /api/v1/capabilities`
+- `GET /api/v1/diagnostics`（返回脱敏的 OCR、小红书网络能力和本地 VLM 运行状态）
 - `POST /api/v1/xiaohongshu/preview`（解析分享文案；可选读取标题、描述和不含 URL 的封面/图集候选）
 - `POST /api/v1/xiaohongshu/import`（重新校验页面和候选后，将公开页面图片保存为本地图片资产）
 - `POST /api/v1/assets`
@@ -122,6 +123,8 @@ PNG、JPEG 和 WebP 可以进行元数据检查和矩形蒙版编辑。一个草
 可选 VLM 水印定位可以由本机管理员显式接入 Web 图片流程，只在像素通过照片场景门禁后提出矩形蒙版草稿。默认安装和默认配置均关闭此能力，不会下载或分发权重；模型建议不会直接处理图片，也不会绕过蒙版预览、风险提示和人工确认。模型不可用、推理失败或门禁拒绝时，界面继续保留手工框选流程。启用步骤、固定 Safetensors 摘要、禁止远程代码策略和真实模型门禁见 [docs/VLM_LOCALIZATION.md](docs/VLM_LOCALIZATION.md)。
 
 任务元数据保存在 SQLite 中。单个任务在独立的 `spawn` 子进程中处理，由常驻监督线程串行调度；子进程崩溃会转为明确的失败状态，取消超时会强制终止子进程。服务重启后，排队或意外中断的任务会重新校验并执行，正在取消的任务会完成取消。取消宽限期默认 2 秒，可通过 `WMRM_WORKER_CANCEL_GRACE_SECONDS` 调整。
+
+设置页集中显示 Tesseract OCR 版本与语言包、小红书页面读取/图片导入开关、受限代理是否配置，以及本地 VLM 的可用状态。重新检查只读取本机组件和配置，不访问小红书页面，也不加载模型。可复制的 schema v2 诊断摘要不会包含文件名、用户内容、任务记录、本地路径、可执行文件位置、代理地址或模型目录。
 
 默认保留产物 30 天、未被计划引用的上传文件 7 天、遗留临时文件 24 小时；分别可通过 `WMRM_ARTIFACT_RETENTION_DAYS`、`WMRM_UNREFERENCED_ASSET_RETENTION_DAYS` 和 `WMRM_FAILED_WORK_RETENTION_HOURS` 调整。任务进程的边界和恢复语义见 [docs/WORKER.md](docs/WORKER.md)。
 
