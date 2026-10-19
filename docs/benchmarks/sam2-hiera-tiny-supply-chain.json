@@ -1,0 +1,21 @@
+{
+  "allowed_file_count": 5,
+  "digest_gate": "pass",
+  "evaluation_allowed": true,
+  "license_gate": "pass",
+  "local_files_verified": false,
+  "model_id": "facebook/sam2-hiera-tiny",
+  "policy_gate": "pass",
+  "product_integration_allowed": false,
+  "release_claim_allowed": false,
+  "review_status": "approved_for_evaluation_only",
+  "revision": "7c218beaf0bb87874785f32b582f640134fc1c09",
+  "runtime_dependencies": [
+    "transformers==4.57.3",
+    "torch==2.7.1",
+    "safetensors==0.6.2"
+  ],
+  "schema_version": 1,
+  "total_size_bytes": 155848852,
+  "weight_format": "safetensors"
+}

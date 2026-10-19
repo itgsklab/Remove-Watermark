@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "model_id": "facebook/sam2-hiera-tiny",
+  "revision": "7c218beaf0bb87874785f32b582f640134fc1c09",
+  "reviewed_at": "2026-10-19",
+  "review_status": "approved_for_evaluation_only",
+  "selection_reason": "Official box-prompted segmentation model with Safetensors weights and a smaller Hiera-T backbone.",
+  "source": {
+    "model_repository": "https://huggingface.co/facebook/sam2-hiera-tiny/tree/7c218beaf0bb87874785f32b582f640134fc1c09",
+    "code_repository": "https://github.com/facebookresearch/sam2/tree/2b90b9f5ceec907a1c18123530e92e794ad901a4",
+    "runtime_documentation": "https://huggingface.co/docs/transformers/v4.57.3/en/model_doc/sam2"
+  },
+  "licenses": {
+    "code": {
+      "spdx": "Apache-2.0",
+      "source": "https://github.com/facebookresearch/sam2/blob/2b90b9f5ceec907a1c18123530e92e794ad901a4/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "weights": {
+      "spdx": "Apache-2.0",
+      "source": "https://huggingface.co/facebook/sam2-hiera-tiny/blob/7c218beaf0bb87874785f32b582f640134fc1c09/README.md",
+      "sha256": "96f72d39f59ddd8f69b43c81f4f9fc1e4682124806f3913ba3aafb0d90fb744c"
+    }
+  },
+  "upstream_code_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+  "runtime_dependencies": [
+    {
+      "name": "transformers",
+      "version": "4.57.3"
+    },
+    {
+      "name": "torch",
+      "version": "2.7.1"
+    },
+    {
+      "name": "safetensors",
+      "version": "0.6.2"
+    }
+  ],
+  "allowed_files": [
+    {
+      "path": "model.safetensors",
+      "size_bytes": 155841672,
+      "sha256": "1449035ba6ba2ed524c646da989e5cb3a9b93b97f1c1b2d474e598c3b748d99f"
+    },
+    {
+      "path": "config.json",
+      "size_bytes": 5697,
+      "sha256": "3239c7ecf212b1a9d9f98310c8993612335c5596a12c8cfba25e512e9dc5965b"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "size_bytes": 683,
+      "sha256": "6ebf229ee259368ce4a8d4f2fe893a72b053023710853e257253939e601f583d"
+    },
+    {
+      "path": "processor_config.json",
+      "size_bytes": 95,
+      "sha256": "f8a68e865cfad115c1c2763f3d93eca7b1c622da06da2a9273eb437fb2389b6d"
+    },
+    {
+      "path": "video_preprocessor_config.json",
+      "size_bytes": 705,
+      "sha256": "9fccfe5f464ec38c2f236d0e6a68e95511c80c22132fc2fa4b9f7b65f24fad95"
+    }
+  ],
+  "explicitly_excluded_files": [
+    {
+      "path": "sam2_hiera_tiny.pt",
+      "reason": "Pickle-based PyTorch checkpoint is outside the Safetensors-only policy."
+    },
+    {
+      "path": "sam2_hiera_t.yaml",
+      "reason": "Not required by the pinned Transformers runtime."
+    }
+  ],
+  "runtime_policy": {
+    "approved_use": "offline_evaluation_only",
+    "automatic_download": false,
+    "bundled_in_release": false,
+    "allow_remote_code": false,
+    "allow_pickle_weights": false,
+    "required_weight_format": "safetensors",
+    "require_exact_revision": true,
+    "require_sha256_verification": true,
+    "product_integration": false
+  }
+}

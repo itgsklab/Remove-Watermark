@@ -46,12 +46,37 @@ make mask-refinement-corpus
 make mask-refinement-contract
 ```
 
+## 候选模型供应链审查
+
+第一候选已经固定为 Meta 官方 `facebook/sam2-hiera-tiny`，仅批准用于离线独立评测。选择该候选是因为它接受候选框提示、Hiera-T 体积相对较小，并且官方仓库提供 Transformers 可加载的 Safetensors 权重。固定清单见 [`models/sam2-hiera-tiny.json`](models/sam2-hiera-tiny.json)，自动审查报告见：
+
+- [`sam2-hiera-tiny-supply-chain.json`](benchmarks/sam2-hiera-tiny-supply-chain.json)
+- [`sam2-hiera-tiny-supply-chain.md`](benchmarks/sam2-hiera-tiny-supply-chain.md)
+
+本轮也比较了两个轻量或高质量候选：
+
+| 候选 | 审查 revision | 结论 |
+| --- | --- | --- |
+| [SAM2 Hiera-T](https://github.com/facebookresearch/sam2/tree/2b90b9f5ceec907a1c18123530e92e794ad901a4) | `2b90b9f5ceec907a1c18123530e92e794ad901a4` | 采用为第一评测候选；官方模型仓库提供固定 Safetensors 文件。 |
+| [MobileSAM](https://github.com/ChaoningZhang/MobileSAM/tree/f706ad9c4eb7f219c00d9050e46328518ffb65d2) | `f706ad9c4eb7f219c00d9050e46328518ffb65d2` | 暂缓；官方使用说明以 `.pt` checkpoint 为主，本轮未找到同等来源的固定 Safetensors 运行清单。 |
+| [HQ-SAM](https://github.com/SysCV/sam-hq/tree/e696978d60352dc9a26b12631cd91781502c6546) | `e696978d60352dc9a26b12631cd91781502c6546` | 暂缓；需要额外 checkpoint 组合，当前分发面和依赖面大于首轮评测需要。 |
+
+清单固定模型 revision、上游代码 revision、Apache-2.0 许可来源、五个允许文件的大小与 SHA-256，以及独立评测环境的精确依赖版本。同仓库的 Pickle `.pt` 权重被明确排除；只允许一个 `model.safetensors`，禁止远程代码、自动下载、随发行包分发和产品接入。由于 SAM2 需要 Transformers 4.57.3，而现有 Florence-2 运行时固定在 4.49 系列，真实评测必须使用隔离虚拟环境，不能修改默认 Web 环境。
+
+可重复检查清单：
+
+```bash
+make model-supply-chain-review
+```
+
+报告中的 `local_files_verified=false` 表示本阶段没有下载 156 MB 权重。只有用户显式准备本地文件并通过完整允许列表、文件大小和 SHA-256 检查后，才能开始真实模型运行。
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 对候选模型的代码许可证、权重许可证、固定 revision、文件摘要和远程代码需求进行独立审查；
-2. 使用独立真实照片和负例生成模型预测，禁止把真实蒙版作为输入；
+1. 在隔离环境中显式下载并校验允许文件，生成真实模型预测，禁止把真实蒙版作为输入；
+2. 使用独立真实照片和负例补充当前合同语料；
 3. 在 CPU、Apple Silicon 和至少一种 CUDA 环境记录耗时与峰值内存；
 4. 由人工完成三条路径的盲测计时，并记录每个样本的修正量；
 5. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。

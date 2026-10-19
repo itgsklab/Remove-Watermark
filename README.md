@@ -188,6 +188,15 @@ make vlm-localization-contract
 [docs/VLM_LOCALIZATION.md](docs/VLM_LOCALIZATION.md)。模型权重和预测结果均保留在被 Git 忽略的
 `work/` 目录，不进入 Web 发行物。
 
+复核 SAM2 Hiera-T 分割候选的固定来源、许可、Safetensors 文件摘要和隔离运行策略：
+
+```bash
+make model-supply-chain-review
+```
+
+该门禁只批准离线评测，不下载模型、不加入默认依赖，也不开放 Web 产品入口。详情见
+[docs/MASK_REFINEMENT_EVALUATION.md](docs/MASK_REFINEMENT_EVALUATION.md)。
+
 复核带来源记录的真实照片和项目截图复杂度阈值：
 
 ```bash
