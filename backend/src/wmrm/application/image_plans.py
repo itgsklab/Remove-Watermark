@@ -57,6 +57,7 @@ class ImagePlanService:
             asset_id=asset.id,
             analysis_id=request.analysis_id,
             regions=request.regions,
+            protected_regions=request.protected_regions,
             radius=request.radius,
             warnings=warnings,
         )
@@ -75,6 +76,10 @@ class ImagePlanService:
                         "response": response.model_dump(mode="json"),
                         "asset_sha256": asset.sha256,
                         "regions": [item.model_dump(mode="json") for item in request.regions],
+                        "protected_regions": [
+                            item.model_dump(mode="json")
+                            for item in request.protected_regions
+                        ],
                         "radius": request.radius,
                         "complexity": preview.complexity.model_dump(mode="json"),
                         "selection_risk": preview.selection_risk.model_dump(mode="json"),

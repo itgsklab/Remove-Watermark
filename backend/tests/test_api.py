@@ -318,7 +318,8 @@ def test_validates_plan_and_generates_clean_docx_copy(client: TestClient) -> Non
     assert report["processing"] == {
         "kind": "object_removal",
         "output_kind": "docx",
-        "selected_target_count": 1,
+            "selected_target_count": 1,
+            "protected_target_count": 0,
         "warning_codes": [],
         "radius": None,
             "dpi": None,

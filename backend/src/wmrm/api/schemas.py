@@ -293,6 +293,7 @@ class PreviewImageMasksRequest(BaseModel):
     asset_id: str
     analysis_id: str
     regions: list[ImageMaskRegion] = Field(min_length=1, max_length=100)
+    protected_regions: list[ImageMaskRegion] = Field(default_factory=list, max_length=100)
 
 
 class ImageRegionComplexity(BaseModel):
@@ -330,6 +331,7 @@ class ImageMaskPreviewResponse(BaseModel):
     valid: bool
     executable: bool
     regions: list[ImageMaskRegion]
+    protected_regions: list[ImageMaskRegion] = Field(default_factory=list)
     covered_pixels: float = Field(gt=0)
     coverage_ratio: float = Field(gt=0, le=1)
     complexity: ImageComplexityResponse
@@ -378,6 +380,7 @@ class ValidateImagePlanRequest(BaseModel):
     asset_sha256: str
     analysis_id: str
     regions: list[ImageMaskRegion] = Field(min_length=1, max_length=100)
+    protected_regions: list[ImageMaskRegion] = Field(default_factory=list, max_length=100)
     radius: int = Field(default=3, ge=1, le=10)
     acknowledged_warnings: list[str] = Field(default_factory=list)
 
@@ -389,6 +392,7 @@ class ImagePlanResponse(BaseModel):
     analysis_id: str
     strategy: Literal["opencv_telea"] = "opencv_telea"
     regions: list[ImageMaskRegion]
+    protected_regions: list[ImageMaskRegion] = Field(default_factory=list)
     radius: int
     warnings: list[PlanWarning]
     output_kind: Literal["png"] = "png"
@@ -482,6 +486,7 @@ class TaskReportProcessing(BaseModel):
     kind: str
     output_kind: str
     selected_target_count: int = Field(ge=0)
+    protected_target_count: int = Field(default=0, ge=0)
     warning_codes: list[str] = Field(default_factory=list)
     radius: int | None = None
     dpi: int | None = None

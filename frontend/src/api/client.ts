@@ -244,6 +244,7 @@ export interface ImageMaskPreview {
   valid: boolean
   executable: boolean
   regions: ImageMaskRegion[]
+  protected_regions: ImageMaskRegion[]
   covered_pixels: number
   coverage_ratio: number
   complexity: {
@@ -280,6 +281,7 @@ export interface ImagePlan {
   analysis_id: string
   strategy: 'opencv_telea'
   regions: ImageMaskRegion[]
+  protected_regions: ImageMaskRegion[]
   radius: number
   warnings: PlanWarning[]
   output_kind: 'png'
@@ -410,6 +412,7 @@ export async function createAnalysis(
 export async function previewImageMasks(
   analysis: Analysis,
   regions: ImageMaskRegion[],
+  protectedRegions: ImageMaskRegion[] = [],
 ): Promise<ImageMaskPreview> {
   return parse<ImageMaskPreview>(await fetch('/api/v1/image-masks/preview', {
     method: 'POST',
@@ -418,6 +421,7 @@ export async function previewImageMasks(
       asset_id: analysis.asset_id,
       analysis_id: analysis.id,
       regions,
+      protected_regions: protectedRegions,
     }),
   }))
 }
@@ -454,6 +458,7 @@ export async function validatePlan(
 export async function validateImagePlan(
   analysis: Analysis,
   regions: ImageMaskRegion[],
+  protectedRegions: ImageMaskRegion[],
   radius: number,
   acknowledgedWarnings: string[],
 ): Promise<ImagePlan> {
@@ -465,6 +470,7 @@ export async function validateImagePlan(
       asset_sha256: analysis.asset_sha256,
       analysis_id: analysis.id,
       regions,
+      protected_regions: protectedRegions,
       radius,
       acknowledged_warnings: acknowledgedWarnings,
     }),

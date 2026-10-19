@@ -27,6 +27,7 @@ def run_task_process(request: dict[str, Any], result_queue: Any, cancel_event: A
                 list(request["regions"]),
                 int(request["radius"]),
                 cancel_event.is_set,
+                list(request.get("protected_regions", [])),
             )
             preview_payload = {"available": False, "warning": None, "images": []}
         elif plan_kind in {"pdf_redaction", "pdf_raster_inpaint"}:

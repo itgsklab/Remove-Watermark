@@ -275,6 +275,13 @@ def test_image_plan_runs_opencv_and_preserves_pixels_outside_mask(
         "y1": 35,
         "transform_id": analysis["image_metadata"]["transform_id"],
     }
+    protected_region = {
+        "x0": 35,
+        "y0": 24,
+        "x1": 45,
+        "y1": 31,
+        "transform_id": analysis["image_metadata"]["transform_id"],
+    }
     planned = client.post(
         "/api/v1/image-plans/validate",
         json={
@@ -282,12 +289,14 @@ def test_image_plan_runs_opencv_and_preserves_pixels_outside_mask(
             "asset_sha256": uploaded["sha256"],
             "analysis_id": analysis["id"],
             "regions": [region],
+            "protected_regions": [protected_region],
             "radius": 3,
         },
     )
     assert planned.status_code == 200
     assert planned.json()["valid"] is True
     assert planned.json()["output_kind"] == "png"
+    assert planned.json()["protected_regions"] == [protected_region]
 
     created = client.post("/api/v1/tasks", json={"plan_id": planned.json()["id"]})
     assert created.status_code == 202
@@ -308,6 +317,7 @@ def test_image_plan_runs_opencv_and_preserves_pixels_outside_mask(
     assert report["processing"]["kind"] == "image_inpaint"
     assert report["processing"]["output_kind"] == "png"
     assert report["processing"]["selected_target_count"] == 1
+    assert report["processing"]["protected_target_count"] == 1
     assert report["processing"]["radius"] == 3
     assert report["comparison"] is None
     downloaded = client.get(artifact["download_url"])
@@ -318,9 +328,43 @@ def test_image_plan_runs_opencv_and_preserves_pixels_outside_mask(
     result = np.asarray(Image.open(BytesIO(downloaded.content)).convert("RGB"))
     mask = np.zeros(source.shape[:2], dtype=bool)
     mask[20:35, 25:55] = True
+    mask[24:31, 35:45] = False
     assert result.shape == source.shape
     assert np.array_equal(result[~mask], source[~mask])
     assert np.any(result[mask] != source[mask])
+
+
+def test_image_mask_preview_subtracts_protected_regions(client: TestClient) -> None:
+    uploaded = client.post(
+        "/api/v1/assets", files={"file": ("protected.png", make_image("PNG"))}
+    ).json()
+    analysis = client.post(
+        "/api/v1/analyses",
+        json={"asset_id": uploaded["id"], "preset": "image"},
+    ).json()
+    transform_id = analysis["image_metadata"]["transform_id"]
+    payload = {
+        "asset_id": uploaded["id"],
+        "analysis_id": analysis["id"],
+        "regions": [
+            {"x0": 0, "y0": 0, "x1": 20, "y1": 20, "transform_id": transform_id}
+        ],
+        "protected_regions": [
+            {"x0": 5, "y0": 5, "x1": 15, "y1": 15, "transform_id": transform_id}
+        ],
+    }
+
+    preview = client.post("/api/v1/image-masks/preview", json=payload)
+
+    assert preview.status_code == 200
+    assert preview.json()["covered_pixels"] == 300
+    assert preview.json()["protected_regions"] == payload["protected_regions"]
+    assert any("排除 1 个保护区域" in item for item in preview.json()["warnings"])
+
+    payload["protected_regions"] = payload["regions"]
+    empty = client.post("/api/v1/image-masks/preview", json=payload)
+    assert empty.status_code == 422
+    assert empty.json()["error"]["code"] == "EMPTY_EFFECTIVE_MASK"
 
 
 def test_large_image_plan_requires_explicit_acknowledgement(client: TestClient) -> None:

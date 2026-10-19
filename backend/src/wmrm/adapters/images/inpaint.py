@@ -16,6 +16,7 @@ def inpaint_image(
     regions: list[dict[str, Any]],
     radius: int,
     cancelled: Callable[[], bool] | None = None,
+    protected_regions: list[dict[str, Any]] | None = None,
 ) -> dict[str, int | str]:
     should_cancel = cancelled or (lambda: False)
     _check_cancelled(should_cancel)
@@ -39,6 +40,16 @@ def inpaint_image(
         if x0 >= x1 or y0 >= y1:
             raise ValueError("蒙版区域为空或超出图片范围。")
         mask[y0:y1, x0:x1] = 255
+    for region in protected_regions or []:
+        x0 = max(0, math.floor(float(region["x0"])))
+        y0 = max(0, math.floor(float(region["y0"])))
+        x1 = min(width, math.ceil(float(region["x1"])))
+        y1 = min(height, math.ceil(float(region["y1"])))
+        if x0 >= x1 or y0 >= y1:
+            raise ValueError("保护区域为空或超出图片范围。")
+        mask[y0:y1, x0:x1] = 0
+    if not np.any(mask):
+        raise ValueError("保护区不能覆盖全部蒙版。")
 
     _check_cancelled(should_cancel)
     repaired_rgb = cv2.inpaint(original[:, :, :3], mask, float(radius), cv2.INPAINT_TELEA)
@@ -68,6 +79,7 @@ def inpaint_image(
 
     return {
         "removed_count": len(regions),
+        "protected_count": len(protected_regions or []),
         "masked_pixels": int(np.count_nonzero(mask)),
         "changed_pixels": int(np.count_nonzero(changed)),
         "outside_changed_pixels": outside_changed,
