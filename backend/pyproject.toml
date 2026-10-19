@@ -53,6 +53,7 @@ wmrm-pdf-ocr-probe = "wmrm.benchmarks.pdf_ocr_probe:main"
 wmrm-pdf-redaction-corpus = "wmrm.benchmarks.pdf_redaction_corpus:main"
 wmrm-vlm-predict = "wmrm.benchmarks.vlm_predict:main"
 wmrm-vlm-fetch = "wmrm.benchmarks.vlm_fetch:main"
+wmrm-model-supply-chain = "wmrm.benchmarks.model_supply_chain:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/wmrm"]

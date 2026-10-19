@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
+.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract model-supply-chain-review complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -99,6 +99,12 @@ mask-refinement-contract:
 		--predictions tests/fixtures/mask_refinement/contract-predictions.json \
 		--report-json ../docs/benchmarks/mask-refinement-contract.json \
 		--report-md ../docs/benchmarks/mask-refinement-contract.md
+
+model-supply-chain-review:
+	cd backend && .venv/bin/python -m wmrm.benchmarks.model_supply_chain \
+		--manifest ../docs/models/sam2-hiera-tiny.json \
+		--report-json ../docs/benchmarks/sam2-hiera-tiny-supply-chain.json \
+		--report-md ../docs/benchmarks/sam2-hiera-tiny-supply-chain.md
 
 complexity-calibration:
 	cd backend && .venv/bin/python -m wmrm.benchmarks.complexity_calibration \
