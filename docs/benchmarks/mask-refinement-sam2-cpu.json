@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "benchmark": "wmrm-box-guided-mask-refinement",
+  "evaluation_kind": "model",
+  "refiner": {
+    "automatic_download": false,
+    "device": "cpu",
+    "id": "sam2-hiera-tiny-box-refiner-v1",
+    "is_model_output": true,
+    "model_id": "facebook/sam2-hiera-tiny",
+    "model_revision": "7c218beaf0bb87874785f32b582f640134fc1c09",
+    "prompt_version": "candidate-box-v1",
+    "runtime": {
+      "architecture": "arm64",
+      "candidate_box_clipping": true,
+      "checkpoint_load_issues": 0,
+      "device": "cpu",
+      "kind": "local-transformers-sam2",
+      "platform": "darwin",
+      "runtime_model_class": "Sam2Model",
+      "source_config_model_type": "sam2_video",
+      "torch_version": "2.7.1",
+      "transformers_version": "5.10.4"
+    }
+  },
+  "thresholds": {
+    "minimum_iou": 0.75,
+    "minimum_precision": 0.8,
+    "minimum_recall": 0.8,
+    "minimum_correction_reduction": 0.25,
+    "maximum_outside_candidate_pixels": 0,
+    "minimum_sample_count": 8,
+    "minimum_negative_count": 4,
+    "minimum_category_count": 6,
+    "minimum_timing_count": 6
+  },
+  "summary": {
+    "sample_count": 8,
+    "positive_count": 4,
+    "negative_count": 4,
+    "category_count": 8,
+    "true_positive_pixels": 1531,
+    "false_positive_pixels": 5100,
+    "false_negative_pixels": 29,
+    "candidate_correction_pixels": 14818,
+    "refined_correction_pixels": 5129,
+    "outside_candidate_pixels": 0,
+    "precision": 0.230885,
+    "recall": 0.98141,
+    "iou": 0.22988,
+    "correction_reduction": 0.653867,
+    "timing_evidence_count": 0,
+    "metric_gate": "fail",
+    "evidence_gate": "pass",
+    "timing_gate": "fail",
+    "release_claim_allowed": false
+  },
+  "workflow_timing": {
+    "count": 0,
+    "manual_mean": null,
+    "box_mean": null,
+    "refined_mean": null
+  },
+  "samples": [
+    {
+      "sample_id": "positive-translucent-text",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 560,
+      "candidate_pixels": 2432,
+      "predicted_pixels": 1603,
+      "true_positive_pixels": 531,
+      "false_positive_pixels": 1072,
+      "false_negative_pixels": 29,
+      "outside_candidate_pixels": 0,
+      "iou": 0.325368,
+      "candidate_correction_pixels": 1872,
+      "refined_correction_pixels": 1101,
+      "correction_reduction": 0.411859,
+      "runtime": {
+        "duration_ms": 1224.503,
+        "peak_memory_mb": 1170.281
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "positive-timestamp",
+      "kind": "positive",
+      "category": "timestamp",
+      "expected_pixels": 384,
+      "candidate_pixels": 1320,
+      "predicted_pixels": 538,
+      "true_positive_pixels": 384,
+      "false_positive_pixels": 154,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 0.713755,
+      "candidate_correction_pixels": 936,
+      "refined_correction_pixels": 154,
+      "correction_reduction": 0.83547,
+      "runtime": {
+        "duration_ms": 2060.201,
+        "peak_memory_mb": 1398.594
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "positive-stamp",
+      "kind": "positive",
+      "category": "stamp",
+      "expected_pixels": 366,
+      "candidate_pixels": 1444,
+      "predicted_pixels": 371,
+      "true_positive_pixels": 366,
+      "false_positive_pixels": 5,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 0.986523,
+      "candidate_correction_pixels": 1078,
+      "refined_correction_pixels": 5,
+      "correction_reduction": 0.995362,
+      "runtime": {
+        "duration_ms": 1536.278,
+        "peak_memory_mb": 1429.391
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "positive-signature",
+      "kind": "positive",
+      "category": "signature",
+      "expected_pixels": 250,
+      "candidate_pixels": 1836,
+      "predicted_pixels": 318,
+      "true_positive_pixels": 250,
+      "false_positive_pixels": 68,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 0.786164,
+      "candidate_correction_pixels": 1586,
+      "refined_correction_pixels": 68,
+      "correction_reduction": 0.957125,
+      "runtime": {
+        "duration_ms": 1355.499,
+        "peak_memory_mb": 1439.891
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "negative-face",
+      "kind": "negative",
+      "category": "face",
+      "expected_pixels": 0,
+      "candidate_pixels": 2162,
+      "predicted_pixels": 1125,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 1125,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 0.0,
+      "candidate_correction_pixels": 2162,
+      "refined_correction_pixels": 1125,
+      "correction_reduction": 0.479648,
+      "runtime": {
+        "duration_ms": 1295.526,
+        "peak_memory_mb": 1448.234
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "negative-content-signature",
+      "kind": "negative",
+      "category": "normal_signature",
+      "expected_pixels": 0,
+      "candidate_pixels": 2128,
+      "predicted_pixels": 309,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 309,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 0.0,
+      "candidate_correction_pixels": 2128,
+      "refined_correction_pixels": 309,
+      "correction_reduction": 0.854793,
+      "runtime": {
+        "duration_ms": 1850.601,
+        "peak_memory_mb": 1465.078
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "negative-brand",
+      "kind": "negative",
+      "category": "brand",
+      "expected_pixels": 0,
+      "candidate_pixels": 1296,
+      "predicted_pixels": 637,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 637,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 0.0,
+      "candidate_correction_pixels": 1296,
+      "refined_correction_pixels": 637,
+      "correction_reduction": 0.508488,
+      "runtime": {
+        "duration_ms": 1662.789,
+        "peak_memory_mb": 1481.484
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "negative-body-text",
+      "kind": "negative",
+      "category": "body_text",
+      "expected_pixels": 0,
+      "candidate_pixels": 3760,
+      "predicted_pixels": 1730,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 1730,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 0.0,
+      "candidate_correction_pixels": 3760,
+      "refined_correction_pixels": 1730,
+      "correction_reduction": 0.539894,
+      "runtime": {
+        "duration_ms": 1637.376,
+        "peak_memory_mb": 1492.156
+      },
+      "workflow_seconds": null
+    }
+  ]
+}

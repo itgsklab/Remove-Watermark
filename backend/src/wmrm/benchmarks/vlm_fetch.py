@@ -10,6 +10,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from wmrm.adapters.images.florence2 import verify_model_directory
+from wmrm.benchmarks.model_supply_chain import audit_model_manifest
 
 
 def fetch_pinned_model(manifest_path: Path, destination: Path) -> Path:
@@ -71,7 +72,11 @@ def fetch_pinned_model(manifest_path: Path, destination: Path) -> Path:
             temporary.replace(target)
         finally:
             temporary.unlink(missing_ok=True)
-    verify_model_directory(destination, manifest_path)
+    policy = manifest.get("runtime_policy")
+    if isinstance(policy, dict) and policy.get("approved_use") == "offline_evaluation_only":
+        audit_model_manifest(manifest_path, model_dir=destination)
+    else:
+        verify_model_directory(destination, manifest_path)
     return destination
 
 
@@ -91,7 +96,7 @@ def _required_text(payload: dict[str, Any], field: str) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Fetch the reviewed Florence-2 model files.")
+    parser = argparse.ArgumentParser(description="Fetch explicitly reviewed model files.")
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--destination", type=Path, required=True)
     args = parser.parse_args()

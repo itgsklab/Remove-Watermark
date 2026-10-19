@@ -197,6 +197,17 @@ make model-supply-chain-review
 该门禁只批准离线评测，不下载模型、不加入默认依赖，也不开放 Web 产品入口。详情见
 [docs/MASK_REFINEMENT_EVALUATION.md](docs/MASK_REFINEMENT_EVALUATION.md)。
 
+显式建立隔离环境、下载固定 SAM2 文件并运行 CPU/MPS 本地评测：
+
+```bash
+make mask-refinement-model-env
+make mask-refinement-model-fetch
+make mask-refinement-model
+```
+
+上述命令将约 156 MB 权重、隔离依赖、预测蒙版和完整运行报告保留在 Git 忽略的 `work/`
+目录。公开仓库只保存脱敏汇总，当前指标门禁与人工计时门禁均未通过。
+
 复核带来源记录的真实照片和项目截图复杂度阈值：
 
 ```bash

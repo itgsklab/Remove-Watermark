@@ -54,6 +54,7 @@ wmrm-pdf-redaction-corpus = "wmrm.benchmarks.pdf_redaction_corpus:main"
 wmrm-vlm-predict = "wmrm.benchmarks.vlm_predict:main"
 wmrm-vlm-fetch = "wmrm.benchmarks.vlm_fetch:main"
 wmrm-model-supply-chain = "wmrm.benchmarks.model_supply_chain:main"
+wmrm-mask-refinement-predict = "wmrm.benchmarks.mask_refinement_predict:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/wmrm"]
