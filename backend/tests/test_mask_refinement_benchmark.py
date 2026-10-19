@@ -9,10 +9,12 @@ from PIL import Image
 from wmrm.adapters.images.segmentation import SegmentationMask
 from wmrm.benchmarks.mask_refinement import (
     MaskRefinementBenchmarkError,
+    _audit_corpus_metadata,
     run_mask_refinement_benchmark,
 )
 
 FIXTURES = Path(__file__).parent / "fixtures" / "mask_refinement"
+PHOTO_FIXTURES = Path(__file__).parent / "fixtures" / "vlm_localization"
 
 
 def _copied_predictions(tmp_path: Path) -> tuple[dict, Path]:
@@ -112,6 +114,19 @@ def test_prediction_mask_digest_is_verified(tmp_path: Path) -> None:
         _run(tmp_path, predictions_path)
 
 
+def test_correction_reduction_is_clamped_when_prediction_is_worse(tmp_path: Path) -> None:
+    predictions, predictions_path = _copied_predictions(tmp_path)
+    row = predictions["predictions"][0]
+    mask_path = tmp_path / row["mask_file"]
+    Image.new("L", (128, 96), 255).save(mask_path, format="PNG", optimize=False)
+    row["mask_sha256"] = hashlib.sha256(mask_path.read_bytes()).hexdigest()
+    predictions_path.write_text(json.dumps(predictions))
+
+    report = _run(tmp_path, predictions_path)
+
+    assert report["samples"][0]["correction_reduction"] == 0.0
+
+
 def test_release_claim_requires_model_runtime_and_human_timing(tmp_path: Path) -> None:
     predictions, predictions_path = _copied_predictions(tmp_path)
     predictions["refiner"].update(
@@ -139,3 +154,49 @@ def test_release_claim_requires_model_runtime_and_human_timing(tmp_path: Path) -
         "box_mean": 40.0,
         "refined_mean": 20.0,
     }
+
+
+def test_photo_pair_corpus_passes_provenance_and_evidence_gates(tmp_path: Path) -> None:
+    report = run_mask_refinement_benchmark(
+        PHOTO_FIXTURES / "mask-refinement-photo-manifest.json",
+        PHOTO_FIXTURES / "mask-refinement-photo-contract-predictions.json",
+        report_json=tmp_path / "report.json",
+        report_markdown=tmp_path / "report.md",
+        min_sample_count=32,
+        min_negative_count=16,
+        min_category_count=4,
+    )
+
+    assert report["corpus"] == {
+        "kind": "provenance_photo_pairs",
+        "provenance_gate": "pass",
+        "pair_count": 16,
+        "source_count": 16,
+        "contains_user_data": False,
+    }
+    assert report["summary"]["sample_count"] == 32
+    assert report["summary"]["negative_count"] == 16
+    assert report["summary"]["category_count"] == 4
+    assert report["summary"]["metric_gate"] == "pass"
+    assert report["summary"]["evidence_gate"] == "pass"
+    assert report["summary"]["timing_gate"] == "fail"
+    assert report["summary"]["release_claim_allowed"] is False
+    assert "Independent sources: 16" in (tmp_path / "report.md").read_text()
+
+
+def test_photo_pair_corpus_rejects_missing_provenance() -> None:
+    manifest = json.loads((PHOTO_FIXTURES / "mask-refinement-photo-manifest.json").read_text())
+    del manifest["samples"][0]["usage_terms_url"]
+
+    with pytest.raises(MaskRefinementBenchmarkError, match="usage_terms_url"):
+        _audit_corpus_metadata(manifest, manifest["samples"])
+
+
+def test_photo_pair_corpus_rejects_pair_metadata_mismatch() -> None:
+    manifest = json.loads((PHOTO_FIXTURES / "mask-refinement-photo-manifest.json").read_text())
+    pair_id = manifest["samples"][0]["pair_id"]
+    pair = [sample for sample in manifest["samples"] if sample["pair_id"] == pair_id]
+    pair[0]["candidate_box"] = {"x0": 0, "y0": 0, "x1": 1, "y1": 1}
+
+    with pytest.raises(MaskRefinementBenchmarkError, match="candidate_box"):
+        _audit_corpus_metadata(manifest, manifest["samples"])

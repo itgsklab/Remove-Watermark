@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "refiner": {
+    "id": "photo-corpus-scoring-contract",
+    "model_id": null,
+    "model_revision": null,
+    "prompt_version": "paired-photo-truth-v1",
+    "device": "fixture",
+    "is_model_output": false,
+    "automatic_download": false,
+    "note": "Ground-truth masks for contract verification; not model output."
+  },
+  "predictions": [
+    {
+      "sample_id": "paired-as11-40-5878-negative",
+      "mask_file": "mask_refinement_expected/paired-as11-40-5878-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-as11-40-5878-positive",
+      "mask_file": "mask_refinement_expected/paired-as11-40-5878-positive.png",
+      "mask_sha256": "0c2d76c33361f82f5191a428b291f83a234ee48e4f4572b6dac8c08ba79da5f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-144326190-negative",
+      "mask_file": "mask_refinement_expected/paired-commons-144326190-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-144326190-positive",
+      "mask_file": "mask_refinement_expected/paired-commons-144326190-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-14666867-negative",
+      "mask_file": "mask_refinement_expected/paired-commons-14666867-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-14666867-positive",
+      "mask_file": "mask_refinement_expected/paired-commons-14666867-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-201054816-negative",
+      "mask_file": "mask_refinement_expected/paired-commons-201054816-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-201054816-positive",
+      "mask_file": "mask_refinement_expected/paired-commons-201054816-positive.png",
+      "mask_sha256": "8158095155fe5cb9136926577a98a81d0de37d2f0d2b4078784d6dd57f5fd0b8",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-38778875-negative",
+      "mask_file": "mask_refinement_expected/paired-commons-38778875-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-38778875-positive",
+      "mask_file": "mask_refinement_expected/paired-commons-38778875-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-59873545-negative",
+      "mask_file": "mask_refinement_expected/paired-commons-59873545-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-59873545-positive",
+      "mask_file": "mask_refinement_expected/paired-commons-59873545-positive.png",
+      "mask_sha256": "57bb27131e094e1cb3a763d124c0acc830db939c3ab0f3e256b117c45b6b107b",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-74184357-negative",
+      "mask_file": "mask_refinement_expected/paired-commons-74184357-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-74184357-positive",
+      "mask_file": "mask_refinement_expected/paired-commons-74184357-positive.png",
+      "mask_sha256": "e03b5886d8e2f5c4c28809720a1303910b406e276f1bcde8aae765c94856222e",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-iss042e097549-negative",
+      "mask_file": "mask_refinement_expected/paired-iss042e097549-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-iss042e097549-positive",
+      "mask_file": "mask_refinement_expected/paired-iss042e097549-positive.png",
+      "mask_sha256": "bb05e5db1af41bb59d20350dd8262b03169454721422df596ef305b46c80aaab",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-photo-horizon-negative",
+      "mask_file": "mask_refinement_expected/paired-photo-horizon-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-photo-horizon-positive",
+      "mask_file": "mask_refinement_expected/paired-photo-horizon-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-photo-night-negative",
+      "mask_file": "mask_refinement_expected/paired-photo-night-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-photo-night-positive",
+      "mask_file": "mask_refinement_expected/paired-photo-night-positive.png",
+      "mask_sha256": "5dd78a8f34223c773102b10c0eff1a28ecd7c6db62e3c5541313019893b7460f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia00254-negative",
+      "mask_file": "mask_refinement_expected/paired-pia00254-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia00254-positive",
+      "mask_file": "mask_refinement_expected/paired-pia00254-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia11141-negative",
+      "mask_file": "mask_refinement_expected/paired-pia11141-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia11141-positive",
+      "mask_file": "mask_refinement_expected/paired-pia11141-positive.png",
+      "mask_sha256": "911bba19718ff7ff37a96b4eb057fa775df627d52200ca2b58742cdeecd62dc4",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia11727-negative",
+      "mask_file": "mask_refinement_expected/paired-pia11727-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia11727-positive",
+      "mask_file": "mask_refinement_expected/paired-pia11727-positive.png",
+      "mask_sha256": "ee332f1a843bb378f32ea072060692244f6194f80ece7ef163a8d0fafcb12ccf",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia17792-negative",
+      "mask_file": "mask_refinement_expected/paired-pia17792-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia17792-positive",
+      "mask_file": "mask_refinement_expected/paired-pia17792-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia20284-negative",
+      "mask_file": "mask_refinement_expected/paired-pia20284-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia20284-positive",
+      "mask_file": "mask_refinement_expected/paired-pia20284-positive.png",
+      "mask_sha256": "0c2d76c33361f82f5191a428b291f83a234ee48e4f4572b6dac8c08ba79da5f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia24642-negative",
+      "mask_file": "mask_refinement_expected/paired-pia24642-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia24642-positive",
+      "mask_file": "mask_refinement_expected/paired-pia24642-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    }
+  ]
+}
