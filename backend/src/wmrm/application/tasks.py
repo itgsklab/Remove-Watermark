@@ -185,6 +185,7 @@ class TaskService:
                     "preview_path": str(self.artifact_root / task_id / "preview"),
                     "candidates": payload.get("candidates", []),
                     "regions": payload.get("regions", []),
+                    "protected_regions": payload.get("protected_regions", []),
                     "radius": payload.get("radius", 3),
                     "dpi": payload.get("dpi", 144),
                     "ocr_languages": payload.get("ocr_languages", "eng"),
@@ -330,7 +331,15 @@ class TaskService:
                     )
                     record.status = "succeeded"
                     record.stage = (
-                        f"已修复 {result['removed_count']} 个蒙版区域并完成像素校验"
+                        (
+                            f"已修复 {result['removed_count']} 个蒙版区域"
+                            + (
+                                f"，并保护 {result['protected_count']} 个区域"
+                                if result.get("protected_count")
+                                else ""
+                            )
+                            + "；已完成像素校验"
+                        )
                         if is_image
                         else (
                             f"已栅格修复 {result['removed_count']} 个 PDF 区域并回灌文字层"
@@ -521,6 +530,7 @@ class TaskService:
                 kind=str(payload.get("kind", "object_removal")),
                 output_kind=str(plan_response.get("output_kind", asset.kind)),
                 selected_target_count=selected_target_count,
+                protected_target_count=len(payload.get("protected_regions", [])),
                 warning_codes=warning_codes,
                 radius=_optional_int(payload.get("radius")),
                 dpi=_optional_int(payload.get("dpi")),

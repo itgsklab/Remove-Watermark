@@ -46,7 +46,7 @@ class ImageMaskService:
         if analysis.asset_id != asset.id or analysis.asset_sha256 != asset.sha256:
             raise AssetError("PLAN_STALE", "图片检查结果已经失效，请重新检查。", 409)
 
-        for region in request.regions:
+        for region in [*request.regions, *request.protected_regions]:
             values = (region.x0, region.y0, region.x1, region.y1)
             if not all(math.isfinite(value) for value in values):
                 raise AssetError("INVALID_MASK", "蒙版坐标必须是有限数字。", 422)
@@ -65,7 +65,15 @@ class ImageMaskService:
                     409,
                 )
 
-        covered_pixels = rectangle_union_area(request.regions)
+        covered_pixels = rectangle_difference_area(
+            request.regions, request.protected_regions
+        )
+        if covered_pixels <= 0:
+            raise AssetError(
+                "EMPTY_EFFECTIVE_MASK",
+                "保护区不能覆盖全部蒙版，请保留至少一个需要修复的像素区域。",
+                422,
+            )
         coverage_ratio = covered_pixels / (
             metadata.display_width * metadata.display_height
         )
@@ -100,6 +108,10 @@ class ImageMaskService:
         warnings = [
             "蒙版预览只验证计划修复的像素区域；创建处理任务后才会生成新图片。"
         ]
+        if request.protected_regions:
+            warnings.append(
+                f"已从最终修复蒙版中排除 {len(request.protected_regions)} 个保护区域。"
+            )
         if coverage_ratio > 0.25:
             warnings.append("蒙版覆盖超过图片面积的 25%，后续修复可能明显改变主体内容。")
         elif large_selection:
@@ -123,6 +135,7 @@ class ImageMaskService:
             valid=True,
             executable=not metadata.animated,
             regions=request.regions,
+            protected_regions=request.protected_regions,
             covered_pixels=covered_pixels,
             coverage_ratio=coverage_ratio,
             complexity=complexity,
@@ -133,6 +146,10 @@ class ImageMaskService:
 
 
 def rectangle_union_area(regions) -> float:
+    return rectangle_difference_area(regions, [])
+
+
+def rectangle_difference_area(regions, protected_regions) -> float:
     rectangles = [
         (
             math.floor(item.x0),
@@ -142,7 +159,22 @@ def rectangle_union_area(regions) -> float:
         )
         for item in regions
     ]
-    xs = sorted({coordinate for x0, _, x1, _ in rectangles for coordinate in (x0, x1)})
+    protected = [
+        (
+            math.floor(item.x0),
+            math.floor(item.y0),
+            math.ceil(item.x1),
+            math.ceil(item.y1),
+        )
+        for item in protected_regions
+    ]
+    xs = sorted(
+        {
+            coordinate
+            for x0, _, x1, _ in [*rectangles, *protected]
+            for coordinate in (x0, x1)
+        }
+    )
     area = 0.0
     for left, right in zip(xs, xs[1:], strict=False):
         if right <= left:
@@ -152,16 +184,48 @@ def rectangle_union_area(regions) -> float:
             for x0, y0, x1, y1 in rectangles
             if x0 < right and x1 > left
         )
-        if not intervals:
+        mask_intervals = _merge_intervals(intervals)
+        if not mask_intervals:
             continue
-        covered_y = 0.0
-        start, end = intervals[0]
-        for next_start, next_end in intervals[1:]:
-            if next_start > end:
-                covered_y += end - start
-                start, end = next_start, next_end
-            else:
-                end = max(end, next_end)
-        covered_y += end - start
+        protected_intervals = _merge_intervals(
+            sorted(
+                (y0, y1)
+                for x0, y0, x1, y1 in protected
+                if x0 < right and x1 > left
+            )
+        )
+        covered_y = sum(end - start for start, end in mask_intervals)
+        covered_y -= _interval_intersection_length(mask_intervals, protected_intervals)
         area += (right - left) * covered_y
     return area
+
+
+def _merge_intervals(intervals) -> list[tuple[int, int]]:
+    if not intervals:
+        return []
+    merged: list[tuple[int, int]] = []
+    start, end = intervals[0]
+    for next_start, next_end in intervals[1:]:
+        if next_start > end:
+            merged.append((start, end))
+            start, end = next_start, next_end
+        else:
+            end = max(end, next_end)
+    merged.append((start, end))
+    return merged
+
+
+def _interval_intersection_length(
+    first: list[tuple[int, int]], second: list[tuple[int, int]]
+) -> float:
+    total = 0.0
+    left_index = right_index = 0
+    while left_index < len(first) and right_index < len(second):
+        left = max(first[left_index][0], second[right_index][0])
+        right = min(first[left_index][1], second[right_index][1])
+        total += max(0, right - left)
+        if first[left_index][1] <= second[right_index][1]:
+            left_index += 1
+        else:
+            right_index += 1
+    return total

@@ -56,9 +56,14 @@ const pdfOcrEnabled = ref(false)
 const pdfOcrLanguages = ref<string[]>([])
 const ocrDiagnosticsError = ref('')
 const confirmedRasterization = ref(false)
+interface ImageMaskDraft {
+  regions: ImageMaskRegion[]
+  protectedRegions: ImageMaskRegion[]
+}
 const imageMasks = ref<ImageMaskRegion[]>([])
-const imageMaskPast = ref<ImageMaskRegion[][]>([])
-const imageMaskFuture = ref<ImageMaskRegion[][]>([])
+const imageProtectedRegions = ref<ImageMaskRegion[]>([])
+const imageMaskPast = ref<ImageMaskDraft[]>([])
+const imageMaskFuture = ref<ImageMaskDraft[]>([])
 const imageMaskPreview = ref<ImageMaskPreview | null>(null)
 const imageRadius = ref(3)
 const imagePlanWarnings = ref<PlanWarning[]>([])
@@ -266,40 +271,41 @@ function clearAnalysis() {
   resetImageMasks()
 }
 
-function updateImageMasks(regions: ImageMaskRegion[]) {
-  if (regions.length > 100) {
+function updateImageDraft(regions: ImageMaskRegion[], protectedRegions: ImageMaskRegion[]) {
+  if (regions.length > 100 || protectedRegions.length > 100) {
     reportImageMaskLimit()
     return
   }
-  const next = cloneImageMasks(regions)
-  if (sameImageMasks(imageMasks.value, next)) return
-  imageMaskPast.value.push(cloneImageMasks(imageMasks.value))
+  const next = cloneImageDraft({ regions, protectedRegions })
+  if (sameImageDraft(currentImageDraft(), next)) return
+  imageMaskPast.value.push(cloneImageDraft(currentImageDraft()))
   if (imageMaskPast.value.length > imageMaskHistoryLimit) imageMaskPast.value.shift()
   imageMaskFuture.value = []
-  imageMasks.value = next
+  applyImageDraft(next)
   clearImageMaskPreview()
 }
 
 function undoImageMasks() {
   const previous = imageMaskPast.value.pop()
   if (!previous) return
-  imageMaskFuture.value.push(cloneImageMasks(imageMasks.value))
-  imageMasks.value = cloneImageMasks(previous)
+  imageMaskFuture.value.push(cloneImageDraft(currentImageDraft()))
+  applyImageDraft(previous)
   clearImageMaskPreview()
-  message.value = `已撤销蒙版编辑，当前有 ${imageMasks.value.length} 个区域。`
+  message.value = `已撤销编辑，当前有 ${imageMasks.value.length} 个蒙版、${imageProtectedRegions.value.length} 个保护区。`
 }
 
 function redoImageMasks() {
   const next = imageMaskFuture.value.pop()
   if (!next) return
-  imageMaskPast.value.push(cloneImageMasks(imageMasks.value))
-  imageMasks.value = cloneImageMasks(next)
+  imageMaskPast.value.push(cloneImageDraft(currentImageDraft()))
+  applyImageDraft(next)
   clearImageMaskPreview()
-  message.value = `已重做蒙版编辑，当前有 ${imageMasks.value.length} 个区域。`
+  message.value = `已重做编辑，当前有 ${imageMasks.value.length} 个蒙版、${imageProtectedRegions.value.length} 个保护区。`
 }
 
 function resetImageMasks() {
   imageMasks.value = []
+  imageProtectedRegions.value = []
   imageMaskPast.value = []
   imageMaskFuture.value = []
   clearImageMaskPreview()
@@ -311,11 +317,24 @@ function clearImageMaskPreview() {
   confirmedImageWarnings.value = []
 }
 
-function cloneImageMasks(regions: ImageMaskRegion[]) {
-  return regions.map(region => ({ ...region }))
+function currentImageDraft(): ImageMaskDraft {
+  return { regions: imageMasks.value, protectedRegions: imageProtectedRegions.value }
 }
 
-function sameImageMasks(left: ImageMaskRegion[], right: ImageMaskRegion[]) {
+function cloneImageDraft(draft: ImageMaskDraft): ImageMaskDraft {
+  return {
+    regions: draft.regions.map(region => ({ ...region })),
+    protectedRegions: draft.protectedRegions.map(region => ({ ...region })),
+  }
+}
+
+function applyImageDraft(draft: ImageMaskDraft) {
+  const copy = cloneImageDraft(draft)
+  imageMasks.value = copy.regions
+  imageProtectedRegions.value = copy.protectedRegions
+}
+
+function sameImageRegions(left: ImageMaskRegion[], right: ImageMaskRegion[]) {
   return left.length === right.length && left.every((region, index) => {
     const other = right[index]
     return other !== undefined
@@ -327,8 +346,13 @@ function sameImageMasks(left: ImageMaskRegion[], right: ImageMaskRegion[]) {
   })
 }
 
+function sameImageDraft(left: ImageMaskDraft, right: ImageMaskDraft) {
+  return sameImageRegions(left.regions, right.regions)
+    && sameImageRegions(left.protectedRegions, right.protectedRegions)
+}
+
 function reportImageMaskLimit() {
-  message.value = '一个图片蒙版草稿最多包含 100 个区域。'
+  message.value = '一个图片草稿最多包含 100 个蒙版片段和 100 个保护区片段。'
 }
 
 async function requestVlmSuggestions() {
@@ -340,7 +364,7 @@ async function requestVlmSuggestions() {
     const result = await suggestImageMasks(analysis.value)
     vlmWarnings.value = result.warnings
     if (result.status === 'suggested') {
-      updateImageMasks(result.regions)
+      updateImageDraft(result.regions, [])
       message.value = `本地模型提出 ${result.regions.length} 个候选区域。请逐个检查、调整并验证蒙版。`
     } else if (result.status === 'photo_gate_rejected') {
       message.value = '图片未通过照片场景门禁，模型没有运行；请继续手工框选。'
@@ -359,7 +383,11 @@ async function previewImageMaskRisk() {
   busy.value = true
   message.value = ''
   try {
-    imageMaskPreview.value = await previewImageMasks(analysis.value, imageMasks.value)
+    imageMaskPreview.value = await previewImageMasks(
+      analysis.value,
+      imageMasks.value,
+      imageProtectedRegions.value,
+    )
     const risk = complexityLabels[imageMaskPreview.value.complexity.level]
     const selection = imageMaskPreview.value.selection_risk.level === 'review'
       ? '，选区需要确认'
@@ -380,6 +408,7 @@ async function processImage() {
     const plan = await validateImagePlan(
       analysis.value,
       imageMasks.value,
+      imageProtectedRegions.value,
       imageRadius.value,
       confirmedImageWarnings.value,
     )
@@ -695,8 +724,8 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
     <section v-if="analysis.preset === 'image' && analysis.image_metadata" class="panel image-mask-panel">
       <div class="image-metadata-heading">
         <div>
-          <p class="eyebrow">矩形蒙版草稿</p>
-          <h2>框选水印所在区域</h2>
+          <p class="eyebrow">图片蒙版草稿</p>
+          <h2>标记水印并保护正文</h2>
         </div>
         <dl class="image-metadata-grid">
           <div><dt>显示尺寸</dt><dd>{{ analysis.image_metadata.display_width }} × {{ analysis.image_metadata.display_height }}</dd></div>
@@ -727,16 +756,17 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         :asset-id="assetId"
         :metadata="analysis.image_metadata"
         :regions="imageMasks"
+        :protected-regions="imageProtectedRegions"
         :can-undo="canUndoImageMasks"
         :can-redo="canRedoImageMasks"
-        @update:regions="updateImageMasks"
+        @update:draft="updateImageDraft"
         @undo="undoImageMasks"
         @redo="redoImageMasks"
         @limit-reached="reportImageMaskLimit"
       />
       <div class="process-actions">
         <button :disabled="busy || imageMasks.length === 0" @click="previewImageMaskRisk">
-          {{ busy ? '正在验证…' : `验证蒙版草稿（${imageMasks.length} 个区域）` }}
+          {{ busy ? '正在验证…' : `验证蒙版草稿（${imageMasks.length} 个蒙版，${imageProtectedRegions.length} 个保护区）` }}
         </button>
         <p>先验证坐标和覆盖面积，再生成新的 PNG 副本。</p>
       </div>
