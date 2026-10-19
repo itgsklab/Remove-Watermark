@@ -20,14 +20,26 @@ URL_PATTERN = re.compile(r"https?://[^\s<>\"'，。；：！？、）》】}\)\]
 NOTE_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 SHORT_PATH_PATTERN = re.compile(r"^/[A-Za-z0-9_./~-]{1,240}$")
 TRAILING_PUNCTUATION = ".,;:!?，。；：！？、）》】})]"
+PARSER_RULE_VERSION = "xhs-html-meta-v2"
+MEDIA_URL_KEYS = frozenset({"og:image", "og:image:url", "og:image:secure_url", "twitter:image"})
+MEDIA_WIDTH_KEYS = frozenset({"og:image:width", "twitter:image:width"})
+MEDIA_HEIGHT_KEYS = frozenset({"og:image:height", "twitter:image:height"})
+MAX_DECLARED_MEDIA_DIMENSION = 100_000
 
 
 class XiaohongshuLinkError(Exception):
-    def __init__(self, code: str, message: str, status_code: int = 422):
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        status_code: int = 422,
+        details: dict[str, object] | None = None,
+    ):
         super().__init__(message)
         self.code = code
         self.message = message
         self.status_code = status_code
+        self.details = details or {}
 
 
 @dataclass(frozen=True)
@@ -53,6 +65,9 @@ class LinkMetadata:
     description: str | None
     author: str | None
     thumbnail_present: bool
+    parser_version: str
+    page_structure_status: str
+    diagnostic_codes: tuple[str, ...] = ()
     media_candidates: tuple[MediaCandidate, ...] = ()
     warnings: tuple[str, ...] = ()
 
@@ -63,6 +78,8 @@ class MediaCandidate:
     position: int
     role: str
     source_url: str = field(repr=False)
+    width: int | None = None
+    height: int | None = None
 
 
 @dataclass(frozen=True)
@@ -135,11 +152,19 @@ def _note_id_from_path(path: str) -> str | None:
     return None
 
 
+@dataclass
+class _MediaDeclaration:
+    url: str
+    width: int | None = None
+    height: int | None = None
+
+
 class _MetadataParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.meta: dict[str, str] = {}
-        self.media_urls: list[tuple[str, str]] = []
+        self.media: list[_MediaDeclaration] = []
+        self.invalid_dimension_count = 0
         self.canonical: str | None = None
         self.title_parts: list[str] = []
         self._in_title = False
@@ -149,8 +174,20 @@ class _MetadataParser(HTMLParser):
         if tag.lower() == "meta":
             key = (values.get("property") or values.get("name") or "").lower()
             content = values.get("content", "").strip()
-            if key in {"og:image", "og:image:url", "twitter:image"} and content:
-                self.media_urls.append((key, content))
+            if key in MEDIA_URL_KEYS and content:
+                self.media.append(_MediaDeclaration(content))
+            elif key in MEDIA_WIDTH_KEYS and content and self.media:
+                dimension = _parse_declared_dimension(content)
+                if dimension is None:
+                    self.invalid_dimension_count += 1
+                elif self.media[-1].width is None:
+                    self.media[-1].width = dimension
+            elif key in MEDIA_HEIGHT_KEYS and content and self.media:
+                dimension = _parse_declared_dimension(content)
+                if dimension is None:
+                    self.invalid_dimension_count += 1
+                elif self.media[-1].height is None:
+                    self.media[-1].height = dimension
             if key and content and key not in self.meta:
                 self.meta[key] = content
         elif tag.lower() == "link" and "canonical" in values.get("rel", "").lower().split():
@@ -186,29 +223,61 @@ def extract_metadata(body: bytes, page_url: str) -> LinkMetadata:
     title = parser.meta.get("og:title") or "".join(parser.title_parts).strip() or None
     description = parser.meta.get("og:description") or parser.meta.get("description") or None
     author = parser.meta.get("author") or parser.meta.get("article:author") or None
-    candidates: list[MediaCandidate] = []
-    seen_urls: set[str] = set()
-    for _, media_url in parser.media_urls:
+    candidate_values: dict[str, dict[str, int | None]] = {}
+    for declaration in parser.media:
         try:
-            normalized_media = parse_page_media_url(urljoin(page_url, media_url))
+            normalized_media = parse_page_media_url(urljoin(page_url, declaration.url))
         except XiaohongshuLinkError:
             warnings.append("页面提供了不受支持的图片地址，已忽略。")
             continue
-        if normalized_media in seen_urls:
+        existing = candidate_values.get(normalized_media)
+        if existing is not None:
+            existing["width"] = existing["width"] or declaration.width
+            existing["height"] = existing["height"] or declaration.height
             continue
-        seen_urls.add(normalized_media)
-        position = len(candidates) + 1
-        candidates.append(
-            MediaCandidate(
-                candidate_id=_media_candidate_id(normalized_media),
-                position=position,
-                role="cover" if position == 1 else "gallery",
-                source_url=normalized_media,
-            )
-        )
-        if len(candidates) == 20:
+        candidate_values[normalized_media] = {
+            "width": declaration.width,
+            "height": declaration.height,
+        }
+        if len(candidate_values) == 20:
             warnings.append("页面图片候选超过 20 个，仅保留前 20 个。")
             break
+    candidates = [
+        MediaCandidate(
+            candidate_id=_media_candidate_id(media_url),
+            position=position,
+            role="cover" if position == 1 else "gallery",
+            width=values["width"],
+            height=values["height"],
+            source_url=media_url,
+        )
+        for position, (media_url, values) in enumerate(candidate_values.items(), start=1)
+    ]
+    diagnostic_codes: list[str] = []
+    known_structure = bool(canonical_link or title or description or author or parser.media)
+    if not known_structure:
+        page_structure_status = "changed"
+        diagnostic_codes.append("XHS_PAGE_STRUCTURE_UNRECOGNIZED")
+        warnings.append("页面未包含当前规则可识别的元数据，页面结构可能已经变化。")
+    elif parser.media and not candidates:
+        page_structure_status = "changed"
+        diagnostic_codes.append("XHS_PAGE_MEDIA_UNUSABLE")
+        warnings.append("页面声明了图片，但没有候选通过当前安全规则。")
+    elif not candidates:
+        page_structure_status = "partial"
+        diagnostic_codes.append("XHS_PAGE_MEDIA_MISSING")
+        warnings.append("页面没有声明可导入的公开图片候选。")
+    elif any(candidate.width is None or candidate.height is None for candidate in candidates):
+        page_structure_status = "partial"
+        diagnostic_codes.append("XHS_MEDIA_DIMENSIONS_MISSING")
+        warnings.append("部分图片候选没有声明完整尺寸。")
+    else:
+        page_structure_status = "matched"
+    if parser.invalid_dimension_count:
+        if page_structure_status == "matched":
+            page_structure_status = "partial"
+        diagnostic_codes.append("XHS_MEDIA_DIMENSIONS_INVALID")
+        warnings.append("页面包含无效的图片尺寸声明，已忽略。")
     return LinkMetadata(
         canonical_url=canonical_url,
         note_id=note_id,
@@ -216,9 +285,21 @@ def extract_metadata(body: bytes, page_url: str) -> LinkMetadata:
         description=_clean_text(description, 500),
         author=_clean_text(author, 100),
         thumbnail_present=bool(candidates),
+        parser_version=PARSER_RULE_VERSION,
+        page_structure_status=page_structure_status,
+        diagnostic_codes=tuple(diagnostic_codes),
         media_candidates=tuple(candidates),
         warnings=tuple(warnings),
     )
+
+
+def _parse_declared_dimension(value: str) -> int | None:
+    if not value.isascii() or not value.isdecimal():
+        return None
+    dimension = int(value)
+    if dimension <= 0 or dimension > MAX_DECLARED_MEDIA_DIMENSION:
+        return None
+    return dimension
 
 
 def parse_media_url(url: str) -> str:

@@ -5,7 +5,7 @@
 `POST /api/v1/xiaohongshu/preview` 接受一段分享文案或一个 HTTPS 链接，完成两层处理：
 
 1. **本地解析**：提取唯一链接、校验精确域名和笔记路径、去掉输出地址中的查询参数，并返回笔记 ID。
-2. **可选元数据预览**：显式启用后，跟随有限次受控跳转，读取 HTML 中的标题、描述、作者、canonical 地址以及公开图片元数据。
+2. **可选元数据预览**：显式启用后，跟随有限次受控跳转，读取 HTML 中的标题、描述、作者、canonical 地址以及公开图片元数据，并返回固定解析规则版本、页面结构状态、稳定诊断码和页面声明的候选尺寸。
 3. **可选图片导入**：只向前端返回不可逆候选编号；用户选择后，后端重新读取页面、确认候选仍存在，再从受限的小红书 CDN 下载图片并保存到本地资产库。第一张有效图片标记为封面，其余重复 `og:image` 条目标记为图集图片。
 
 接口不会把 `og:image`、查询令牌或 CDN 地址返回浏览器或写入数据库。它只读取公开 HTML 元数据，不执行页面 JavaScript，不使用登录 Cookie，不绕过访问控制，不调用非公开下载接口，也不处理视频。当前导入的是页面公开声明的图片候选，不保证是原始全尺寸图片，也不保证页面始终提供完整图集。
@@ -76,4 +76,6 @@ wmrm-api
 - `resolved`：完成页面读取；字段仍可能为空。
 - `unavailable`：远端状态、内容类型、跳转或网络条件不满足。
 
-`media_download_supported` 只有在页面读取和图片导入同时启用时才为 `true`。`media_candidates` 只包含候选编号、顺序和 `cover`/`gallery` 角色，不包含远端 URL。`POST /api/v1/xiaohongshu/import` 会重新解析同一分享内容并拒绝已消失或变化的候选；成功后返回普通 `AssetResponse`，可直接进入图片检查、风险预检和 OpenCV 处理闭环。
+`parser_version` 标识本次结果采用的固定 HTML 元数据规则。`page_structure_status` 可能为 `not_checked`、`matched`、`partial`、`changed` 或 `unavailable`；`diagnostic_codes` 提供稳定、可测试且不含页面正文的原因码。当前规则识别 Open Graph 和 Twitter 图片条目，并把紧随图片条目的宽高声明关联到候选；缺失或无效尺寸不会通过猜测补齐。
+
+`media_download_supported` 只有在页面读取和图片导入同时启用时才为 `true`。`media_candidates` 只包含候选编号、顺序、`cover`/`gallery` 角色及页面声明的可选宽高，不包含远端 URL。前端导入时一并提交预览规则版本；`POST /api/v1/xiaohongshu/import` 会重新解析同一分享内容，并拒绝旧规则结果以及已消失或变化的候选。失败响应只返回当前规则版本、结构状态和诊断码，不返回 CDN 地址、查询令牌或页面正文。成功后返回普通 `AssetResponse`，可直接进入图片检查、风险预检和 OpenCV 处理闭环。

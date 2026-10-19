@@ -51,6 +51,58 @@ test('settings show privacy-safe local runtime diagnostics', async ({ page }) =>
   expect(browserErrors).toEqual([])
 })
 
+test('Xiaohongshu preview shows parser diagnostics and candidate dimensions', async ({ page }) => {
+  const browserErrors = watchBrowserErrors(page)
+  await page.route('**/api/v1/xiaohongshu/preview', async route => {
+    const request = route.request()
+    expect(request.postDataJSON()).toEqual({
+      share_text: 'https://www.xiaohongshu.com/explore/66aabbccddeeff0011223344',
+      resolve_metadata: true,
+    })
+    await route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        kind: 'direct',
+        normalized_url: 'https://www.xiaohongshu.com/explore/66aabbccddeeff0011223344',
+        canonical_url: 'https://www.xiaohongshu.com/explore/66aabbccddeeff0011223344',
+        note_id: '66aabbccddeeff0011223344',
+        metadata_status: 'resolved',
+        title: '公开页面候选',
+        description: null,
+        author: null,
+        thumbnail_present: true,
+        media_download_supported: false,
+        parser_version: 'xhs-html-meta-v2',
+        page_structure_status: 'partial',
+        diagnostic_codes: ['XHS_MEDIA_DIMENSIONS_MISSING'],
+        media_candidates: [{
+          candidate_id: 'xhs-image-0123456789abcdef0123',
+          position: 1,
+          role: 'cover',
+          width: 1080,
+          height: null,
+        }],
+        warnings: ['部分图片候选没有声明完整尺寸。'],
+      }),
+    })
+  })
+
+  await page.goto('/')
+  await page.getByLabel('分享内容').fill(
+    'https://www.xiaohongshu.com/explore/66aabbccddeeff0011223344',
+  )
+  await page.getByLabel(/尝试读取页面标题/).check()
+  await page.getByRole('button', { name: '解析分享链接' }).click()
+
+  await expect(page.getByRole('heading', { name: '公开页面候选' })).toBeVisible()
+  await expect(page.getByText('xhs-html-meta-v2')).toBeVisible()
+  await expect(page.getByText('部分匹配')).toBeVisible()
+  await expect(page.getByText(/宽 1080 px · 高度未声明/)).toBeVisible()
+  await expect(page.getByText('XHS_MEDIA_DIMENSIONS_MISSING')).toBeVisible()
+  await expect(page.getByText(/xhscdn|token=/)).toHaveCount(0)
+  expect(browserErrors).toEqual([])
+})
+
 test('DOCX watermark workflow reaches verified result and report', async ({ page }) => {
   const browserErrors = watchBrowserErrors(page)
   await upload(page, 'browser-watermark.docx')

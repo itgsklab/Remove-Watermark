@@ -64,10 +64,15 @@ export interface XiaohongshuPreview {
   author: string | null
   thumbnail_present: boolean
   media_download_supported: boolean
+  parser_version: string
+  page_structure_status: 'not_checked' | 'matched' | 'partial' | 'changed' | 'unavailable'
+  diagnostic_codes: string[]
   media_candidates: Array<{
     candidate_id: string
     position: number
     role: 'cover' | 'gallery'
+    width: number | null
+    height: number | null
   }>
   warnings: string[]
 }
@@ -375,11 +380,16 @@ export async function previewXiaohongshuLink(
 export async function importXiaohongshuImage(
   shareText: string,
   candidateId: string,
+  parserVersion: string,
 ): Promise<Asset> {
   return parse<Asset>(await fetch('/api/v1/xiaohongshu/import', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ share_text: shareText, candidate_id: candidateId }),
+    body: JSON.stringify({
+      share_text: shareText,
+      candidate_id: candidateId,
+      parser_version: parserVersion,
+    }),
   }))
 }
 

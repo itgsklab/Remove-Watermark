@@ -1,4 +1,5 @@
 from wmrm.adapters.xiaohongshu.links import (
+    PARSER_RULE_VERSION,
     DownloadedImage,
     MediaTransport,
     MetadataTransport,
@@ -47,6 +48,9 @@ class XiaohongshuLinkService:
             "author": None,
             "thumbnail_present": False,
             "media_download_supported": self.metadata_enabled and self.media_import_enabled,
+            "parser_version": PARSER_RULE_VERSION,
+            "page_structure_status": "not_checked",
+            "diagnostic_codes": [],
             "media_candidates": [],
             "warnings": [],
         }
@@ -68,6 +72,8 @@ class XiaohongshuLinkService:
             if exc.code in {"XHS_HOST_NOT_ALLOWED", "XHS_HTTPS_REQUIRED", "XHS_UNSAFE_ADDRESS"}:
                 raise
             result["metadata_status"] = "unavailable"
+            result["page_structure_status"] = "unavailable"
+            result["diagnostic_codes"] = [exc.code]
             result["warnings"] = [exc.message]
             return result
         result.update(
@@ -79,11 +85,16 @@ class XiaohongshuLinkService:
                 "description": metadata.description,
                 "author": metadata.author,
                 "thumbnail_present": metadata.thumbnail_present,
+                "parser_version": metadata.parser_version,
+                "page_structure_status": metadata.page_structure_status,
+                "diagnostic_codes": list(metadata.diagnostic_codes),
                 "media_candidates": [
                     {
                         "candidate_id": candidate.candidate_id,
                         "position": candidate.position,
                         "role": candidate.role,
+                        "width": candidate.width,
+                        "height": candidate.height,
                     }
                     for candidate in metadata.media_candidates
                 ],
@@ -92,12 +103,27 @@ class XiaohongshuLinkService:
         )
         return result
 
-    def import_image(self, share_text: str, candidate_id: str) -> DownloadedImage:
+    def import_image(
+        self,
+        share_text: str,
+        candidate_id: str,
+        parser_version: str | None = None,
+    ) -> DownloadedImage:
         if not self.metadata_enabled or not self.media_import_enabled:
             raise XiaohongshuLinkError(
                 "XHS_MEDIA_IMPORT_DISABLED",
                 "小红书图片导入未由本机管理员启用。",
                 409,
+            )
+        if parser_version is not None and parser_version != PARSER_RULE_VERSION:
+            raise XiaohongshuLinkError(
+                "XHS_PARSER_VERSION_MISMATCH",
+                "解析规则已经更新，请重新预览页面后再导入。",
+                409,
+                {
+                    "current_parser_version": PARSER_RULE_VERSION,
+                    "preview_parser_version": parser_version,
+                },
             )
         parsed = parse_share_text(share_text)
         metadata = resolve_metadata(
@@ -116,6 +142,11 @@ class XiaohongshuLinkService:
                 "XHS_MEDIA_CANDIDATE_NOT_FOUND",
                 "页面已变化或图片候选不存在，请重新预览。",
                 409,
+                {
+                    "parser_version": metadata.parser_version,
+                    "page_structure_status": metadata.page_structure_status,
+                    "diagnostic_codes": list(metadata.diagnostic_codes),
+                },
             )
         return download_image(
             candidate,
