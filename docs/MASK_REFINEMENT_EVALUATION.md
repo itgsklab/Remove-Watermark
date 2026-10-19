@@ -61,7 +61,7 @@ make mask-refinement-contract
 | [MobileSAM](https://github.com/ChaoningZhang/MobileSAM/tree/f706ad9c4eb7f219c00d9050e46328518ffb65d2) | `f706ad9c4eb7f219c00d9050e46328518ffb65d2` | 暂缓；官方使用说明以 `.pt` checkpoint 为主，本轮未找到同等来源的固定 Safetensors 运行清单。 |
 | [HQ-SAM](https://github.com/SysCV/sam-hq/tree/e696978d60352dc9a26b12631cd91781502c6546) | `e696978d60352dc9a26b12631cd91781502c6546` | 暂缓；需要额外 checkpoint 组合，当前分发面和依赖面大于首轮评测需要。 |
 
-清单固定模型 revision、上游代码 revision、Apache-2.0 许可来源、五个允许文件的大小与 SHA-256，以及独立评测环境的精确依赖版本。同仓库的 Pickle `.pt` 权重被明确排除；只允许一个 `model.safetensors`，禁止远程代码、自动下载、随发行包分发和产品接入。由于 SAM2 需要 Transformers 4.57.3，而现有 Florence-2 运行时固定在 4.49 系列，真实评测必须使用隔离虚拟环境，不能修改默认 Web 环境。
+清单固定模型 revision、上游代码 revision、Apache-2.0 许可来源、五个允许文件的大小与 SHA-256，以及独立评测环境的精确依赖版本。同仓库的 Pickle `.pt` 权重被明确排除；只允许一个 `model.safetensors`，禁止远程代码、自动下载、随发行包分发和产品接入。SAM2 评测使用已经修复已知高危公告的 Transformers 5.10.4，而现有 Florence-2 运行时固定在 4.49 系列，因此真实评测必须使用隔离虚拟环境，不能修改默认 Web 环境。
 
 可重复检查清单：
 
@@ -69,14 +69,29 @@ make mask-refinement-contract
 make model-supply-chain-review
 ```
 
-报告中的 `local_files_verified=false` 表示本阶段没有下载 156 MB 权重。只有用户显式准备本地文件并通过完整允许列表、文件大小和 SHA-256 检查后，才能开始真实模型运行。
+供应链阶段报告中的 `local_files_verified=false` 记录当时尚未下载 156 MB 权重。后续首轮真实评测已经通过显式命令下载并验证五个允许文件；模型和隔离运行环境仍只存在于被 Git 忽略的 `work/` 目录。
+
+## 首轮真实模型结果
+
+固定的 8 样本合同语料已经在 Apple Silicon 的 CPU 与 MPS 路径各运行一次。公开报告只保留脱敏的模型、运行时、指标、耗时和进程峰值常驻内存，不包含本地路径、权重或预测蒙版：
+
+- [`mask-refinement-sam2-mps.json`](benchmarks/mask-refinement-sam2-mps.json) 与 [`mask-refinement-sam2-mps.md`](benchmarks/mask-refinement-sam2-mps.md)
+- [`mask-refinement-sam2-cpu.json`](benchmarks/mask-refinement-sam2-cpu.json) 与 [`mask-refinement-sam2-cpu.md`](benchmarks/mask-refinement-sam2-cpu.md)
+
+两条路径均通过 8 样本/4 负例/8 类别证据门禁，但都没有通过指标门禁：MPS 的 Precision/Recall/IoU 为 0.228/0.917/0.223，CPU 为 0.231/0.981/0.230。四个正例中时间戳、印章和签名细化明显优于直接使用候选框；半透明文字仍不稳定。四个负例都会因为候选框提示产生对象蒙版，说明 SAM2 只能细化边界，不能判断候选本身是否应删除。
+
+固定仓库的源配置类型是 `sam2_video`，图像评测按 Transformers 官方图像 API 加载为 `Sam2Model`。运行时会要求 checkpoint 的 missing、unexpected、mismatched keys 和加载错误全部为 0，并把结果写入报告；上游类型提示不能被静默忽略。
+
+预测在适配器边界被裁剪到已验证候选框，因此框外像素保持为 0。CPU 与 MPS 的像素结果略有差异，必须继续按设备分别报告。首样本包含模型暖机成本；`peak_memory_mb` 是进程截至该样本的峰值常驻内存，而不是单次增量。
+
+当前结论保持 `release_claim_allowed=false`：指标门禁失败，且尚无三条人工工作流计时。真实模型结果不会进入 Web，也不会改变手工流程。
 
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 在隔离环境中显式下载并校验允许文件，生成真实模型预测，禁止把真实蒙版作为输入；
-2. 使用独立真实照片和负例补充当前合同语料；
-3. 在 CPU、Apple Silicon 和至少一种 CUDA 环境记录耗时与峰值内存；
-4. 由人工完成三条路径的盲测计时，并记录每个样本的修正量；
+1. 使用独立真实照片和负例扩充当前仓库生成语料，并保持来源、摘要和人工标签可审计；
+2. 在至少一种 CUDA 环境复跑相同固定 revision，记录耗时、峰值内存和像素差异；
+3. 由人工完成“纯手工”“VLM 框”“VLM + 分割”三条路径的盲测计时，并记录每个样本的修正量；
+4. 根据负例结果研究是否需要候选拒绝门禁；SAM2 本身不得承担“是否为水印”的判断；
 5. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。
