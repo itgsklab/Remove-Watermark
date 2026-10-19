@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "refiner": {
+    "id": "mask-refinement-contract-fixture",
+    "model_id": null,
+    "model_revision": null,
+    "prompt_version": "mask-refinement-contract-v1",
+    "device": "fixture",
+    "is_model_output": false,
+    "automatic_download": false,
+    "note": "Geometry fixture for the scoring contract; not a model result."
+  },
+  "predictions": [
+    {
+      "sample_id": "positive-translucent-text",
+      "mask_file": "predicted/positive-translucent-text.png",
+      "mask_sha256": "0b3ffd71aef6903d9784768bcf0fa2c183c18fc64110f9477d08ad13a12ca497",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "positive-timestamp",
+      "mask_file": "predicted/positive-timestamp.png",
+      "mask_sha256": "ae552b62b894c75a3a83facf67248499ea3fc625feae6bb23f2e8e7749bdc889",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "positive-stamp",
+      "mask_file": "predicted/positive-stamp.png",
+      "mask_sha256": "1a04172cd3df6bb8bfaa46c10f45886f3d053024f0ea192cafb7a10c02f070ca",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "positive-signature",
+      "mask_file": "predicted/positive-signature.png",
+      "mask_sha256": "d24851664a78a844493b552fe8689f99304800ad092cd91fe0f2e4ed01ba7a3b",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "negative-face",
+      "mask_file": "predicted/negative-face.png",
+      "mask_sha256": "ebde2fc6a9cbe2cd2384f0578d91e984e454935e0f38d1c342209e6fffaaf3b3",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "negative-content-signature",
+      "mask_file": "predicted/negative-content-signature.png",
+      "mask_sha256": "ebde2fc6a9cbe2cd2384f0578d91e984e454935e0f38d1c342209e6fffaaf3b3",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "negative-brand",
+      "mask_file": "predicted/negative-brand.png",
+      "mask_sha256": "ebde2fc6a9cbe2cd2384f0578d91e984e454935e0f38d1c342209e6fffaaf3b3",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "negative-body-text",
+      "mask_file": "predicted/negative-body-text.png",
+      "mask_sha256": "ebde2fc6a9cbe2cd2384f0578d91e984e454935e0f38d1c342209e6fffaaf3b3",
+      "runtime": null,
+      "workflow_seconds": null
+    }
+  ]
+}
