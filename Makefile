@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
+.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -89,6 +89,16 @@ vlm-localization-model-photo-gated:
 		--model-manifest ../docs/models/florence-2-base.json \
 		--output ../work/vlm-photo-gated-predictions.json \
 		--photo-scene-gate
+
+mask-refinement-corpus:
+	cd backend && .venv/bin/python tests/fixtures/mask_refinement/build_corpus.py
+
+mask-refinement-contract:
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement \
+		--manifest tests/fixtures/mask_refinement/manifest.json \
+		--predictions tests/fixtures/mask_refinement/contract-predictions.json \
+		--report-json ../docs/benchmarks/mask-refinement-contract.json \
+		--report-md ../docs/benchmarks/mask-refinement-contract.md
 
 complexity-calibration:
 	cd backend && .venv/bin/python -m wmrm.benchmarks.complexity_calibration \

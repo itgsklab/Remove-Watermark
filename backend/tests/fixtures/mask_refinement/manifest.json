@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "description": "Model-independent box-guided mask-refinement scoring fixtures.",
+  "samples": [
+    {
+      "id": "positive-translucent-text",
+      "file": "images/positive-translucent-text.png",
+      "sha256": "ae4c8bea9ab382e11fa9a2696c244b7c74e28f8af0395c39dcd482b62a1218f7",
+      "expected_mask": "expected/positive-translucent-text.png",
+      "expected_mask_sha256": "0b3ffd71aef6903d9784768bcf0fa2c183c18fc64110f9477d08ad13a12ca497",
+      "width": 128,
+      "height": 96,
+      "category": "translucent_text",
+      "candidate_box": {
+        "x0": 26,
+        "y0": 27,
+        "x1": 102,
+        "y1": 59
+      },
+      "review_required": false,
+      "provenance": "Deterministic repository-generated scoring-contract fixture."
+    },
+    {
+      "id": "positive-timestamp",
+      "file": "images/positive-timestamp.png",
+      "sha256": "530e3510b3bac5e000b83540d1746af9b48758f42a3a07639ff058cf19be6db2",
+      "expected_mask": "expected/positive-timestamp.png",
+      "expected_mask_sha256": "ae552b62b894c75a3a83facf67248499ea3fc625feae6bb23f2e8e7749bdc889",
+      "width": 128,
+      "height": 96,
+      "category": "timestamp",
+      "candidate_box": {
+        "x0": 40,
+        "y0": 69,
+        "x1": 100,
+        "y1": 91
+      },
+      "review_required": false,
+      "provenance": "Deterministic repository-generated scoring-contract fixture."
+    },
+    {
+      "id": "positive-stamp",
+      "file": "images/positive-stamp.png",
+      "sha256": "da6e9364350277810b9bc89f82f250ac69cd320c4ae645da71cd850a439431c0",
+      "expected_mask": "expected/positive-stamp.png",
+      "expected_mask_sha256": "1a04172cd3df6bb8bfaa46c10f45886f3d053024f0ea192cafb7a10c02f070ca",
+      "width": 128,
+      "height": 96,
+      "category": "stamp",
+      "candidate_box": {
+        "x0": 83,
+        "y0": 6,
+        "x1": 121,
+        "y1": 44
+      },
+      "review_required": false,
+      "provenance": "Deterministic repository-generated scoring-contract fixture."
+    },
+    {
+      "id": "positive-signature",
+      "file": "images/positive-signature.png",
+      "sha256": "b0c2018b4676bc19e02660c57ed41149267f9208d137d804dfdc03da70015e84",
+      "expected_mask": "expected/positive-signature.png",
+      "expected_mask_sha256": "d24851664a78a844493b552fe8689f99304800ad092cd91fe0f2e4ed01ba7a3b",
+      "width": 128,
+      "height": 96,
+      "category": "signature",
+      "candidate_box": {
+        "x0": 10,
+        "y0": 36,
+        "x1": 78,
+        "y1": 63
+      },
+      "review_required": false,
+      "provenance": "Deterministic repository-generated scoring-contract fixture."
+    },
+    {
+      "id": "negative-face",
+      "file": "images/negative-face.png",
+      "sha256": "b6c50da60224563fc08da41a69e75eefd2762d592c840d76e838a5e2e0dc552f",
+      "expected_mask": "expected/negative-face.png",
+      "expected_mask_sha256": "ebde2fc6a9cbe2cd2384f0578d91e984e454935e0f38d1c342209e6fffaaf3b3",
+      "width": 128,
+      "height": 96,
+      "category": "face",
+      "candidate_box": {
+        "x0": 40,
+        "y0": 8,
+        "x1": 87,
+        "y1": 54
+      },
+      "review_required": false,
+      "provenance": "Deterministic repository-generated scoring-contract fixture."
+    },
+    {
+      "id": "negative-content-signature",
+      "file": "images/negative-content-signature.png",
+      "sha256": "2eee911e0371854e9846581fa4794569c47eda79703cec474c8c035560f11f0d",
+      "expected_mask": "expected/negative-content-signature.png",
+      "expected_mask_sha256": "ebde2fc6a9cbe2cd2384f0578d91e984e454935e0f38d1c342209e6fffaaf3b3",
+      "width": 128,
+      "height": 96,
+      "category": "normal_signature",
+      "candidate_box": {
+        "x0": 14,
+        "y0": 30,
+        "x1": 90,
+        "y1": 58
+      },
+      "review_required": false,
+      "provenance": "Deterministic repository-generated scoring-contract fixture."
+    },
+    {
+      "id": "negative-brand",
+      "file": "images/negative-brand.png",
+      "sha256": "b0224fa620308c4a31bc39618ff74b00986389615643cf60c5bdaea865f96cff",
+      "expected_mask": "expected/negative-brand.png",
+      "expected_mask_sha256": "ebde2fc6a9cbe2cd2384f0578d91e984e454935e0f38d1c342209e6fffaaf3b3",
+      "width": 128,
+      "height": 96,
+      "category": "brand",
+      "candidate_box": {
+        "x0": 84,
+        "y0": 8,
+        "x1": 120,
+        "y1": 44
+      },
+      "review_required": false,
+      "provenance": "Deterministic repository-generated scoring-contract fixture."
+    },
+    {
+      "id": "negative-body-text",
+      "file": "images/negative-body-text.png",
+      "sha256": "3734b0c55dbda25e8590c50277400e60d85ebdb81165dd921aaf9f0c206844c8",
+      "expected_mask": "expected/negative-body-text.png",
+      "expected_mask_sha256": "ebde2fc6a9cbe2cd2384f0578d91e984e454935e0f38d1c342209e6fffaaf3b3",
+      "width": 128,
+      "height": 96,
+      "category": "body_text",
+      "candidate_box": {
+        "x0": 8,
+        "y0": 11,
+        "x1": 102,
+        "y1": 51
+      },
+      "review_required": false,
+      "provenance": "Deterministic repository-generated scoring-contract fixture."
+    }
+  ]
+}

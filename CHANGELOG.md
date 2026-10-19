@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A model-independent box-guided mask-refinement Protocol and reproducible pixel benchmark covering
+  IoU, leakage, correction workload, runtime metadata and human workflow timing gates.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
   explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,

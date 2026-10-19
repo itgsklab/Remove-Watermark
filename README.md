@@ -120,7 +120,7 @@ PNG、JPEG 和 WebP 可以进行元数据检查，并使用矩形、画笔、橡
 
 小红书入口可以从分享文案中提取 HTTPS 笔记直链或短链。纯链接解析不访问网络；页面读取和图片导入分别通过 `WMRM_XHS_METADATA_ENABLED=true`、`WMRM_XHS_MEDIA_IMPORT_ENABLED=true` 显式启用。预览只返回不含 CDN URL 的候选编号、页面声明的候选尺寸、解析规则版本和结构诊断；导入时后端重新读取页面并校验规则版本与候选，再将公开页面声明的 JPEG、PNG 或 WebP 封面/图集图片保存到本地资产库，随后复用现有图片检查和蒙版修复流程。页面中由受限 CDN 以 HTTP 形式声明的图片会先升级为 HTTPS，实际请求不会使用明文 HTTP。使用 fake-IP DNS 的本机可通过 `WMRM_XHS_HTTPS_PROXY=http://127.0.0.1:<port>` 显式启用受限回环代理；项目不会自动继承系统代理。它不执行页面 JavaScript、不使用登录 Cookie、不处理视频，也不承诺图片候选是原始全尺寸图片或完整图集。安全模型和配置见 [docs/XIAOHONGSHU_LINKS.md](docs/XIAOHONGSHU_LINKS.md)。
 
-可选 VLM 水印定位可以由本机管理员显式接入 Web 图片流程，只在像素通过照片场景门禁后提出矩形蒙版草稿。默认安装和默认配置均关闭此能力，不会下载或分发权重；模型建议不会直接处理图片，也不会绕过蒙版预览、风险提示和人工确认。模型不可用、推理失败或门禁拒绝时，界面继续保留手工框选流程。启用步骤、固定 Safetensors 摘要、禁止远程代码策略和真实模型门禁见 [docs/VLM_LOCALIZATION.md](docs/VLM_LOCALIZATION.md)。
+可选 VLM 水印定位可以由本机管理员显式接入 Web 图片流程，只在像素通过照片场景门禁后提出矩形蒙版草稿。默认安装和默认配置均关闭此能力，不会下载或分发权重；模型建议不会直接处理图片，也不会绕过蒙版预览、风险提示和人工确认。模型不可用、推理失败或门禁拒绝时，界面继续保留手工框选流程。候选框细化为像素蒙版目前只有模型无关合同和评测门禁，尚未接入真实分割模型或产品流程。启用步骤、固定 Safetensors 摘要、禁止远程代码策略和真实模型门禁见 [docs/VLM_LOCALIZATION.md](docs/VLM_LOCALIZATION.md)，蒙版细化的评测边界见 [docs/MASK_REFINEMENT_EVALUATION.md](docs/MASK_REFINEMENT_EVALUATION.md)。
 
 任务元数据保存在 SQLite 中。单个任务在独立的 `spawn` 子进程中处理，由常驻监督线程串行调度；子进程崩溃会转为明确的失败状态，取消超时会强制终止子进程。服务重启后，排队或意外中断的任务会重新校验并执行，正在取消的任务会完成取消。取消宽限期默认 2 秒，可通过 `WMRM_WORKER_CANCEL_GRACE_SECONDS` 调整。
 
