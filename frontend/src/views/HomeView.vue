@@ -90,11 +90,41 @@ function metadataStatusLabel(status: XiaohongshuPreview['metadata_status']) {
   }[status]
 }
 
+function pageStructureStatusLabel(status: XiaohongshuPreview['page_structure_status']) {
+  return {
+    not_checked: '未读取页面',
+    matched: '结构匹配',
+    partial: '部分匹配',
+    changed: '可能已变化',
+    unavailable: '页面不可用',
+  }[status]
+}
+
+const diagnosticLabels: Record<string, string> = {
+  XHS_PAGE_STRUCTURE_UNRECOGNIZED: '未识别到当前规则支持的页面元数据。',
+  XHS_PAGE_MEDIA_UNUSABLE: '页面图片声明均未通过安全规则。',
+  XHS_PAGE_MEDIA_MISSING: '页面没有声明公开图片候选。',
+  XHS_MEDIA_DIMENSIONS_MISSING: '部分图片没有声明完整尺寸。',
+  XHS_MEDIA_DIMENSIONS_INVALID: '页面包含无效的图片尺寸声明。',
+}
+
+function candidateDimensions(candidate: XiaohongshuPreview['media_candidates'][number]) {
+  if (candidate.width && candidate.height) return `${candidate.width} × ${candidate.height} px`
+  if (candidate.width) return `宽 ${candidate.width} px · 高度未声明`
+  if (candidate.height) return `宽度未声明 · 高 ${candidate.height} px`
+  return '页面未声明尺寸'
+}
+
 async function importCandidate(candidateId: string) {
   importingCandidate.value = candidateId
   linkMessage.value = ''
   try {
-    store.currentAsset = await importXiaohongshuImage(shareText.value, candidateId)
+    if (!linkPreview.value) return
+    store.currentAsset = await importXiaohongshuImage(
+      shareText.value,
+      candidateId,
+      linkPreview.value.parser_version,
+    )
     await router.push(`/workspace/${store.currentAsset.id}`)
   } catch (error) {
     linkMessage.value = error instanceof ApiError ? error.message : '图片导入失败。'
@@ -180,12 +210,25 @@ async function importCandidate(candidateId: string) {
           <dt>媒体边界</dt>
           <dd>{{ linkPreview.media_candidates.length ? `发现 ${linkPreview.media_candidates.length} 个公开图片候选` : '未发现可导入图片' }}</dd>
         </div>
+        <div>
+          <dt>解析规则</dt>
+          <dd><code>{{ linkPreview.parser_version }}</code></dd>
+        </div>
+        <div>
+          <dt>页面结构</dt>
+          <dd>{{ pageStructureStatusLabel(linkPreview.page_structure_status) }}</dd>
+        </div>
       </dl>
+      <ul v-if="linkPreview.diagnostic_codes.length" class="xhs-diagnostics" aria-label="页面诊断">
+        <li v-for="code in linkPreview.diagnostic_codes" :key="code">
+          {{ diagnosticLabels[code] || '页面读取未通过当前规则。' }} <code>{{ code }}</code>
+        </li>
+      </ul>
       <div v-if="linkPreview.media_candidates.length" class="xhs-media-candidates">
         <div v-for="candidate in linkPreview.media_candidates" :key="candidate.candidate_id" class="xhs-media-candidate">
           <div>
             <strong>{{ candidate.role === 'cover' ? '封面候选' : '图集图片' }} {{ candidate.position }}</strong>
-            <p>图片地址保留在本地后端，仅导入后进入现有图片检查流程。</p>
+            <p>{{ candidateDimensions(candidate) }}。图片地址保留在本地后端，仅导入后进入现有图片检查流程。</p>
           </div>
           <button
             :disabled="!linkPreview.media_download_supported || importingCandidate !== null"

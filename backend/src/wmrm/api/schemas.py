@@ -77,6 +77,8 @@ class XiaohongshuMediaCandidateResponse(BaseModel):
     candidate_id: str
     position: int = Field(ge=1)
     role: Literal["cover", "gallery"]
+    width: int | None = Field(default=None, ge=1, le=100_000)
+    height: int | None = Field(default=None, ge=1, le=100_000)
 
 
 class XiaohongshuPreviewResponse(BaseModel):
@@ -90,6 +92,9 @@ class XiaohongshuPreviewResponse(BaseModel):
     author: str | None
     thumbnail_present: bool
     media_download_supported: bool
+    parser_version: str
+    page_structure_status: Literal["not_checked", "matched", "partial", "changed", "unavailable"]
+    diagnostic_codes: list[str] = Field(default_factory=list)
     media_candidates: list[XiaohongshuMediaCandidateResponse] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
 
@@ -97,6 +102,7 @@ class XiaohongshuPreviewResponse(BaseModel):
 class XiaohongshuImportRequest(BaseModel):
     share_text: str = Field(min_length=1, max_length=4096)
     candidate_id: str = Field(pattern=r"^xhs-image-[a-f0-9]{20}$")
+    parser_version: str | None = Field(default=None, min_length=1, max_length=64)
 
 
 class AssetResponse(BaseModel):

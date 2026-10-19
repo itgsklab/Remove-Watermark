@@ -295,6 +295,9 @@ def test_preview_api_parses_without_network(client: TestClient) -> None:
         "author": None,
         "thumbnail_present": False,
         "media_download_supported": False,
+        "parser_version": "xhs-html-meta-v2",
+        "page_structure_status": "not_checked",
+        "diagnostic_codes": [],
         "media_candidates": [],
         "warnings": [],
     }
@@ -369,7 +372,12 @@ def test_preview_ignores_media_url_outside_xiaohongshu_cdn() -> None:
 
     assert metadata.media_candidates == ()
     assert metadata.thumbnail_present is False
-    assert metadata.warnings == ("页面提供了不受支持的图片地址，已忽略。",)
+    assert metadata.page_structure_status == "changed"
+    assert metadata.diagnostic_codes == ("XHS_PAGE_MEDIA_UNUSABLE",)
+    assert metadata.warnings == (
+        "页面提供了不受支持的图片地址，已忽略。",
+        "页面声明了图片，但没有候选通过当前安全规则。",
+    )
 
 
 def test_extracts_page_declared_gallery_and_upgrades_cdn_urls_to_https() -> None:
@@ -381,9 +389,14 @@ def test_extracts_page_declared_gallery_and_upgrades_cdn_urls_to_https() -> None
                 200,
                 {"content-type": "text/html"},
                 (
-                    '<meta property="og:image" content="//picasso-static.xiaohongshu.com/logo.png">'
+                    '<meta property="og:image" '
+                    'content="//picasso-static.xiaohongshu.com/logo.png">'
                     f'<meta property="og:image" content="{first}">'
+                    '<meta property="og:image:width" content="1080">'
+                    '<meta property="og:image:height" content="1440">'
                     f'<meta property="og:image" content="{second}">'
+                    '<meta property="og:image:width" content="720">'
+                    '<meta property="og:image:height" content="960">'
                     f'<meta property="og:image" content="{second}">'
                 ).encode(),
             )
@@ -404,7 +417,64 @@ def test_extracts_page_declared_gallery_and_upgrades_cdn_urls_to_https() -> None
     ]
     assert metadata.media_candidates[0].source_url == first.replace("http://", "https://")
     assert metadata.media_candidates[1].source_url == second.replace("http://", "https://")
+    assert [
+        (item.width, item.height) for item in metadata.media_candidates
+    ] == [(1080, 1440), (720, 960)]
+    assert metadata.parser_version == "xhs-html-meta-v2"
+    assert metadata.page_structure_status == "matched"
+    assert metadata.diagnostic_codes == ()
     assert metadata.warnings == ("页面提供了不受支持的图片地址，已忽略。",)
+
+
+def test_reports_unrecognized_page_structure_without_exposing_page_content() -> None:
+    transport = FakeTransport(
+        [MetadataResponse(200, {"content-type": "text/html"}, b"<main>changed layout</main>")]
+    )
+
+    metadata = resolve_metadata(
+        parse_share_text(f"https://www.xiaohongshu.com/explore/{NOTE_ID}"),
+        transport,
+        timeout=2,
+        max_bytes=100_000,
+        max_redirects=3,
+    )
+
+    assert metadata.page_structure_status == "changed"
+    assert metadata.diagnostic_codes == ("XHS_PAGE_STRUCTURE_UNRECOGNIZED",)
+    assert "changed layout" not in repr(metadata)
+
+
+def test_reports_partial_candidate_dimensions() -> None:
+    image_url = "https://sns-webpic-qc.xhscdn.com/partial.jpg"
+    transport = FakeTransport(
+        [
+            MetadataResponse(
+                200,
+                {"content-type": "text/html"},
+                (
+                    f'<meta property="og:image" content="{image_url}">'
+                    '<meta property="og:image:width" content="1080">'
+                    '<meta property="og:image:height" content="not-a-number">'
+                ).encode(),
+            )
+        ]
+    )
+
+    metadata = resolve_metadata(
+        parse_share_text(f"https://www.xiaohongshu.com/explore/{NOTE_ID}"),
+        transport,
+        timeout=2,
+        max_bytes=100_000,
+        max_redirects=3,
+    )
+
+    assert metadata.media_candidates[0].width == 1080
+    assert metadata.media_candidates[0].height is None
+    assert metadata.page_structure_status == "partial"
+    assert metadata.diagnostic_codes == (
+        "XHS_MEDIA_DIMENSIONS_MISSING",
+        "XHS_MEDIA_DIMENSIONS_INVALID",
+    )
 
 
 def test_imports_previewed_cover_into_local_asset_store(tmp_path: Path) -> None:
@@ -472,3 +542,83 @@ def test_rejects_media_import_when_local_opt_in_is_disabled(client: TestClient) 
 
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "XHS_MEDIA_IMPORT_DISABLED"
+
+
+def test_rejects_import_from_an_outdated_parser_version(tmp_path: Path) -> None:
+    app = create_app(
+        Settings(
+            data_dir=tmp_path / "data",
+            docx_preview_enabled=False,
+            pdf_preview_enabled=False,
+            worker_start_method="forkserver",
+            xhs_metadata_enabled=True,
+            xhs_media_import_enabled=True,
+        ),
+        xiaohongshu_transport=FakeTransport([]),
+        xiaohongshu_media_transport=FakeTransport([]),
+    )
+
+    with TestClient(app) as api:
+        response = api.post(
+            "/api/v1/xiaohongshu/import",
+            json={
+                "share_text": f"https://www.xiaohongshu.com/explore/{NOTE_ID}",
+                "candidate_id": "xhs-image-0123456789abcdef0123",
+                "parser_version": "xhs-html-meta-v1",
+            },
+        )
+
+    assert response.status_code == 409
+    assert response.json()["error"] == {
+        "code": "XHS_PARSER_VERSION_MISMATCH",
+        "message": "解析规则已经更新，请重新预览页面后再导入。",
+        "details": {
+            "current_parser_version": "xhs-html-meta-v2",
+            "preview_parser_version": "xhs-html-meta-v1",
+        },
+        "request_id": response.headers["X-Request-ID"],
+    }
+
+
+def test_candidate_change_error_includes_privacy_safe_page_diagnostics(tmp_path: Path) -> None:
+    metadata_transport = FakeTransport(
+        [
+            MetadataResponse(
+                200,
+                {"content-type": "text/html"},
+                b'<meta property="og:title" content="Page without the old image">',
+            )
+        ]
+    )
+    app = create_app(
+        Settings(
+            data_dir=tmp_path / "data",
+            docx_preview_enabled=False,
+            pdf_preview_enabled=False,
+            worker_start_method="forkserver",
+            xhs_metadata_enabled=True,
+            xhs_media_import_enabled=True,
+        ),
+        xiaohongshu_transport=metadata_transport,
+        xiaohongshu_media_transport=FakeTransport([]),
+    )
+
+    with TestClient(app) as api:
+        response = api.post(
+            "/api/v1/xiaohongshu/import",
+            json={
+                "share_text": f"https://www.xiaohongshu.com/explore/{NOTE_ID}",
+                "candidate_id": "xhs-image-0123456789abcdef0123",
+                "parser_version": "xhs-html-meta-v2",
+            },
+        )
+
+    assert response.status_code == 409
+    error = response.json()["error"]
+    assert error["code"] == "XHS_MEDIA_CANDIDATE_NOT_FOUND"
+    assert error["details"] == {
+        "parser_version": "xhs-html-meta-v2",
+        "page_structure_status": "partial",
+        "diagnostic_codes": ["XHS_PAGE_MEDIA_MISSING"],
+    }
+    assert "Page without the old image" not in response.text

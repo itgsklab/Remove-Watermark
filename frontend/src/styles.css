@@ -60,6 +60,12 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .link-details div { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; }
 .link-details dt { color: #738078; font-size: .78rem; }
 .link-details dd { margin: 0; overflow-wrap: anywhere; font-size: .86rem; }
+.xhs-diagnostics {
+  display: grid; gap: 7px; margin: 14px 0 0; padding: 12px 14px 12px 30px;
+  border: 1px solid #e4c992; border-radius: 10px; background: #fff8e9; color: #765019;
+  font-size: .82rem; line-height: 1.45;
+}
+.xhs-diagnostics code { overflow-wrap: anywhere; color: #765019; }
 .xhs-media-candidates { display: grid; gap: 10px; margin-top: 16px; }
 .xhs-media-candidate {
   display: flex; align-items: center; justify-content: space-between; gap: 18px;

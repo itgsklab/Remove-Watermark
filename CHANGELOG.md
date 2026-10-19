@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
+  explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,
   with shared undo/redo history and backend-enforced subtraction from the effective repair mask.
 - Per-page PDF Deep task-report evidence for OCR execution status, searchable word counts and

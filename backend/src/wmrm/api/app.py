@@ -239,6 +239,7 @@ def create_app(
             error=ErrorBody(
                 code=exc.code,
                 message=exc.message,
+                details=exc.details,
                 request_id=request.state.request_id,
             )
         )
@@ -333,6 +334,7 @@ def create_app(
             xiaohongshu_links.import_image,
             request.share_text,
             request.candidate_id,
+            request.parser_version,
         )
 
         async def chunks() -> AsyncIterator[bytes]:
