@@ -86,12 +86,23 @@ make model-supply-chain-review
 
 当前结论保持 `release_claim_allowed=false`：指标门禁失败，且尚无三条人工工作流计时。真实模型结果不会进入 Web，也不会改变手工流程。
 
+## 独立实景成对语料
+
+第二轮评测复用仓库中已经固定来源与摘要的 NASA、Wikimedia 实景照片，形成 16 个独立来源、32 个样本。每个来源包含一张仓库生成水印的正例和一张同图同候选框的干净负例；正例真值由成对 RGB 像素差异生成，负例真值为空。审计会拒绝缺少公开 HTTPS 来源、使用条款、许可、署名、原图摘要、转换记录、标注方法或成对一致性的样本，也会拒绝包含用户数据的声明。
+
+- [`mask-refinement-photo-contract.json`](benchmarks/mask-refinement-photo-contract.json) 与 [`mask-refinement-photo-contract.md`](benchmarks/mask-refinement-photo-contract.md) 验证语料、指标实现和来源门禁，不代表模型性能。
+- [`mask-refinement-sam2-photo-mps.json`](benchmarks/mask-refinement-sam2-photo-mps.json) 与 [`mask-refinement-sam2-photo-mps.md`](benchmarks/mask-refinement-sam2-photo-mps.md) 记录 MPS 真实输出。
+- [`mask-refinement-sam2-photo-cpu.json`](benchmarks/mask-refinement-sam2-photo-cpu.json) 与 [`mask-refinement-sam2-photo-cpu.md`](benchmarks/mask-refinement-sam2-photo-cpu.md) 记录 CPU 真实输出。
+
+MPS 的 Precision/Recall/IoU 为 0.515/0.911/0.490，CPU 为 0.580/0.978/0.573。两条路径均通过 32 样本、16 负例、4 类别、16 独立来源及成对一致性门禁，但指标门禁失败：16 个干净负例仍会被候选框提示为对象蒙版。该结果在更多真实背景上确认了首轮结论，SAM2 可以细化已经确认的水印边界，却不能判断候选是否应该删除。
+
+由于指标门禁已经失败，本阶段不填造或提前收集人工计时。人工盲测需要实际参与者按统一流程完成；在候选拒绝门禁使精度达到阈值前，计时结果也不能改变发布结论。
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 使用独立真实照片和负例扩充当前仓库生成语料，并保持来源、摘要和人工标签可审计；
-2. 在至少一种 CUDA 环境复跑相同固定 revision，记录耗时、峰值内存和像素差异；
-3. 由人工完成“纯手工”“VLM 框”“VLM + 分割”三条路径的盲测计时，并记录每个样本的修正量；
-4. 根据负例结果研究是否需要候选拒绝门禁；SAM2 本身不得承担“是否为水印”的判断；
-5. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。
+1. 研究独立于 SAM2 的候选拒绝门禁，优先降低干净同框负例误选；SAM2 本身不得承担“是否为水印”的判断；
+2. 候选拒绝后的固定实景语料指标达到阈值后，再由人工完成“纯手工”“VLM 框”“VLM + 分割”三条路径的盲测计时；
+3. 在至少一种 CUDA 环境复跑相同固定 revision，记录耗时、峰值内存和像素差异；
+4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。

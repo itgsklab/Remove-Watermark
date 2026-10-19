@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract mask-refinement-model-env mask-refinement-model-fetch mask-refinement-model model-supply-chain-review complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
+.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract mask-refinement-model-env mask-refinement-model-fetch mask-refinement-model mask-refinement-photo-corpus mask-refinement-photo-model mask-refinement-photo-model-cpu model-supply-chain-review complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -122,6 +122,43 @@ mask-refinement-model:
 		--report-json ../work/mask-refinement-sam2/report.json \
 		--report-md ../work/mask-refinement-sam2/report.md \
 		--require-model-output
+
+mask-refinement-photo-corpus:
+	backend/.venv/bin/python backend/tests/fixtures/vlm_localization/build_mask_refinement_corpus.py
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--predictions tests/fixtures/vlm_localization/mask-refinement-photo-contract-predictions.json \
+		--report-json ../docs/benchmarks/mask-refinement-photo-contract.json \
+		--report-md ../docs/benchmarks/mask-refinement-photo-contract.md \
+		--min-sample-count 32 --min-negative-count 16 --min-category-count 4
+
+mask-refinement-photo-model:
+	cd backend && ../work/segmentation-eval/.venv/bin/python -m wmrm.benchmarks.mask_refinement_predict \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--model-dir ../work/models/sam2-hiera-tiny \
+		--model-manifest ../docs/models/sam2-hiera-tiny.json \
+		--output ../work/mask-refinement-sam2-photo-mps/predictions.json --device mps
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--predictions ../work/mask-refinement-sam2-photo-mps/predictions.json \
+		--report-json ../work/mask-refinement-sam2-photo-mps/report.json \
+		--report-md ../work/mask-refinement-sam2-photo-mps/report.md \
+		--require-model-output \
+		--min-sample-count 32 --min-negative-count 16 --min-category-count 4
+
+mask-refinement-photo-model-cpu:
+	cd backend && ../work/segmentation-eval/.venv/bin/python -m wmrm.benchmarks.mask_refinement_predict \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--model-dir ../work/models/sam2-hiera-tiny \
+		--model-manifest ../docs/models/sam2-hiera-tiny.json \
+		--output ../work/mask-refinement-sam2-photo-cpu/predictions.json --device cpu
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--predictions ../work/mask-refinement-sam2-photo-cpu/predictions.json \
+		--report-json ../work/mask-refinement-sam2-photo-cpu/report.json \
+		--report-md ../work/mask-refinement-sam2-photo-cpu/report.md \
+		--require-model-output \
+		--min-sample-count 32 --min-negative-count 16 --min-category-count 4
 
 model-supply-chain-review:
 	cd backend && .venv/bin/python -m wmrm.benchmarks.model_supply_chain \

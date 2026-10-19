@@ -208,6 +208,17 @@ make mask-refinement-model
 上述命令将约 156 MB 权重、隔离依赖、预测蒙版和完整运行报告保留在 Git 忽略的 `work/`
 目录。公开仓库只保存脱敏汇总，当前指标门禁与人工计时门禁均未通过。
 
+扩充并复核 16 个独立实景来源组成的 32 样本成对语料，再运行 CPU/MPS 对照：
+
+```bash
+make mask-refinement-photo-corpus
+make mask-refinement-photo-model
+make mask-refinement-photo-model-cpu
+```
+
+实景语料要求每个正例都有同图同框的干净负例，并固定公开来源、使用条款、原图摘要、
+转换方式和像素真值生成方法。当前真实模型仍未通过精度门禁，不会进入 Web 产品入口。
+
 复核带来源记录的真实照片和项目截图复杂度阈值：
 
 ```bash

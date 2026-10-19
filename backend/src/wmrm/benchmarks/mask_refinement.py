@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import numpy as np
 from PIL import Image
@@ -73,6 +74,7 @@ def run_mask_refinement_benchmark(
     prediction_rows = predictions.get("predictions")
     if not isinstance(samples, list) or not samples:
         raise MaskRefinementBenchmarkError("Mask-refinement corpus must contain samples.")
+    corpus_audit = _audit_corpus_metadata(manifest, samples)
     if not isinstance(prediction_rows, list):
         raise MaskRefinementBenchmarkError("Predictions must contain sample rows.")
     prediction_map = _prediction_map(prediction_rows)
@@ -123,6 +125,12 @@ def run_mask_refinement_benchmark(
             height,
         )
         is_negative = not bool(expected.any())
+        if corpus_audit is not None:
+            expected_role = "clean_negative" if is_negative else "watermark_positive"
+            if sample.get("pair_role") != expected_role:
+                raise MaskRefinementBenchmarkError(
+                    f"Pair role does not match mask truth for {sample_id}."
+                )
         negative_count += int(is_negative)
         candidate_box = _candidate_box(sample.get("candidate_box"), width, height)
         candidate = _box_mask(candidate_box, width, height)
@@ -244,6 +252,8 @@ def run_mask_refinement_benchmark(
         "workflow_timing": _timing_summary(timing_rows),
         "samples": results,
     }
+    if corpus_audit is not None:
+        report["corpus"] = corpus_audit
     report_json.parent.mkdir(parents=True, exist_ok=True)
     report_markdown.parent.mkdir(parents=True, exist_ok=True)
     report_json.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
@@ -261,6 +271,82 @@ def _prediction_map(rows: list[object]) -> dict[str, dict[str, Any]]:
             raise MaskRefinementBenchmarkError(f"Duplicate prediction row: {sample_id}")
         result[sample_id] = row
     return result
+
+
+def _audit_corpus_metadata(
+    manifest: dict[str, Any], samples: list[object]
+) -> dict[str, Any] | None:
+    kind = manifest.get("corpus_kind")
+    if kind is None:
+        return None
+    if kind != "provenance_photo_pairs":
+        raise MaskRefinementBenchmarkError("Unsupported mask-refinement corpus kind.")
+    pairs: dict[str, dict[str, dict[str, Any]]] = {}
+    sources: set[str] = set()
+    for sample in samples:
+        if not isinstance(sample, dict):
+            raise MaskRefinementBenchmarkError("Corpus samples must be objects.")
+        pair_id = _required_text(sample, "pair_id")
+        role = _required_text(sample, "pair_role")
+        if role not in {"clean_negative", "watermark_positive"}:
+            raise MaskRefinementBenchmarkError("Photo pair role is invalid.")
+        if role in pairs.setdefault(pair_id, {}):
+            raise MaskRefinementBenchmarkError(f"Duplicate {role} row for pair {pair_id}.")
+        pairs[pair_id][role] = sample
+        source_group = _required_text(sample, "source_group")
+        sources.add(source_group)
+        source_sha256 = _required_text(sample, "source_sha256")
+        if len(source_sha256) != 64 or any(
+            character not in "0123456789abcdef" for character in source_sha256
+        ):
+            raise MaskRefinementBenchmarkError("source_sha256 must be a lowercase SHA-256 value.")
+        _required_text(sample, "license")
+        _required_text(sample, "attribution")
+        _required_text(sample, "provenance")
+        _required_text(sample, "transformation")
+        _required_text(sample, "annotation_method")
+        if sample.get("contains_user_data") is not False:
+            raise MaskRefinementBenchmarkError("Photo corpus must exclude user data.")
+        for field in ("source_record", "usage_terms_url"):
+            value = _required_text(sample, field)
+            parsed = urlsplit(value)
+            if parsed.scheme != "https" or not parsed.netloc or parsed.username is not None:
+                raise MaskRefinementBenchmarkError(f"{field} must be a public HTTPS URL.")
+
+    required_roles = {"clean_negative", "watermark_positive"}
+    for pair_id, pair in pairs.items():
+        if set(pair) != required_roles:
+            raise MaskRefinementBenchmarkError(f"Incomplete photo pair: {pair_id}.")
+        negative = pair["clean_negative"]
+        positive = pair["watermark_positive"]
+        for field in (
+            "width",
+            "height",
+            "candidate_box",
+            "source_group",
+            "source_sha256",
+            "source_record",
+            "usage_terms_url",
+            "license",
+            "attribution",
+        ):
+            if negative.get(field) != positive.get(field):
+                raise MaskRefinementBenchmarkError(
+                    f"Photo pair metadata mismatch for {pair_id}: {field}."
+                )
+        if negative.get("file") == positive.get("file") or negative.get("sha256") == positive.get(
+            "sha256"
+        ):
+            raise MaskRefinementBenchmarkError(f"Photo pair images are not distinct: {pair_id}.")
+    if len(sources) != len(pairs):
+        raise MaskRefinementBenchmarkError("Each photo pair must use an independent source group.")
+    return {
+        "kind": kind,
+        "provenance_gate": "pass",
+        "pair_count": len(pairs),
+        "source_count": len(sources),
+        "contains_user_data": False,
+    }
 
 
 def _validate_refiner_metadata(refiner: dict[str, Any], *, require_runtime: bool) -> None:
@@ -293,10 +379,7 @@ def _workflow_timing(row: dict[str, Any]) -> dict[str, float] | None:
         return None
     if not isinstance(value, dict):
         raise MaskRefinementBenchmarkError("Workflow timing must be an object.")
-    result = {
-        key: _required_number(value, key)
-        for key in ("manual", "box", "refined")
-    }
+    result = {key: _required_number(value, key) for key in ("manual", "box", "refined")}
     if any(item <= 0 for item in result.values()):
         raise MaskRefinementBenchmarkError("Workflow timing values must be positive.")
     return result
@@ -351,7 +434,7 @@ def _load_mask(
 def _correction_reduction(candidate: int, refined: int) -> float:
     if candidate == 0:
         return 1.0 if refined == 0 else 0.0
-    return min(1.0, 1 - refined / candidate)
+    return max(0.0, min(1.0, 1 - refined / candidate))
 
 
 def _contained_file(root: Path, relative: str) -> Path:
@@ -430,21 +513,30 @@ def _markdown(report: dict[str, Any]) -> str:
         if report["evaluation_kind"] == "model"
         else "This is a scoring-contract fixture, not a model performance result."
     )
+    lines = [
+        "# Box-guided mask-refinement benchmark",
+        "",
+        note,
+        "",
+        f"Metric gate: **{summary['metric_gate']}** · IoU: {summary['iou']:.3f} · "
+        f"Precision: {summary['precision']:.3f} · Recall: {summary['recall']:.3f}",
+        f"Correction reduction: {summary['correction_reduction']:.3f} · "
+        f"Outside-box pixels: {summary['outside_candidate_pixels']}",
+        f"Evidence gate: **{summary['evidence_gate']}** · Samples: "
+        f"{summary['sample_count']} · Negatives: {summary['negative_count']} · "
+        f"Categories: {summary['category_count']}",
+        f"Timing gate: **{summary['timing_gate']}** · Timed workflows: "
+        f"{summary['timing_evidence_count']}",
+    ]
+    corpus = report.get("corpus")
+    if isinstance(corpus, dict):
+        lines.append(
+            f"Provenance gate: **{corpus['provenance_gate']}** · Independent sources: "
+            f"{corpus['source_count']} · Paired scenes: {corpus['pair_count']}"
+        )
     return "\n".join(
         [
-            "# Box-guided mask-refinement benchmark",
-            "",
-            note,
-            "",
-            f"Metric gate: **{summary['metric_gate']}** · IoU: {summary['iou']:.3f} · "
-            f"Precision: {summary['precision']:.3f} · Recall: {summary['recall']:.3f}",
-            f"Correction reduction: {summary['correction_reduction']:.3f} · "
-            f"Outside-box pixels: {summary['outside_candidate_pixels']}",
-            f"Evidence gate: **{summary['evidence_gate']}** · Samples: "
-            f"{summary['sample_count']} · Negatives: {summary['negative_count']} · "
-            f"Categories: {summary['category_count']}",
-            f"Timing gate: **{summary['timing_gate']}** · Timed workflows: "
-            f"{summary['timing_evidence_count']}",
+            *lines,
             "",
             "## Samples",
             "",
@@ -464,6 +556,10 @@ def main() -> None:
     parser.add_argument("--report-json", type=Path, required=True)
     parser.add_argument("--report-md", type=Path, required=True)
     parser.add_argument("--require-model-output", action="store_true")
+    parser.add_argument("--min-sample-count", type=int, default=8)
+    parser.add_argument("--min-negative-count", type=int, default=4)
+    parser.add_argument("--min-category-count", type=int, default=6)
+    parser.add_argument("--min-timing-count", type=int, default=6)
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
     report = run_mask_refinement_benchmark(
@@ -472,6 +568,10 @@ def main() -> None:
         report_json=args.report_json,
         report_markdown=args.report_md,
         require_model_output=args.require_model_output,
+        min_sample_count=args.min_sample_count,
+        min_negative_count=args.min_negative_count,
+        min_category_count=args.min_category_count,
+        min_timing_count=args.min_timing_count,
     )
     if args.strict and not report["summary"]["release_claim_allowed"]:
         raise SystemExit("Mask-refinement release-evidence gate failed.")
