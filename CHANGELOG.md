@@ -22,6 +22,8 @@ All notable changes to this project are documented in this file. The format foll
   candidate acceptances but failed CPU/MPS pixel gates, preventing premature timing and Web claims.
 - An evaluation-only SAM2 multimask policy that chooses each box's highest model-predicted IoU mask
   without consulting ground truth, with reproducible CPU/MPS development reports and no Web wiring.
+- A second eight-source confirmation corpus frozen before multimask inference, with source-group and
+  digest disjointness enforced against both development data and the first holdout corpus.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
   explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,
