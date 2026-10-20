@@ -87,6 +87,7 @@ def _write_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
                     "id": "sam2",
                     "model_id": "facebook/sam2-hiera-tiny",
                     "model_revision": "def456",
+                    "prompt_version": "candidate-box-highest-predicted-iou-v1",
                     "device": "cpu",
                     "is_model_output": True,
                     "automatic_download": False,
@@ -113,6 +114,10 @@ def test_gate_keeps_confirmed_positive_and_empties_rejected_negative(tmp_path: P
     assert gate["false_negative"] == 0
     assert gate["precision"] == 1.0
     assert gate["recall"] == 1.0
+    assert result["refiner"]["id"] == "florence2-confirmed-sam2"
+    assert result["refiner"]["prompt_version"] == (
+        "watermark-candidate-iou-v1 + candidate-box-highest-predicted-iou-v1"
+    )
     positive = Image.open(tmp_path / "gated" / result["predictions"][0]["mask_file"])
     negative = Image.open(tmp_path / "gated" / result["predictions"][1]["mask_file"])
     assert positive.getbbox() == (0, 0, 8, 8)

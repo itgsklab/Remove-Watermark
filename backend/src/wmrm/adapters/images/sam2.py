@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import platform
 from pathlib import Path
-from typing import Protocol
+from typing import Literal, Protocol
 
 import numpy as np
 from PIL import Image, ImageOps
@@ -31,13 +31,22 @@ class Sam2MaskRefiner:
         manifest_path: Path,
         *,
         device: str = "auto",
+        mask_selection: Literal["single", "highest-iou"] = "single",
         runtime: Sam2Runtime | None = None,
     ) -> None:
+        if mask_selection not in {"single", "highest-iou"}:
+            raise ValueError("SAM2 mask selection must be single or highest-iou.")
         report = audit_model_manifest(manifest_path, model_dir=model_dir)
         self.model_id = str(report["model_id"])
         self.model_revision = str(report["revision"])
-        self._runtime = runtime or _TransformersSam2Runtime(model_dir.resolve(), device)
-        self.runtime_metadata = self._runtime.metadata
+        self.mask_selection = mask_selection
+        self._runtime = runtime or _TransformersSam2Runtime(
+            model_dir.resolve(),
+            device,
+            mask_selection,
+        )
+        self.runtime_metadata = dict(self._runtime.metadata)
+        self.runtime_metadata.setdefault("mask_selection", mask_selection)
 
     def refine(
         self,
@@ -65,7 +74,12 @@ class Sam2MaskRefiner:
 
 
 class _TransformersSam2Runtime:
-    def __init__(self, model_dir: Path, device: str) -> None:
+    def __init__(
+        self,
+        model_dir: Path,
+        device: str,
+        mask_selection: Literal["single", "highest-iou"],
+    ) -> None:
         try:
             import torch
             import transformers
@@ -108,6 +122,7 @@ class _TransformersSam2Runtime:
         self._model.eval()
         self._device = device
         self._torch = torch
+        self._mask_selection = mask_selection
         self.metadata = {
             "kind": "local-transformers-sam2",
             "device": device,
@@ -119,6 +134,8 @@ class _TransformersSam2Runtime:
             "runtime_model_class": type(self._model).__name__,
             "checkpoint_load_issues": loading_issues,
             "candidate_box_clipping": True,
+            "mask_selection": mask_selection,
+            "multimask_output": mask_selection == "highest-iou",
         }
 
     def predict(self, image: Image.Image, boxes: tuple[LocalizationBox, ...]) -> np.ndarray:
@@ -132,14 +149,49 @@ class _TransformersSam2Runtime:
         ).to(self._device)
         original_sizes = inputs["original_sizes"].cpu()
         with self._torch.inference_mode():
-            outputs = self._model(**inputs, multimask_output=False)
+            outputs = self._model(
+                **inputs,
+                multimask_output=self._mask_selection == "highest-iou",
+            )
         masks = self._processor.post_process_masks(
             outputs.pred_masks.cpu(),
             original_sizes,
         )[0]
         values = masks.detach().cpu().numpy().astype(bool)
-        while values.ndim > 3 and values.shape[1] == 1:
-            values = values[:, 0]
-        if values.ndim != 3 or values.shape[0] != len(boxes):
-            raise Sam2ConfigurationError("SAM2 returned an unsupported mask tensor.")
-        return np.logical_or.reduce(values, axis=0)
+        scores = outputs.iou_scores.detach().cpu().numpy()
+        selected = _select_predicted_masks(
+            values,
+            scores,
+            box_count=len(boxes),
+            mask_selection=self._mask_selection,
+        )
+        return np.logical_or.reduce(selected, axis=0)
+
+
+def _select_predicted_masks(
+    values: np.ndarray,
+    scores: np.ndarray,
+    *,
+    box_count: int,
+    mask_selection: Literal["single", "highest-iou"],
+) -> np.ndarray:
+    """Select one SAM2 mask per box without consulting evaluation ground truth."""
+    while values.ndim > 4 and values.shape[0] == 1:
+        values = values[0]
+    if values.ndim == 3:
+        values = values[:, None, :, :]
+    if values.ndim != 4 or values.shape[0] != box_count:
+        raise Sam2ConfigurationError("SAM2 returned an unsupported mask tensor.")
+
+    while scores.ndim > 2 and scores.shape[0] == 1:
+        scores = scores[0]
+    if scores.ndim == 1:
+        scores = scores[:, None]
+    if scores.shape != values.shape[:2]:
+        raise Sam2ConfigurationError("SAM2 returned incompatible mask scores.")
+    if mask_selection == "single":
+        if values.shape[1] != 1:
+            raise Sam2ConfigurationError("SAM2 single-mask mode returned multiple masks.")
+        return values[:, 0]
+    indices = np.argmax(scores, axis=1)
+    return values[np.arange(box_count), indices]

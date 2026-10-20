@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image
 
 from wmrm.adapters.images.detection import LocalizationBox
-from wmrm.adapters.images.sam2 import Sam2MaskRefiner
+from wmrm.adapters.images.sam2 import Sam2MaskRefiner, _select_predicted_masks
 from wmrm.adapters.images.segmentation import SegmentationMask
 from wmrm.benchmarks.mask_refinement_predict import generate_mask_predictions
 
@@ -43,10 +43,48 @@ def test_sam2_refiner_clips_model_mask_to_candidate_boxes(tmp_path: Path, monkey
     assert not values[:, :2].any()
 
 
+def test_multimask_selection_uses_highest_predicted_iou_per_box() -> None:
+    values = np.zeros((2, 3, 4, 5), dtype=bool)
+    values[0, 0, 0, 0] = True
+    values[0, 2, 0, 2] = True
+    values[1, 0, 1, 0] = True
+    values[1, 1, 1, 1] = True
+    scores = np.array([[[0.2, 0.3, 0.9], [0.1, 0.8, 0.4]]], dtype=np.float32)
+
+    selected = _select_predicted_masks(
+        values,
+        scores,
+        box_count=2,
+        mask_selection="highest-iou",
+    )
+
+    assert selected.shape == (2, 4, 5)
+    assert selected[0, 0, 2]
+    assert selected[1, 1, 1]
+    assert selected.sum() == 2
+
+
+def test_single_mask_selection_rejects_unexpected_candidates() -> None:
+    values = np.zeros((1, 2, 4, 5), dtype=bool)
+    scores = np.zeros((1, 1, 2), dtype=np.float32)
+
+    with np.testing.assert_raises_regex(RuntimeError, "single-mask mode"):
+        _select_predicted_masks(
+            values,
+            scores,
+            box_count=1,
+            mask_selection="single",
+        )
+
+
 class FakeRefiner:
     model_id = "fixture/sam2"
     model_revision = "b" * 40
-    runtime_metadata = {"kind": "injected", "device": "cpu"}
+    runtime_metadata = {
+        "kind": "injected",
+        "device": "cpu",
+        "mask_selection": "highest-iou",
+    }
 
     def refine(
         self, image_path: Path, boxes: tuple[LocalizationBox, ...]
@@ -90,6 +128,8 @@ def test_prediction_generator_records_real_model_metadata(tmp_path: Path) -> Non
     row = result["predictions"][0]
     assert result["refiner"]["is_model_output"] is True
     assert result["refiner"]["automatic_download"] is False
+    assert result["refiner"]["id"] == "sam2-hiera-tiny-box-refiner-multimask-v1"
+    assert result["refiner"]["prompt_version"] == "candidate-box-highest-predicted-iou-v1"
     assert row["runtime"]["duration_ms"] > 0
     assert row["runtime"]["peak_memory_mb"] > 0
     assert row["mask_sha256"] == hashlib.sha256(

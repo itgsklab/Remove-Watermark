@@ -226,6 +226,14 @@ make mask-refinement-candidate-gate-cpu
 
 随后使用 8 个全新来源组成的 16 样本冻结留出集复核。候选门禁拒绝全部干净负例，但组合像素指标未通过：MPS IoU 为 0.643，CPU IoU 为 0.705。留出集不用于回调阈值，人工计时保持未开始，模型能力不会进入 Web 产品入口。详情见 [独立评测文档](docs/MASK_REFINEMENT_EVALUATION.md)。
 
+开发语料上的后续实验可让 SAM2 返回多个蒙版，并按模型自己的预测 IoU 选择每个候选框的
+蒙版。该策略在 CPU 与 MPS 开发评测中通过像素门禁，但仍需第二个未见来源确认集：
+
+```bash
+make mask-refinement-multimask-mps
+make mask-refinement-multimask-cpu
+```
+
 复核带来源记录的真实照片和项目截图复杂度阈值：
 
 ```bash

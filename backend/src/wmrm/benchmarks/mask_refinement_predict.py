@@ -7,7 +7,7 @@ import resource
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from PIL import Image
@@ -24,6 +24,7 @@ def generate_mask_predictions(
     output: Path,
     *,
     device: str = "auto",
+    mask_selection: Literal["single", "highest-iou"] = "single",
     refiner: WatermarkMaskRefiner | None = None,
 ) -> dict[str, Any]:
     corpus_manifest = corpus_manifest.resolve()
@@ -35,6 +36,7 @@ def generate_mask_predictions(
         model_dir,
         model_manifest,
         device=device,
+        mask_selection=mask_selection,
     )
     output = output.resolve()
     mask_dir = output.parent / "masks"
@@ -78,13 +80,24 @@ def generate_mask_predictions(
             }
         )
     metadata = dict(segmenter.runtime_metadata)
+    selected_policy = str(metadata.get("mask_selection", mask_selection))
+    refiner_id = (
+        "sam2-hiera-tiny-box-refiner-multimask-v1"
+        if selected_policy == "highest-iou"
+        else "sam2-hiera-tiny-box-refiner-v1"
+    )
+    prompt_version = (
+        "candidate-box-highest-predicted-iou-v1"
+        if selected_policy == "highest-iou"
+        else "candidate-box-v1"
+    )
     result = {
         "schema_version": 1,
         "refiner": {
-            "id": "sam2-hiera-tiny-box-refiner-v1",
+            "id": refiner_id,
             "model_id": segmenter.model_id,
             "model_revision": segmenter.model_revision,
-            "prompt_version": "candidate-box-v1",
+            "prompt_version": prompt_version,
             "device": str(metadata.get("device", device)),
             "is_model_output": True,
             "automatic_download": False,
@@ -125,6 +138,12 @@ def main() -> None:
     parser.add_argument("--model-manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", choices=("auto", "cpu", "mps", "cuda"), default="auto")
+    parser.add_argument(
+        "--mask-selection",
+        choices=("single", "highest-iou"),
+        default="single",
+        help="Request one mask or choose the model's highest predicted-IoU mask.",
+    )
     args = parser.parse_args()
     generate_mask_predictions(
         args.manifest,
@@ -132,6 +151,7 @@ def main() -> None:
         args.model_manifest,
         args.output,
         device=args.device,
+        mask_selection=args.mask_selection,
     )
 
 
