@@ -18,6 +18,8 @@ All notable changes to this project are documented in this file. The format foll
   Wikimedia sources, with paired clean negatives, exact pixel-difference masks and CPU/MPS reports.
 - A reproducible Florence-2 candidate-confirmation gate that rejects all 16 paired clean negatives
   before SAM2 refinement and passes the CPU/MPS pixel metric gates on the fixed development corpus.
+- A source-disjoint eight-photo holdout corpus and frozen real-model reports showing zero clean
+  candidate acceptances but failed CPU/MPS pixel gates, preventing premature timing and Web claims.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
   explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,

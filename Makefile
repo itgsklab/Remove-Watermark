@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract mask-refinement-model-env mask-refinement-model-fetch mask-refinement-model mask-refinement-photo-corpus mask-refinement-photo-model mask-refinement-photo-model-cpu mask-refinement-candidate-gate-mps mask-refinement-candidate-gate-cpu model-supply-chain-review complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
+.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract mask-refinement-model-env mask-refinement-model-fetch mask-refinement-model mask-refinement-photo-corpus mask-refinement-photo-model mask-refinement-photo-model-cpu mask-refinement-candidate-gate-mps mask-refinement-candidate-gate-cpu mask-refinement-holdout-corpus mask-refinement-holdout-localization mask-refinement-holdout-model-mps mask-refinement-holdout-model-cpu mask-refinement-holdout-gate-mps mask-refinement-holdout-gate-cpu model-supply-chain-review complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -187,6 +187,62 @@ mask-refinement-candidate-gate-cpu:
 		--report-md ../work/mask-refinement-sam2-photo-cpu-gated/report.md \
 		--require-model-output \
 		--min-sample-count 32 --min-negative-count 16 --min-category-count 4
+
+mask-refinement-holdout-corpus:
+	backend/.venv/bin/python backend/tests/fixtures/mask_refinement_holdout/build_corpus.py
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement \
+		--manifest tests/fixtures/mask_refinement_holdout/manifest.json \
+		--predictions tests/fixtures/mask_refinement_holdout/contract-predictions.json \
+		--report-json ../docs/benchmarks/mask-refinement-holdout-contract.json \
+		--report-md ../docs/benchmarks/mask-refinement-holdout-contract.md \
+		--min-sample-count 16 --min-negative-count 8 --min-category-count 4
+
+mask-refinement-holdout-localization:
+	cd backend && .venv/bin/python -m wmrm.benchmarks.vlm_predict \
+		--manifest tests/fixtures/mask_refinement_holdout/manifest.json \
+		--model-dir ../work/models/florence-2-base \
+		--model-manifest ../docs/models/florence-2-base.json \
+		--output ../work/mask-refinement-holdout/florence2-predictions.json --device mps
+
+mask-refinement-holdout-model-mps:
+	cd backend && ../work/segmentation-eval/.venv/bin/python -m wmrm.benchmarks.mask_refinement_predict \
+		--manifest tests/fixtures/mask_refinement_holdout/manifest.json \
+		--model-dir ../work/models/sam2-hiera-tiny \
+		--model-manifest ../docs/models/sam2-hiera-tiny.json \
+		--output ../work/mask-refinement-holdout/sam2-mps/predictions.json --device mps
+
+mask-refinement-holdout-model-cpu:
+	cd backend && ../work/segmentation-eval/.venv/bin/python -m wmrm.benchmarks.mask_refinement_predict \
+		--manifest tests/fixtures/mask_refinement_holdout/manifest.json \
+		--model-dir ../work/models/sam2-hiera-tiny \
+		--model-manifest ../docs/models/sam2-hiera-tiny.json \
+		--output ../work/mask-refinement-holdout/sam2-cpu/predictions.json --device cpu
+
+mask-refinement-holdout-gate-mps:
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement_gate \
+		--manifest tests/fixtures/mask_refinement_holdout/manifest.json \
+		--localization-predictions ../work/mask-refinement-holdout/florence2-predictions.json \
+		--segmentation-predictions ../work/mask-refinement-holdout/sam2-mps/predictions.json \
+		--output ../work/mask-refinement-holdout/gated-mps/predictions.json
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement \
+		--manifest tests/fixtures/mask_refinement_holdout/manifest.json \
+		--predictions ../work/mask-refinement-holdout/gated-mps/predictions.json \
+		--report-json ../work/mask-refinement-holdout/gated-mps/report.json \
+		--report-md ../work/mask-refinement-holdout/gated-mps/report.md \
+		--require-model-output --min-sample-count 16 --min-negative-count 8 --min-category-count 4
+
+mask-refinement-holdout-gate-cpu:
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement_gate \
+		--manifest tests/fixtures/mask_refinement_holdout/manifest.json \
+		--localization-predictions ../work/mask-refinement-holdout/florence2-predictions.json \
+		--segmentation-predictions ../work/mask-refinement-holdout/sam2-cpu/predictions.json \
+		--output ../work/mask-refinement-holdout/gated-cpu/predictions.json
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement \
+		--manifest tests/fixtures/mask_refinement_holdout/manifest.json \
+		--predictions ../work/mask-refinement-holdout/gated-cpu/predictions.json \
+		--report-json ../work/mask-refinement-holdout/gated-cpu/report.json \
+		--report-md ../work/mask-refinement-holdout/gated-cpu/report.md \
+		--require-model-output --min-sample-count 16 --min-negative-count 8 --min-category-count 4
 
 model-supply-chain-review:
 	cd backend && .venv/bin/python -m wmrm.benchmarks.model_supply_chain \

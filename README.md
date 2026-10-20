@@ -224,7 +224,7 @@ make mask-refinement-candidate-gate-mps
 make mask-refinement-candidate-gate-cpu
 ```
 
-该结果仅覆盖固定开发语料，尚待独立留出集和人工盲测计时，不会进入 Web 产品入口。
+随后使用 8 个全新来源组成的 16 样本冻结留出集复核。候选门禁拒绝全部干净负例，但组合像素指标未通过：MPS IoU 为 0.643，CPU IoU 为 0.705。留出集不用于回调阈值，人工计时保持未开始，模型能力不会进入 Web 产品入口。详情见 [独立评测文档](docs/MASK_REFINEMENT_EVALUATION.md)。
 
 复核带来源记录的真实照片和项目截图复杂度阈值：
 

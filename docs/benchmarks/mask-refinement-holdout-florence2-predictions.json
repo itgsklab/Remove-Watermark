@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "detector": {
+    "id": "florence-2-local-open-vocabulary",
+    "model_id": "microsoft/Florence-2-base",
+    "model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+    "prompt": "watermark",
+    "is_model_output": true,
+    "runtime": {
+      "kind": "local-vendored-florence2",
+      "device": "mps",
+      "torch_version": "2.14.1",
+      "transformers_version": "4.49.0",
+      "maximum_candidate_coverage": 0.3
+    },
+    "note": "Generated locally from SHA-256 verified Safetensors weights."
+  },
+  "predictions": [
+    {
+      "sample_id": "holdout-as17-148-22727-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "holdout-as17-148-22727-positive",
+      "boxes": [
+        {
+          "x0": 517.3200073242188,
+          "y0": 409.1999816894531,
+          "x1": 628.9200439453125,
+          "y1": 436.55999755859375,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-0202487-negative",
+      "boxes": [
+        {
+          "x0": 389.1600036621094,
+          "y0": 256.0799865722656,
+          "x1": 718.9200439453125,
+          "y1": 309.3599853515625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-0202487-positive",
+      "boxes": [
+        {
+          "x0": 249.48001098632812,
+          "y0": 30.479999542236328,
+          "x1": 441.0000305175781,
+          "y1": 75.1199951171875,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-iss040e063570-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "holdout-iss040e063570-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 386.6399841308594,
+          "x1": 695.1600341796875,
+          "y1": 452.8800048828125,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-as17-140-21497-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "holdout-as17-140-21497-positive",
+      "boxes": [
+        {
+          "x0": 250.20001220703125,
+          "y0": 32.39999771118164,
+          "x1": 440.280029296875,
+          "y1": 74.63999938964844,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-0701891-negative",
+      "boxes": [
+        {
+          "x0": 0.36000001430511475,
+          "y0": 477.8399963378906,
+          "x1": 718.9200439453125,
+          "y1": 479.2799987792969,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-0701891-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 387.1199951171875,
+          "x1": 695.1600341796875,
+          "y1": 451.91998291015625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-iss041e045376-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "holdout-iss041e045376-positive",
+      "boxes": [
+        {
+          "x0": 249.48001098632812,
+          "y0": 31.920000076293945,
+          "x1": 439.5600280761719,
+          "y1": 75.1199951171875,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-as17-145-22162-negative",
+      "boxes": [
+        {
+          "x0": 621.0,
+          "y0": 357.3599853515625,
+          "x1": 657.0,
+          "y1": 393.3599853515625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-as17-145-22162-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 387.1199951171875,
+          "x1": 695.1600341796875,
+          "y1": 452.3999938964844,
+          "label": "watermark",
+          "confidence": 1.0
+        },
+        {
+          "x0": 516.6000366210938,
+          "y0": 409.67999267578125,
+          "x1": 628.2000122070312,
+          "y1": 437.5199890136719,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-iss073e0008524-negative",
+      "boxes": [
+        {
+          "x0": 527.4000244140625,
+          "y0": 446.1600036621094,
+          "x1": 555.4800415039062,
+          "y1": 473.03997802734375,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "holdout-iss073e0008524-positive",
+      "boxes": [
+        {
+          "x0": 249.48001098632812,
+          "y0": 31.920000076293945,
+          "x1": 439.5600280761719,
+          "y1": 75.1199951171875,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    }
+  ]
+}
