@@ -234,6 +234,9 @@ make mask-refinement-multimask-mps
 make mask-refinement-multimask-cpu
 ```
 
+第二套 8 来源确认集在策略冻结后运行，候选门禁仍拒绝全部干净负例，但 MPS/CPU IoU
+分别只有 0.730/0.714，未通过像素门禁。项目因此不开始人工计时，也不开放 Web 模型入口。
+
 复核带来源记录的真实照片和项目截图复杂度阈值：
 
 ```bash

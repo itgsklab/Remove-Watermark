@@ -182,11 +182,47 @@ make mask-refinement-multimask-mps
 make mask-refinement-multimask-cpu
 ```
 
+## 第二确认集结果
+
+在多候选策略冻结后，项目从 NASA 官方图片库固定了 8 个全新来源，生成 16 个正负成对
+样本。构建器同时校验来源组和原图 SHA-256 与开发语料、第一留出集均无交集。语料及真值
+先以独立提交冻结，再运行固定的 Florence-2 revision、`watermark` 提示词、IoU 0.5 候选
+门禁和 SAM2 `highest-iou` 策略。
+
+候选门禁拒绝 8/8 个干净负例，接受 7/8 个水印正例，Precision 为 1.000、Recall 为
+0.875。漏检样本的最佳定位 IoU 为 0.279。像素结果为：
+
+| 设备 | Precision | Recall | IoU | 修正量减少 | 指标门禁 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| MPS | 0.955 | 0.756 | 0.730 | 0.798 | 失败 |
+| CPU | 0.877 | 0.794 | 0.714 | 0.770 | 失败 |
+
+完整证据见：
+
+- [`mask-refinement-confirmation-contract.json`](benchmarks/mask-refinement-confirmation-contract.json) 与 [`mask-refinement-confirmation-contract.md`](benchmarks/mask-refinement-confirmation-contract.md)；
+- [`mask-refinement-confirmation-gate-mps.json`](benchmarks/mask-refinement-confirmation-gate-mps.json) 与 [`mask-refinement-confirmation-gate-mps.md`](benchmarks/mask-refinement-confirmation-gate-mps.md)；
+- [`mask-refinement-confirmation-gate-cpu.json`](benchmarks/mask-refinement-confirmation-gate-cpu.json) 与 [`mask-refinement-confirmation-gate-cpu.md`](benchmarks/mask-refinement-confirmation-gate-cpu.md)；
+- 脱敏的 Florence-2 原始输出见 [`mask-refinement-confirmation-florence2-predictions.json`](benchmarks/mask-refinement-confirmation-florence2-predictions.json)。
+
+确认集像素门禁失败，因此本阶段停止，不收集人工计时，也不接入 Web。该语料不会被用于
+回调候选阈值、提示词或蒙版选择策略。
+
+复现命令：
+
+```bash
+make mask-refinement-confirmation-corpus
+make mask-refinement-confirmation-localization
+make mask-refinement-confirmation-model-mps
+make mask-refinement-confirmation-model-cpu
+make mask-refinement-confirmation-gate-mps
+make mask-refinement-confirmation-gate-cpu
+```
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 建立第二个未见来源确认集，并在构建和真值冻结后仅运行一次固定的多候选策略；
-2. 只有确认集像素指标通过后才进行人工盲测计时；
+1. 回到开发语料研究新的文字蒙版或候选定位策略；两个独立确认集均保持冻结，不用于调参；
+2. 新策略通过开发门禁后，使用第三套未见来源进行一次确认；只有确认指标通过后才进行人工盲测计时；
 3. 在至少一种 CUDA 环境复跑固定 revision，记录耗时、峰值内存和像素差异；
 4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。
