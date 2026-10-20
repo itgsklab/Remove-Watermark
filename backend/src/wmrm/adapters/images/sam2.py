@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Literal, Protocol
 
 import numpy as np
-from PIL import Image, ImageOps
+from PIL import Image, ImageFilter, ImageOps
 
 from wmrm.adapters.images.detection import LocalizationBox
 from wmrm.adapters.images.segmentation import SegmentationMask
@@ -32,14 +32,18 @@ class Sam2MaskRefiner:
         *,
         device: str = "auto",
         mask_selection: Literal["single", "highest-iou"] = "single",
+        text_contrast_augmentation: bool = False,
         runtime: Sam2Runtime | None = None,
     ) -> None:
         if mask_selection not in {"single", "highest-iou"}:
             raise ValueError("SAM2 mask selection must be single or highest-iou.")
+        if text_contrast_augmentation and mask_selection != "highest-iou":
+            raise ValueError("Text-contrast augmentation requires highest-iou mask selection.")
         report = audit_model_manifest(manifest_path, model_dir=model_dir)
         self.model_id = str(report["model_id"])
         self.model_revision = str(report["revision"])
         self.mask_selection = mask_selection
+        self.text_contrast_augmentation = text_contrast_augmentation
         self._runtime = runtime or _TransformersSam2Runtime(
             model_dir.resolve(),
             device,
@@ -47,6 +51,13 @@ class Sam2MaskRefiner:
         )
         self.runtime_metadata = dict(self._runtime.metadata)
         self.runtime_metadata.setdefault("mask_selection", mask_selection)
+        self.runtime_metadata["text_contrast_augmentation"] = text_contrast_augmentation
+        if text_contrast_augmentation:
+            self.runtime_metadata["text_contrast_policy"] = {
+                "minimum_box_aspect_ratio": 5.0,
+                "gaussian_blur_radius": 1.5,
+                "minimum_channel_delta": 20,
+            }
 
     def refine(
         self,
@@ -64,6 +75,8 @@ class Sam2MaskRefiner:
         predicted = np.asarray(self._runtime.predict(image, boxes), dtype=bool)
         if predicted.shape != (height, width):
             raise Sam2ConfigurationError("SAM2 returned a mask with incorrect dimensions.")
+        if self.text_contrast_augmentation:
+            predicted |= _text_contrast_mask(image, boxes)
         candidate_union = np.zeros((height, width), dtype=bool)
         for box in boxes:
             x0, y0 = int(np.floor(box.x0)), int(np.floor(box.y0))
@@ -71,6 +84,31 @@ class Sam2MaskRefiner:
             candidate_union[y0:y1, x0:x1] = True
         predicted &= candidate_union
         return SegmentationMask(width, height, predicted.astype(np.uint8).tobytes())
+
+
+def _text_contrast_mask(
+    image: Image.Image,
+    boxes: tuple[LocalizationBox, ...],
+) -> np.ndarray:
+    """Find high local RGB contrast in text-shaped boxes without evaluation labels."""
+    width, height = image.size
+    result = np.zeros((height, width), dtype=bool)
+    for box in boxes:
+        box_width = box.x1 - box.x0
+        box_height = box.y1 - box.y0
+        if box_height <= 0 or box_width / box_height < 5.0:
+            continue
+        x0, y0 = int(np.floor(box.x0)), int(np.floor(box.y0))
+        x1, y1 = int(np.ceil(box.x1)), int(np.ceil(box.y1))
+        crop = image.crop((x0, y0, x1, y1)).convert("RGB")
+        source = np.asarray(crop, dtype=np.int16)
+        background = np.asarray(
+            crop.filter(ImageFilter.GaussianBlur(radius=1.5)),
+            dtype=np.int16,
+        )
+        local_delta = np.max(np.abs(source - background), axis=2)
+        result[y0:y1, x0:x1] |= local_delta >= 20
+    return result
 
 
 class _TransformersSam2Runtime:

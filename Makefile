@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract mask-refinement-model-env mask-refinement-model-fetch mask-refinement-model mask-refinement-photo-corpus mask-refinement-photo-model mask-refinement-photo-model-cpu mask-refinement-candidate-gate-mps mask-refinement-candidate-gate-cpu mask-refinement-multimask-mps mask-refinement-multimask-cpu mask-refinement-holdout-corpus mask-refinement-holdout-localization mask-refinement-holdout-model-mps mask-refinement-holdout-model-cpu mask-refinement-holdout-gate-mps mask-refinement-holdout-gate-cpu mask-refinement-confirmation-corpus mask-refinement-confirmation-localization mask-refinement-confirmation-model-mps mask-refinement-confirmation-model-cpu mask-refinement-confirmation-gate-mps mask-refinement-confirmation-gate-cpu model-supply-chain-review complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
+.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract mask-refinement-model-env mask-refinement-model-fetch mask-refinement-model mask-refinement-photo-corpus mask-refinement-photo-model mask-refinement-photo-model-cpu mask-refinement-candidate-gate-mps mask-refinement-candidate-gate-cpu mask-refinement-multimask-mps mask-refinement-multimask-cpu mask-refinement-text-contrast-mps mask-refinement-text-contrast-cpu mask-refinement-holdout-corpus mask-refinement-holdout-localization mask-refinement-holdout-model-mps mask-refinement-holdout-model-cpu mask-refinement-holdout-gate-mps mask-refinement-holdout-gate-cpu mask-refinement-confirmation-corpus mask-refinement-confirmation-localization mask-refinement-confirmation-model-mps mask-refinement-confirmation-model-cpu mask-refinement-confirmation-gate-mps mask-refinement-confirmation-gate-cpu model-supply-chain-review complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -227,6 +227,44 @@ mask-refinement-multimask-cpu:
 		--report-md ../docs/benchmarks/mask-refinement-multimask-candidate-gate-cpu.md \
 		--require-model-output \
 		--min-sample-count 32 --min-negative-count 16 --min-category-count 4
+
+mask-refinement-text-contrast-mps:
+	cd backend && ../work/segmentation-eval/.venv/bin/python -m wmrm.benchmarks.mask_refinement_predict \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--model-dir ../work/models/sam2-hiera-tiny \
+		--model-manifest ../docs/models/sam2-hiera-tiny.json \
+		--output ../work/mask-refinement-sam2-text-contrast-photo-mps/predictions.json \
+		--device mps --mask-selection highest-iou --text-contrast-augmentation
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement_gate \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--localization-predictions ../docs/benchmarks/vlm-photo-gated-predictions.json \
+		--segmentation-predictions ../work/mask-refinement-sam2-text-contrast-photo-mps/predictions.json \
+		--output ../work/mask-refinement-sam2-text-contrast-photo-mps-gated/predictions.json
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--predictions ../work/mask-refinement-sam2-text-contrast-photo-mps-gated/predictions.json \
+		--report-json ../docs/benchmarks/mask-refinement-text-contrast-candidate-gate-mps.json \
+		--report-md ../docs/benchmarks/mask-refinement-text-contrast-candidate-gate-mps.md \
+		--require-model-output --min-sample-count 32 --min-negative-count 16 --min-category-count 4
+
+mask-refinement-text-contrast-cpu:
+	cd backend && ../work/segmentation-eval/.venv/bin/python -m wmrm.benchmarks.mask_refinement_predict \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--model-dir ../work/models/sam2-hiera-tiny \
+		--model-manifest ../docs/models/sam2-hiera-tiny.json \
+		--output ../work/mask-refinement-sam2-text-contrast-photo-cpu/predictions.json \
+		--device cpu --mask-selection highest-iou --text-contrast-augmentation
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement_gate \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--localization-predictions ../docs/benchmarks/vlm-photo-gated-predictions.json \
+		--segmentation-predictions ../work/mask-refinement-sam2-text-contrast-photo-cpu/predictions.json \
+		--output ../work/mask-refinement-sam2-text-contrast-photo-cpu-gated/predictions.json
+	cd backend && .venv/bin/python -m wmrm.benchmarks.mask_refinement \
+		--manifest tests/fixtures/vlm_localization/mask-refinement-photo-manifest.json \
+		--predictions ../work/mask-refinement-sam2-text-contrast-photo-cpu-gated/predictions.json \
+		--report-json ../docs/benchmarks/mask-refinement-text-contrast-candidate-gate-cpu.json \
+		--report-md ../docs/benchmarks/mask-refinement-text-contrast-candidate-gate-cpu.md \
+		--require-model-output --min-sample-count 32 --min-negative-count 16 --min-category-count 4
 
 mask-refinement-holdout-corpus:
 	backend/.venv/bin/python backend/tests/fixtures/mask_refinement_holdout/build_corpus.py
