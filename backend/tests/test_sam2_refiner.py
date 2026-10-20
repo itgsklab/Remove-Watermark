@@ -8,7 +8,11 @@ import numpy as np
 from PIL import Image
 
 from wmrm.adapters.images.detection import LocalizationBox
-from wmrm.adapters.images.sam2 import Sam2MaskRefiner, _select_predicted_masks
+from wmrm.adapters.images.sam2 import (
+    Sam2MaskRefiner,
+    _select_predicted_masks,
+    _text_contrast_mask,
+)
 from wmrm.adapters.images.segmentation import SegmentationMask
 from wmrm.benchmarks.mask_refinement_predict import generate_mask_predictions
 
@@ -77,6 +81,42 @@ def test_single_mask_selection_rejects_unexpected_candidates() -> None:
         )
 
 
+def test_text_contrast_mask_only_augments_text_shaped_boxes() -> None:
+    pixels = np.full((20, 60, 3), 80, dtype=np.uint8)
+    pixels[5:7, 8:42] = 240
+    pixels[12:14, 8:42] = 10
+    image = Image.fromarray(pixels, mode="RGB")
+
+    text_mask = _text_contrast_mask(
+        image,
+        (LocalizationBox(4, 4, 56, 14, "candidate", 1.0),),
+    )
+    square_mask = _text_contrast_mask(
+        image,
+        (LocalizationBox(4, 2, 20, 18, "candidate", 1.0),),
+    )
+
+    assert text_mask.any()
+    assert not text_mask[:4].any()
+    assert not text_mask[:, :4].any()
+    assert not square_mask.any()
+
+
+def test_text_contrast_requires_multimask_selection(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(
+        "wmrm.adapters.images.sam2.audit_model_manifest",
+        lambda *args, **kwargs: {"model_id": "fixture/sam2", "revision": "a" * 40},
+    )
+
+    with np.testing.assert_raises_regex(ValueError, "requires highest-iou"):
+        Sam2MaskRefiner(
+            tmp_path,
+            tmp_path / "manifest.json",
+            text_contrast_augmentation=True,
+            runtime=Runtime(),
+        )
+
+
 class FakeRefiner:
     model_id = "fixture/sam2"
     model_revision = "b" * 40
@@ -84,6 +124,7 @@ class FakeRefiner:
         "kind": "injected",
         "device": "cpu",
         "mask_selection": "highest-iou",
+        "text_contrast_augmentation": True,
     }
 
     def refine(
@@ -128,8 +169,12 @@ def test_prediction_generator_records_real_model_metadata(tmp_path: Path) -> Non
     row = result["predictions"][0]
     assert result["refiner"]["is_model_output"] is True
     assert result["refiner"]["automatic_download"] is False
-    assert result["refiner"]["id"] == "sam2-hiera-tiny-box-refiner-multimask-v1"
-    assert result["refiner"]["prompt_version"] == "candidate-box-highest-predicted-iou-v1"
+    assert result["refiner"]["id"] == (
+        "sam2-hiera-tiny-box-refiner-multimask-text-contrast-v1"
+    )
+    assert result["refiner"]["prompt_version"] == (
+        "candidate-box-highest-predicted-iou-text-contrast-v1"
+    )
     assert row["runtime"]["duration_ms"] > 0
     assert row["runtime"]["peak_memory_mb"] > 0
     assert row["mask_sha256"] == hashlib.sha256(

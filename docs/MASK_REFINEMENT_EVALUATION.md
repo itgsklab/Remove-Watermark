@@ -218,11 +218,39 @@ make mask-refinement-confirmation-gate-mps
 make mask-refinement-confirmation-gate-cpu
 ```
 
+## 文字局部对比度开发实验
+
+第二确认失败后，两个确认集均保持冻结。本轮只在原开发语料上测试一个确定性文字补充
+策略：候选框长宽比至少为 5:1 时，用半径 1.5 的高斯模糊估计局部背景；任一 RGB 通道与
+背景差值至少为 20 的像素会与 SAM2 蒙版合并。该步骤只读取输入图片和候选框，不读取
+标注；普通角标不触发该规则。开发时比较了半径 1.0–3.0 和差值 12–24 的小型固定网格，
+选择在 MPS、CPU 间表现均衡的 1.5/20 组合。
+
+固定开发语料结果为：
+
+| 设备 | Precision | Recall | IoU | 修正量减少 | 指标门禁 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| MPS | 0.931 | 0.880 | 0.826 | 0.865 | 通过 |
+| CPU | 0.913 | 0.897 | 0.827 | 0.864 | 通过 |
+
+完整报告见：
+
+- [`mask-refinement-text-contrast-candidate-gate-mps.json`](benchmarks/mask-refinement-text-contrast-candidate-gate-mps.json) 与 [`mask-refinement-text-contrast-candidate-gate-mps.md`](benchmarks/mask-refinement-text-contrast-candidate-gate-mps.md)；
+- [`mask-refinement-text-contrast-candidate-gate-cpu.json`](benchmarks/mask-refinement-text-contrast-candidate-gate-cpu.json) 与 [`mask-refinement-text-contrast-candidate-gate-cpu.md`](benchmarks/mask-refinement-text-contrast-candidate-gate-cpu.md)。
+
+该策略仍只拥有开发证据，不会在此前两个确认集上重跑。人工计时为空，
+`release_claim_allowed=false`，Web 产品行为不变。
+
+```bash
+make mask-refinement-text-contrast-mps
+make mask-refinement-text-contrast-cpu
+```
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 回到开发语料研究新的文字蒙版或候选定位策略；两个独立确认集均保持冻结，不用于调参；
-2. 新策略通过开发门禁后，使用第三套未见来源进行一次确认；只有确认指标通过后才进行人工盲测计时；
+1. 建立第三套未见来源确认集，并在语料与真值冻结后只运行一次固定文字局部对比度策略；
+2. 只有第三确认集像素指标通过后才进行人工盲测计时；
 3. 在至少一种 CUDA 环境复跑固定 revision，记录耗时、峰值内存和像素差异；
 4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。

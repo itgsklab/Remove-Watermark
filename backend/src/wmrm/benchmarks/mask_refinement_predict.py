@@ -25,6 +25,7 @@ def generate_mask_predictions(
     *,
     device: str = "auto",
     mask_selection: Literal["single", "highest-iou"] = "single",
+    text_contrast_augmentation: bool = False,
     refiner: WatermarkMaskRefiner | None = None,
 ) -> dict[str, Any]:
     corpus_manifest = corpus_manifest.resolve()
@@ -37,6 +38,7 @@ def generate_mask_predictions(
         model_manifest,
         device=device,
         mask_selection=mask_selection,
+        text_contrast_augmentation=text_contrast_augmentation,
     )
     output = output.resolve()
     mask_dir = output.parent / "masks"
@@ -81,16 +83,18 @@ def generate_mask_predictions(
         )
     metadata = dict(segmenter.runtime_metadata)
     selected_policy = str(metadata.get("mask_selection", mask_selection))
-    refiner_id = (
-        "sam2-hiera-tiny-box-refiner-multimask-v1"
-        if selected_policy == "highest-iou"
-        else "sam2-hiera-tiny-box-refiner-v1"
+    uses_text_contrast = bool(
+        metadata.get("text_contrast_augmentation", text_contrast_augmentation)
     )
-    prompt_version = (
-        "candidate-box-highest-predicted-iou-v1"
-        if selected_policy == "highest-iou"
-        else "candidate-box-v1"
-    )
+    if selected_policy == "highest-iou" and uses_text_contrast:
+        refiner_id = "sam2-hiera-tiny-box-refiner-multimask-text-contrast-v1"
+        prompt_version = "candidate-box-highest-predicted-iou-text-contrast-v1"
+    elif selected_policy == "highest-iou":
+        refiner_id = "sam2-hiera-tiny-box-refiner-multimask-v1"
+        prompt_version = "candidate-box-highest-predicted-iou-v1"
+    else:
+        refiner_id = "sam2-hiera-tiny-box-refiner-v1"
+        prompt_version = "candidate-box-v1"
     result = {
         "schema_version": 1,
         "refiner": {
@@ -144,6 +148,11 @@ def main() -> None:
         default="single",
         help="Request one mask or choose the model's highest predicted-IoU mask.",
     )
+    parser.add_argument(
+        "--text-contrast-augmentation",
+        action="store_true",
+        help="Union local RGB contrast for candidate boxes with text-like aspect ratios.",
+    )
     args = parser.parse_args()
     generate_mask_predictions(
         args.manifest,
@@ -152,6 +161,7 @@ def main() -> None:
         args.output,
         device=args.device,
         mask_selection=args.mask_selection,
+        text_contrast_augmentation=args.text_contrast_augmentation,
     )
 
 
