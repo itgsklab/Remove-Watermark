@@ -534,6 +534,15 @@ def _markdown(report: dict[str, Any]) -> str:
             f"Provenance gate: **{corpus['provenance_gate']}** · Independent sources: "
             f"{corpus['source_count']} · Paired scenes: {corpus['pair_count']}"
         )
+    candidate_gate = report["refiner"].get("candidate_gate")
+    if isinstance(candidate_gate, dict):
+        lines.append(
+            "Candidate gate: "
+            f"TP {candidate_gate['true_positive']} · TN {candidate_gate['true_negative']} · "
+            f"FP {candidate_gate['false_positive']} · FN {candidate_gate['false_negative']} · "
+            f"Precision {candidate_gate['precision']:.3f} · "
+            f"Recall {candidate_gate['recall']:.3f}"
+        )
     return "\n".join(
         [
             *lines,

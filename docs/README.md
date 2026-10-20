@@ -28,6 +28,8 @@ reports maintained in this repository:
 - `benchmarks/mask-refinement-photo-contract.md`
 - `benchmarks/mask-refinement-sam2-photo-mps.md`
 - `benchmarks/mask-refinement-sam2-photo-cpu.md`
+- `benchmarks/mask-refinement-candidate-gate-mps.md`
+- `benchmarks/mask-refinement-candidate-gate-cpu.md`
 - `benchmarks/vlm-localization-contract.md`
 - `benchmarks/vlm-localization-model.md`
 - `benchmarks/image-complexity-calibration.md`
