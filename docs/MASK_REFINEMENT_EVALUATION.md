@@ -153,11 +153,40 @@ make mask-refinement-holdout-gate-mps
 make mask-refinement-holdout-gate-cpu
 ```
 
+## 多候选蒙版开发实验
+
+冻结留出集失败后，项目只在原 16 来源开发语料上研究 SAM2 的多候选输出。新策略要求
+SAM2 为每个候选框输出三个蒙版，并直接选择模型预测 IoU 最高的一项；选择过程不读取像素
+真值，也不改变 Florence-2 的 `watermark` 提示词或 IoU 0.5 候选确认阈值。默认单蒙版
+行为保持不变，该模式仅能通过显式评测参数启用。
+
+开发语料结果为：
+
+| 设备 | Precision | Recall | IoU | 修正量减少 | 指标门禁 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| MPS | 0.942 | 0.848 | 0.806 | 0.852 | 通过 |
+| CPU | 0.924 | 0.887 | 0.826 | 0.865 | 通过 |
+
+完整报告见：
+
+- [`mask-refinement-multimask-candidate-gate-mps.json`](benchmarks/mask-refinement-multimask-candidate-gate-mps.json) 与 [`mask-refinement-multimask-candidate-gate-mps.md`](benchmarks/mask-refinement-multimask-candidate-gate-mps.md)；
+- [`mask-refinement-multimask-candidate-gate-cpu.json`](benchmarks/mask-refinement-multimask-candidate-gate-cpu.json) 与 [`mask-refinement-multimask-candidate-gate-cpu.md`](benchmarks/mask-refinement-multimask-candidate-gate-cpu.md)。
+
+这些结果只证明新策略在开发数据上达到像素阈值。此前冻结的留出集不会在本阶段重跑或
+用于选择策略；人工计时仍为空，`release_claim_allowed=false`，Web 产品没有新增模型入口。
+
+可在已有固定权重和隔离环境中复现：
+
+```bash
+make mask-refinement-multimask-mps
+make mask-refinement-multimask-cpu
+```
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 回到独立开发语料研究更适合文字水印的分割策略或多候选模型，留出集保持冻结且不得用于调参；
-2. 新方案先通过开发门禁，再建立第二个未见来源确认集；只有确认集像素指标通过后才进行人工盲测计时；
+1. 建立第二个未见来源确认集，并在构建和真值冻结后仅运行一次固定的多候选策略；
+2. 只有确认集像素指标通过后才进行人工盲测计时；
 3. 在至少一种 CUDA 环境复跑固定 revision，记录耗时、峰值内存和像素差异；
 4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。

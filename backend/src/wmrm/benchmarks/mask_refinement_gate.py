@@ -140,15 +140,17 @@ def apply_candidate_confirmation_gate(
         "recall": round(recall, 6),
         "samples": diagnostics,
     }
+    segmentation_id = _required_text(refiner, "id")
+    segmentation_prompt = _required_text(refiner, "prompt_version")
     result = {
         "schema_version": 1,
         "refiner": {
-            "id": "florence2-confirmed-sam2-refiner-v1",
+            "id": f"florence2-confirmed-{segmentation_id}",
             "model_id": f"{gate['detector_model_id']} + {_required_text(refiner, 'model_id')}",
             "model_revision": (
                 f"{gate['detector_model_revision']} + {_required_text(refiner, 'model_revision')}"
             ),
-            "prompt_version": "watermark-candidate-iou-v1",
+            "prompt_version": f"watermark-candidate-iou-v1 + {segmentation_prompt}",
             "device": _required_text(refiner, "device"),
             "is_model_output": True,
             "automatic_download": False,
