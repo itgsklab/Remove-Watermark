@@ -1,0 +1,985 @@
+{
+  "schema_version": 1,
+  "benchmark": "wmrm-box-guided-mask-refinement",
+  "evaluation_kind": "model",
+  "refiner": {
+    "id": "florence2-confirmed-sam2-refiner-v1",
+    "model_id": "microsoft/Florence-2-base + facebook/sam2-hiera-tiny",
+    "model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac + 7c218beaf0bb87874785f32b582f640134fc1c09",
+    "prompt_version": "watermark-candidate-iou-v1",
+    "device": "cpu",
+    "is_model_output": true,
+    "automatic_download": false,
+    "runtime": {
+      "architecture": "arm64",
+      "candidate_box_clipping": true,
+      "checkpoint_load_issues": 0,
+      "device": "cpu",
+      "kind": "local-transformers-sam2",
+      "platform": "darwin",
+      "runtime_model_class": "Sam2Model",
+      "source_config_model_type": "sam2_video",
+      "torch_version": "2.7.1",
+      "transformers_version": "5.10.4"
+    },
+    "candidate_gate": {
+      "kind": "florence2-candidate-iou-confirmation",
+      "iou_threshold": 0.5,
+      "detector_id": "florence-2-local-open-vocabulary",
+      "detector_model_id": "microsoft/Florence-2-base",
+      "detector_model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+      "prompt": "watermark",
+      "true_positive": 15,
+      "true_negative": 16,
+      "false_positive": 0,
+      "false_negative": 1,
+      "precision": 1.0,
+      "recall": 0.9375,
+      "samples": [
+        {
+          "sample_id": "paired-as11-40-5878-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-as11-40-5878-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.671924,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-commons-144326190-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-commons-144326190-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.861557,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-commons-14666867-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-commons-14666867-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.861557,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-commons-201054816-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-commons-201054816-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.698812,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-commons-38778875-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-commons-38778875-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.861557,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-commons-59873545-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-commons-59873545-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.717222,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-commons-74184357-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-commons-74184357-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.694263,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-iss042e097549-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-iss042e097549-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.884206,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-photo-horizon-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-photo-horizon-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.871107,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-photo-night-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-photo-night-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.704126,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-pia00254-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-pia00254-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.884206,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-pia11141-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-pia11141-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.73371,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-pia11727-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-pia11727-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.652565,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-pia17792-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-pia17792-positive",
+          "expected": "accept",
+          "decision": "reject",
+          "best_iou": 0.269379,
+          "outcome": "false_negative"
+        },
+        {
+          "sample_id": "paired-pia20284-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-pia20284-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.709253,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "paired-pia24642-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "paired-pia24642-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.849093,
+          "outcome": "true_positive"
+        }
+      ]
+    }
+  },
+  "thresholds": {
+    "minimum_iou": 0.75,
+    "minimum_precision": 0.8,
+    "minimum_recall": 0.8,
+    "minimum_correction_reduction": 0.25,
+    "maximum_outside_candidate_pixels": 0,
+    "minimum_sample_count": 32,
+    "minimum_negative_count": 16,
+    "minimum_category_count": 4,
+    "minimum_timing_count": 6
+  },
+  "summary": {
+    "sample_count": 32,
+    "positive_count": 16,
+    "negative_count": 16,
+    "category_count": 4,
+    "true_positive_pixels": 100748,
+    "false_positive_pixels": 8859,
+    "false_negative_pixels": 13392,
+    "candidate_correction_pixels": 157220,
+    "refined_correction_pixels": 22251,
+    "outside_candidate_pixels": 0,
+    "precision": 0.919175,
+    "recall": 0.88267,
+    "iou": 0.819096,
+    "correction_reduction": 0.858472,
+    "timing_evidence_count": 0,
+    "metric_gate": "pass",
+    "evidence_gate": "pass",
+    "timing_gate": "fail",
+    "release_claim_allowed": false
+  },
+  "workflow_timing": {
+    "count": 0,
+    "manual_mean": null,
+    "box_mean": null,
+    "refined_mean": null
+  },
+  "samples": [
+    {
+      "sample_id": "paired-as11-40-5878-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 937.316,
+        "peak_memory_mb": 1180.875
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-as11-40-5878-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3288,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4347,
+      "true_positive_pixels": 3249,
+      "false_positive_pixels": 1098,
+      "false_negative_pixels": 39,
+      "outside_candidate_pixels": 0,
+      "iou": 0.740766,
+      "candidate_correction_pixels": 2536,
+      "refined_correction_pixels": 1137,
+      "correction_reduction": 0.551656,
+      "runtime": {
+        "duration_ms": 948.741,
+        "peak_memory_mb": 1409.203
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-144326190-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1138.675,
+        "peak_memory_mb": 1423.109
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-144326190-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 11001,
+      "true_positive_pixels": 10994,
+      "false_positive_pixels": 7,
+      "false_negative_pixels": 6,
+      "outside_candidate_pixels": 0,
+      "iou": 0.998819,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 13,
+      "correction_reduction": 0.904412,
+      "runtime": {
+        "duration_ms": 1134.016,
+        "peak_memory_mb": 1435.766
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-14666867-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1195.724,
+        "peak_memory_mb": 1453.141
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-14666867-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10987,
+      "true_positive_pixels": 10984,
+      "false_positive_pixels": 3,
+      "false_negative_pixels": 16,
+      "outside_candidate_pixels": 0,
+      "iou": 0.998273,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 19,
+      "correction_reduction": 0.860294,
+      "runtime": {
+        "duration_ms": 1199.423,
+        "peak_memory_mb": 1454.547
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-201054816-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1410.432,
+        "peak_memory_mb": 1472.516
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-201054816-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3290,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4522,
+      "true_positive_pixels": 3264,
+      "false_positive_pixels": 1258,
+      "false_negative_pixels": 26,
+      "outside_candidate_pixels": 0,
+      "iou": 0.717678,
+      "candidate_correction_pixels": 2534,
+      "refined_correction_pixels": 1284,
+      "correction_reduction": 0.493291,
+      "runtime": {
+        "duration_ms": 1335.541,
+        "peak_memory_mb": 1475.359
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-38778875-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1451.226,
+        "peak_memory_mb": 1494.688
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-38778875-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10988,
+      "true_positive_pixels": 10987,
+      "false_positive_pixels": 1,
+      "false_negative_pixels": 13,
+      "outside_candidate_pixels": 0,
+      "iou": 0.998727,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 14,
+      "correction_reduction": 0.897059,
+      "runtime": {
+        "duration_ms": 1344.415,
+        "peak_memory_mb": 1502.047
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-59873545-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1335.619,
+        "peak_memory_mb": 1505.625
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-59873545-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3260,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 3366,
+      "true_positive_pixels": 2877,
+      "false_positive_pixels": 489,
+      "false_negative_pixels": 383,
+      "outside_candidate_pixels": 0,
+      "iou": 0.767405,
+      "candidate_correction_pixels": 2564,
+      "refined_correction_pixels": 872,
+      "correction_reduction": 0.659906,
+      "runtime": {
+        "duration_ms": 1659.923,
+        "peak_memory_mb": 1509.125
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-74184357-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1215.675,
+        "peak_memory_mb": 1511.766
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-commons-74184357-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3264,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 3951,
+      "true_positive_pixels": 3100,
+      "false_positive_pixels": 851,
+      "false_negative_pixels": 164,
+      "outside_candidate_pixels": 0,
+      "iou": 0.753341,
+      "candidate_correction_pixels": 2560,
+      "refined_correction_pixels": 1015,
+      "correction_reduction": 0.603516,
+      "runtime": {
+        "duration_ms": 1310.612,
+        "peak_memory_mb": 1512.0
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-iss042e097549-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1280.567,
+        "peak_memory_mb": 1513.359
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-iss042e097549-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 10999,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10989,
+      "true_positive_pixels": 10988,
+      "false_positive_pixels": 1,
+      "false_negative_pixels": 11,
+      "outside_candidate_pixels": 0,
+      "iou": 0.998909,
+      "candidate_correction_pixels": 137,
+      "refined_correction_pixels": 12,
+      "correction_reduction": 0.912409,
+      "runtime": {
+        "duration_ms": 1383.88,
+        "peak_memory_mb": 1518.953
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-photo-horizon-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1271.659,
+        "peak_memory_mb": 1527.734
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-photo-horizon-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10998,
+      "true_positive_pixels": 10997,
+      "false_positive_pixels": 1,
+      "false_negative_pixels": 3,
+      "outside_candidate_pixels": 0,
+      "iou": 0.999636,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 4,
+      "correction_reduction": 0.970588,
+      "runtime": {
+        "duration_ms": 1345.251,
+        "peak_memory_mb": 1528.953
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-photo-night-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1359.037,
+        "peak_memory_mb": 1530.641
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-photo-night-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3244,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 2391,
+      "true_positive_pixels": 1783,
+      "false_positive_pixels": 608,
+      "false_negative_pixels": 1461,
+      "outside_candidate_pixels": 0,
+      "iou": 0.462876,
+      "candidate_correction_pixels": 2580,
+      "refined_correction_pixels": 2069,
+      "correction_reduction": 0.198062,
+      "runtime": {
+        "duration_ms": 1516.291,
+        "peak_memory_mb": 1539.031
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia00254-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1420.323,
+        "peak_memory_mb": 1543.516
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia00254-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10980,
+      "true_positive_pixels": 10980,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 20,
+      "outside_candidate_pixels": 0,
+      "iou": 0.998182,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 20,
+      "correction_reduction": 0.852941,
+      "runtime": {
+        "duration_ms": 1259.567,
+        "peak_memory_mb": 1549.906
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia11141-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1317.617,
+        "peak_memory_mb": 1550.328
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia11141-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3232,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 5183,
+      "true_positive_pixels": 3151,
+      "false_positive_pixels": 2032,
+      "false_negative_pixels": 81,
+      "outside_candidate_pixels": 0,
+      "iou": 0.598594,
+      "candidate_correction_pixels": 2592,
+      "refined_correction_pixels": 2113,
+      "correction_reduction": 0.184799,
+      "runtime": {
+        "duration_ms": 1406.864,
+        "peak_memory_mb": 1551.938
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia11727-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1593.282,
+        "peak_memory_mb": 1565.453
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia11727-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3275,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4203,
+      "true_positive_pixels": 3178,
+      "false_positive_pixels": 1025,
+      "false_negative_pixels": 97,
+      "outside_candidate_pixels": 0,
+      "iou": 0.73907,
+      "candidate_correction_pixels": 2549,
+      "refined_correction_pixels": 1122,
+      "correction_reduction": 0.559827,
+      "runtime": {
+        "duration_ms": 1248.928,
+        "peak_memory_mb": 1575.75
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia17792-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1352.155,
+        "peak_memory_mb": 1576.641
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia17792-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 11000,
+      "outside_candidate_pixels": 0,
+      "iou": 0.0,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 11000,
+      "correction_reduction": 0.0,
+      "runtime": {
+        "duration_ms": 1433.821,
+        "peak_memory_mb": 1578.984
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia20284-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1383.971,
+        "peak_memory_mb": 1582.297
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia20284-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3288,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4703,
+      "true_positive_pixels": 3221,
+      "false_positive_pixels": 1482,
+      "false_negative_pixels": 67,
+      "outside_candidate_pixels": 0,
+      "iou": 0.675262,
+      "candidate_correction_pixels": 2536,
+      "refined_correction_pixels": 1549,
+      "correction_reduction": 0.389196,
+      "runtime": {
+        "duration_ms": 1419.323,
+        "peak_memory_mb": 1586.406
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia24642-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1468.957,
+        "peak_memory_mb": 1589.219
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "paired-pia24642-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10998,
+      "true_positive_pixels": 10995,
+      "false_positive_pixels": 3,
+      "false_negative_pixels": 5,
+      "outside_candidate_pixels": 0,
+      "iou": 0.999273,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 8,
+      "correction_reduction": 0.941176,
+      "runtime": {
+        "duration_ms": 1298.74,
+        "peak_memory_mb": 1600.703
+      },
+      "workflow_seconds": null
+    }
+  ],
+  "corpus": {
+    "kind": "provenance_photo_pairs",
+    "provenance_gate": "pass",
+    "pair_count": 16,
+    "source_count": 16,
+    "contains_user_data": false
+  }
+}

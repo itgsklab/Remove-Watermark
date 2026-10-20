@@ -16,6 +16,8 @@ All notable changes to this project are documented in this file. The format foll
   CPU/MPS benchmark reports showing strong recall but failed precision and human-timing gates.
 - A provenance-audited 32-sample real-photo refinement corpus built from 16 independent NASA and
   Wikimedia sources, with paired clean negatives, exact pixel-difference masks and CPU/MPS reports.
+- A reproducible Florence-2 candidate-confirmation gate that rejects all 16 paired clean negatives
+  before SAM2 refinement and passes the CPU/MPS pixel metric gates on the fixed development corpus.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
   explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,

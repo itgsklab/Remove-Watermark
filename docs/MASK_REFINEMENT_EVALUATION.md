@@ -98,11 +98,36 @@ MPS 的 Precision/Recall/IoU 为 0.515/0.911/0.490，CPU 为 0.580/0.978/0.573�
 
 由于指标门禁已经失败，本阶段不填造或提前收集人工计时。人工盲测需要实际参与者按统一流程完成；在候选拒绝门禁使精度达到阈值前，计时结果也不能改变发布结论。
 
+## Florence-2 候选确认门禁
+
+候选拒绝实验复用了已经固定 revision、提示词和真实输出的 Florence-2 定位结果。门禁要求定位框与外部候选框的 IoU 至少为 0.5，达到阈值后才采用 SAM2 蒙版；该阈值与现有定位基准一致，没有针对本轮结果重新调参。公开的脱敏原始定位输入见 [`vlm-photo-gated-predictions.json`](benchmarks/vlm-photo-gated-predictions.json)。
+
+在 16 对固定实景样本上，门禁接受 15 个水印正例、拒绝全部 16 个干净同框负例，并漏掉 1 个水印正例；候选级 Precision 为 1.000，Recall 为 0.938。组合后的像素结果为：
+
+| 设备 | Precision | Recall | IoU | 修正量减少 | 指标门禁 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| MPS | 0.958 | 0.823 | 0.795 | 0.846 | 通过 |
+| CPU | 0.919 | 0.883 | 0.819 | 0.858 | 通过 |
+
+完整报告见：
+
+- [`mask-refinement-candidate-gate-mps.json`](benchmarks/mask-refinement-candidate-gate-mps.json) 与 [`mask-refinement-candidate-gate-mps.md`](benchmarks/mask-refinement-candidate-gate-mps.md)；
+- [`mask-refinement-candidate-gate-cpu.json`](benchmarks/mask-refinement-candidate-gate-cpu.json) 与 [`mask-refinement-candidate-gate-cpu.md`](benchmarks/mask-refinement-candidate-gate-cpu.md)。
+
+该实验适用于确认人工或其他来源给出的候选框。若候选框本身也由同一次 Florence-2 推理生成，则这不是独立的二次确认，不能据此推断相同的拒绝能力。当前结果来自开发语料，尚需独立留出语料复核；人工计时门禁仍为失败，`release_claim_allowed=false`，组合模型不会进入 Web。
+
+可用已有真实模型输出复现组合评分，不会下载权重或重新推理：
+
+```bash
+make mask-refinement-candidate-gate-mps
+make mask-refinement-candidate-gate-cpu
+```
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 研究独立于 SAM2 的候选拒绝门禁，优先降低干净同框负例误选；SAM2 本身不得承担“是否为水印”的判断；
-2. 候选拒绝后的固定实景语料指标达到阈值后，再由人工完成“纯手工”“VLM 框”“VLM + 分割”三条路径的盲测计时；
+1. 用独立留出实景语料复核 Florence-2 候选确认门禁，避免把开发语料结果当成泛化证据；
+2. 留出语料的候选与像素指标达到阈值后，再由人工完成“纯手工”“VLM 框”“VLM + 分割”三条路径的盲测计时；
 3. 在至少一种 CUDA 环境复跑相同固定 revision，记录耗时、峰值内存和像素差异；
 4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。

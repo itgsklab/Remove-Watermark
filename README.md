@@ -217,7 +217,14 @@ make mask-refinement-photo-model-cpu
 ```
 
 实景语料要求每个正例都有同图同框的干净负例，并固定公开来源、使用条款、原图摘要、
-转换方式和像素真值生成方法。当前真实模型仍未通过精度门禁，不会进入 Web 产品入口。
+转换方式和像素真值生成方法。原始 SAM2 结果仍未通过精度门禁。加入 Florence-2 候选确认后，CPU 与 MPS 的指标门禁均通过；复现组合评分：
+
+```bash
+make mask-refinement-candidate-gate-mps
+make mask-refinement-candidate-gate-cpu
+```
+
+该结果仅覆盖固定开发语料，尚待独立留出集和人工盲测计时，不会进入 Web 产品入口。
 
 复核带来源记录的真实照片和项目截图复杂度阈值：
 

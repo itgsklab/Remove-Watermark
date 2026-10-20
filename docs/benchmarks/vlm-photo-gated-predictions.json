@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "detector": {
+    "id": "florence-2-local-open-vocabulary",
+    "model_id": "microsoft/Florence-2-base",
+    "model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+    "prompt": "watermark",
+    "is_model_output": true,
+    "runtime": {
+      "kind": "photo-gated-localizer",
+      "localizer": {
+        "kind": "local-vendored-florence2",
+        "device": "mps",
+        "torch_version": "2.14.1",
+        "transformers_version": "4.49.0",
+        "maximum_candidate_coverage": 0.3
+      },
+      "photo_scene_gate": {
+        "maximum_sample_dimension": 256,
+        "minimum_luminance_entropy": 4.5,
+        "minimum_quantized_color_count": 128,
+        "color_quantization_step": 16,
+        "minimum_luminance_standard_deviation": 25.0,
+        "flat_gradient_magnitude": 10.0,
+        "maximum_flat_gradient_ratio": 0.75,
+        "minimum_dark_detail_entropy": 3.4,
+        "gradient_orientation_magnitude": 20.0,
+        "gradient_orientation_bin_count": 18,
+        "minimum_gradient_orientation_entropy": 3.9
+      }
+    },
+    "note": "Generated locally from SHA-256 verified Safetensors weights."
+  },
+  "predictions": [
+    {
+      "sample_id": "real-horizon-corner",
+      "boxes": [
+        {
+          "x0": 397.1700134277344,
+          "y0": 27.720001220703125,
+          "x1": 522.9900512695312,
+          "y1": 78.12000274658203,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "real-horizon-translucent",
+      "boxes": [
+        {
+          "x0": 123.39000701904297,
+          "y0": 153.0,
+          "x1": 330.21002197265625,
+          "y1": 204.12001037597656,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "real-night-multiline",
+      "boxes": [
+        {
+          "x0": 46.17000198364258,
+          "y0": 515.8800048828125,
+          "x1": 495.45001220703125,
+          "y1": 695.8800048828125,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "clean-horizon-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "clean-night-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "clean-project-ui-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-photo-horizon-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-photo-horizon-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 387.1199951171875,
+          "x1": 694.4400024414062,
+          "y1": 451.91998291015625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-photo-night-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-photo-night-positive",
+      "boxes": [
+        {
+          "x0": 250.20001220703125,
+          "y0": 31.439998626708984,
+          "x1": 439.5600280761719,
+          "y1": 75.1199951171875,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia24642-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia24642-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 387.1199951171875,
+          "x1": 696.6000366210938,
+          "y1": 452.8800048828125,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-as11-40-5878-negative",
+      "boxes": [
+        {
+          "x0": 63.720001220703125,
+          "y0": 90.0,
+          "x1": 100.44000244140625,
+          "y1": 126.47999572753906,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-as11-40-5878-positive",
+      "boxes": [
+        {
+          "x0": 249.48001098632812,
+          "y0": 30.959999084472656,
+          "x1": 439.5600280761719,
+          "y1": 76.55999755859375,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-iss042e097549-negative",
+      "boxes": [
+        {
+          "x0": 541.0800170898438,
+          "y0": 146.16000366210938,
+          "x1": 591.4800415039062,
+          "y1": 197.0399932861328,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-iss042e097549-positive",
+      "boxes": [
+        {
+          "x0": 497.8800048828125,
+          "y0": 387.6000061035156,
+          "x1": 695.1600341796875,
+          "y1": 451.44000244140625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia11141-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia11141-positive",
+      "boxes": [
+        {
+          "x0": 249.48001098632812,
+          "y0": 32.39999771118164,
+          "x1": 439.5600280761719,
+          "y1": 74.15999603271484,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia00254-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia00254-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 387.6000061035156,
+          "x1": 694.4400024414062,
+          "y1": 451.44000244140625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia20284-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia20284-positive",
+      "boxes": [
+        {
+          "x0": 249.48001098632812,
+          "y0": 31.439998626708984,
+          "x1": 439.5600280761719,
+          "y1": 74.63999938964844,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia17792-negative",
+      "boxes": [
+        {
+          "x0": 276.8399963378906,
+          "y0": 194.1599884033203,
+          "x1": 464.0400085449219,
+          "y1": 356.8800048828125,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia17792-positive",
+      "boxes": [
+        {
+          "x0": 517.3200073242188,
+          "y0": 409.1999816894531,
+          "x1": 628.9200439453125,
+          "y1": 436.0799865722656,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-pia11727-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-pia11727-positive",
+      "boxes": [
+        {
+          "x0": 247.32000732421875,
+          "y0": 30.479999542236328,
+          "x1": 441.0000305175781,
+          "y1": 76.55999755859375,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-38778875-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-38778875-positive",
+      "boxes": [
+        {
+          "x0": 497.8800048828125,
+          "y0": 386.6399841308594,
+          "x1": 695.8800048828125,
+          "y1": 451.91998291015625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-59873545-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-59873545-positive",
+      "boxes": [
+        {
+          "x0": 250.92001342773438,
+          "y0": 31.920000076293945,
+          "x1": 441.0000305175781,
+          "y1": 74.63999938964844,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-14666867-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-14666867-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 386.6399841308594,
+          "x1": 695.1600341796875,
+          "y1": 451.91998291015625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-74184357-negative",
+      "boxes": [
+        {
+          "x0": 429.4800109863281,
+          "y0": 207.59999084472656,
+          "x1": 456.1200256347656,
+          "y1": 259.44000244140625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-74184357-positive",
+      "boxes": [
+        {
+          "x0": 250.92001342773438,
+          "y0": 31.439998626708984,
+          "x1": 438.84002685546875,
+          "y1": 76.08000183105469,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-144326190-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-commons-144326190-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 386.6399841308594,
+          "x1": 695.1600341796875,
+          "y1": 451.91998291015625,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-201054816-negative",
+      "boxes": [
+        {
+          "x0": 476.280029296875,
+          "y0": 204.72000122070312,
+          "x1": 520.2000122070312,
+          "y1": 224.39999389648438,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-commons-201054816-positive",
+      "boxes": [
+        {
+          "x0": 250.20001220703125,
+          "y0": 31.439998626708984,
+          "x1": 441.0000305175781,
+          "y1": 75.1199951171875,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "paired-dashboard-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-dashboard-positive",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-document-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-document-positive",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-code-editor-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-code-editor-positive",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-poster-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-poster-positive",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-mobile-feed-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "paired-mobile-feed-positive",
+      "boxes": []
+    }
+  ]
+}
