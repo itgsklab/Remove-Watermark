@@ -123,11 +123,41 @@ make mask-refinement-candidate-gate-mps
 make mask-refinement-candidate-gate-cpu
 ```
 
+## 独立留出集结果
+
+为了避免把开发语料结果误当成泛化证据，项目在模型推理前冻结了 8 个全新 NASA 来源组成的 16 个成对样本。构建器强制检查来源组与开发集交集为零，并固定官方记录页、资产 URL、使用条款、SHA-256、转换方式和精确像素差异真值。合同报告见 [`mask-refinement-holdout-contract.json`](benchmarks/mask-refinement-holdout-contract.json) 与 [`mask-refinement-holdout-contract.md`](benchmarks/mask-refinement-holdout-contract.md)。
+
+相同的 Florence-2、SAM2 revision、`watermark` 提示词和 IoU 0.5 候选门禁没有重新调参。候选级门禁拒绝 8/8 个干净负例，接受 7/8 个水印正例，Precision 为 1.000、Recall 为 0.875；漏检样本的最佳定位 IoU 为 0.274。像素级组合结果没有通过预先设定的门禁：
+
+| 设备 | Precision | Recall | IoU | 修正量减少 | 指标门禁 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| MPS | 0.937 | 0.673 | 0.643 | 0.730 | 失败 |
+| CPU | 0.855 | 0.801 | 0.705 | 0.758 | 失败 |
+
+完整报告见：
+
+- [`mask-refinement-holdout-gate-mps.json`](benchmarks/mask-refinement-holdout-gate-mps.json) 与 [`mask-refinement-holdout-gate-mps.md`](benchmarks/mask-refinement-holdout-gate-mps.md)；
+- [`mask-refinement-holdout-gate-cpu.json`](benchmarks/mask-refinement-holdout-gate-cpu.json) 与 [`mask-refinement-holdout-gate-cpu.md`](benchmarks/mask-refinement-holdout-gate-cpu.md)；
+- 脱敏的 Florence-2 原始输出见 [`mask-refinement-holdout-florence2-predictions.json`](benchmarks/mask-refinement-holdout-florence2-predictions.json)。
+
+留出结果说明候选拒绝在这批新来源上没有产生误接受，但 SAM2 对不同背景和半透明文字的像素边界仍不稳定。该留出集不会被用于回调阈值；本阶段停止在失败证据，不执行人工计时，也不接入 Web。
+
+复现语料合同与真实评测：
+
+```bash
+make mask-refinement-holdout-corpus
+make mask-refinement-holdout-localization
+make mask-refinement-holdout-model-mps
+make mask-refinement-holdout-model-cpu
+make mask-refinement-holdout-gate-mps
+make mask-refinement-holdout-gate-cpu
+```
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 用独立留出实景语料复核 Florence-2 候选确认门禁，避免把开发语料结果当成泛化证据；
-2. 留出语料的候选与像素指标达到阈值后，再由人工完成“纯手工”“VLM 框”“VLM + 分割”三条路径的盲测计时；
-3. 在至少一种 CUDA 环境复跑相同固定 revision，记录耗时、峰值内存和像素差异；
+1. 回到独立开发语料研究更适合文字水印的分割策略或多候选模型，留出集保持冻结且不得用于调参；
+2. 新方案先通过开发门禁，再建立第二个未见来源确认集；只有确认集像素指标通过后才进行人工盲测计时；
+3. 在至少一种 CUDA 环境复跑固定 revision，记录耗时、峰值内存和像素差异；
 4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。

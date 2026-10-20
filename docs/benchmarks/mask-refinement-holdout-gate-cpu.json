@@ -1,0 +1,537 @@
+{
+  "schema_version": 1,
+  "benchmark": "wmrm-box-guided-mask-refinement",
+  "evaluation_kind": "model",
+  "refiner": {
+    "id": "florence2-confirmed-sam2-refiner-v1",
+    "model_id": "microsoft/Florence-2-base + facebook/sam2-hiera-tiny",
+    "model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac + 7c218beaf0bb87874785f32b582f640134fc1c09",
+    "prompt_version": "watermark-candidate-iou-v1",
+    "device": "cpu",
+    "is_model_output": true,
+    "automatic_download": false,
+    "runtime": {
+      "architecture": "arm64",
+      "candidate_box_clipping": true,
+      "checkpoint_load_issues": 0,
+      "device": "cpu",
+      "kind": "local-transformers-sam2",
+      "platform": "darwin",
+      "runtime_model_class": "Sam2Model",
+      "source_config_model_type": "sam2_video",
+      "torch_version": "2.7.1",
+      "transformers_version": "5.10.4"
+    },
+    "candidate_gate": {
+      "kind": "florence2-candidate-iou-confirmation",
+      "iou_threshold": 0.5,
+      "detector_id": "florence-2-local-open-vocabulary",
+      "detector_model_id": "microsoft/Florence-2-base",
+      "detector_model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+      "prompt": "watermark",
+      "true_positive": 7,
+      "true_negative": 8,
+      "false_positive": 0,
+      "false_negative": 1,
+      "precision": 1.0,
+      "recall": 0.875,
+      "samples": [
+        {
+          "sample_id": "holdout-as17-148-22727-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "holdout-as17-148-22727-positive",
+          "expected": "accept",
+          "decision": "reject",
+          "best_iou": 0.27419,
+          "outcome": "false_negative"
+        },
+        {
+          "sample_id": "holdout-0202487-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "holdout-0202487-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.681213,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "holdout-iss040e063570-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "holdout-iss040e063570-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.84907,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "holdout-as17-140-21497-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "holdout-as17-140-21497-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.725372,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "holdout-0701891-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "holdout-0701891-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.867939,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "holdout-iss041e045376-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "holdout-iss041e045376-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.709253,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "holdout-as17-145-22162-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.009825,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "holdout-as17-145-22162-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.861557,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "holdout-iss073e0008524-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "holdout-iss073e0008524-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.709253,
+          "outcome": "true_positive"
+        }
+      ]
+    }
+  },
+  "thresholds": {
+    "minimum_iou": 0.75,
+    "minimum_precision": 0.8,
+    "minimum_recall": 0.8,
+    "minimum_correction_reduction": 0.25,
+    "maximum_outside_candidate_pixels": 0,
+    "minimum_sample_count": 16,
+    "minimum_negative_count": 8,
+    "minimum_category_count": 4,
+    "minimum_timing_count": 6
+  },
+  "summary": {
+    "sample_count": 16,
+    "positive_count": 8,
+    "negative_count": 8,
+    "category_count": 4,
+    "true_positive_pixels": 45607,
+    "false_positive_pixels": 7739,
+    "false_negative_pixels": 11330,
+    "candidate_correction_pixels": 78743,
+    "refined_correction_pixels": 19069,
+    "outside_candidate_pixels": 0,
+    "precision": 0.854928,
+    "recall": 0.801008,
+    "iou": 0.705161,
+    "correction_reduction": 0.757832,
+    "timing_evidence_count": 0,
+    "metric_gate": "fail",
+    "evidence_gate": "pass",
+    "timing_gate": "fail",
+    "release_claim_allowed": false
+  },
+  "workflow_timing": {
+    "count": 0,
+    "manual_mean": null,
+    "box_mean": null,
+    "refined_mean": null
+  },
+  "samples": [
+    {
+      "sample_id": "holdout-as17-148-22727-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 898.116,
+        "peak_memory_mb": 1212.734
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-as17-148-22727-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 11000,
+      "outside_candidate_pixels": 0,
+      "iou": 0.0,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 11000,
+      "correction_reduction": 0.0,
+      "runtime": {
+        "duration_ms": 892.516,
+        "peak_memory_mb": 1440.969
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-0202487-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 883.006,
+        "peak_memory_mb": 1490.172
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-0202487-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3270,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4997,
+      "true_positive_pixels": 3202,
+      "false_positive_pixels": 1795,
+      "false_negative_pixels": 68,
+      "outside_candidate_pixels": 0,
+      "iou": 0.632182,
+      "candidate_correction_pixels": 2554,
+      "refined_correction_pixels": 1863,
+      "correction_reduction": 0.270556,
+      "runtime": {
+        "duration_ms": 881.42,
+        "peak_memory_mb": 1493.641
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-iss040e063570-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 906.466,
+        "peak_memory_mb": 1500.297
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-iss040e063570-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10977,
+      "true_positive_pixels": 10975,
+      "false_positive_pixels": 2,
+      "false_negative_pixels": 25,
+      "outside_candidate_pixels": 0,
+      "iou": 0.997546,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 27,
+      "correction_reduction": 0.801471,
+      "runtime": {
+        "duration_ms": 890.427,
+        "peak_memory_mb": 1507.125
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-as17-140-21497-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 940.888,
+        "peak_memory_mb": 1515.688
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-as17-140-21497-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3217,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 5205,
+      "true_positive_pixels": 3160,
+      "false_positive_pixels": 2045,
+      "false_negative_pixels": 57,
+      "outside_candidate_pixels": 0,
+      "iou": 0.600532,
+      "candidate_correction_pixels": 2607,
+      "refined_correction_pixels": 2102,
+      "correction_reduction": 0.193709,
+      "runtime": {
+        "duration_ms": 920.412,
+        "peak_memory_mb": 1522.906
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-0701891-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 926.553,
+        "peak_memory_mb": 1523.562
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-0701891-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10989,
+      "true_positive_pixels": 10989,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 11,
+      "outside_candidate_pixels": 0,
+      "iou": 0.999,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 11,
+      "correction_reduction": 0.919118,
+      "runtime": {
+        "duration_ms": 934.152,
+        "peak_memory_mb": 1532.156
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-iss041e045376-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 881.876,
+        "peak_memory_mb": 1532.438
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-iss041e045376-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3218,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4962,
+      "true_positive_pixels": 3106,
+      "false_positive_pixels": 1856,
+      "false_negative_pixels": 112,
+      "outside_candidate_pixels": 0,
+      "iou": 0.61214,
+      "candidate_correction_pixels": 2606,
+      "refined_correction_pixels": 1968,
+      "correction_reduction": 0.24482,
+      "runtime": {
+        "duration_ms": 883.697,
+        "peak_memory_mb": 1532.469
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-as17-145-22162-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1010.589,
+        "peak_memory_mb": 1532.75
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-as17-145-22162-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10999,
+      "true_positive_pixels": 10997,
+      "false_positive_pixels": 2,
+      "false_negative_pixels": 3,
+      "outside_candidate_pixels": 0,
+      "iou": 0.999546,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 5,
+      "correction_reduction": 0.963235,
+      "runtime": {
+        "duration_ms": 1153.124,
+        "peak_memory_mb": 1536.891
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-iss073e0008524-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 881.712,
+        "peak_memory_mb": 1537.766
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "holdout-iss073e0008524-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3232,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 5217,
+      "true_positive_pixels": 3178,
+      "false_positive_pixels": 2039,
+      "false_negative_pixels": 54,
+      "outside_candidate_pixels": 0,
+      "iou": 0.602922,
+      "candidate_correction_pixels": 2592,
+      "refined_correction_pixels": 2093,
+      "correction_reduction": 0.192515,
+      "runtime": {
+        "duration_ms": 983.711,
+        "peak_memory_mb": 1544.984
+      },
+      "workflow_seconds": null
+    }
+  ],
+  "corpus": {
+    "kind": "provenance_photo_pairs",
+    "provenance_gate": "pass",
+    "pair_count": 8,
+    "source_count": 8,
+    "contains_user_data": false
+  }
+}

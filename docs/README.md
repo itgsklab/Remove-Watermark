@@ -30,6 +30,9 @@ reports maintained in this repository:
 - `benchmarks/mask-refinement-sam2-photo-cpu.md`
 - `benchmarks/mask-refinement-candidate-gate-mps.md`
 - `benchmarks/mask-refinement-candidate-gate-cpu.md`
+- `benchmarks/mask-refinement-holdout-contract.md`
+- `benchmarks/mask-refinement-holdout-gate-mps.md`
+- `benchmarks/mask-refinement-holdout-gate-cpu.md`
 - `benchmarks/vlm-localization-contract.md`
 - `benchmarks/vlm-localization-model.md`
 - `benchmarks/image-complexity-calibration.md`
