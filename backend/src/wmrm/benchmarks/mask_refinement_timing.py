@@ -10,6 +10,7 @@ from typing import Any
 
 PROTOCOL_ID = "wmrm-mask-refinement-human-timing-v1"
 WORKFLOWS = ("manual", "box", "refined")
+FAILURE_REASONS = ("mask_not_usable", "editor_problem", "time_limit", "other")
 MIN_PARTICIPANTS = 3
 MIN_PAIRED_SAMPLES = 8
 MAX_FAILURE_RATE = 0.10
@@ -122,6 +123,8 @@ def create_timing_session(
                     "workflow": workflow,
                     "image_file": sample["image_file"],
                     "image_sha256": sample["image_sha256"],
+                    "width": sample["width"],
+                    "height": sample["height"],
                     "candidate_box": sample["candidate_box"],
                     "refined_mask_file": refined_masks[sample["sample_id"]]["file"],
                     "refined_mask_sha256": refined_masks[sample["sample_id"]]["sha256"],
@@ -343,6 +346,8 @@ def _timing_sample(root: Path, sample: object) -> dict[str, Any]:
         "image_file": image_file,
         "image_sha256": _sha256(image_path),
         "candidate_box": coordinates,
+        "width": int(_required_number(sample, "width")),
+        "height": int(_required_number(sample, "height")),
     }
 
 
@@ -397,6 +402,8 @@ def _validate_trial(
     reason = trial.get("failure_reason")
     if status == "failed" and (not isinstance(reason, str) or not reason.strip()):
         raise MaskRefinementTimingError("Failed trials require a failure reason.")
+    if status == "failed" and reason.strip() not in FAILURE_REASONS:
+        raise MaskRefinementTimingError("Failed trials require a supported failure reason.")
     if status == "completed" and reason not in {None, ""}:
         raise MaskRefinementTimingError("Completed trials cannot include a failure reason.")
     return {

@@ -57,6 +57,7 @@ wmrm-model-supply-chain = "wmrm.benchmarks.model_supply_chain:main"
 wmrm-mask-refinement-predict = "wmrm.benchmarks.mask_refinement_predict:main"
 wmrm-mask-refinement-gate = "wmrm.benchmarks.mask_refinement_gate:main"
 wmrm-mask-refinement-timing = "wmrm.benchmarks.mask_refinement_timing:main"
+wmrm-mask-refinement-timing-ui = "wmrm.benchmarks.mask_refinement_timing_ui:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/wmrm"]

@@ -18,7 +18,8 @@
 
 计时在图片和初始蒙版完整可见时开始，在参与者确认最终可用蒙版时停止。`total_seconds`
 记录全部任务时间，`correction_seconds` 记录主动编辑蒙版的时间。无法得到可用蒙版时必须
-标记 `failed` 并填写失败原因，不能删除失败试次。
+标记 `failed` 并从“无法得到可用蒙版、编辑器异常、超时、其他”四个固定原因中选择，不能
+删除失败试次。结果不保存自由文本，避免把姓名、路径或其他私人信息带入公开汇总。
 
 ## 冻结门禁
 
@@ -48,8 +49,25 @@ cd backend
   --results ../work/mask-refinement-timing/operator-01/results.json
 ```
 
-操作员按照 `session.json` 的顺序执行任务，并在 `results.json` 中填写总耗时、修正耗时、
-完成状态和失败原因。不得编辑会话文件；其摘要变化会导致审计失败。
+不要手工编辑 `session.json` 或 `results.json`。启动独立的本地计时界面：
+
+```bash
+cd backend
+.venv/bin/python -m wmrm.benchmarks.mask_refinement_timing_ui \
+  --manifest tests/fixtures/mask_refinement_confirmation_fourth/manifest.json \
+  --refined-predictions ../work/mask-refinement-confirmation-fourth/gated-mps/predictions.json \
+  --session ../work/mask-refinement-timing/operator-01/session.json \
+  --results ../work/mask-refinement-timing/operator-01/results.json \
+  --port 8776
+```
+
+随后在同一台电脑打开 `http://127.0.0.1:8776/`。页面只显示方案 A/B/C，不显示工作流
+名称、样本 ID、像素真值或模型指标。图片与初始蒙版完整加载后由服务器开始总计时；页面
+累计每次画笔按下到抬起之间的主动修正时间。每次确认或失败后结果立即原子写入本机，刷新
+页面可继续尚未完成的任务，已经完成的试次不能从页面修改。
+
+计时服务只监听环回地址，启动时重新验证会话、确认集、MPS 预测文件和每个图片/蒙版摘要。
+任一文件变化都会拒绝启动。界面不会接入正式产品路由，也不发送网络请求到本机之外。
 
 ## 审计真实结果
 

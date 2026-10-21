@@ -354,6 +354,10 @@ make mask-refinement-confirmation-fourth-gate-cpu
 [`MASK_REFINEMENT_TIMING_PROTOCOL.md`](MASK_REFINEMENT_TIMING_PROTOCOL.md)。当前参与者和试次
 均为 0，计时及发布门禁继续失败；没有生成或填造人工结果。
 
+协议配套界面独立运行于 `127.0.0.1`，不挂载到正式 Web 产品。它在图片和初始建议加载完成
+后启动服务器总计时，累计画笔主动修正时间，并逐任务原子保存。界面向参与者只显示方案
+A/B/C，不暴露工作流名称、样本 ID、真值或模型指标；启动和提供素材前均重新校验冻结摘要。
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
