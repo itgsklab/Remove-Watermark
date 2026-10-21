@@ -1,0 +1,545 @@
+{
+  "schema_version": 1,
+  "benchmark": "wmrm-box-guided-mask-refinement",
+  "evaluation_kind": "model",
+  "refiner": {
+    "id": "florence2-confirmed-sam2-hiera-tiny-box-refiner-multimask-text-contrast-v1",
+    "model_id": "microsoft/Florence-2-base + facebook/sam2-hiera-tiny",
+    "model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac + 7c218beaf0bb87874785f32b582f640134fc1c09",
+    "prompt_version": "watermark-candidate-iou-v1 + candidate-box-highest-predicted-iou-text-contrast-v1",
+    "device": "cpu",
+    "is_model_output": true,
+    "automatic_download": false,
+    "runtime": {
+      "architecture": "arm64",
+      "candidate_box_clipping": true,
+      "checkpoint_load_issues": 0,
+      "device": "cpu",
+      "kind": "local-transformers-sam2",
+      "mask_selection": "highest-iou",
+      "multimask_output": true,
+      "platform": "darwin",
+      "runtime_model_class": "Sam2Model",
+      "source_config_model_type": "sam2_video",
+      "text_contrast_augmentation": true,
+      "text_contrast_policy": {
+        "gaussian_blur_radius": 1.5,
+        "minimum_box_aspect_ratio": 5.0,
+        "minimum_channel_delta": 20
+      },
+      "torch_version": "2.7.1",
+      "transformers_version": "5.10.4"
+    },
+    "candidate_gate": {
+      "kind": "florence2-candidate-iou-confirmation",
+      "iou_threshold": 0.5,
+      "detector_id": "florence-2-local-open-vocabulary",
+      "detector_model_id": "microsoft/Florence-2-base",
+      "detector_model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+      "prompt": "watermark",
+      "true_positive": 7,
+      "true_negative": 8,
+      "false_positive": 0,
+      "false_negative": 1,
+      "precision": 1.0,
+      "recall": 0.875,
+      "samples": [
+        {
+          "sample_id": "confirmation-third-pia00123-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-third-pia00123-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.858435,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-third-pia00122-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-third-pia00122-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.693834,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-third-pia13474-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-third-pia13474-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.861557,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-third-pia00134-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-third-pia00134-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.709253,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-third-pia00232-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-third-pia00232-positive",
+          "expected": "accept",
+          "decision": "reject",
+          "best_iou": 0.27419,
+          "outcome": "false_negative"
+        },
+        {
+          "sample_id": "confirmation-third-twin-jet-nebula-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-third-twin-jet-nebula-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.679072,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-third-pia04200-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-third-pia04200-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.858435,
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-third-pia04225-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-third-pia04225-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.693834,
+          "outcome": "true_positive"
+        }
+      ]
+    }
+  },
+  "thresholds": {
+    "minimum_iou": 0.75,
+    "minimum_precision": 0.8,
+    "minimum_recall": 0.8,
+    "minimum_correction_reduction": 0.25,
+    "maximum_outside_candidate_pixels": 0,
+    "minimum_sample_count": 16,
+    "minimum_negative_count": 8,
+    "minimum_category_count": 4,
+    "minimum_timing_count": 6
+  },
+  "summary": {
+    "sample_count": 16,
+    "positive_count": 8,
+    "negative_count": 8,
+    "category_count": 4,
+    "true_positive_pixels": 45692,
+    "false_positive_pixels": 6704,
+    "false_negative_pixels": 11249,
+    "candidate_correction_pixels": 78739,
+    "refined_correction_pixels": 17953,
+    "outside_candidate_pixels": 0,
+    "precision": 0.872051,
+    "recall": 0.802445,
+    "iou": 0.71792,
+    "correction_reduction": 0.771994,
+    "timing_evidence_count": 0,
+    "metric_gate": "fail",
+    "evidence_gate": "pass",
+    "timing_gate": "fail",
+    "release_claim_allowed": false
+  },
+  "workflow_timing": {
+    "count": 0,
+    "manual_mean": null,
+    "box_mean": null,
+    "refined_mean": null
+  },
+  "samples": [
+    {
+      "sample_id": "confirmation-third-pia00123-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 748.464,
+        "peak_memory_mb": 1157.422
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00123-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10980,
+      "true_positive_pixels": 10978,
+      "false_positive_pixels": 2,
+      "false_negative_pixels": 22,
+      "outside_candidate_pixels": 0,
+      "iou": 0.997819,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 24,
+      "correction_reduction": 0.823529,
+      "runtime": {
+        "duration_ms": 742.925,
+        "peak_memory_mb": 1386.047
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00122-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 725.425,
+        "peak_memory_mb": 1412.656
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00122-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3262,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4373,
+      "true_positive_pixels": 3220,
+      "false_positive_pixels": 1153,
+      "false_negative_pixels": 42,
+      "outside_candidate_pixels": 0,
+      "iou": 0.729332,
+      "candidate_correction_pixels": 2562,
+      "refined_correction_pixels": 1195,
+      "correction_reduction": 0.533568,
+      "runtime": {
+        "duration_ms": 753.085,
+        "peak_memory_mb": 1416.938
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia13474-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 734.328,
+        "peak_memory_mb": 1420.969
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia13474-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 10999,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10948,
+      "true_positive_pixels": 10947,
+      "false_positive_pixels": 1,
+      "false_negative_pixels": 52,
+      "outside_candidate_pixels": 0,
+      "iou": 0.995182,
+      "candidate_correction_pixels": 137,
+      "refined_correction_pixels": 53,
+      "correction_reduction": 0.613139,
+      "runtime": {
+        "duration_ms": 738.508,
+        "peak_memory_mb": 1429.078
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00134-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 756.002,
+        "peak_memory_mb": 1429.578
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00134-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3232,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 5133,
+      "true_positive_pixels": 3199,
+      "false_positive_pixels": 1934,
+      "false_negative_pixels": 33,
+      "outside_candidate_pixels": 0,
+      "iou": 0.619241,
+      "candidate_correction_pixels": 2592,
+      "refined_correction_pixels": 1967,
+      "correction_reduction": 0.241127,
+      "runtime": {
+        "duration_ms": 758.283,
+        "peak_memory_mb": 1437.578
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00232-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 733.486,
+        "peak_memory_mb": 1437.578
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00232-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 11000,
+      "outside_candidate_pixels": 0,
+      "iou": 0.0,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 11000,
+      "correction_reduction": 0.0,
+      "runtime": {
+        "duration_ms": 748.631,
+        "peak_memory_mb": 1445.578
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-twin-jet-nebula-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 729.927,
+        "peak_memory_mb": 1453.594
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-twin-jet-nebula-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3199,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4607,
+      "true_positive_pixels": 3152,
+      "false_positive_pixels": 1455,
+      "false_negative_pixels": 47,
+      "outside_candidate_pixels": 0,
+      "iou": 0.677267,
+      "candidate_correction_pixels": 2625,
+      "refined_correction_pixels": 1502,
+      "correction_reduction": 0.42781,
+      "runtime": {
+        "duration_ms": 767.964,
+        "peak_memory_mb": 1453.594
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia04200-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 738.67,
+        "peak_memory_mb": 1477.594
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia04200-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10973,
+      "true_positive_pixels": 10973,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 27,
+      "outside_candidate_pixels": 0,
+      "iou": 0.997545,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 27,
+      "correction_reduction": 0.801471,
+      "runtime": {
+        "duration_ms": 755.87,
+        "peak_memory_mb": 1477.594
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia04225-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 737.298,
+        "peak_memory_mb": 1477.641
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia04225-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3249,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 5382,
+      "true_positive_pixels": 3223,
+      "false_positive_pixels": 2159,
+      "false_negative_pixels": 26,
+      "outside_candidate_pixels": 0,
+      "iou": 0.595969,
+      "candidate_correction_pixels": 2575,
+      "refined_correction_pixels": 2185,
+      "correction_reduction": 0.151456,
+      "runtime": {
+        "duration_ms": 745.075,
+        "peak_memory_mb": 1477.641
+      },
+      "workflow_seconds": null
+    }
+  ],
+  "corpus": {
+    "kind": "provenance_photo_pairs",
+    "provenance_gate": "pass",
+    "pair_count": 8,
+    "source_count": 8,
+    "contains_user_data": false
+  }
+}

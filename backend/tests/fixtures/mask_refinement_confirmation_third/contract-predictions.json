@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "refiner": {
+    "id": "third-confirmation-scoring-contract",
+    "model_id": null,
+    "model_revision": null,
+    "prompt_version": "paired-third-confirmation-truth-v1",
+    "device": "fixture",
+    "is_model_output": false,
+    "automatic_download": false
+  },
+  "predictions": [
+    {
+      "sample_id": "confirmation-third-pia00123-negative",
+      "mask_file": "expected/confirmation-third-pia00123-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00123-positive",
+      "mask_file": "expected/confirmation-third-pia00123-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00122-negative",
+      "mask_file": "expected/confirmation-third-pia00122-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00122-positive",
+      "mask_file": "expected/confirmation-third-pia00122-positive.png",
+      "mask_sha256": "386e110418b15da3f599ba8caeea6227cac8b3ccd26d0492c014951a9929641b",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia13474-negative",
+      "mask_file": "expected/confirmation-third-pia13474-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia13474-positive",
+      "mask_file": "expected/confirmation-third-pia13474-positive.png",
+      "mask_sha256": "796e207907f88da596b3965651b7c2c5eedf298226e8de2da60fb4c8ababa4d1",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00134-negative",
+      "mask_file": "expected/confirmation-third-pia00134-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00134-positive",
+      "mask_file": "expected/confirmation-third-pia00134-positive.png",
+      "mask_sha256": "911bba19718ff7ff37a96b4eb057fa775df627d52200ca2b58742cdeecd62dc4",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00232-negative",
+      "mask_file": "expected/confirmation-third-pia00232-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia00232-positive",
+      "mask_file": "expected/confirmation-third-pia00232-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-twin-jet-nebula-negative",
+      "mask_file": "expected/confirmation-third-twin-jet-nebula-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-twin-jet-nebula-positive",
+      "mask_file": "expected/confirmation-third-twin-jet-nebula-positive.png",
+      "mask_sha256": "a8e1c50727ba4a4b669606bc424ebfcc07f42bac1d817560f9a768e57600e289",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia04200-negative",
+      "mask_file": "expected/confirmation-third-pia04200-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia04200-positive",
+      "mask_file": "expected/confirmation-third-pia04200-positive.png",
+      "mask_sha256": "5edb6989ddff6615df1620ada2714059c160787eded0f1b8d96f0dea44f9a2f9",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia04225-negative",
+      "mask_file": "expected/confirmation-third-pia04225-negative.png",
+      "mask_sha256": "ef8dbe4c10467bd63568ab47bf3357310a89eb8c77e6df30b7bf0af7caf8434f",
+      "runtime": null,
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-third-pia04225-positive",
+      "mask_file": "expected/confirmation-third-pia04225-positive.png",
+      "mask_sha256": "18d1a2321b48a0bdf1cc34cdb1e8955db7bda38d6b4a7f05a1bd8411b84731b1",
+      "runtime": null,
+      "workflow_seconds": null
+    }
+  ]
+}
