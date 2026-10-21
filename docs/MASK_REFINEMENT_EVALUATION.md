@@ -341,11 +341,26 @@ make mask-refinement-confirmation-fourth-gate-cpu
 
 确认指标已经通过，但人工计时证据仍为空，`release_claim_allowed=false`，Web 产品行为不变。
 
+## 人工盲测协议冻结
+
+在收集人工数据前，项目固定了 `wmrm-mask-refinement-human-timing-v1` 协议及门禁。协议从
+第四确认集选取 8 个正样本，每名参与者完成纯手工、候选框和模型细化共 24 个任务；三分块
+平衡顺序避免同一图片连续出现，并让每个样本完整覆盖三种工作流。
+
+新增命令为匿名参与者生成带摘要的会话与结果模板，并审计任务完整性、重复参与者、语料一致
+性、耗时范围和失败原因。公开协议基线见
+[`mask-refinement-timing-protocol.json`](benchmarks/mask-refinement-timing-protocol.json) 与
+[`mask-refinement-timing-protocol.md`](benchmarks/mask-refinement-timing-protocol.md)，执行说明见
+[`MASK_REFINEMENT_TIMING_PROTOCOL.md`](MASK_REFINEMENT_TIMING_PROTOCOL.md)。当前参与者和试次
+均为 0，计时及发布门禁继续失败；没有生成或填造人工结果。
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 按固定任务说明组织三类工作流的真实人工盲测，记录总耗时、修正耗时和失败原因；
+1. 已冻结三类工作流的匿名盲测协议、顺序生成器、结果模板和审计门禁；按
+   [`MASK_REFINEMENT_TIMING_PROTOCOL.md`](MASK_REFINEMENT_TIMING_PROTOCOL.md) 组织至少三名
+   真实参与者完成计时，记录总耗时、修正耗时和失败原因；
 2. 人工计时通过前保持 `release_claim_allowed=false`，不接入 Web；所有确认语料继续冻结；
 3. 在至少一种 CUDA 环境复跑固定 revision，记录耗时、峰值内存和像素差异；
 4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。

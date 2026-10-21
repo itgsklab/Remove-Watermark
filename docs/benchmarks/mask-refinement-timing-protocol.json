@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "protocol_id": "wmrm-mask-refinement-human-timing-v1",
+  "corpus_manifest": "manifest.json",
+  "corpus_sha256": "6fba3bb9cc5333024a9debc24e556aff8e4dea0977ff644736fd88ff96372179",
+  "positive_sample_count": 8,
+  "workflows": [
+    "manual",
+    "box",
+    "refined"
+  ],
+  "design": {
+    "task_order": "seeded three-block counterbalance",
+    "tasks_per_participant": 24,
+    "participant_identity": "one-way pseudonymous id; raw code is not stored",
+    "expected_masks_visible_to_participant": false
+  },
+  "thresholds": {
+    "minimum_participants": 3,
+    "minimum_paired_samples": 8,
+    "maximum_failure_rate": 0.1,
+    "maximum_refined_to_manual_median_ratio": 0.75,
+    "maximum_refined_to_box_median_ratio": 0.9
+  },
+  "summary": {
+    "participant_count": 0,
+    "trial_count": 0,
+    "timing_gate": "fail",
+    "release_claim_allowed": false
+  }
+}

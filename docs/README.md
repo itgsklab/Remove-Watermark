@@ -16,6 +16,7 @@ reports maintained in this repository:
 - `WORKER.md`
 - `WEB_DEPLOYMENT.md`
 - `LAMA_EVALUATION.md`
+- `MASK_REFINEMENT_TIMING_PROTOCOL.md`
 - `XIAOHONGSHU_LINKS.md`
 - `VLM_LOCALIZATION.md`
 - `models/florence-2-base.json`
@@ -30,6 +31,7 @@ reports maintained in this repository:
 - `benchmarks/mask-refinement-sam2-photo-cpu.md`
 - `benchmarks/mask-refinement-candidate-gate-mps.md`
 - `benchmarks/mask-refinement-candidate-gate-cpu.md`
+- `benchmarks/mask-refinement-timing-protocol.md`
 - `benchmarks/mask-refinement-holdout-contract.md`
 - `benchmarks/mask-refinement-holdout-gate-mps.md`
 - `benchmarks/mask-refinement-holdout-gate-cpu.md`
