@@ -27,6 +27,8 @@ All notable changes to this project are documented in this file. The format foll
   fixed CPU/MPS run failed the pixel gate and therefore blocks timing and Web integration.
 - An evaluation-only local RGB-contrast augmentation for text-shaped candidate boxes, with fixed
   thresholds and CPU/MPS development reports; it remains disabled pending a new unseen confirmation.
+- A third eight-source confirmation corpus frozen before text-contrast inference and disjoint by
+  source group and digest from all 32 sources used by earlier development and confirmation stages.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
   explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,
