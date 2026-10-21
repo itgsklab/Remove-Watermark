@@ -246,11 +246,45 @@ make mask-refinement-text-contrast-mps
 make mask-refinement-text-contrast-cpu
 ```
 
+## 第三确认集结果
+
+文字局部对比度策略冻结后，项目从 NASA 官方图片库固定了第三组 8 个新来源，生成 16 个
+正负成对样本。语料在模型运行前以独立提交冻结，构建器强制检查来源组和原图 SHA-256
+与开发语料、第一留出集及第二确认集的全部 32 个来源无交集。
+
+固定的 Florence-2 `watermark` 提示词和 IoU 0.5 候选门禁拒绝 8/8 个干净负例，接受
+7/8 个水印正例；Precision 为 1.000、Recall 为 0.875。漏检角标的最佳定位 IoU 为
+0.274。SAM2 多候选与文字局部对比度组合结果为：
+
+| 设备 | Precision | Recall | IoU | 修正量减少 | 指标门禁 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| MPS | 0.908 | 0.770 | 0.714 | 0.777 | 失败 |
+| CPU | 0.872 | 0.802 | 0.718 | 0.772 | 失败 |
+
+完整证据见：
+
+- [`mask-refinement-confirmation-third-contract.json`](benchmarks/mask-refinement-confirmation-third-contract.json) 与 [`mask-refinement-confirmation-third-contract.md`](benchmarks/mask-refinement-confirmation-third-contract.md)；
+- [`mask-refinement-confirmation-third-gate-mps.json`](benchmarks/mask-refinement-confirmation-third-gate-mps.json) 与 [`mask-refinement-confirmation-third-gate-mps.md`](benchmarks/mask-refinement-confirmation-third-gate-mps.md)；
+- [`mask-refinement-confirmation-third-gate-cpu.json`](benchmarks/mask-refinement-confirmation-third-gate-cpu.json) 与 [`mask-refinement-confirmation-third-gate-cpu.md`](benchmarks/mask-refinement-confirmation-third-gate-cpu.md)；
+- 脱敏 Florence-2 输出见 [`mask-refinement-confirmation-third-florence2-predictions.json`](benchmarks/mask-refinement-confirmation-third-florence2-predictions.json)。
+
+确认指标失败，因此第三确认集保持冻结，不回调提示词、候选阈值或蒙版规则；人工计时与
+Web 接入继续停止。
+
+```bash
+make mask-refinement-confirmation-third-corpus
+make mask-refinement-confirmation-third-localization
+make mask-refinement-confirmation-third-model-mps
+make mask-refinement-confirmation-third-model-cpu
+make mask-refinement-confirmation-third-gate-mps
+make mask-refinement-confirmation-third-gate-cpu
+```
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 建立第三套未见来源确认集，并在语料与真值冻结后只运行一次固定文字局部对比度策略；
-2. 只有第三确认集像素指标通过后才进行人工盲测计时；
+1. 回到开发语料研究提高候选召回且保持干净负例拒绝能力的独立定位策略；三个确认语料均保持冻结；
+2. 新定位策略先通过开发门禁，再建立新的未见来源确认集；只有确认指标通过后才进行人工盲测计时；
 3. 在至少一种 CUDA 环境复跑固定 revision，记录耗时、峰值内存和像素差异；
 4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。
