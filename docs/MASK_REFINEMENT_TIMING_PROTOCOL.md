@@ -38,6 +38,22 @@
 用户名。工具只保存参与者代码的单向摘要。会话与原始计时结果保存在被 Git 忽略的
 `work/` 目录，不应提交公开仓库。
 
+现场采集优先使用协调工具。它使用密码学随机参与者代码和种子建立私有目录，将目录与文件
+权限限制为当前系统用户可读写，并且不会把原始参与者代码写入磁盘：
+
+```bash
+cd backend
+.venv/bin/python -m wmrm.benchmarks.mask_refinement_timing_collect new \
+  --manifest tests/fixtures/mask_refinement_confirmation_fourth/manifest.json \
+  --refined-predictions ../work/mask-refinement-confirmation-fourth/gated-mps/predictions.json \
+  --root ../work/mask-refinement-timing/participants
+```
+
+命令只输出匿名参与者 ID、会话路径和结果路径。为参与者启动界面时，把输出路径传给下一节
+的本地计时界面。每名真实参与者只建立一个会话，不要预填或复制计时结果。
+
+以下手工命令只用于需要固定种子复现会话生成的情况：
+
 ```bash
 cd backend
 .venv/bin/python -m wmrm.benchmarks.mask_refinement_timing prepare \
@@ -71,7 +87,26 @@ cd backend
 
 ## 审计真实结果
 
-收集至少三套真实结果后运行：
+采集过程中可以查看匿名完成进度，不会输出工作流、样本或计时值：
+
+```bash
+cd backend
+.venv/bin/python -m wmrm.benchmarks.mask_refinement_timing_collect status \
+  --root ../work/mask-refinement-timing/participants
+```
+
+收集至少三套真实结果后，优先对采集目录整体审计。只要其中存在未完成会话，命令就会拒绝
+生成报告，避免静默排除失败或中断的参与者：
+
+```bash
+cd backend
+.venv/bin/python -m wmrm.benchmarks.mask_refinement_timing_collect audit \
+  --root ../work/mask-refinement-timing/participants \
+  --report-json ../work/mask-refinement-timing/report.json \
+  --report-md ../work/mask-refinement-timing/report.md
+```
+
+也可以显式列出每组会话与结果：
 
 ```bash
 cd backend
