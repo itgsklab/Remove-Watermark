@@ -10,6 +10,9 @@ import numpy as np
 from PIL import Image
 
 DEFAULT_IOU_THRESHOLD = 0.5
+DEFAULT_DETECTION_CONTAINMENT_THRESHOLD = 0.9
+DEFAULT_MIN_DETECTION_AREA_RATIO = 0.15
+MATCH_STRATEGIES = ("iou", "iou-or-contained-detection")
 
 
 class CandidateGateError(ValueError):
@@ -23,9 +26,18 @@ def apply_candidate_confirmation_gate(
     output: Path,
     *,
     iou_threshold: float = DEFAULT_IOU_THRESHOLD,
+    match_strategy: str = "iou",
+    detection_containment_threshold: float = DEFAULT_DETECTION_CONTAINMENT_THRESHOLD,
+    min_detection_area_ratio: float = DEFAULT_MIN_DETECTION_AREA_RATIO,
 ) -> dict[str, Any]:
     if not 0 < iou_threshold <= 1:
         raise CandidateGateError("Candidate IoU threshold must be in (0, 1].")
+    if match_strategy not in MATCH_STRATEGIES:
+        raise CandidateGateError("Unsupported candidate match strategy.")
+    if not 0 < detection_containment_threshold <= 1:
+        raise CandidateGateError("Detection containment threshold must be in (0, 1].")
+    if not 0 < min_detection_area_ratio <= 1:
+        raise CandidateGateError("Minimum detection area ratio must be in (0, 1].")
     corpus_manifest = corpus_manifest.resolve()
     localization_predictions = localization_predictions.resolve()
     segmentation_predictions = segmentation_predictions.resolve()
@@ -77,11 +89,19 @@ def apply_candidate_confirmation_gate(
         detections = localization_row.get("boxes")
         if not isinstance(detections, list):
             raise CandidateGateError(f"Invalid localization boxes for {sample_id}.")
-        best_iou = max(
-            (_intersection_over_union(candidate, _box(item, width, height)) for item in detections),
-            default=0.0,
+        matches = [
+            _candidate_match(candidate, _box(item, width, height)) for item in detections
+        ]
+        best_iou = max((item[0] for item in matches), default=0.0)
+        best_detection_containment = max((item[1] for item in matches), default=0.0)
+        best_detection_area_ratio = max((item[2] for item in matches), default=0.0)
+        iou_match = any(item[0] >= iou_threshold for item in matches)
+        containment_match = match_strategy == "iou-or-contained-detection" and any(
+            item[1] >= detection_containment_threshold
+            and item[2] >= min_detection_area_ratio
+            for item in matches
         )
-        accepted = best_iou >= iou_threshold
+        accepted = iou_match or containment_match
         if accepted:
             outcome = "true_positive" if expected_positive else "false_positive"
         else:
@@ -119,6 +139,15 @@ def apply_candidate_confirmation_gate(
                 "expected": "accept" if expected_positive else "reject",
                 "decision": "accept" if accepted else "reject",
                 "best_iou": round(best_iou, 6),
+                "best_detection_containment": round(best_detection_containment, 6),
+                "best_detection_area_ratio": round(best_detection_area_ratio, 6),
+                "decision_reason": (
+                    "iou"
+                    if iou_match
+                    else "contained_detection"
+                    if containment_match
+                    else "no_match"
+                ),
                 "outcome": outcome,
             }
         )
@@ -129,8 +158,15 @@ def apply_candidate_confirmation_gate(
     precision = _ratio(counts["true_positive"], counts["true_positive"] + counts["false_positive"])
     recall = _ratio(counts["true_positive"], counts["true_positive"] + counts["false_negative"])
     gate = {
-        "kind": "florence2-candidate-iou-confirmation",
+        "kind": (
+            "florence2-candidate-iou-confirmation"
+            if match_strategy == "iou"
+            else "florence2-candidate-iou-or-contained-detection-confirmation"
+        ),
+        "match_strategy": match_strategy,
         "iou_threshold": iou_threshold,
+        "detection_containment_threshold": detection_containment_threshold,
+        "min_detection_area_ratio": min_detection_area_ratio,
         "detector_id": _required_text(detector, "id"),
         "detector_model_id": _required_text(detector, "model_id"),
         "detector_model_revision": _required_text(detector, "model_revision"),
@@ -150,7 +186,9 @@ def apply_candidate_confirmation_gate(
             "model_revision": (
                 f"{gate['detector_model_revision']} + {_required_text(refiner, 'model_revision')}"
             ),
-            "prompt_version": f"watermark-candidate-iou-v1 + {segmentation_prompt}",
+            "prompt_version": (
+                f"watermark-candidate-{match_strategy}-v1 + {segmentation_prompt}"
+            ),
             "device": _required_text(refiner, "device"),
             "is_model_output": True,
             "automatic_download": False,
@@ -198,6 +236,24 @@ def _intersection_over_union(
     right_area = (right[2] - right[0]) * (right[3] - right[1])
     union = left_area + right_area - intersection
     return intersection / union if union else 0.0
+
+
+def _candidate_match(
+    candidate: tuple[float, float, float, float],
+    detection: tuple[float, float, float, float],
+) -> tuple[float, float, float]:
+    intersection_width = max(0.0, min(candidate[2], detection[2]) - max(candidate[0], detection[0]))
+    intersection_height = max(
+        0.0, min(candidate[3], detection[3]) - max(candidate[1], detection[1])
+    )
+    intersection = intersection_width * intersection_height
+    candidate_area = (candidate[2] - candidate[0]) * (candidate[3] - candidate[1])
+    detection_area = (detection[2] - detection[0]) * (detection[3] - detection[1])
+    union = candidate_area + detection_area - intersection
+    iou = intersection / union if union else 0.0
+    detection_containment = intersection / detection_area if detection_area else 0.0
+    detection_area_ratio = detection_area / candidate_area if candidate_area else 0.0
+    return iou, detection_containment, detection_area_ratio
 
 
 def _contained_file(root: Path, relative: str) -> Path:
@@ -263,6 +319,17 @@ def main() -> None:
     parser.add_argument("--segmentation-predictions", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--iou-threshold", type=float, default=DEFAULT_IOU_THRESHOLD)
+    parser.add_argument("--match-strategy", choices=MATCH_STRATEGIES, default="iou")
+    parser.add_argument(
+        "--detection-containment-threshold",
+        type=float,
+        default=DEFAULT_DETECTION_CONTAINMENT_THRESHOLD,
+    )
+    parser.add_argument(
+        "--min-detection-area-ratio",
+        type=float,
+        default=DEFAULT_MIN_DETECTION_AREA_RATIO,
+    )
     args = parser.parse_args()
     apply_candidate_confirmation_gate(
         args.manifest,
@@ -270,6 +337,9 @@ def main() -> None:
         args.segmentation_predictions,
         args.output,
         iou_threshold=args.iou_threshold,
+        match_strategy=args.match_strategy,
+        detection_containment_threshold=args.detection_containment_threshold,
+        min_detection_area_ratio=args.min_detection_area_ratio,
     )
 
 

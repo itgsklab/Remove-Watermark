@@ -30,6 +30,8 @@ All notable changes to this project are documented in this file. The format foll
 - A third eight-source confirmation corpus frozen before text-contrast inference and disjoint by
   source group and digest from all 32 sources used by earlier stages; its fixed CPU/MPS run failed
   the pixel gate, so timing and Web integration remain blocked.
+- An evaluation-only candidate match strategy that accepts a substantial Florence-2 detection fully
+  contained by the proposed region, restoring 16/16 development recall without accepting clean pairs.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
   explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,
