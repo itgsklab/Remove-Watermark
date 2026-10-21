@@ -39,6 +39,8 @@ All notable changes to this project are documented in this file. The format foll
   session generation, counterbalanced task order, tamper checks, failure evidence and fixed gates.
 - A loopback-only blind timing interface that loads the frozen image, candidate box or MPS mask,
   measures server total time and active edits, and atomically saves each anonymous trial.
+- A local timing-collection coordinator that creates permission-restricted anonymous sessions,
+  reports completion without trial details and refuses to audit partially completed collections.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
   explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,
