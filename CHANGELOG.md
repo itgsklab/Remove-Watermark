@@ -37,6 +37,8 @@ All notable changes to this project are documented in this file. The format foll
   passed the candidate, pixel and evidence gates, allowing blind human timing to begin next.
 - A frozen human-timing protocol for manual, candidate-box and model-refined masks, with anonymous
   session generation, counterbalanced task order, tamper checks, failure evidence and fixed gates.
+- A loopback-only blind timing interface that loads the frozen image, candidate box or MPS mask,
+  measures server total time and active edits, and atomically saves each anonymous trial.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
   explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,

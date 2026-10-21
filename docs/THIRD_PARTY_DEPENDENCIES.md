@@ -4,7 +4,7 @@ This file is generated from the pinned Python packaging constraints and npm lock
 It records release inputs; it is not a legal opinion or a substitute for license review.
 Regenerate it with `make release-metadata` and verify it with `make release-metadata-check`.
 
-- Input digest: `dc99bf1e4959e3b5a308690784b3a75ead6b85ac7d4b27b50713d0fba426580b`
+- Input digest: `1e7ce3b2a770e14e1b2a8e8df24c0238144a6ac51d0aa9b4a44e6aa7fc3ac6bd`
 - Python packages: 34
 - npm packages: 129
 - Vendored components: 1
