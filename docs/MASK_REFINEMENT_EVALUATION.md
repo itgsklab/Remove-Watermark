@@ -308,11 +308,44 @@ make mask-refinement-contained-detection-mps
 make mask-refinement-contained-detection-cpu
 ```
 
+## 第四确认集结果
+
+候选包含关系策略冻结后，项目在任何模型推理前固定了第四组 8 个 NASA 官方来源和 16 个
+成对样本。来源组和原图 SHA-256 与开发集及此前三套确认集的全部 40 个来源无交集。
+
+固定策略只运行一次：Florence-2 使用 `watermark` 提示词，SAM2 使用模型预测 IoU 最高
+的蒙版和既定文字局部对比度规则；候选匹配保留 IoU 0.5，并使用 90% 包含率与 15% 面积
+下限。8/8 个正例接受，8/8 个干净负例拒绝。只有一个角标通过新增包含关系分支，其传统
+IoU 为 0.269；其余七个正例由原 IoU 规则通过。
+
+| 设备 | 候选 Precision | 候选 Recall | 像素 Precision | 像素 Recall | 像素 IoU | 指标门禁 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| MPS | 1.000 | 1.000 | 0.943 | 0.909 | 0.861 | 通过 |
+| CPU | 1.000 | 1.000 | 0.914 | 0.995 | 0.910 | 通过 |
+
+完整证据见：
+
+- [`mask-refinement-confirmation-fourth-contract.json`](benchmarks/mask-refinement-confirmation-fourth-contract.json) 与 [`mask-refinement-confirmation-fourth-contract.md`](benchmarks/mask-refinement-confirmation-fourth-contract.md)；
+- [`mask-refinement-confirmation-fourth-gate-mps.json`](benchmarks/mask-refinement-confirmation-fourth-gate-mps.json) 与 [`mask-refinement-confirmation-fourth-gate-mps.md`](benchmarks/mask-refinement-confirmation-fourth-gate-mps.md)；
+- [`mask-refinement-confirmation-fourth-gate-cpu.json`](benchmarks/mask-refinement-confirmation-fourth-gate-cpu.json) 与 [`mask-refinement-confirmation-fourth-gate-cpu.md`](benchmarks/mask-refinement-confirmation-fourth-gate-cpu.md)；
+- 脱敏 Florence-2 输出见 [`mask-refinement-confirmation-fourth-florence2-predictions.json`](benchmarks/mask-refinement-confirmation-fourth-florence2-predictions.json)。
+
+```bash
+make mask-refinement-confirmation-fourth-corpus
+make mask-refinement-confirmation-fourth-localization
+make mask-refinement-confirmation-fourth-model-mps
+make mask-refinement-confirmation-fourth-model-cpu
+make mask-refinement-confirmation-fourth-gate-mps
+make mask-refinement-confirmation-fourth-gate-cpu
+```
+
+确认指标已经通过，但人工计时证据仍为空，`release_claim_allowed=false`，Web 产品行为不变。
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 冻结第四套来源不相交的未见确认集，再仅运行一次候选包含关系策略；已有三个确认语料继续冻结；
-2. 只有新确认集指标通过后才进行人工盲测计时；确认失败则返回开发语料，不能用确认集调参；
+1. 按固定任务说明组织三类工作流的真实人工盲测，记录总耗时、修正耗时和失败原因；
+2. 人工计时通过前保持 `release_claim_allowed=false`，不接入 Web；所有确认语料继续冻结；
 3. 在至少一种 CUDA 环境复跑固定 revision，记录耗时、峰值内存和像素差异；
 4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。
