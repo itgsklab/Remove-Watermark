@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "detector": {
+    "id": "florence-2-local-open-vocabulary",
+    "model_id": "microsoft/Florence-2-base",
+    "model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+    "prompt": "watermark",
+    "is_model_output": true,
+    "runtime": {
+      "kind": "local-vendored-florence2",
+      "device": "mps",
+      "torch_version": "2.14.1",
+      "transformers_version": "4.49.0",
+      "maximum_candidate_coverage": 0.3
+    },
+    "note": "Generated locally from SHA-256 verified Safetensors weights."
+  },
+  "predictions": [
+    {
+      "sample_id": "confirmation-fourth-pia07882-negative",
+      "boxes": [
+        {
+          "x0": 216.36001586914062,
+          "y0": 332.8800048828125,
+          "x1": 718.9200439453125,
+          "y1": 456.7200012207031,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia07882-positive",
+      "boxes": [
+        {
+          "x0": 517.3200073242188,
+          "y0": 408.7200012207031,
+          "x1": 628.9200439453125,
+          "y1": 435.5999755859375,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia15691-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "confirmation-fourth-pia15691-positive",
+      "boxes": [
+        {
+          "x0": 249.48001098632812,
+          "y0": 30.959999084472656,
+          "x1": 438.84002685546875,
+          "y1": 76.08000183105469,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia24921-negative",
+      "boxes": [
+        {
+          "x0": 94.68000030517578,
+          "y0": 204.239990234375,
+          "x1": 140.04000854492188,
+          "y1": 234.47999572753906,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia24921-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 387.6000061035156,
+          "x1": 695.1600341796875,
+          "y1": 451.44000244140625,
+          "label": "watermark",
+          "confidence": 1.0
+        },
+        {
+          "x0": 517.3200073242188,
+          "y0": 409.67999267578125,
+          "x1": 628.2000122070312,
+          "y1": 436.0799865722656,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia02210-negative",
+      "boxes": [
+        {
+          "x0": 411.4800109863281,
+          "y0": 212.87998962402344,
+          "x1": 484.20001220703125,
+          "y1": 280.0799865722656,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia02210-positive",
+      "boxes": [
+        {
+          "x0": 249.48001098632812,
+          "y0": 32.39999771118164,
+          "x1": 439.5600280761719,
+          "y1": 74.15999603271484,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia02215-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "confirmation-fourth-pia02215-positive",
+      "boxes": [
+        {
+          "x0": 496.4400329589844,
+          "y0": 386.6399841308594,
+          "x1": 695.1600341796875,
+          "y1": 452.8800048828125,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia18182-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "confirmation-fourth-pia18182-positive",
+      "boxes": [
+        {
+          "x0": 249.48001098632812,
+          "y0": 31.920000076293945,
+          "x1": 439.5600280761719,
+          "y1": 75.1199951171875,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia00346-negative",
+      "boxes": []
+    },
+    {
+      "sample_id": "confirmation-fourth-pia00346-positive",
+      "boxes": [
+        {
+          "x0": 497.1600341796875,
+          "y0": 386.6399841308594,
+          "x1": 695.8800048828125,
+          "y1": 452.8800048828125,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia01481-negative",
+      "boxes": [
+        {
+          "x0": 207.00001525878906,
+          "y0": 336.239990234375,
+          "x1": 330.84002685546875,
+          "y1": 467.7599792480469,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "sample_id": "confirmation-fourth-pia01481-positive",
+      "boxes": [
+        {
+          "x0": 250.20001220703125,
+          "y0": 31.920000076293945,
+          "x1": 441.0000305175781,
+          "y1": 75.1199951171875,
+          "label": "watermark",
+          "confidence": 1.0
+        }
+      ]
+    }
+  ]
+}

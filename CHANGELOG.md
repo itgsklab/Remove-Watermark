@@ -32,6 +32,9 @@ All notable changes to this project are documented in this file. The format foll
   the pixel gate, so timing and Web integration remain blocked.
 - An evaluation-only candidate match strategy that accepts a substantial Florence-2 detection fully
   contained by the proposed region, restoring 16/16 development recall without accepting clean pairs.
+- A fourth eight-source confirmation corpus frozen before contained-detection inference, with source
+  groups and digests disjoint from all 40 sources used by earlier stages; its fixed CPU/MPS run
+  passed the candidate, pixel and evidence gates, allowing blind human timing to begin next.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including
   explicit page-structure states and stale-parser rejection before image import.
 - Image-editor brush, eraser, independent mask/protection visibility and protected-area strokes,
