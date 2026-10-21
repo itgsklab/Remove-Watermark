@@ -137,6 +137,46 @@ def test_gate_records_below_threshold_positive_as_false_negative(tmp_path: Path)
     assert result["refiner"]["candidate_gate"]["false_negative"] == 1
 
 
+def test_contained_detection_strategy_accepts_meaningful_inner_box(tmp_path: Path) -> None:
+    manifest, localization, segmentation = _write_inputs(tmp_path)
+    payload = json.loads(localization.read_text())
+    payload["predictions"][0]["boxes"] = [{"x0": 2, "y0": 2, "x1": 5, "y1": 5}]
+    localization.write_text(json.dumps(payload))
+
+    result = apply_candidate_confirmation_gate(
+        manifest,
+        localization,
+        segmentation,
+        tmp_path / "gated" / "predictions.json",
+        match_strategy="iou-or-contained-detection",
+    )
+
+    gate = result["refiner"]["candidate_gate"]
+    assert gate["true_positive"] == 1
+    assert gate["samples"][0]["decision_reason"] == "contained_detection"
+    assert gate["samples"][0]["best_detection_containment"] == 1.0
+    assert gate["samples"][0]["best_detection_area_ratio"] == 0.25
+
+
+def test_contained_detection_strategy_rejects_tiny_inner_box(tmp_path: Path) -> None:
+    manifest, localization, segmentation = _write_inputs(tmp_path)
+    payload = json.loads(localization.read_text())
+    payload["predictions"][0]["boxes"] = [{"x0": 2, "y0": 2, "x1": 3, "y1": 3}]
+    localization.write_text(json.dumps(payload))
+
+    result = apply_candidate_confirmation_gate(
+        manifest,
+        localization,
+        segmentation,
+        tmp_path / "gated" / "predictions.json",
+        match_strategy="iou-or-contained-detection",
+    )
+
+    gate = result["refiner"]["candidate_gate"]
+    assert gate["false_negative"] == 1
+    assert gate["samples"][0]["decision_reason"] == "no_match"
+
+
 @pytest.mark.parametrize(
     ("target", "field", "value", "message"),
     [

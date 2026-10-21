@@ -238,8 +238,8 @@ make mask-refinement-confirmation-gate-cpu
 - [`mask-refinement-text-contrast-candidate-gate-mps.json`](benchmarks/mask-refinement-text-contrast-candidate-gate-mps.json) 与 [`mask-refinement-text-contrast-candidate-gate-mps.md`](benchmarks/mask-refinement-text-contrast-candidate-gate-mps.md)；
 - [`mask-refinement-text-contrast-candidate-gate-cpu.json`](benchmarks/mask-refinement-text-contrast-candidate-gate-cpu.json) 与 [`mask-refinement-text-contrast-candidate-gate-cpu.md`](benchmarks/mask-refinement-text-contrast-candidate-gate-cpu.md)。
 
-该策略仍只拥有开发证据，不会在此前两个确认集上重跑。人工计时为空，
-`release_claim_allowed=false`，Web 产品行为不变。
+该阶段只拥有开发证据，且没有在此前两个确认集上重跑。后续第三确认结果见下一节；人工
+计时为空，`release_claim_allowed=false`，Web 产品行为不变。
 
 ```bash
 make mask-refinement-text-contrast-mps
@@ -280,11 +280,39 @@ make mask-refinement-confirmation-third-gate-mps
 make mask-refinement-confirmation-third-gate-cpu
 ```
 
+## 候选包含关系开发实验
+
+第三确认失败后，三套确认语料保持冻结。本轮只检查原开发集的候选定位行为。唯一漏检的
+角标并非没有定位结果：Florence-2 检测框完全位于候选框内部，但检测面积只占候选面积
+0.269，导致传统框 IoU 同为 0.269，低于 0.5 门槛。
+
+新增的显式评测策略继续接受 IoU 至少 0.5 的匹配；否则只有检测框至少 90% 被候选框
+包含、且检测面积至少占候选面积 15% 时才接受。面积下限阻止极小内部噪点直接通过。
+默认 `iou` 策略保持不变，Web 产品也不调用新策略。
+
+固定开发语料结果为：
+
+| 设备 | 候选 Precision | 候选 Recall | 像素 Precision | 像素 Recall | 像素 IoU | 指标门禁 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| MPS | 1.000 | 1.000 | 0.937 | 0.973 | 0.914 | 通过 |
+| CPU | 1.000 | 1.000 | 0.921 | 0.993 | 0.915 | 通过 |
+
+16 个正例全部接受，16 个干净负例全部拒绝；只有既有漏检样本通过新增包含关系分支。
+完整报告见：
+
+- [`mask-refinement-contained-detection-mps.json`](benchmarks/mask-refinement-contained-detection-mps.json) 与 [`mask-refinement-contained-detection-mps.md`](benchmarks/mask-refinement-contained-detection-mps.md)；
+- [`mask-refinement-contained-detection-cpu.json`](benchmarks/mask-refinement-contained-detection-cpu.json) 与 [`mask-refinement-contained-detection-cpu.md`](benchmarks/mask-refinement-contained-detection-cpu.md)。
+
+```bash
+make mask-refinement-contained-detection-mps
+make mask-refinement-contained-detection-cpu
+```
+
 ## 下一阶段
 
 真实模型接入前仍需完成：
 
-1. 回到开发语料研究提高候选召回且保持干净负例拒绝能力的独立定位策略；三个确认语料均保持冻结；
-2. 新定位策略先通过开发门禁，再建立新的未见来源确认集；只有确认指标通过后才进行人工盲测计时；
+1. 冻结第四套来源不相交的未见确认集，再仅运行一次候选包含关系策略；已有三个确认语料继续冻结；
+2. 只有新确认集指标通过后才进行人工盲测计时；确认失败则返回开发语料，不能用确认集调参；
 3. 在至少一种 CUDA 环境复跑固定 revision，记录耗时、峰值内存和像素差异；
 4. 只有真实模型指标、证据和计时门禁全部通过后，才评估是否作为默认关闭的可编辑蒙版建议接入 Web。
