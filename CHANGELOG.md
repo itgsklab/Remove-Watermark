@@ -38,7 +38,8 @@ All notable changes to this project are documented in this file. The format foll
 - A frozen human-timing protocol for manual, candidate-box and model-refined masks, with anonymous
   session generation, counterbalanced task order, tamper checks, failure evidence and fixed gates.
 - A loopback-only blind timing interface that loads the frozen image, candidate box or MPS mask,
-  measures server total time and active edits, and atomically saves each anonymous trial.
+  starts each task only after an explicit participant-ready action, measures server total time and
+  active edits, and atomically saves each anonymous trial.
 - A local timing-collection coordinator that creates permission-restricted anonymous sessions,
   reports completion without trial details and refuses to audit partially completed collections.
 - Versioned Xiaohongshu HTML parsing diagnostics and privacy-safe candidate dimensions, including

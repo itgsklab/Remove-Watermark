@@ -90,6 +90,9 @@ def test_ui_exposes_only_blinded_current_task_and_security_headers(tmp_path: Pat
     assert "frame-ancestors 'none'" in page.headers["content-security-policy"]
     assert page.headers["x-frame-options"] == "DENY"
     assert "蒙版操作计时" in page.text
+    assert "准备开始下一项任务" in page.text
+    assert "点击后才会加载任务并启动总计时" in page.text
+    assert store.active_started_at is None
     assert state["completed"] == 0
     assert state["total"] == 24
     assert state["task"]["method_label"] in {"A", "B", "C"}
