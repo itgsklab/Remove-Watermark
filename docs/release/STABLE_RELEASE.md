@@ -46,3 +46,7 @@ The command fails when feedback is absent, approval is missing, required runtime
 the VLM opt-in contract changed, or a reproducible critical/high issue remains open or deferred. A
 passing result authorizes preparation and verification of a stable-version commit; it does not create
 a commit, tag, GitHub Release or PyPI upload.
+
+Before any GitHub publication, and again on a fresh download, follow the
+[release asset publication and recovery procedure](ASSET_PUBLICATION.md). Its machine-readable audit
+provides the privacy-scan evidence required by this stable gate.
