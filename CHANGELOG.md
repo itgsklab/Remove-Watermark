@@ -9,6 +9,8 @@ All notable changes to this project are documented in this file. The format foll
 
 - A deterministic OpenAPI 3.1 compatibility baseline for all versioned Web endpoints, enforced in
   continuous integration and local release checks to expose accidental breaking API changes.
+- Generated Vue TypeScript API definitions sourced from the frozen OpenAPI contract, with the client
+  response types migrated from handwritten duplicates and a CI freshness check.
 - A model-independent box-guided mask-refinement Protocol and reproducible pixel benchmark covering
   IoU, leakage, correction workload, runtime metadata and human workflow timing gates.
 - An evaluation-only SAM2 Hiera-T supply-chain manifest and audit gate pinning official revisions,

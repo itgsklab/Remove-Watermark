@@ -1,9 +1,15 @@
-export interface ApiErrorBody {
-  code: string
-  message: string
-  details: Record<string, unknown>
-  request_id: string
-}
+import type { components } from './generated'
+
+type DeepRequired<T> = T extends readonly (infer Item)[]
+  ? Array<DeepRequired<Item>>
+  : T extends object
+    ? { -readonly [Key in keyof T]-?: DeepRequired<T[Key]> }
+    : T
+
+type ResponseSchema<Name extends keyof components['schemas']> =
+  DeepRequired<components['schemas'][Name]>
+
+export type ApiErrorBody = ResponseSchema<'ErrorBody'>
 
 export class ApiError extends Error {
   constructor(public readonly body: ApiErrorBody, public readonly status: number) {
@@ -11,346 +17,31 @@ export class ApiError extends Error {
   }
 }
 
-export interface CapabilityItem {
-  id: string
-  label: string
-  status: 'available' | 'planned' | 'experimental'
-  strategies: string[]
-}
-
-export interface Capabilities {
-  version: string
-  max_upload_bytes: number
-  formats: CapabilityItem[]
-  vlm_localization: {
-    enabled: boolean
-    available: boolean
-    status: 'disabled' | 'configuration_invalid' | 'runtime_missing' | 'ready'
-    model_id: string | null
-    automatic_download: false
-    requires_manual_review: true
-    message: string
-  }
-}
-
-export interface RuntimeDiagnostics {
-  schema_version: 1
-  ocr: {
-    available: boolean
-    status: 'unavailable' | 'ready' | 'probe_failed'
-    version: string | null
-    languages: string[]
-    message: string
-  }
-  xiaohongshu: {
-    status: 'parse_only' | 'metadata_only' | 'ready' | 'configuration_invalid'
-    share_link_parsing: true
-    metadata_reading_enabled: boolean
-    image_import_enabled: boolean
-    proxy_configured: boolean
-    message: string
-  }
-  vlm_localization: Capabilities['vlm_localization']
-}
-
-export interface XiaohongshuPreview {
-  kind: 'direct' | 'short'
-  normalized_url: string
-  canonical_url: string | null
-  note_id: string | null
-  metadata_status: 'not_requested' | 'disabled' | 'resolved' | 'unavailable'
-  title: string | null
-  description: string | null
-  author: string | null
-  thumbnail_present: boolean
-  media_download_supported: boolean
-  parser_version: string
-  page_structure_status: 'not_checked' | 'matched' | 'partial' | 'changed' | 'unavailable'
-  diagnostic_codes: string[]
-  media_candidates: Array<{
-    candidate_id: string
-    position: number
-    role: 'cover' | 'gallery'
-    width: number | null
-    height: number | null
-  }>
-  warnings: string[]
-}
-
-export interface Asset {
-  id: string
-  display_name: string
-  kind: string
-  media_type: string
-  size_bytes: number
-  sha256: string
-  created_at: string
-}
-
-export interface SourceLocator {
-  part_name: string | null
-  shape_index: number | null
-  shape_id: string | null
-  shape_type: string | null
-  page_numbers: number[]
-  resource_name: string | null
-  object_number: number | null
-  generation_number: number | null
-  operation_index: number | null
-  annotation_index: number | null
-  drawing_index: number | null
-  relationship_id: string | null
-  media_part_name: string | null
-  media_sha256: string | null
-}
-
-export interface CandidateRegion {
-  coordinate_space: 'pdf_points'
-  page_number: number
-  x0: number
-  y0: number
-  x1: number
-  y1: number
-  page_width: number
-  page_height: number
-  rotation: number
-  transform_id: string
-  approximate: boolean
-}
-
-export interface PdfPageGeometry {
-  page_number: number
-  width: number
-  height: number
-  rotation: number
-  crop_x: number
-  crop_y: number
-  transform_id: string
-}
-
-export interface ImageMetadata {
-  width: number
-  height: number
-  display_width: number
-  display_height: number
-  format: 'PNG' | 'JPEG' | 'WEBP'
-  mode: string
-  frames: number
-  animated: boolean
-  has_alpha: boolean
-  exif_orientation: number
-  has_icc_profile: boolean
-  transform_id: string
-}
-
-export interface ProtectedContent {
-  content_id: string
-  kind: 'text' | 'image' | 'form' | 'graphic' | 'link' | 'annotation'
-  summary: string
-  region: CandidateRegion
-}
-
-export interface Candidate {
-  candidate_id: string
-  classification: 'confirmed' | 'ambiguous' | 'content'
-  kind: 'text' | 'image' | 'pattern' | 'other'
-  content: string | null
-  evidence: string
-  source_locator: SourceLocator
-  style: string | null
-  allowed_strategies: string[]
-  region: CandidateRegion | null
-  overlaps_protected_content: boolean | null
-  preview_url: string | null
-  preview_media_type: 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp' | null
-}
-
-export interface Analysis {
-  id: string
-  asset_id: string
-  asset_sha256: string
-  status: 'complete'
-  candidates: Candidate[]
-  inspected_parts: string[]
-  warnings: string[]
-  preset: 'codecv' | 'general' | 'image' | null
-  match_status: 'matched' | 'needs_review' | 'not_found' | null
-  pdf_pages: PdfPageGeometry[]
-  protected_content: ProtectedContent[]
-  image_metadata: ImageMetadata | null
-}
-
-export interface RedactionRegion {
-  page_number: number
-  x0: number
-  y0: number
-  x1: number
-  y1: number
-  transform_id: string
-}
-
-export interface RedactionPreview {
-  asset_id: string
-  analysis_id: string
-  valid: boolean
-  requires_acknowledgement: boolean
-  executable: boolean
-  regions: Array<{
-    region: RedactionRegion
-    overlaps: Array<{
-      content_id: string
-      kind: string
-      summary: string
-      intersection_area: number
-    }>
-  }>
-  warnings: string[]
-}
-
-export interface RedactionPlan {
-  id: string | null
-  valid: boolean
-  asset_id: string
-  analysis_id: string
-  strategy: 'pymupdf_redaction' | 'raster_inpaint'
-  license_mode: 'agpl' | 'commercial'
-  regions: RedactionRegion[]
-  dpi: number | null
-  radius: number | null
-  ocr_languages: string | null
-  warnings: PlanWarning[]
-  output_kind: 'pdf'
-}
-
-export interface ImageMaskRegion {
-  x0: number
-  y0: number
-  x1: number
-  y1: number
-  transform_id: string
-}
-
-export interface VlmSuggestion {
-  asset_id: string
-  analysis_id: string
-  status: 'suggested' | 'no_candidates' | 'photo_gate_rejected'
-  regions: ImageMaskRegion[]
-  photo_scene: {
-    eligible: boolean
-    matched_routes: string[]
-    reasons: string[]
-  }
-  warnings: string[]
-}
-
-export interface ImageMaskPreview {
-  asset_id: string
-  analysis_id: string
-  valid: boolean
-  executable: boolean
-  regions: ImageMaskRegion[]
-  protected_regions: ImageMaskRegion[]
-  covered_pixels: number
-  coverage_ratio: number
-  complexity: {
-    level: 'low' | 'review' | 'high'
-    regions: Array<{
-      region_index: number
-      risk: 'low' | 'review' | 'high'
-      texture_score: number
-      edge_density: number
-      periodicity_score: number
-      structure_score: number
-      context_pixels: number
-      reasons: string[]
-    }>
-  }
-  selection_risk: {
-    level: 'normal' | 'review'
-    large_selection: boolean
-    regions: Array<{
-      region_index: number
-      mean_luma_delta: number
-      low_contrast: boolean
-      reason: string
-    }>
-  }
-  requires_acknowledgement: boolean
-  warnings: string[]
-}
-
-export interface ImagePlan {
-  id: string | null
-  valid: boolean
-  asset_id: string
-  analysis_id: string
-  strategy: 'opencv_telea'
-  regions: ImageMaskRegion[]
-  protected_regions: ImageMaskRegion[]
-  radius: number
-  warnings: PlanWarning[]
-  output_kind: 'png'
-}
-
-export interface PlanWarning {
-  code: string
-  candidate_id: string | null
-  message: string
-  requires_acknowledgement: boolean
-}
-
-export interface Plan {
-  id: string | null
-  valid: boolean
-  asset_id: string
-  analysis_id: string
-  operations: Array<{ candidate_id: string; strategy: 'object' }>
-  warnings: PlanWarning[]
-  output_kind: 'docx' | 'pdf'
-}
-
-export interface Artifact {
-  id: string
-  display_name: string
-  media_type: string
-  size_bytes: number
-  sha256: string
-  download_url: string
-  role: 'output' | 'source_preview' | 'result_preview'
-  page_number: number | null
-}
-
-export interface ComparisonPage {
-  page_number: number
-  source_url: string | null
-  result_url: string | null
-}
-
-export interface Comparison {
-  available: boolean
-  removed_count: number
-  changed_parts: string[]
-  source_page_count: number
-  result_page_count: number
-  pages: ComparisonPage[]
-  warning: string | null
-}
-
-export interface ProcessingTask {
-  id: string
-  plan_id: string
-  status: 'queued' | 'running' | 'cancelling' | 'cancelled' | 'succeeded' | 'failed'
-  stage: string
-  progress: number
-  created_at: string
-  updated_at: string
-  duration_seconds: number
-  warning_codes: string[]
-  error: ApiErrorBody | null
-  artifacts: Artifact[]
-  comparison: Comparison | null
-  report_url: string
-}
+export type CapabilityItem = ResponseSchema<'CapabilityItem'>
+export type Capabilities = ResponseSchema<'CapabilitiesResponse'>
+export type RuntimeDiagnostics = ResponseSchema<'RuntimeDiagnosticsResponse'>
+export type XiaohongshuPreview = ResponseSchema<'XiaohongshuPreviewResponse'>
+export type Asset = ResponseSchema<'AssetResponse'>
+export type SourceLocator = ResponseSchema<'SourceLocator'>
+export type CandidateRegion = ResponseSchema<'CandidateRegion'>
+export type PdfPageGeometry = ResponseSchema<'PdfPageGeometry'>
+export type ImageMetadata = ResponseSchema<'ImageMetadataResponse'>
+export type ProtectedContent = ResponseSchema<'ProtectedContentResponse'>
+export type Candidate = ResponseSchema<'CandidateResponse'>
+export type Analysis = ResponseSchema<'AnalysisResponse'>
+export type RedactionRegion = ResponseSchema<'RedactionRegionRequest'>
+export type RedactionPreview = ResponseSchema<'RedactionPreviewResponse'>
+export type RedactionPlan = ResponseSchema<'RedactionPlanResponse'>
+export type ImageMaskRegion = ResponseSchema<'ImageMaskRegion'>
+export type VlmSuggestion = ResponseSchema<'VlmSuggestionResponse'>
+export type ImageMaskPreview = ResponseSchema<'ImageMaskPreviewResponse'>
+export type ImagePlan = ResponseSchema<'ImagePlanResponse'>
+export type PlanWarning = ResponseSchema<'PlanWarning'>
+export type Plan = ResponseSchema<'PlanResponse'>
+export type Artifact = ResponseSchema<'ArtifactResponse'>
+export type ComparisonPage = ResponseSchema<'ComparisonPage'>
+export type Comparison = ResponseSchema<'ComparisonResponse'>
+export type ProcessingTask = ResponseSchema<'TaskResponse'>
 
 async function parse<T>(response: Response): Promise<T> {
   if (response.ok) return response.json() as Promise<T>

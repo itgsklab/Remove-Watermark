@@ -14,11 +14,13 @@ Review the JSON diff and then run:
 
 ```bash
 make api-contract-check
+cd frontend && npm run api:generate && npm run api:check
 ```
 
-Continuous integration runs the same exact comparison. A change to paths, operations, parameters,
-request bodies, response schemas, validation constraints, or component schemas therefore requires
-an explicit update to the committed contract.
+The generated `frontend/src/api/generated.ts` file is the Vue client's source of API response types;
+do not edit it directly. Continuous integration checks both generated artifacts. A change to paths,
+operations, parameters, request bodies, response schemas, validation constraints, or component
+schemas therefore requires an explicit update to the contract and generated TypeScript diff.
 
 ## Compatibility policy
 

@@ -9,7 +9,9 @@
     "typecheck": "vue-tsc -b --noEmit",
     "e2e": "npm run e2e:typecheck && playwright test",
     "e2e:typecheck": "tsc --noEmit -p tsconfig.e2e.json",
-    "e2e:serve": "sh e2e/serve.sh"
+    "e2e:serve": "sh e2e/serve.sh",
+    "api:generate": "openapi-typescript ../docs/release/openapi-v1.json --output src/api/generated.ts --alphabetize --immutable",
+    "api:check": "npm run api:generate -- --check"
   },
   "dependencies": {
     "pdfjs-dist": "5.4.624",
@@ -22,6 +24,7 @@
     "@types/node": "^24.19.2",
     "@vitejs/plugin-vue": "^6.0.10",
     "@vue/tsconfig": "^0.9.1",
+    "openapi-typescript": "7.13.0",
     "typescript": "~5.9.2",
     "vite": "^7.3.7",
     "vue-tsc": "^3.3.13"

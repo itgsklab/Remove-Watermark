@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/bec654b2986bfd673b4a3e938f6e9ba972c7a45072c4d3dd3c6c5afe5ce303ad",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/5149ec2bbba167d21c8c78cadf65227d63c8bc7c819463975c31bef16b5e2a76",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {
@@ -688,6 +688,25 @@
       "name": "Microsoft-Florence-2-runtime",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-babel-code-frame-e647d34273",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40babel/code-frame@7.29.7",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@babel/code-frame",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.29.7"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-babel-helper-string-parser-8415859f17",
@@ -1543,6 +1562,63 @@
       "name": "@playwright/test",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "1.64.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-redocly-ajv-b740a476e9",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40redocly/ajv@8.11.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@redocly/ajv",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "8.11.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-redocly-config-d7eb88be0a",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40redocly/config@0.22.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@redocly/config",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.22.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-redocly-openapi-core-6b87150a09",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/%40redocly/openapi-core@1.34.21",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "@redocly/openapi-core",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.34.21"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-rolldown-pluginutils-95ae35fc7f",
@@ -2438,6 +2514,25 @@
       "versionInfo": "0.9.1"
     },
     {
+      "SPDXID": "SPDXRef-Package-npm-agent-base-a34bde97d1",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/agent-base@7.1.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "agent-base",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.1.4"
+    },
+    {
       "SPDXID": "SPDXRef-Package-npm-alien-signals-442319d324",
       "comment": "Ecosystem: npm; usage: development; direct: no",
       "copyrightText": "NOASSERTION",
@@ -2457,6 +2552,63 @@
       "versionInfo": "3.2.1"
     },
     {
+      "SPDXID": "SPDXRef-Package-npm-ansi-colors-7c7cd6eebd",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/ansi-colors@4.1.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "ansi-colors",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.1.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-argparse-72a560b272",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/argparse@2.0.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "argparse",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.0.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-balanced-match-2fa1a2c772",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/balanced-match@1.0.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "balanced-match",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.0.2"
+    },
+    {
       "SPDXID": "SPDXRef-Package-npm-birpc-07f82932f1",
       "comment": "Ecosystem: npm; usage: runtime; direct: no",
       "copyrightText": "NOASSERTION",
@@ -2474,6 +2626,63 @@
       "name": "birpc",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "2.9.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-brace-expansion-7ddd8b85fc",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/brace-expansion@2.1.7",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "brace-expansion",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.1.7"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-change-case-2540aaad14",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/change-case@5.4.4",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "change-case",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "5.4.4"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-colorette-db4f528769",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/colorette@1.4.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "colorette",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.4.0"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-copy-anything-421aa5d4c2",
@@ -2512,6 +2721,25 @@
       "name": "csstype",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "3.2.3"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-debug-69a3bc3637",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/debug@4.4.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "debug",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.4.3"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-entities-4e7980c659",
@@ -2571,6 +2799,25 @@
       "versionInfo": "2.0.2"
     },
     {
+      "SPDXID": "SPDXRef-Package-npm-fast-deep-equal-357c9ebc9a",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/fast-deep-equal@3.1.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "fast-deep-equal",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "3.1.3"
+    },
+    {
       "SPDXID": "SPDXRef-Package-npm-fdir-abae46b9a5",
       "comment": "Ecosystem: npm; usage: development; direct: no",
       "copyrightText": "NOASSERTION",
@@ -2628,6 +2875,120 @@
       "versionInfo": "5.5.3"
     },
     {
+      "SPDXID": "SPDXRef-Package-npm-https-proxy-agent-7498bce3af",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/https-proxy-agent@7.0.6",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "https-proxy-agent",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.0.6"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-index-to-position-085b0b9d68",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/index-to-position@1.2.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "index-to-position",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.2.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-js-levenshtein-834c50ee28",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/js-levenshtein@1.1.6",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "js-levenshtein",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.1.6"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-js-tokens-71b70c02e0",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/js-tokens@4.0.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "js-tokens",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.0.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-js-yaml-2371540cfa",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/js-yaml@4.3.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "js-yaml",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.3.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-json-schema-traverse-d9dac7f1b0",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/json-schema-traverse@1.0.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "json-schema-traverse",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.0.0"
+    },
+    {
       "SPDXID": "SPDXRef-Package-npm-magic-string-bf00faa2c0",
       "comment": "Ecosystem: npm; usage: runtime; direct: no",
       "copyrightText": "NOASSERTION",
@@ -2647,6 +3008,25 @@
       "versionInfo": "0.30.21"
     },
     {
+      "SPDXID": "SPDXRef-Package-npm-minimatch-9209ae5cee",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/minimatch@5.1.9",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "minimatch",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "5.1.9"
+    },
+    {
       "SPDXID": "SPDXRef-Package-npm-mitt-42b7339cc3",
       "comment": "Ecosystem: npm; usage: runtime; direct: no",
       "copyrightText": "NOASSERTION",
@@ -2664,6 +3044,25 @@
       "name": "mitt",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "3.0.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-ms-b91d6625a6",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/ms@2.1.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "ms",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.1.3"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-muggle-string-d3167c04d8",
@@ -2721,6 +3120,44 @@
       "name": "node-readable-to-web-readable-stream",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "0.4.2"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-openapi-typescript-485cd30132",
+      "comment": "Ecosystem: npm; usage: development; direct: yes",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/openapi-typescript@7.13.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "openapi-typescript",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "7.13.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-parse-json-1793a756af",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/parse-json@8.3.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "parse-json",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "8.3.0"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-path-browserify-d540b7e45c",
@@ -2875,6 +3312,25 @@
       "versionInfo": "1.64.1"
     },
     {
+      "SPDXID": "SPDXRef-Package-npm-pluralize-81cf20a0e5",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/pluralize@8.0.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pluralize",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "8.0.0"
+    },
+    {
       "SPDXID": "SPDXRef-Package-npm-postcss-854ad1542f",
       "comment": "Ecosystem: npm; usage: runtime; direct: no",
       "copyrightText": "NOASSERTION",
@@ -2892,6 +3348,25 @@
       "name": "postcss",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "8.5.28"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-require-from-string-a0a604243a",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/require-from-string@2.0.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "require-from-string",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "2.0.2"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-rfdc-f8b6e7df27",
@@ -2989,6 +3464,25 @@
       "versionInfo": "2.2.6"
     },
     {
+      "SPDXID": "SPDXRef-Package-npm-supports-color-79407c5353",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/supports-color@10.2.2",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "supports-color",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "10.2.2"
+    },
+    {
       "SPDXID": "SPDXRef-Package-npm-tinyglobby-2ad15c78bd",
       "comment": "Ecosystem: npm; usage: development; direct: no",
       "copyrightText": "NOASSERTION",
@@ -3006,6 +3500,25 @@
       "name": "tinyglobby",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "0.2.17"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-type-fest-8a5a14a989",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/type-fest@4.41.0",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "type-fest",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "4.41.0"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-typescript-b1f466eff0",
@@ -3044,6 +3557,25 @@
       "name": "undici-types",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "7.24.6"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-uri-js-replace-95496b84fd",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/uri-js-replace@1.0.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "uri-js-replace",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.0.1"
     },
     {
       "SPDXID": "SPDXRef-Package-npm-vite-ae969cf26b",
@@ -3139,6 +3671,44 @@
       "name": "vue-tsc",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "3.3.13"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-yaml-ast-parser-934e5fc7e7",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/yaml-ast-parser@0.0.43",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "yaml-ast-parser",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "0.0.43"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-npm-yargs-parser-ff12faa09d",
+      "comment": "Ecosystem: npm; usage: development; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:npm/yargs-parser@21.1.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "yargs-parser",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "21.1.1"
     }
   ],
   "relationships": [
@@ -3319,6 +3889,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-Vendored-Microsoft-Florence-2-runtime-17ac8fec0f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-babel-code-frame-e647d34273",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3544,6 +4119,21 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-npm-playwright-test-23425204e9",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-redocly-ajv-b740a476e9",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-redocly-config-d7eb88be0a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-redocly-openapi-core-6b87150a09",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3783,12 +4373,47 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
+      "relatedSpdxElement": "SPDXRef-Package-npm-agent-base-a34bde97d1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-Package-npm-alien-signals-442319d324",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
+      "relatedSpdxElement": "SPDXRef-Package-npm-ansi-colors-7c7cd6eebd",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-argparse-72a560b272",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-balanced-match-2fa1a2c772",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-Package-npm-birpc-07f82932f1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-brace-expansion-7ddd8b85fc",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-change-case-2540aaad14",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-colorette-db4f528769",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3799,6 +4424,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-npm-csstype-13d122959a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-debug-69a3bc3637",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3818,6 +4448,11 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
+      "relatedSpdxElement": "SPDXRef-Package-npm-fast-deep-equal-357c9ebc9a",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-Package-npm-fdir-abae46b9a5",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
@@ -3833,12 +4468,52 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
+      "relatedSpdxElement": "SPDXRef-Package-npm-https-proxy-agent-7498bce3af",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-index-to-position-085b0b9d68",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-js-levenshtein-834c50ee28",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-js-tokens-71b70c02e0",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-js-yaml-2371540cfa",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-json-schema-traverse-d9dac7f1b0",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-Package-npm-magic-string-bf00faa2c0",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
+      "relatedSpdxElement": "SPDXRef-Package-npm-minimatch-9209ae5cee",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-Package-npm-mitt-42b7339cc3",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-ms-b91d6625a6",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3854,6 +4529,16 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-npm-node-readable-to-web-readable-stream-698d274437",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-openapi-typescript-485cd30132",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-parse-json-1793a756af",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3898,7 +4583,17 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
+      "relatedSpdxElement": "SPDXRef-Package-npm-pluralize-81cf20a0e5",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-Package-npm-postcss-854ad1542f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-require-from-string-a0a604243a",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3928,7 +4623,17 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
+      "relatedSpdxElement": "SPDXRef-Package-npm-supports-color-79407c5353",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-Package-npm-tinyglobby-2ad15c78bd",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-type-fest-8a5a14a989",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3939,6 +4644,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-npm-undici-types-86c8057eb1",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-uri-js-replace-95496b84fd",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
@@ -3964,6 +4674,16 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-npm-vue-tsc-d9d1f7a381",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-yaml-ast-parser-934e5fc7e7",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-npm-yargs-parser-ff12faa09d",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     }

@@ -10,7 +10,7 @@ frontend-install:
 	cd frontend && npm install
 
 frontend-check:
-	cd frontend && npm run typecheck && npm run build
+	cd frontend && npm run api:check && npm run typecheck && npm run build
 
 browser-install:
 	cd frontend && npm ci && npx playwright install chromium
