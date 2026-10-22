@@ -50,3 +50,8 @@ a commit, tag, GitHub Release or PyPI upload.
 Before any GitHub publication, and again on a fresh download, follow the
 [release asset publication and recovery procedure](ASSET_PUBLICATION.md). Its machine-readable audit
 provides the privacy-scan evidence required by this stable gate.
+
+Release notes must also match the generated
+[public release status, support matrix and known limitations](RELEASE_STATUS.md). Update
+`release-status.json`, regenerate the document, and run `make release-docs-check` before publishing
+or editing public compatibility claims.

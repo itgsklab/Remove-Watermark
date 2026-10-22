@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "latest_stable": {
+    "version": "0.1.0",
+    "tag": "v0.1.0",
+    "source_commit": "7242b2462d0f0e98a8e20867f255b4a2ebbd3add",
+    "published_at": "2026-10-13T05:42:27Z",
+    "interface": "web",
+    "native_applications": false,
+    "assets": [
+      "SHA256SUMS",
+      "release-manifest.json",
+      "remove-watermark-web-0.1.0.tar.gz",
+      "wmrm-0.1.0-py3-none-any.whl",
+      "wmrm-0.1.0.tar.gz"
+    ]
+  },
+  "development": {
+    "version": "0.1.0",
+    "channel": "unreleased-main",
+    "changelog": "CHANGELOG.md"
+  },
+  "workflows": [
+    {
+      "id": "docx-vml",
+      "name": "Word DOCX VML 文字水印",
+      "stable": "supported",
+      "main": "supported",
+      "documentation": "docs/DOCX_COMPATIBILITY.md",
+      "summary": "检查并选择性删除页眉、页脚中的 VML textpath 文字形状。"
+    },
+    {
+      "id": "codecv-pdf",
+      "name": "CodeCV PDF 平铺水印",
+      "stable": "experimental",
+      "main": "experimental",
+      "documentation": "docs/CODECV_PDF.md",
+      "summary": "按完整内容流操作签名检查并删除用户确认的平铺图案序列。"
+    },
+    {
+      "id": "general-pdf",
+      "name": "通用 PDF 区域删除",
+      "stable": "supported",
+      "main": "supported",
+      "documentation": "docs/GENERAL_PDF.md",
+      "summary": "预览区域重叠风险后执行对象级物理 redaction。"
+    },
+    {
+      "id": "pdf-deep",
+      "name": "PDF Deep 栅格修复",
+      "stable": "supported",
+      "main": "supported",
+      "documentation": "docs/PDF_DEEP.md",
+      "summary": "栅格化选中页面、修复蒙版区域并重建可选文字层。"
+    },
+    {
+      "id": "static-images",
+      "name": "PNG、JPEG、WebP 静态图片",
+      "stable": "supported",
+      "main": "supported",
+      "documentation": "docs/IMAGE_MASKS.md",
+      "summary": "审阅蒙版和风险后使用 OpenCV Telea 生成 PNG 副本。"
+    },
+    {
+      "id": "xiaohongshu",
+      "name": "小红书公开分享链接",
+      "stable": "opt-in",
+      "main": "opt-in",
+      "documentation": "docs/XIAOHONGSHU_LINKS.md",
+      "summary": "默认仅本地解析；显式启用后可读取公开元数据并导入受限图片候选。"
+    },
+    {
+      "id": "vlm-localization",
+      "name": "Florence-2 照片水印定位",
+      "stable": "opt-in-experimental",
+      "main": "opt-in-experimental",
+      "documentation": "docs/VLM_LOCALIZATION.md",
+      "summary": "使用管理员提供的固定本地模型生成可编辑矩形建议，不直接执行处理。"
+    },
+    {
+      "id": "mask-refinement",
+      "name": "SAM2 候选框蒙版细化",
+      "stable": "unavailable",
+      "main": "evaluation-only",
+      "documentation": "docs/MASK_REFINEMENT_EVALUATION.md",
+      "summary": "仅有离线评测和盲测协议，尚未接入正式 Web 产品。"
+    }
+  ],
+  "limitations": [
+    {
+      "id": "web-only",
+      "applies_to": ["all"],
+      "statement": "项目提供本机回环地址上的 Vue Web 页面和 Python 服务，不提供原生桌面 App、云服务或多用户部署。"
+    },
+    {
+      "id": "docx-structure",
+      "applies_to": ["docx-vml"],
+      "statement": "只删除页眉、页脚中的 VML textpath；DrawingML 图片只读，正文背景、正文形状、外部图片关系和旧版 .doc 不处理。"
+    },
+    {
+      "id": "docx-real-corpus",
+      "applies_to": ["docx-vml"],
+      "statement": "自动化矩阵主要使用生成的 OOXML 结构；不能据此宣称兼容 Microsoft Word、WPS 或 LibreOffice 的全部版本和模板。"
+    },
+    {
+      "id": "codecv-real-exports",
+      "applies_to": ["codecv-pdf"],
+      "statement": "公开仓库没有来源许可完整的多版本 CodeCV 真实导出语料，因此此预设保持实验性；未匹配不表示文件中没有水印。"
+    },
+    {
+      "id": "pdf-redaction-loss",
+      "applies_to": ["general-pdf"],
+      "statement": "对象级区域删除会永久移除相交文字、图片像素、矢量图和链接，复杂页面可能需要缩小选区后重新检查。"
+    },
+    {
+      "id": "pdf-deep-loss",
+      "applies_to": ["pdf-deep"],
+      "statement": "Deep 模式会栅格化选中页面且不保留其链接、表单和矢量对象；缺少文字层且未启用可用 OCR 时，页面不会保持可搜索。"
+    },
+    {
+      "id": "image-quality",
+      "applies_to": ["static-images"],
+      "statement": "Telea 修复结果取决于蒙版和背景复杂度，可能产生纹理或结构伪影；动态图仅支持检查，输出统一为移除原元数据的 PNG。"
+    },
+    {
+      "id": "xiaohongshu-public-metadata",
+      "applies_to": ["xiaohongshu"],
+      "statement": "只读取无需登录的公开 HTML 元数据，不处理视频、Cookie 或非公开接口，也不保证候选为原图、完整图集或长期可用。"
+    },
+    {
+      "id": "vlm-local-model",
+      "applies_to": ["vlm-localization"],
+      "statement": "默认关闭且发行物不含权重；用户必须自行准备固定模型，建议框仍需通过照片门禁、风险预览和人工确认。"
+    },
+    {
+      "id": "mask-refinement-gate",
+      "applies_to": ["mask-refinement"],
+      "statement": "蒙版细化尚未进入 Web，真实参与者盲测未完成，离线指标不能作为已发布产品能力或效率声明。"
+    },
+    {
+      "id": "optional-tools",
+      "applies_to": ["docx-vml", "codecv-pdf", "pdf-deep"],
+      "statement": "部分预览和 OCR 依赖本机 LibreOffice、Poppler 或 Tesseract；缺少这些程序时相关预览或 OCR 会明确降级。"
+    }
+  ]
+}

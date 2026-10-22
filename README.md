@@ -6,7 +6,7 @@
 
 面向 DOCX、PDF、CodeCV 简历和小红书图片的本地优先水印处理工具。
 
-> 当前状态：`0.1.0` 正式 Web 版本。已完成 DOCX VML 处理和 DrawingML 图片候选只读预览、CodeCV PDF 平铺水印、通用 PDF 区域物理删除、PDF Deep 栅格修复与可搜索文字层、静态图片矩形蒙版的处理闭环、小红书分享链接解析与公开页面图片安全导入，以及默认关闭的照片门禁 VLM 蒙版建议。用户界面采用 Vue Web 页面，不提供原生桌面 App。
+> 最新稳定版是 `v0.1.0`，采用 Vue Web 页面和本机 Python/FastAPI 服务，不提供原生桌面 App。当前 `main` 还包含尚未进入稳定下载的 `[Unreleased]` 改动；请以[发布状态、支持矩阵与已知限制](docs/release/RELEASE_STATUS.md)区分稳定版、主分支和实验性能力。
 
 ## 技术栈
 
@@ -70,7 +70,7 @@ make web-run
 正式版不会仅凭 CI 通过自动发布；两个不可变 RC 的摘要、反馈记录和阻断条件见
 [docs/release/STABLE_RELEASE.md](docs/release/STABLE_RELEASE.md)。
 
-## 当前可用 API
+## 当前主分支可用 API
 
 - `GET /api/v1/health`
 - `GET /api/v1/capabilities`
