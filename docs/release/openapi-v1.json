@@ -1,0 +1,3849 @@
+{
+  "components": {
+    "schemas": {
+      "AnalysisResponse": {
+        "properties": {
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "asset_sha256": {
+            "title": "Asset Sha256",
+            "type": "string"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/CandidateResponse"
+            },
+            "title": "Candidates",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "image_metadata": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ImageMetadataResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "inspected_parts": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Inspected Parts",
+            "type": "array"
+          },
+          "match_status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "matched",
+                  "needs_review",
+                  "not_found"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Match Status"
+          },
+          "pdf_pages": {
+            "items": {
+              "$ref": "#/components/schemas/PdfPageGeometry"
+            },
+            "title": "Pdf Pages",
+            "type": "array"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "enum": [
+                  "codecv",
+                  "general",
+                  "image"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
+          "protected_content": {
+            "items": {
+              "$ref": "#/components/schemas/ProtectedContentResponse"
+            },
+            "title": "Protected Content",
+            "type": "array"
+          },
+          "status": {
+            "const": "complete",
+            "title": "Status",
+            "type": "string"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "asset_id",
+          "asset_sha256",
+          "status",
+          "candidates",
+          "inspected_parts",
+          "warnings"
+        ],
+        "title": "AnalysisResponse",
+        "type": "object"
+      },
+      "ArtifactResponse": {
+        "properties": {
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "download_url": {
+            "title": "Download Url",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "media_type": {
+            "title": "Media Type",
+            "type": "string"
+          },
+          "page_number": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Number"
+          },
+          "role": {
+            "enum": [
+              "output",
+              "source_preview",
+              "result_preview"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          },
+          "size_bytes": {
+            "title": "Size Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "display_name",
+          "media_type",
+          "size_bytes",
+          "sha256",
+          "download_url",
+          "role"
+        ],
+        "title": "ArtifactResponse",
+        "type": "object"
+      },
+      "AssetResponse": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "media_type": {
+            "title": "Media Type",
+            "type": "string"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          },
+          "size_bytes": {
+            "title": "Size Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "display_name",
+          "kind",
+          "media_type",
+          "size_bytes",
+          "sha256",
+          "created_at"
+        ],
+        "title": "AssetResponse",
+        "type": "object"
+      },
+      "Body_upload_asset_api_v1_assets_post": {
+        "properties": {
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_asset_api_v1_assets_post",
+        "type": "object"
+      },
+      "CandidateRegion": {
+        "properties": {
+          "approximate": {
+            "default": false,
+            "title": "Approximate",
+            "type": "boolean"
+          },
+          "coordinate_space": {
+            "const": "pdf_points",
+            "default": "pdf_points",
+            "title": "Coordinate Space",
+            "type": "string"
+          },
+          "page_height": {
+            "exclusiveMinimum": 0.0,
+            "title": "Page Height",
+            "type": "number"
+          },
+          "page_number": {
+            "minimum": 1.0,
+            "title": "Page Number",
+            "type": "integer"
+          },
+          "page_width": {
+            "exclusiveMinimum": 0.0,
+            "title": "Page Width",
+            "type": "number"
+          },
+          "rotation": {
+            "title": "Rotation",
+            "type": "integer"
+          },
+          "transform_id": {
+            "default": "",
+            "title": "Transform Id",
+            "type": "string"
+          },
+          "x0": {
+            "title": "X0",
+            "type": "number"
+          },
+          "x1": {
+            "title": "X1",
+            "type": "number"
+          },
+          "y0": {
+            "title": "Y0",
+            "type": "number"
+          },
+          "y1": {
+            "title": "Y1",
+            "type": "number"
+          }
+        },
+        "required": [
+          "page_number",
+          "x0",
+          "y0",
+          "x1",
+          "y1",
+          "page_width",
+          "page_height",
+          "rotation"
+        ],
+        "title": "CandidateRegion",
+        "type": "object"
+      },
+      "CandidateResponse": {
+        "properties": {
+          "allowed_strategies": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Allowed Strategies",
+            "type": "array"
+          },
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "classification": {
+            "enum": [
+              "confirmed",
+              "ambiguous",
+              "content"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "evidence": {
+            "title": "Evidence",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "text",
+              "image",
+              "pattern",
+              "other"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "overlaps_protected_content": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overlaps Protected Content"
+          },
+          "preview_media_type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "image/png",
+                  "image/jpeg",
+                  "image/gif",
+                  "image/webp"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preview Media Type"
+          },
+          "preview_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preview Url"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CandidateRegion"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_locator": {
+            "$ref": "#/components/schemas/SourceLocator"
+          },
+          "style": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Style"
+          }
+        },
+        "required": [
+          "candidate_id",
+          "classification",
+          "kind",
+          "content",
+          "evidence",
+          "source_locator",
+          "style",
+          "allowed_strategies"
+        ],
+        "title": "CandidateResponse",
+        "type": "object"
+      },
+      "CapabilitiesResponse": {
+        "properties": {
+          "formats": {
+            "items": {
+              "$ref": "#/components/schemas/CapabilityItem"
+            },
+            "title": "Formats",
+            "type": "array"
+          },
+          "max_upload_bytes": {
+            "title": "Max Upload Bytes",
+            "type": "integer"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          },
+          "vlm_localization": {
+            "$ref": "#/components/schemas/OptionalModelCapability"
+          }
+        },
+        "required": [
+          "version",
+          "max_upload_bytes",
+          "formats",
+          "vlm_localization"
+        ],
+        "title": "CapabilitiesResponse",
+        "type": "object"
+      },
+      "CapabilityItem": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "planned",
+              "experimental"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "strategies": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Strategies",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "status",
+          "strategies"
+        ],
+        "title": "CapabilityItem",
+        "type": "object"
+      },
+      "ComparisonPage": {
+        "properties": {
+          "page_number": {
+            "title": "Page Number",
+            "type": "integer"
+          },
+          "result_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Url"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "required": [
+          "page_number"
+        ],
+        "title": "ComparisonPage",
+        "type": "object"
+      },
+      "ComparisonResponse": {
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "changed_parts": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Changed Parts",
+            "type": "array"
+          },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/ComparisonPage"
+            },
+            "title": "Pages",
+            "type": "array"
+          },
+          "removed_count": {
+            "title": "Removed Count",
+            "type": "integer"
+          },
+          "result_page_count": {
+            "title": "Result Page Count",
+            "type": "integer"
+          },
+          "source_page_count": {
+            "title": "Source Page Count",
+            "type": "integer"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning"
+          }
+        },
+        "required": [
+          "available",
+          "removed_count",
+          "changed_parts",
+          "source_page_count",
+          "result_page_count",
+          "pages"
+        ],
+        "title": "ComparisonResponse",
+        "type": "object"
+      },
+      "CreateAnalysisRequest": {
+        "properties": {
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "enum": [
+                  "codecv",
+                  "general",
+                  "image"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
+          "watermark_text": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Watermark Text"
+          }
+        },
+        "required": [
+          "asset_id"
+        ],
+        "title": "CreateAnalysisRequest",
+        "type": "object"
+      },
+      "CreateTaskRequest": {
+        "properties": {
+          "plan_id": {
+            "title": "Plan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan_id"
+        ],
+        "title": "CreateTaskRequest",
+        "type": "object"
+      },
+      "ErrorBody": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "details": {
+            "additionalProperties": true,
+            "title": "Details",
+            "type": "object"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "request_id"
+        ],
+        "title": "ErrorBody",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "const": "ok",
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "ImageComplexityResponse": {
+        "properties": {
+          "level": {
+            "enum": [
+              "low",
+              "review",
+              "high"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageRegionComplexity"
+            },
+            "title": "Regions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "level",
+          "regions"
+        ],
+        "title": "ImageComplexityResponse",
+        "type": "object"
+      },
+      "ImageMaskPreviewResponse": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "complexity": {
+            "$ref": "#/components/schemas/ImageComplexityResponse"
+          },
+          "coverage_ratio": {
+            "exclusiveMinimum": 0.0,
+            "maximum": 1.0,
+            "title": "Coverage Ratio",
+            "type": "number"
+          },
+          "covered_pixels": {
+            "exclusiveMinimum": 0.0,
+            "title": "Covered Pixels",
+            "type": "number"
+          },
+          "executable": {
+            "title": "Executable",
+            "type": "boolean"
+          },
+          "protected_regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "title": "Protected Regions",
+            "type": "array"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "title": "Regions",
+            "type": "array"
+          },
+          "requires_acknowledgement": {
+            "title": "Requires Acknowledgement",
+            "type": "boolean"
+          },
+          "selection_risk": {
+            "$ref": "#/components/schemas/ImageSelectionRiskResponse"
+          },
+          "valid": {
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "asset_id",
+          "analysis_id",
+          "valid",
+          "executable",
+          "regions",
+          "covered_pixels",
+          "coverage_ratio",
+          "complexity",
+          "selection_risk",
+          "requires_acknowledgement",
+          "warnings"
+        ],
+        "title": "ImageMaskPreviewResponse",
+        "type": "object"
+      },
+      "ImageMaskRegion": {
+        "properties": {
+          "transform_id": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Transform Id",
+            "type": "string"
+          },
+          "x0": {
+            "title": "X0",
+            "type": "number"
+          },
+          "x1": {
+            "title": "X1",
+            "type": "number"
+          },
+          "y0": {
+            "title": "Y0",
+            "type": "number"
+          },
+          "y1": {
+            "title": "Y1",
+            "type": "number"
+          }
+        },
+        "required": [
+          "x0",
+          "y0",
+          "x1",
+          "y1",
+          "transform_id"
+        ],
+        "title": "ImageMaskRegion",
+        "type": "object"
+      },
+      "ImageMetadataResponse": {
+        "properties": {
+          "animated": {
+            "title": "Animated",
+            "type": "boolean"
+          },
+          "display_height": {
+            "exclusiveMinimum": 0.0,
+            "title": "Display Height",
+            "type": "integer"
+          },
+          "display_width": {
+            "exclusiveMinimum": 0.0,
+            "title": "Display Width",
+            "type": "integer"
+          },
+          "exif_orientation": {
+            "maximum": 8.0,
+            "minimum": 1.0,
+            "title": "Exif Orientation",
+            "type": "integer"
+          },
+          "format": {
+            "enum": [
+              "PNG",
+              "JPEG",
+              "WEBP"
+            ],
+            "title": "Format",
+            "type": "string"
+          },
+          "frames": {
+            "minimum": 1.0,
+            "title": "Frames",
+            "type": "integer"
+          },
+          "has_alpha": {
+            "title": "Has Alpha",
+            "type": "boolean"
+          },
+          "has_icc_profile": {
+            "title": "Has Icc Profile",
+            "type": "boolean"
+          },
+          "height": {
+            "exclusiveMinimum": 0.0,
+            "title": "Height",
+            "type": "integer"
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "transform_id": {
+            "title": "Transform Id",
+            "type": "string"
+          },
+          "width": {
+            "exclusiveMinimum": 0.0,
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "width",
+          "height",
+          "display_width",
+          "display_height",
+          "format",
+          "mode",
+          "frames",
+          "animated",
+          "has_alpha",
+          "exif_orientation",
+          "has_icc_profile",
+          "transform_id"
+        ],
+        "title": "ImageMetadataResponse",
+        "type": "object"
+      },
+      "ImagePlanResponse": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "output_kind": {
+            "const": "png",
+            "default": "png",
+            "title": "Output Kind",
+            "type": "string"
+          },
+          "protected_regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "title": "Protected Regions",
+            "type": "array"
+          },
+          "radius": {
+            "title": "Radius",
+            "type": "integer"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "title": "Regions",
+            "type": "array"
+          },
+          "strategy": {
+            "const": "opencv_telea",
+            "default": "opencv_telea",
+            "title": "Strategy",
+            "type": "string"
+          },
+          "valid": {
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/PlanWarning"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "valid",
+          "asset_id",
+          "analysis_id",
+          "regions",
+          "radius",
+          "warnings"
+        ],
+        "title": "ImagePlanResponse",
+        "type": "object"
+      },
+      "ImageRegionComplexity": {
+        "properties": {
+          "context_pixels": {
+            "minimum": 0.0,
+            "title": "Context Pixels",
+            "type": "integer"
+          },
+          "edge_density": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Edge Density",
+            "type": "number"
+          },
+          "periodicity_score": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Periodicity Score",
+            "type": "number"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "region_index": {
+            "minimum": 0.0,
+            "title": "Region Index",
+            "type": "integer"
+          },
+          "risk": {
+            "enum": [
+              "low",
+              "review",
+              "high"
+            ],
+            "title": "Risk",
+            "type": "string"
+          },
+          "structure_score": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Structure Score",
+            "type": "number"
+          },
+          "texture_score": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Texture Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "region_index",
+          "risk",
+          "texture_score",
+          "edge_density",
+          "periodicity_score",
+          "structure_score",
+          "context_pixels",
+          "reasons"
+        ],
+        "title": "ImageRegionComplexity",
+        "type": "object"
+      },
+      "ImageRegionSelectionRisk": {
+        "properties": {
+          "low_contrast": {
+            "title": "Low Contrast",
+            "type": "boolean"
+          },
+          "mean_luma_delta": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Mean Luma Delta",
+            "type": "number"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "region_index": {
+            "minimum": 0.0,
+            "title": "Region Index",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "region_index",
+          "mean_luma_delta",
+          "low_contrast",
+          "reason"
+        ],
+        "title": "ImageRegionSelectionRisk",
+        "type": "object"
+      },
+      "ImageSelectionRiskResponse": {
+        "properties": {
+          "large_selection": {
+            "title": "Large Selection",
+            "type": "boolean"
+          },
+          "level": {
+            "enum": [
+              "normal",
+              "review"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageRegionSelectionRisk"
+            },
+            "title": "Regions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "level",
+          "large_selection",
+          "regions"
+        ],
+        "title": "ImageSelectionRiskResponse",
+        "type": "object"
+      },
+      "OcrRuntimeDiagnostic": {
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "languages": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Languages",
+            "type": "array"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "unavailable",
+              "ready",
+              "probe_failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          }
+        },
+        "required": [
+          "available",
+          "status",
+          "message"
+        ],
+        "title": "OcrRuntimeDiagnostic",
+        "type": "object"
+      },
+      "OptionalModelCapability": {
+        "properties": {
+          "automatic_download": {
+            "const": false,
+            "default": false,
+            "title": "Automatic Download",
+            "type": "boolean"
+          },
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "requires_manual_review": {
+            "const": true,
+            "default": true,
+            "title": "Requires Manual Review",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "disabled",
+              "configuration_invalid",
+              "runtime_missing",
+              "ready"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "enabled",
+          "available",
+          "status",
+          "message"
+        ],
+        "title": "OptionalModelCapability",
+        "type": "object"
+      },
+      "PdfPageGeometry": {
+        "properties": {
+          "crop_x": {
+            "default": 0,
+            "title": "Crop X",
+            "type": "number"
+          },
+          "crop_y": {
+            "default": 0,
+            "title": "Crop Y",
+            "type": "number"
+          },
+          "height": {
+            "exclusiveMinimum": 0.0,
+            "title": "Height",
+            "type": "number"
+          },
+          "page_number": {
+            "minimum": 1.0,
+            "title": "Page Number",
+            "type": "integer"
+          },
+          "rotation": {
+            "title": "Rotation",
+            "type": "integer"
+          },
+          "transform_id": {
+            "title": "Transform Id",
+            "type": "string"
+          },
+          "width": {
+            "exclusiveMinimum": 0.0,
+            "title": "Width",
+            "type": "number"
+          }
+        },
+        "required": [
+          "page_number",
+          "width",
+          "height",
+          "rotation",
+          "transform_id"
+        ],
+        "title": "PdfPageGeometry",
+        "type": "object"
+      },
+      "PhotoSceneAssessmentResponse": {
+        "properties": {
+          "eligible": {
+            "title": "Eligible",
+            "type": "boolean"
+          },
+          "matched_routes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Matched Routes",
+            "type": "array"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          }
+        },
+        "required": [
+          "eligible",
+          "matched_routes",
+          "reasons"
+        ],
+        "title": "PhotoSceneAssessmentResponse",
+        "type": "object"
+      },
+      "PlanOperation": {
+        "properties": {
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "strategy": {
+            "const": "object",
+            "default": "object",
+            "title": "Strategy",
+            "type": "string"
+          }
+        },
+        "required": [
+          "candidate_id"
+        ],
+        "title": "PlanOperation",
+        "type": "object"
+      },
+      "PlanResponse": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "operations": {
+            "items": {
+              "$ref": "#/components/schemas/PlanOperation"
+            },
+            "title": "Operations",
+            "type": "array"
+          },
+          "output_kind": {
+            "default": "docx",
+            "enum": [
+              "docx",
+              "pdf"
+            ],
+            "title": "Output Kind",
+            "type": "string"
+          },
+          "valid": {
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/PlanWarning"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "valid",
+          "asset_id",
+          "analysis_id",
+          "operations",
+          "warnings"
+        ],
+        "title": "PlanResponse",
+        "type": "object"
+      },
+      "PlanWarning": {
+        "properties": {
+          "candidate_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Candidate Id"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "requires_acknowledgement": {
+            "default": true,
+            "title": "Requires Acknowledgement",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "PlanWarning",
+        "type": "object"
+      },
+      "PreviewImageMasksRequest": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "protected_regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "maxItems": 100,
+            "title": "Protected Regions",
+            "type": "array"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Regions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "asset_id",
+          "analysis_id",
+          "regions"
+        ],
+        "title": "PreviewImageMasksRequest",
+        "type": "object"
+      },
+      "PreviewRedactionsRequest": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/RedactionRegionRequest"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Regions",
+            "type": "array"
+          },
+          "strategy": {
+            "default": "pymupdf_redaction",
+            "enum": [
+              "pymupdf_redaction",
+              "raster_inpaint"
+            ],
+            "title": "Strategy",
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id",
+          "analysis_id",
+          "regions"
+        ],
+        "title": "PreviewRedactionsRequest",
+        "type": "object"
+      },
+      "ProtectedContentResponse": {
+        "properties": {
+          "content_id": {
+            "title": "Content Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "text",
+              "image",
+              "form",
+              "graphic",
+              "link",
+              "annotation"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "region": {
+            "$ref": "#/components/schemas/CandidateRegion"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content_id",
+          "kind",
+          "summary",
+          "region"
+        ],
+        "title": "ProtectedContentResponse",
+        "type": "object"
+      },
+      "RedactionOverlap": {
+        "properties": {
+          "content_id": {
+            "title": "Content Id",
+            "type": "string"
+          },
+          "intersection_area": {
+            "exclusiveMinimum": 0.0,
+            "title": "Intersection Area",
+            "type": "number"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content_id",
+          "kind",
+          "summary",
+          "intersection_area"
+        ],
+        "title": "RedactionOverlap",
+        "type": "object"
+      },
+      "RedactionPlanResponse": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "dpi": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dpi"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "license_mode": {
+            "enum": [
+              "agpl",
+              "commercial"
+            ],
+            "title": "License Mode",
+            "type": "string"
+          },
+          "ocr_languages": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ocr Languages"
+          },
+          "output_kind": {
+            "const": "pdf",
+            "default": "pdf",
+            "title": "Output Kind",
+            "type": "string"
+          },
+          "radius": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Radius"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/RedactionRegionRequest"
+            },
+            "title": "Regions",
+            "type": "array"
+          },
+          "strategy": {
+            "default": "pymupdf_redaction",
+            "enum": [
+              "pymupdf_redaction",
+              "raster_inpaint"
+            ],
+            "title": "Strategy",
+            "type": "string"
+          },
+          "valid": {
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/PlanWarning"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "valid",
+          "asset_id",
+          "analysis_id",
+          "license_mode",
+          "regions",
+          "warnings"
+        ],
+        "title": "RedactionPlanResponse",
+        "type": "object"
+      },
+      "RedactionPreviewResponse": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "executable": {
+            "title": "Executable",
+            "type": "boolean"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/RedactionRegionPreview"
+            },
+            "title": "Regions",
+            "type": "array"
+          },
+          "requires_acknowledgement": {
+            "title": "Requires Acknowledgement",
+            "type": "boolean"
+          },
+          "valid": {
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "asset_id",
+          "analysis_id",
+          "valid",
+          "requires_acknowledgement",
+          "executable",
+          "regions",
+          "warnings"
+        ],
+        "title": "RedactionPreviewResponse",
+        "type": "object"
+      },
+      "RedactionRegionPreview": {
+        "properties": {
+          "overlaps": {
+            "items": {
+              "$ref": "#/components/schemas/RedactionOverlap"
+            },
+            "title": "Overlaps",
+            "type": "array"
+          },
+          "region": {
+            "$ref": "#/components/schemas/RedactionRegionRequest"
+          }
+        },
+        "required": [
+          "region",
+          "overlaps"
+        ],
+        "title": "RedactionRegionPreview",
+        "type": "object"
+      },
+      "RedactionRegionRequest": {
+        "properties": {
+          "page_number": {
+            "minimum": 1.0,
+            "title": "Page Number",
+            "type": "integer"
+          },
+          "transform_id": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Transform Id",
+            "type": "string"
+          },
+          "x0": {
+            "title": "X0",
+            "type": "number"
+          },
+          "x1": {
+            "title": "X1",
+            "type": "number"
+          },
+          "y0": {
+            "title": "Y0",
+            "type": "number"
+          },
+          "y1": {
+            "title": "Y1",
+            "type": "number"
+          }
+        },
+        "required": [
+          "page_number",
+          "x0",
+          "y0",
+          "x1",
+          "y1",
+          "transform_id"
+        ],
+        "title": "RedactionRegionRequest",
+        "type": "object"
+      },
+      "RuntimeDiagnosticsResponse": {
+        "properties": {
+          "ocr": {
+            "$ref": "#/components/schemas/OcrRuntimeDiagnostic"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "vlm_localization": {
+            "$ref": "#/components/schemas/OptionalModelCapability"
+          },
+          "xiaohongshu": {
+            "$ref": "#/components/schemas/XiaohongshuRuntimeDiagnostic"
+          }
+        },
+        "required": [
+          "ocr",
+          "xiaohongshu",
+          "vlm_localization"
+        ],
+        "title": "RuntimeDiagnosticsResponse",
+        "type": "object"
+      },
+      "SourceLocator": {
+        "properties": {
+          "annotation_index": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Annotation Index"
+          },
+          "drawing_index": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Drawing Index"
+          },
+          "generation_number": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generation Number"
+          },
+          "media_part_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Media Part Name"
+          },
+          "media_sha256": {
+            "anyOf": [
+              {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Media Sha256"
+          },
+          "object_number": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Object Number"
+          },
+          "operation_index": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operation Index"
+          },
+          "page_numbers": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Page Numbers",
+            "type": "array"
+          },
+          "part_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part Name"
+          },
+          "relationship_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relationship Id"
+          },
+          "resource_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource Name"
+          },
+          "shape_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shape Id"
+          },
+          "shape_index": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shape Index"
+          },
+          "shape_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shape Type"
+          }
+        },
+        "title": "SourceLocator",
+        "type": "object"
+      },
+      "TaskReport": {
+        "properties": {
+          "artifacts": {
+            "items": {
+              "$ref": "#/components/schemas/TaskReportArtifact"
+            },
+            "title": "Artifacts",
+            "type": "array"
+          },
+          "comparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskReportComparison"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "duration_seconds": {
+            "minimum": 0.0,
+            "title": "Duration Seconds",
+            "type": "number"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskReportError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "input": {
+            "$ref": "#/components/schemas/TaskReportInput"
+          },
+          "plan_id": {
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "processing": {
+            "$ref": "#/components/schemas/TaskReportProcessing"
+          },
+          "progress": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Progress",
+            "type": "number"
+          },
+          "schema_version": {
+            "const": "1.0",
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "stage": {
+            "title": "Stage",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "cancelling",
+              "cancelled",
+              "succeeded",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "task_id": {
+            "title": "Task Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "plan_id",
+          "status",
+          "stage",
+          "progress",
+          "created_at",
+          "updated_at",
+          "duration_seconds",
+          "input",
+          "processing"
+        ],
+        "title": "TaskReport",
+        "type": "object"
+      },
+      "TaskReportArtifact": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "media_type": {
+            "title": "Media Type",
+            "type": "string"
+          },
+          "page_number": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Number"
+          },
+          "role": {
+            "enum": [
+              "output",
+              "source_preview",
+              "result_preview"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          },
+          "size_bytes": {
+            "title": "Size Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "media_type",
+          "size_bytes",
+          "sha256"
+        ],
+        "title": "TaskReportArtifact",
+        "type": "object"
+      },
+      "TaskReportComparison": {
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "removed_count": {
+            "title": "Removed Count",
+            "type": "integer"
+          },
+          "result_page_count": {
+            "title": "Result Page Count",
+            "type": "integer"
+          },
+          "source_page_count": {
+            "title": "Source Page Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "available",
+          "removed_count",
+          "source_page_count",
+          "result_page_count"
+        ],
+        "title": "TaskReportComparison",
+        "type": "object"
+      },
+      "TaskReportError": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "title": "TaskReportError",
+        "type": "object"
+      },
+      "TaskReportInput": {
+        "properties": {
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "media_type": {
+            "title": "Media Type",
+            "type": "string"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          },
+          "size_bytes": {
+            "title": "Size Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "asset_id",
+          "kind",
+          "media_type",
+          "size_bytes",
+          "sha256"
+        ],
+        "title": "TaskReportInput",
+        "type": "object"
+      },
+      "TaskReportPdfPage": {
+        "properties": {
+          "ocr_status": {
+            "enum": [
+              "not_needed",
+              "succeeded",
+              "disabled",
+              "unavailable",
+              "failed",
+              "no_text"
+            ],
+            "title": "Ocr Status",
+            "type": "string"
+          },
+          "page_number": {
+            "minimum": 1.0,
+            "title": "Page Number",
+            "type": "integer"
+          },
+          "searchable": {
+            "title": "Searchable",
+            "type": "boolean"
+          },
+          "text_source": {
+            "enum": [
+              "source_text",
+              "ocr",
+              "none"
+            ],
+            "title": "Text Source",
+            "type": "string"
+          },
+          "unsearchable_reason": {
+            "anyOf": [
+              {
+                "enum": [
+                  "ocr_disabled",
+                  "ocr_unavailable",
+                  "ocr_failed",
+                  "ocr_no_text",
+                  "text_layer_insert_failed"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unsearchable Reason"
+          },
+          "word_count": {
+            "minimum": 0.0,
+            "title": "Word Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "page_number",
+          "text_source",
+          "ocr_status",
+          "word_count",
+          "searchable"
+        ],
+        "title": "TaskReportPdfPage",
+        "type": "object"
+      },
+      "TaskReportProcessing": {
+        "properties": {
+          "dpi": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dpi"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "ocr_languages": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ocr Languages"
+          },
+          "output_kind": {
+            "title": "Output Kind",
+            "type": "string"
+          },
+          "pdf_pages": {
+            "items": {
+              "$ref": "#/components/schemas/TaskReportPdfPage"
+            },
+            "title": "Pdf Pages",
+            "type": "array"
+          },
+          "protected_target_count": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Protected Target Count",
+            "type": "integer"
+          },
+          "radius": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Radius"
+          },
+          "selected_target_count": {
+            "minimum": 0.0,
+            "title": "Selected Target Count",
+            "type": "integer"
+          },
+          "warning_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warning Codes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "kind",
+          "output_kind",
+          "selected_target_count"
+        ],
+        "title": "TaskReportProcessing",
+        "type": "object"
+      },
+      "TaskResponse": {
+        "properties": {
+          "artifacts": {
+            "items": {
+              "$ref": "#/components/schemas/ArtifactResponse"
+            },
+            "title": "Artifacts",
+            "type": "array"
+          },
+          "comparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComparisonResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "duration_seconds": {
+            "minimum": 0.0,
+            "title": "Duration Seconds",
+            "type": "number"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorBody"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "plan_id": {
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "progress": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Progress",
+            "type": "number"
+          },
+          "report_url": {
+            "title": "Report Url",
+            "type": "string"
+          },
+          "stage": {
+            "title": "Stage",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "cancelling",
+              "cancelled",
+              "succeeded",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "warning_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warning Codes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "plan_id",
+          "status",
+          "stage",
+          "progress",
+          "created_at",
+          "updated_at",
+          "duration_seconds",
+          "report_url"
+        ],
+        "title": "TaskResponse",
+        "type": "object"
+      },
+      "ValidateImagePlanRequest": {
+        "properties": {
+          "acknowledged_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Acknowledged Warnings",
+            "type": "array"
+          },
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "asset_sha256": {
+            "title": "Asset Sha256",
+            "type": "string"
+          },
+          "protected_regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "maxItems": 100,
+            "title": "Protected Regions",
+            "type": "array"
+          },
+          "radius": {
+            "default": 3,
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Radius",
+            "type": "integer"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Regions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "asset_id",
+          "asset_sha256",
+          "analysis_id",
+          "regions"
+        ],
+        "title": "ValidateImagePlanRequest",
+        "type": "object"
+      },
+      "ValidatePlanRequest": {
+        "properties": {
+          "acknowledged_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Acknowledged Warnings",
+            "type": "array"
+          },
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "asset_sha256": {
+            "title": "Asset Sha256",
+            "type": "string"
+          },
+          "operations": {
+            "items": {
+              "$ref": "#/components/schemas/PlanOperation"
+            },
+            "minItems": 1,
+            "title": "Operations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "asset_id",
+          "asset_sha256",
+          "analysis_id",
+          "operations"
+        ],
+        "title": "ValidatePlanRequest",
+        "type": "object"
+      },
+      "ValidateRedactionPlanRequest": {
+        "properties": {
+          "acknowledged_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Acknowledged Warnings",
+            "type": "array"
+          },
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "asset_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Asset Sha256",
+            "type": "string"
+          },
+          "dpi": {
+            "default": 144,
+            "maximum": 300.0,
+            "minimum": 96.0,
+            "title": "Dpi",
+            "type": "integer"
+          },
+          "ocr_languages": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9_]+(?:\\+[A-Za-z0-9_]+)*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ocr Languages"
+          },
+          "radius": {
+            "default": 3,
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Radius",
+            "type": "integer"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/RedactionRegionRequest"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Regions",
+            "type": "array"
+          },
+          "strategy": {
+            "default": "pymupdf_redaction",
+            "enum": [
+              "pymupdf_redaction",
+              "raster_inpaint"
+            ],
+            "title": "Strategy",
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id",
+          "analysis_id",
+          "regions",
+          "asset_sha256"
+        ],
+        "title": "ValidateRedactionPlanRequest",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VlmSuggestionRequest": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id",
+          "analysis_id"
+        ],
+        "title": "VlmSuggestionRequest",
+        "type": "object"
+      },
+      "VlmSuggestionResponse": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "photo_scene": {
+            "$ref": "#/components/schemas/PhotoSceneAssessmentResponse"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "title": "Regions",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "suggested",
+              "no_candidates",
+              "photo_gate_rejected"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "asset_id",
+          "analysis_id",
+          "status",
+          "regions",
+          "photo_scene",
+          "warnings"
+        ],
+        "title": "VlmSuggestionResponse",
+        "type": "object"
+      },
+      "XiaohongshuImportRequest": {
+        "properties": {
+          "candidate_id": {
+            "pattern": "^xhs-image-[a-f0-9]{20}$",
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "parser_version": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parser Version"
+          },
+          "share_text": {
+            "maxLength": 4096,
+            "minLength": 1,
+            "title": "Share Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "share_text",
+          "candidate_id"
+        ],
+        "title": "XiaohongshuImportRequest",
+        "type": "object"
+      },
+      "XiaohongshuMediaCandidateResponse": {
+        "properties": {
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "maximum": 100000.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "position": {
+            "minimum": 1.0,
+            "title": "Position",
+            "type": "integer"
+          },
+          "role": {
+            "enum": [
+              "cover",
+              "gallery"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "maximum": 100000.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          }
+        },
+        "required": [
+          "candidate_id",
+          "position",
+          "role"
+        ],
+        "title": "XiaohongshuMediaCandidateResponse",
+        "type": "object"
+      },
+      "XiaohongshuPreviewRequest": {
+        "properties": {
+          "resolve_metadata": {
+            "default": false,
+            "title": "Resolve Metadata",
+            "type": "boolean"
+          },
+          "share_text": {
+            "maxLength": 4096,
+            "minLength": 1,
+            "title": "Share Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "share_text"
+        ],
+        "title": "XiaohongshuPreviewRequest",
+        "type": "object"
+      },
+      "XiaohongshuPreviewResponse": {
+        "properties": {
+          "author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Author"
+          },
+          "canonical_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Canonical Url"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "diagnostic_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Diagnostic Codes",
+            "type": "array"
+          },
+          "kind": {
+            "enum": [
+              "direct",
+              "short"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "media_candidates": {
+            "items": {
+              "$ref": "#/components/schemas/XiaohongshuMediaCandidateResponse"
+            },
+            "title": "Media Candidates",
+            "type": "array"
+          },
+          "media_download_supported": {
+            "title": "Media Download Supported",
+            "type": "boolean"
+          },
+          "metadata_status": {
+            "enum": [
+              "not_requested",
+              "disabled",
+              "resolved",
+              "unavailable"
+            ],
+            "title": "Metadata Status",
+            "type": "string"
+          },
+          "normalized_url": {
+            "title": "Normalized Url",
+            "type": "string"
+          },
+          "note_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note Id"
+          },
+          "page_structure_status": {
+            "enum": [
+              "not_checked",
+              "matched",
+              "partial",
+              "changed",
+              "unavailable"
+            ],
+            "title": "Page Structure Status",
+            "type": "string"
+          },
+          "parser_version": {
+            "title": "Parser Version",
+            "type": "string"
+          },
+          "thumbnail_present": {
+            "title": "Thumbnail Present",
+            "type": "boolean"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "kind",
+          "normalized_url",
+          "canonical_url",
+          "note_id",
+          "metadata_status",
+          "title",
+          "description",
+          "author",
+          "thumbnail_present",
+          "media_download_supported",
+          "parser_version",
+          "page_structure_status"
+        ],
+        "title": "XiaohongshuPreviewResponse",
+        "type": "object"
+      },
+      "XiaohongshuRuntimeDiagnostic": {
+        "properties": {
+          "image_import_enabled": {
+            "title": "Image Import Enabled",
+            "type": "boolean"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "metadata_reading_enabled": {
+            "title": "Metadata Reading Enabled",
+            "type": "boolean"
+          },
+          "proxy_configured": {
+            "title": "Proxy Configured",
+            "type": "boolean"
+          },
+          "share_link_parsing": {
+            "const": true,
+            "default": true,
+            "title": "Share Link Parsing",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "parse_only",
+              "metadata_only",
+              "ready",
+              "configuration_invalid"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "metadata_reading_enabled",
+          "image_import_enabled",
+          "proxy_configured",
+          "message"
+        ],
+        "title": "XiaohongshuRuntimeDiagnostic",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Watermark Remover",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/analyses": {
+      "post": {
+        "operationId": "create_analysis_api_v1_analyses_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Analysis"
+      }
+    },
+    "/api/v1/analyses/{analysis_id}": {
+      "get": {
+        "operationId": "get_analysis_api_v1_analyses__analysis_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "title": "Analysis Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Analysis"
+      }
+    },
+    "/api/v1/analyses/{analysis_id}/candidates/{candidate_id}/preview": {
+      "get": {
+        "operationId": "get_analysis_candidate_preview_api_v1_analyses__analysis_id__candidates__candidate_id__preview_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "title": "Analysis Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "candidate_id",
+            "required": true,
+            "schema": {
+              "title": "Candidate Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Analysis Candidate Preview"
+      }
+    },
+    "/api/v1/assets": {
+      "post": {
+        "operationId": "upload_asset_api_v1_assets_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_asset_api_v1_assets_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload Asset"
+      }
+    },
+    "/api/v1/assets/{asset_id}": {
+      "delete": {
+        "operationId": "delete_asset_api_v1_assets__asset_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "asset_id",
+            "required": true,
+            "schema": {
+              "title": "Asset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Asset"
+      },
+      "get": {
+        "operationId": "get_asset_api_v1_assets__asset_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "asset_id",
+            "required": true,
+            "schema": {
+              "title": "Asset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Asset"
+      }
+    },
+    "/api/v1/assets/{asset_id}/content": {
+      "get": {
+        "operationId": "get_asset_content_api_v1_assets__asset_id__content_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "asset_id",
+            "required": true,
+            "schema": {
+              "title": "Asset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Asset Content"
+      }
+    },
+    "/api/v1/capabilities": {
+      "get": {
+        "operationId": "capabilities_api_v1_capabilities_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilitiesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Capabilities"
+      }
+    },
+    "/api/v1/diagnostics": {
+      "get": {
+        "operationId": "runtime_diagnostics_api_v1_diagnostics_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeDiagnosticsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Runtime Diagnostics"
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/api/v1/image-masks/preview": {
+      "post": {
+        "operationId": "preview_image_masks_api_v1_image_masks_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewImageMasksRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageMaskPreviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Preview Image Masks"
+      }
+    },
+    "/api/v1/image-plans/validate": {
+      "post": {
+        "operationId": "validate_image_plan_api_v1_image_plans_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateImagePlanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImagePlanResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Validate Image Plan"
+      }
+    },
+    "/api/v1/image-suggestions/vlm": {
+      "post": {
+        "operationId": "suggest_image_masks_api_v1_image_suggestions_vlm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VlmSuggestionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VlmSuggestionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Suggest Image Masks"
+      }
+    },
+    "/api/v1/plans/validate": {
+      "post": {
+        "operationId": "validate_plan_api_v1_plans_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidatePlanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Validate Plan"
+      }
+    },
+    "/api/v1/redaction-plans/validate": {
+      "post": {
+        "operationId": "validate_redaction_plan_api_v1_redaction_plans_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateRedactionPlanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedactionPlanResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Validate Redaction Plan"
+      }
+    },
+    "/api/v1/redactions/preview": {
+      "post": {
+        "operationId": "preview_redactions_api_v1_redactions_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewRedactionsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedactionPreviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Preview Redactions"
+      }
+    },
+    "/api/v1/tasks": {
+      "get": {
+        "operationId": "list_tasks_api_v1_tasks_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TaskResponse"
+                  },
+                  "title": "Response List Tasks Api V1 Tasks Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Tasks"
+      },
+      "post": {
+        "operationId": "create_task_api_v1_tasks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTaskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Task"
+      }
+    },
+    "/api/v1/tasks/{task_id}": {
+      "get": {
+        "operationId": "get_task_api_v1_tasks__task_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Task"
+      }
+    },
+    "/api/v1/tasks/{task_id}/artifacts/{artifact_id}": {
+      "get": {
+        "operationId": "download_artifact_api_v1_tasks__task_id__artifacts__artifact_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "artifact_id",
+            "required": true,
+            "schema": {
+              "title": "Artifact Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "inline",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Inline",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download Artifact"
+      }
+    },
+    "/api/v1/tasks/{task_id}/cancel": {
+      "post": {
+        "operationId": "cancel_task_api_v1_tasks__task_id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Task"
+      }
+    },
+    "/api/v1/tasks/{task_id}/report": {
+      "get": {
+        "operationId": "download_task_report_api_v1_tasks__task_id__report_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download Task Report"
+      }
+    },
+    "/api/v1/xiaohongshu/import": {
+      "post": {
+        "operationId": "import_xiaohongshu_image_api_v1_xiaohongshu_import_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/XiaohongshuImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Import Xiaohongshu Image"
+      }
+    },
+    "/api/v1/xiaohongshu/preview": {
+      "post": {
+        "operationId": "preview_xiaohongshu_link_api_v1_xiaohongshu_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/XiaohongshuPreviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/XiaohongshuPreviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Preview Xiaohongshu Link"
+      }
+    }
+  }
+}

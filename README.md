@@ -146,9 +146,13 @@ make browser-check
 验证发布依赖清单、SPDX SBOM 和全新虚拟环境中的 wheel 安装：
 
 ```bash
+make api-contract-check
 make release-metadata-check
 make wheel-check
 ```
+
+`docs/release/openapi-v1.json` 是当前 `/api/v1/` Web API 的机器可读兼容性基线。
+接口演进规则见 [docs/release/API_COMPATIBILITY_V1.md](docs/release/API_COMPATIBILITY_V1.md)。
 
 版本变化见 [CHANGELOG.md](CHANGELOG.md)，第三方依赖清单见
 [docs/THIRD_PARTY_DEPENDENCIES.md](docs/THIRD_PARTY_DEPENDENCIES.md)，机器可读的 SPDX 2.3 SBOM 位于

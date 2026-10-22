@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract mask-refinement-model-env mask-refinement-model-fetch mask-refinement-model mask-refinement-photo-corpus mask-refinement-photo-model mask-refinement-photo-model-cpu mask-refinement-candidate-gate-mps mask-refinement-candidate-gate-cpu mask-refinement-multimask-mps mask-refinement-multimask-cpu mask-refinement-text-contrast-mps mask-refinement-text-contrast-cpu mask-refinement-contained-detection-mps mask-refinement-contained-detection-cpu mask-refinement-holdout-corpus mask-refinement-holdout-localization mask-refinement-holdout-model-mps mask-refinement-holdout-model-cpu mask-refinement-holdout-gate-mps mask-refinement-holdout-gate-cpu mask-refinement-confirmation-corpus mask-refinement-confirmation-localization mask-refinement-confirmation-model-mps mask-refinement-confirmation-model-cpu mask-refinement-confirmation-gate-mps mask-refinement-confirmation-gate-cpu mask-refinement-confirmation-third-corpus mask-refinement-confirmation-third-localization mask-refinement-confirmation-third-model-mps mask-refinement-confirmation-third-model-cpu mask-refinement-confirmation-third-gate-mps mask-refinement-confirmation-third-gate-cpu mask-refinement-confirmation-fourth-corpus mask-refinement-confirmation-fourth-localization mask-refinement-confirmation-fourth-model-mps mask-refinement-confirmation-fourth-model-cpu mask-refinement-confirmation-fourth-gate-mps mask-refinement-confirmation-fourth-gate-cpu mask-refinement-timing-protocol model-supply-chain-review complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
+.PHONY: backend-install backend-check frontend-install frontend-check browser-install browser-check web-build web-run image-benchmark mobile-watermark-benchmark mobile-selection-corpus vlm-localization-corpus vlm-model-fetch vlm-localization-contract vlm-localization-model vlm-photo-gate vlm-localization-model-photo-gated mask-refinement-corpus mask-refinement-contract mask-refinement-model-env mask-refinement-model-fetch mask-refinement-model mask-refinement-photo-corpus mask-refinement-photo-model mask-refinement-photo-model-cpu mask-refinement-candidate-gate-mps mask-refinement-candidate-gate-cpu mask-refinement-multimask-mps mask-refinement-multimask-cpu mask-refinement-text-contrast-mps mask-refinement-text-contrast-cpu mask-refinement-contained-detection-mps mask-refinement-contained-detection-cpu mask-refinement-holdout-corpus mask-refinement-holdout-localization mask-refinement-holdout-model-mps mask-refinement-holdout-model-cpu mask-refinement-holdout-gate-mps mask-refinement-holdout-gate-cpu mask-refinement-confirmation-corpus mask-refinement-confirmation-localization mask-refinement-confirmation-model-mps mask-refinement-confirmation-model-cpu mask-refinement-confirmation-gate-mps mask-refinement-confirmation-gate-cpu mask-refinement-confirmation-third-corpus mask-refinement-confirmation-third-localization mask-refinement-confirmation-third-model-mps mask-refinement-confirmation-third-model-cpu mask-refinement-confirmation-third-gate-mps mask-refinement-confirmation-third-gate-cpu mask-refinement-confirmation-fourth-corpus mask-refinement-confirmation-fourth-localization mask-refinement-confirmation-fourth-model-mps mask-refinement-confirmation-fourth-model-cpu mask-refinement-confirmation-fourth-gate-mps mask-refinement-confirmation-fourth-gate-cpu mask-refinement-timing-protocol model-supply-chain-review complexity-calibration codecv-corpus codecv-real-corpus pdf-redaction-probe pdf-ocr-probe pdf-redaction-corpus api-contract api-contract-check release-metadata release-metadata-check wheel-check release-check stable-release-policy-check check
 
 backend-install:
 	cd backend && python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
@@ -584,15 +584,21 @@ pdf-redaction-corpus:
 release-metadata:
 	python3 packaging/generate_release_metadata.py
 
+api-contract:
+	backend/.venv/bin/python packaging/generate_openapi_contract.py
+
+api-contract-check:
+	backend/.venv/bin/python packaging/generate_openapi_contract.py --check
+
 release-metadata-check:
 	python3 packaging/generate_release_metadata.py --check
 
 wheel-check:
 	python3 packaging/verify_wheel_install.py
 
-release-check: release-metadata-check wheel-check
+release-check: api-contract-check release-metadata-check wheel-check
 
 stable-release-policy-check:
 	python3 packaging/verify_stable_release.py
 
-check: backend-check frontend-check
+check: backend-check frontend-check api-contract-check
