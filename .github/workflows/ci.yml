@@ -41,10 +41,14 @@ jobs:
           packaging/verify_web_bundle.py
           packaging/smoke_web_bundle.py
           packaging/tests/test_build_web_bundle.py
+          packaging/audit_release_assets.py
+          packaging/tests/test_audit_release_assets.py
       - name: Verify frozen OpenAPI v1 contract
         run: python packaging/generate_openapi_contract.py --check
       - name: Test OpenAPI contract tooling
         run: python -m pytest packaging/tests/test_generate_openapi_contract.py
+      - name: Test release asset privacy audit
+        run: python -m pytest packaging/tests/test_audit_release_assets.py
       - name: Verify and test public error-code contract
         run: >-
           python -m pytest packaging/tests/test_generate_error_code_contract.py

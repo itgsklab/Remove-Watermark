@@ -35,3 +35,5 @@ python packaging/prepare_release_candidate.py \
 
 The tool does not commit, tag, upload or publish anything. The resulting changes must pass the full
 release-readiness matrix again as the release-candidate commit before any package publication.
+Build the five public files, run the independent privacy audit, publish through a reviewed draft and
+verify a fresh GitHub download using [the asset publication procedure](ASSET_PUBLICATION.md).

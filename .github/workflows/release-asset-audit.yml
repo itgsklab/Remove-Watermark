@@ -1,0 +1,73 @@
+name: Release asset audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing GitHub Release tag to download
+        required: true
+        type: string
+      version:
+        description: Python package version without the v prefix
+        required: true
+        type: string
+      source_commit:
+        description: Full 40-character source commit recorded in the manifest
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  audit-downloaded-assets:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+      RELEASE_VERSION: ${{ inputs.version }}
+      RELEASE_SOURCE_COMMIT: ${{ inputs.source_commit }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.10"
+      - name: Verify the published tag target
+        shell: bash
+        run: |
+          mkdir -p work
+          gh release view "$RELEASE_TAG" \
+            --json tagName,targetCommitish,isDraft \
+            > work/release.json
+          python - <<'PY'
+          import json
+          import os
+
+          release = json.load(open("work/release.json", encoding="utf-8"))
+          if release != {
+              "tagName": os.environ["RELEASE_TAG"],
+              "targetCommitish": os.environ["RELEASE_SOURCE_COMMIT"],
+              "isDraft": False,
+          }:
+              raise SystemExit("GitHub Release tag, target commit, or publication state changed")
+          PY
+      - name: Download the complete public release into an empty directory
+        shell: bash
+        run: |
+          mkdir -p work/downloaded-release
+          gh release download "$RELEASE_TAG" --dir work/downloaded-release
+      - name: Audit downloaded names, hashes, archives and private-data patterns
+        run: >-
+          python packaging/audit_release_assets.py
+          --assets-dir work/downloaded-release
+          --version "$RELEASE_VERSION"
+          --expected-commit "$RELEASE_SOURCE_COMMIT"
+          --report-json work/release-asset-audit.json
+      - name: Upload privacy-safe audit evidence
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-asset-audit
+          path: work/release-asset-audit.json
+          if-no-files-found: error
+          retention-days: 30
