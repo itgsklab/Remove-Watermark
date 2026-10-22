@@ -11,6 +11,8 @@ All notable changes to this project are documented in this file. The format foll
   continuous integration and local release checks to expose accidental breaking API changes.
 - Generated Vue TypeScript API definitions sourced from the frozen OpenAPI contract, with the client
   response types migrated from handwritten duplicates and a CI freshness check.
+- A generated v1 error-code contract covering Web response/task delivery, HTTP status mappings and
+  CLI exit-code mappings, enforced in local and three-platform release checks.
 - A model-independent box-guided mask-refinement Protocol and reproducible pixel benchmark covering
   IoU, leakage, correction workload, runtime metadata and human workflow timing gates.
 - An evaluation-only SAM2 Hiera-T supply-chain manifest and audit gate pinning official revisions,

@@ -147,6 +147,7 @@ make browser-check
 
 ```bash
 make api-contract-check
+make error-contract-check
 make release-metadata-check
 make wheel-check
 ```
@@ -154,6 +155,8 @@ make wheel-check
 `docs/release/openapi-v1.json` 是当前 `/api/v1/` Web API 的机器可读兼容性基线。
 Vue 客户端类型由该基线生成，并由 `cd frontend && npm run api:check` 检查是否过期。
 接口演进规则见 [docs/release/API_COMPATIBILITY_V1.md](docs/release/API_COMPATIBILITY_V1.md)。
+Web API 与 CLI 的符号错误码及状态映射见
+[docs/release/ERROR_CODES_V1.md](docs/release/ERROR_CODES_V1.md)。
 
 版本变化见 [CHANGELOG.md](CHANGELOG.md)，第三方依赖清单见
 [docs/THIRD_PARTY_DEPENDENCIES.md](docs/THIRD_PARTY_DEPENDENCIES.md)，机器可读的 SPDX 2.3 SBOM 位于

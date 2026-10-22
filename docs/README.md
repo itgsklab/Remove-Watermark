@@ -23,6 +23,8 @@ reports maintained in this repository:
 - `release/CLI_COMPATIBILITY_V1.md`
 - `release/API_COMPATIBILITY_V1.md`
 - `release/openapi-v1.json`
+- `release/ERROR_CODES_V1.md`
+- `release/error-codes-v1.json`
 - `release/RELEASE_CANDIDATE.md`
 - `release/STABLE_RELEASE.md`
 - `benchmarks/opencv-telea-baseline.md`
