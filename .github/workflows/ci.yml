@@ -57,6 +57,9 @@ jobs:
       - name: Install locked frontend dependencies
         working-directory: frontend
         run: npm ci
+      - name: Verify generated API types
+        working-directory: frontend
+        run: npm run api:check
       - name: Type-check Vue sources
         working-directory: frontend
         run: npm run typecheck

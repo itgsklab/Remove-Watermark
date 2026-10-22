@@ -4,9 +4,9 @@ This file is generated from the pinned Python packaging constraints and npm lock
 It records release inputs; it is not a legal opinion or a substitute for license review.
 Regenerate it with `make release-metadata` and verify it with `make release-metadata-check`.
 
-- Input digest: `bec654b2986bfd673b4a3e938f6e9ba972c7a45072c4d3dd3c6c5afe5ce303ad`
+- Input digest: `5149ec2bbba167d21c8c78cadf65227d63c8bc7c819463975c31bef16b5e2a76`
 - Python packages: 34
-- npm packages: 129
+- npm packages: 159
 - Vendored components: 1
 - License fields: `NOASSERTION` until an authoritative package-by-package review is recorded
 
@@ -47,6 +47,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | Python | `watchfiles` | `1.3.0` | locked transitive | no | — |
 | Python | `websockets` | `17.1` | locked transitive | no | — |
 | Vendored | `Microsoft-Florence-2-runtime` | `5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac` | optional runtime source | yes | — |
+| npm | `@babel/code-frame` | `7.29.7` | development | no | — |
 | npm | `@babel/helper-string-parser` | `7.29.7` | runtime | no | — |
 | npm | `@babel/helper-validator-identifier` | `7.29.7` | runtime | no | — |
 | npm | `@babel/parser` | `7.29.9` | runtime | no | — |
@@ -92,6 +93,9 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `@napi-rs/canvas-win32-x64-msvc` | `0.1.100` | optional runtime | no | os=win32; cpu=x64 |
 | npm | `@napi-rs/lzma-linux-x64-gnu` | `1.5.1` | development | no | os=linux; cpu=x64 |
 | npm | `@playwright/test` | `1.64.1` | development | yes | — |
+| npm | `@redocly/ajv` | `8.11.2` | development | no | — |
+| npm | `@redocly/config` | `0.22.0` | development | no | — |
+| npm | `@redocly/openapi-core` | `1.34.21` | development | no | — |
 | npm | `@rolldown/pluginutils` | `1.0.1` | development | no | — |
 | npm | `@rollup/rollup-android-arm-eabi` | `4.63.4` | development | no | os=android; cpu=arm |
 | npm | `@rollup/rollup-android-arm64` | `4.63.4` | development | no | os=android; cpu=arm64 |
@@ -139,21 +143,40 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `@vue/server-renderer` | `3.5.43` | runtime | no | — |
 | npm | `@vue/shared` | `3.5.43` | runtime | no | — |
 | npm | `@vue/tsconfig` | `0.9.1` | development | yes | — |
+| npm | `agent-base` | `7.1.4` | development | no | — |
 | npm | `alien-signals` | `3.2.1` | development | no | — |
+| npm | `ansi-colors` | `4.1.3` | development | no | — |
+| npm | `argparse` | `2.0.1` | development | no | — |
+| npm | `balanced-match` | `1.0.2` | development | no | — |
 | npm | `birpc` | `2.9.0` | runtime | no | — |
+| npm | `brace-expansion` | `2.1.7` | development | no | — |
+| npm | `change-case` | `5.4.4` | development | no | — |
+| npm | `colorette` | `1.4.0` | development | no | — |
 | npm | `copy-anything` | `4.1.1` | runtime | no | — |
 | npm | `csstype` | `3.2.3` | runtime | no | — |
+| npm | `debug` | `4.4.3` | development | no | — |
 | npm | `entities` | `7.0.1` | runtime | no | — |
 | npm | `esbuild` | `0.28.2` | development | no | — |
 | npm | `estree-walker` | `2.0.2` | runtime | no | — |
+| npm | `fast-deep-equal` | `3.1.3` | development | no | — |
 | npm | `fdir` | `6.5.0` | development | no | — |
 | npm | `fsevents` | `2.3.3` | development | no | os=darwin |
 | npm | `hookable` | `5.5.3` | runtime | no | — |
+| npm | `https-proxy-agent` | `7.0.6` | development | no | — |
+| npm | `index-to-position` | `1.2.0` | development | no | — |
+| npm | `js-levenshtein` | `1.1.6` | development | no | — |
+| npm | `js-tokens` | `4.0.0` | development | no | — |
+| npm | `js-yaml` | `4.3.2` | development | no | — |
+| npm | `json-schema-traverse` | `1.0.0` | development | no | — |
 | npm | `magic-string` | `0.30.21` | runtime | no | — |
+| npm | `minimatch` | `5.1.9` | development | no | — |
 | npm | `mitt` | `3.0.1` | runtime | no | — |
+| npm | `ms` | `2.1.3` | development | no | — |
 | npm | `muggle-string` | `0.4.1` | development | no | — |
 | npm | `nanoid` | `3.3.19` | runtime | no | — |
 | npm | `node-readable-to-web-readable-stream` | `0.4.2` | optional runtime | no | — |
+| npm | `openapi-typescript` | `7.13.0` | development | yes | — |
+| npm | `parse-json` | `8.3.0` | development | no | — |
 | npm | `path-browserify` | `1.0.1` | development | no | — |
 | npm | `pdfjs-dist` | `5.4.624` | runtime | yes | — |
 | npm | `perfect-debounce` | `1.0.0` | runtime | no | — |
@@ -162,17 +185,24 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | npm | `pinia` | `3.0.4` | runtime | yes | — |
 | npm | `playwright` | `1.64.1` | development | no | — |
 | npm | `playwright-core` | `1.64.1` | development | no | — |
+| npm | `pluralize` | `8.0.0` | development | no | — |
 | npm | `postcss` | `8.5.28` | runtime | no | — |
+| npm | `require-from-string` | `2.0.2` | development | no | — |
 | npm | `rfdc` | `1.4.1` | runtime | no | — |
 | npm | `rollup` | `4.63.4` | development | no | — |
 | npm | `source-map-js` | `1.2.2` | runtime | no | — |
 | npm | `speakingurl` | `14.0.1` | runtime | no | — |
 | npm | `superjson` | `2.2.6` | runtime | no | — |
+| npm | `supports-color` | `10.2.2` | development | no | — |
 | npm | `tinyglobby` | `0.2.17` | development | no | — |
+| npm | `type-fest` | `4.41.0` | development | no | — |
 | npm | `typescript` | `5.9.3` | runtime | yes | — |
 | npm | `undici-types` | `7.24.6` | development | no | — |
+| npm | `uri-js-replace` | `1.0.1` | development | no | — |
 | npm | `vite` | `7.3.7` | development | yes | — |
 | npm | `vscode-uri` | `3.2.0` | development | no | — |
 | npm | `vue` | `3.5.43` | runtime | yes | — |
 | npm | `vue-router` | `4.6.4` | runtime | yes | — |
 | npm | `vue-tsc` | `3.3.13` | development | yes | — |
+| npm | `yaml-ast-parser` | `0.0.43` | development | no | — |
+| npm | `yargs-parser` | `21.1.1` | development | no | — |
