@@ -38,6 +38,9 @@ jobs:
           packaging/tests/test_generate_error_code_contract.py
           packaging/generate_openapi_contract.py
           packaging/tests/test_generate_openapi_contract.py
+          packaging/verify_web_bundle.py
+          packaging/smoke_web_bundle.py
+          packaging/tests/test_build_web_bundle.py
       - name: Verify frozen OpenAPI v1 contract
         run: python packaging/generate_openapi_contract.py --check
       - name: Test OpenAPI contract tooling

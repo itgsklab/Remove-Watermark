@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/5149ec2bbba167d21c8c78cadf65227d63c8bc7c819463975c31bef16b5e2a76",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/c0db9a19aed221c901cf53bfe64f1ab0cd41327357865af2a2b9d57d0bfe0069",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {
@@ -137,6 +137,25 @@
       "name": "anyio",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "4.15.1"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-build-a353905184",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/build@1.6.1",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "build",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.6.1"
     },
     {
       "SPDXID": "SPDXRef-Package-Python-click-283a0acf5a",
@@ -460,6 +479,25 @@
       "name": "pypdf",
       "primaryPackagePurpose": "LIBRARY",
       "versionInfo": "6.19.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-Python-pyproject-hooks-999b7c41e4",
+      "comment": "Ecosystem: Python; usage: locked transitive; direct: no",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:pypi/pyproject-hooks@1.3.3",
+          "referenceType": "purl"
+        }
+      ],
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "name": "pyproject-hooks",
+      "primaryPackagePurpose": "LIBRARY",
+      "versionInfo": "1.3.3"
     },
     {
       "SPDXID": "SPDXRef-Package-Python-python-dotenv-23552edbf2",
@@ -3748,6 +3786,11 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
+      "relatedSpdxElement": "SPDXRef-Package-Python-build-a353905184",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-Package-Python-click-283a0acf5a",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
@@ -3829,6 +3872,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-Package-Python-pypdf-6b271e3171",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-Package-Remove-Watermark"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-Python-pyproject-hooks-999b7c41e4",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },

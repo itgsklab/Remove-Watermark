@@ -56,3 +56,21 @@ python packaging/build_web_bundle.py \
 
 The archive uses normalized ownership, modes and timestamps, rejects symlinks, contains the project
 license and an internal `SHA256SUMS`, and includes startup instructions for Unix and Windows.
+
+Verify the archive before extracting it. Supplying the published SHA-256 binds the check to the
+downloaded release asset as well as its internal manifest:
+
+```bash
+python packaging/verify_web_bundle.py \
+  --bundle work/release/remove-watermark-web-0.1.0.tar.gz \
+  --version 0.1.0 \
+  --expected-sha256 PUBLISHED_64_CHARACTER_SHA256 \
+  --extract-to work/release/extracted \
+  --report-json work/release/web-bundle-verification.json
+```
+
+The verifier rejects duplicate or escaping paths, links and special files, unexpected ownership,
+permissions or timestamps, missing runtime files, unlisted payloads and checksum mismatches. Release
+readiness CI independently builds the archive twice, requires byte-for-byte reproducibility, safely
+extracts it, installs the bundled wheel in a clean environment, and starts the extracted Vue/FastAPI
+service before publishing the archive as a workflow artifact.
