@@ -3,6 +3,10 @@
 Public compatibility notes, security boundaries, implementation details, and reproducible benchmark
 reports maintained in this repository:
 
+Start with the generated [release status, support matrix and known limitations](release/RELEASE_STATUS.md)
+when deciding whether a workflow belongs to the stable download, current `main`, or an experimental
+evaluation path.
+
 - `MAINTENANCE.md`
 - `THIRD_PARTY_DEPENDENCIES.md`
 - `release/sbom.spdx.json`
@@ -27,6 +31,7 @@ reports maintained in this repository:
 - `release/error-codes-v1.json`
 - `release/RELEASE_CANDIDATE.md`
 - `release/STABLE_RELEASE.md`
+- `release/RELEASE_STATUS.md`
 - `benchmarks/opencv-telea-baseline.md`
 - `benchmarks/mobile-watermark-baseline.md`
 - `benchmarks/mobile-selection-corpus.md`

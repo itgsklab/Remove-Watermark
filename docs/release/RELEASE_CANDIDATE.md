@@ -37,3 +37,6 @@ The tool does not commit, tag, upload or publish anything. The resulting changes
 release-readiness matrix again as the release-candidate commit before any package publication.
 Build the five public files, run the independent privacy audit, publish through a reviewed draft and
 verify a fresh GitHub download using [the asset publication procedure](ASSET_PUBLICATION.md).
+The draft release notes must link the generated
+[support matrix and known limitations](RELEASE_STATUS.md); `make release-docs-check` rejects stale
+status, version, asset and workflow-scope claims.

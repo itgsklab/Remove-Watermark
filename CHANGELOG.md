@@ -7,6 +7,9 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A machine-checked public release-status contract and generated support/limitations matrix that
+  separates the packaged `v0.1.0` surface from unreleased `main`, experimental capabilities and
+  evaluation-only work.
 - A deterministic OpenAPI 3.1 compatibility baseline for all versioned Web endpoints, enforced in
   continuous integration and local release checks to expose accidental breaking API changes.
 - Generated Vue TypeScript API definitions sourced from the frozen OpenAPI contract, with the client
@@ -97,6 +100,9 @@ All notable changes to this project are documented in this file. The format foll
   descriptions, and distinguish supported formats from the CodeCV compatibility-validation status.
 
 ## [0.1.0] - 2026-10-13
+
+The packaged release scope and current limitations are recorded in the
+[public release status](docs/release/RELEASE_STATUS.md).
 
 ### Added
 
