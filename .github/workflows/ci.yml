@@ -32,7 +32,14 @@ jobs:
       - name: Install pinned development dependencies
         run: python -m pip install --constraint packaging/constraints.txt --editable './backend[dev]'
       - name: Lint Python sources
-        run: python -m ruff check backend
+        run: >-
+          python -m ruff check backend
+          packaging/generate_openapi_contract.py
+          packaging/tests/test_generate_openapi_contract.py
+      - name: Verify frozen OpenAPI v1 contract
+        run: python packaging/generate_openapi_contract.py --check
+      - name: Test OpenAPI contract tooling
+        run: python -m pytest packaging/tests/test_generate_openapi_contract.py
       - name: Run full backend test suite
         working-directory: backend
         run: python -m pytest

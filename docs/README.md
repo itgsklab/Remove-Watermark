@@ -21,6 +21,8 @@ reports maintained in this repository:
 - `VLM_LOCALIZATION.md`
 - `models/florence-2-base.json`
 - `release/CLI_COMPATIBILITY_V1.md`
+- `release/API_COMPATIBILITY_V1.md`
+- `release/openapi-v1.json`
 - `release/RELEASE_CANDIDATE.md`
 - `release/STABLE_RELEASE.md`
 - `benchmarks/opencv-telea-baseline.md`
