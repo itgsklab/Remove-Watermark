@@ -4,8 +4,8 @@ This file is generated from the pinned Python packaging constraints and npm lock
 It records release inputs; it is not a legal opinion or a substitute for license review.
 Regenerate it with `make release-metadata` and verify it with `make release-metadata-check`.
 
-- Input digest: `5149ec2bbba167d21c8c78cadf65227d63c8bc7c819463975c31bef16b5e2a76`
-- Python packages: 34
+- Input digest: `c0db9a19aed221c901cf53bfe64f1ab0cd41327357865af2a2b9d57d0bfe0069`
+- Python packages: 36
 - npm packages: 159
 - Vendored components: 1
 - License fields: `NOASSERTION` until an authoritative package-by-package review is recorded
@@ -18,6 +18,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | Python | `annotated-doc` | `0.0.5` | locked transitive | no | — |
 | Python | `annotated-types` | `0.8.0` | locked transitive | no | — |
 | Python | `anyio` | `4.15.1` | locked transitive | no | — |
+| Python | `build` | `1.6.1` | locked transitive | no | — |
 | Python | `click` | `8.5.0` | locked transitive | no | — |
 | Python | `defusedxml` | `0.7.1` | runtime | yes | — |
 | Python | `fastapi` | `0.141.1` | runtime | yes | — |
@@ -35,6 +36,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | Python | `pydantic-settings` | `2.15.0` | runtime | yes | — |
 | Python | `pymupdf` | `1.28.2` | runtime | yes | — |
 | Python | `pypdf` | `6.19.0` | runtime | yes | — |
+| Python | `pyproject-hooks` | `1.3.3` | locked transitive | no | — |
 | Python | `python-dotenv` | `1.2.3` | locked transitive | no | — |
 | Python | `python-multipart` | `0.0.32` | runtime | yes | — |
 | Python | `pywin32-ctypes` | `0.2.3` | locked transitive | no | sys_platform == "win32" |

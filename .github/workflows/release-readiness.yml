@@ -40,8 +40,93 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  web-bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.10"
+          cache: pip
+          cache-dependency-path: |
+            backend/pyproject.toml
+            packaging/constraints.txt
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install release build tool
+        run: python -m pip install --constraint packaging/constraints.txt build==1.6.1
+      - name: Test Web bundle construction and hostile archive rejection
+        run: python packaging/tests/test_build_web_bundle.py
+      - name: Build Python release artifacts
+        run: python -m build --outdir work/web-release backend
+      - name: Build locked Vue production files
+        working-directory: frontend
+        run: npm ci && npm run build
+      - name: Resolve immutable build inputs
+        shell: bash
+        run: |
+          echo "VERSION=$(python -c 'import tomllib; print(tomllib.load(open("backend/pyproject.toml", "rb"))["project"]["version"])')" >> "$GITHUB_ENV"
+          echo "SOURCE_DATE_EPOCH=$(git show -s --format=%ct HEAD)" >> "$GITHUB_ENV"
+      - name: Build the Web archive twice
+        shell: bash
+        run: |
+          python packaging/build_web_bundle.py \
+            --version "$VERSION" \
+            --wheel "work/web-release/wmrm-$VERSION-py3-none-any.whl" \
+            --sdist "work/web-release/wmrm-$VERSION.tar.gz" \
+            --frontend-dir frontend/dist \
+            --source-date-epoch "$SOURCE_DATE_EPOCH" \
+            --output "work/web-release/remove-watermark-web-$VERSION.tar.gz"
+          python packaging/build_web_bundle.py \
+            --version "$VERSION" \
+            --wheel "work/web-release/wmrm-$VERSION-py3-none-any.whl" \
+            --sdist "work/web-release/wmrm-$VERSION.tar.gz" \
+            --frontend-dir frontend/dist \
+            --source-date-epoch "$SOURCE_DATE_EPOCH" \
+            --output "work/web-release/remove-watermark-web-$VERSION.rebuilt.tar.gz"
+          cmp \
+            "work/web-release/remove-watermark-web-$VERSION.tar.gz" \
+            "work/web-release/remove-watermark-web-$VERSION.rebuilt.tar.gz"
+      - name: Verify and safely extract the Web archive
+        shell: bash
+        run: |
+          python packaging/verify_web_bundle.py \
+            --bundle "work/web-release/remove-watermark-web-$VERSION.tar.gz" \
+            --version "$VERSION" \
+            --source-date-epoch "$SOURCE_DATE_EPOCH" \
+            --extract-to work/web-extracted \
+            --report-json work/web-bundle-verification.json
+      - name: Install the bundled wheel and start the extracted Web service
+        shell: bash
+        run: |
+          python -m venv work/web-runtime
+          work/web-runtime/bin/pip install \
+            --constraint packaging/constraints.txt \
+            "work/web-extracted/remove-watermark-web-$VERSION/packages/wmrm-$VERSION-py3-none-any.whl"
+          work/web-runtime/bin/python packaging/smoke_web_bundle.py \
+            --bundle-root "work/web-extracted/remove-watermark-web-$VERSION" \
+            --version "$VERSION" \
+            --report-json work/web-bundle-smoke.json
+      - name: Upload verified Web release evidence
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: web-release-bundle
+          path: |
+            work/web-release/remove-watermark-web-*.tar.gz
+            !work/web-release/*.rebuilt.tar.gz
+            work/web-bundle-verification.json
+            work/web-bundle-smoke.json
+          if-no-files-found: error
+          retention-days: 30
+
   aggregate-evidence:
-    needs: metadata-and-wheel
+    needs:
+      - metadata-and-wheel
+      - web-bundle
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
