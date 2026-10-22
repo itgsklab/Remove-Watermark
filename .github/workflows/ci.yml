@@ -34,12 +34,18 @@ jobs:
       - name: Lint Python sources
         run: >-
           python -m ruff check backend
+          packaging/generate_error_code_contract.py
+          packaging/tests/test_generate_error_code_contract.py
           packaging/generate_openapi_contract.py
           packaging/tests/test_generate_openapi_contract.py
       - name: Verify frozen OpenAPI v1 contract
         run: python packaging/generate_openapi_contract.py --check
       - name: Test OpenAPI contract tooling
         run: python -m pytest packaging/tests/test_generate_openapi_contract.py
+      - name: Verify and test public error-code contract
+        run: >-
+          python -m pytest packaging/tests/test_generate_error_code_contract.py
+          && python packaging/generate_error_code_contract.py --check
       - name: Run full backend test suite
         working-directory: backend
         run: python -m pytest

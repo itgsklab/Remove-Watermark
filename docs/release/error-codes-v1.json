@@ -1,0 +1,691 @@
+{
+  "api_error_codes": [
+    {
+      "code": "ANALYSIS_NOT_AVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "ANALYSIS_NOT_FOUND",
+      "delivery": "response",
+      "http_statuses": [
+        404
+      ]
+    },
+    {
+      "code": "ARTIFACT_NOT_FOUND",
+      "delivery": "response",
+      "http_statuses": [
+        404
+      ]
+    },
+    {
+      "code": "ASSET_NOT_FOUND",
+      "delivery": "response",
+      "http_statuses": [
+        404
+      ]
+    },
+    {
+      "code": "CANDIDATE_NOT_FOUND",
+      "delivery": "response",
+      "http_statuses": [
+        404
+      ]
+    },
+    {
+      "code": "CROSS_ORIGIN_REQUEST",
+      "delivery": "response",
+      "http_statuses": [
+        403
+      ]
+    },
+    {
+      "code": "EMPTY_EFFECTIVE_MASK",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "IMAGE_MASK_NOT_AVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "IMAGE_PLAN_NOT_AVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "INVALID_DOCX",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "INVALID_FILE",
+      "delivery": "response",
+      "http_statuses": [
+        400
+      ]
+    },
+    {
+      "code": "INVALID_IMAGE",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "INVALID_MASK",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "INVALID_PDF",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "INVALID_PLAN",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "INVALID_REGION",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "INVALID_REQUEST",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "NOT_FOUND",
+      "delivery": "response",
+      "http_statuses": [
+        404
+      ]
+    },
+    {
+      "code": "OCR_LANGUAGES_DUPLICATED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "OCR_LANGUAGES_NOT_INSTALLED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "OCR_LANGUAGES_UNAVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "PASSWORD_REQUIRED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "PLAN_NOT_AVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "PLAN_NOT_FOUND",
+      "delivery": "response",
+      "http_statuses": [
+        404
+      ]
+    },
+    {
+      "code": "PLAN_STALE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "PREVIEW_NOT_AVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        404,
+        415
+      ]
+    },
+    {
+      "code": "PREVIEW_STALE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "PROCESSING_FAILED",
+      "delivery": "task",
+      "http_statuses": []
+    },
+    {
+      "code": "REDACTION_BACKEND_UNAVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "REDACTION_NOT_AVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "RESOURCE_LIMIT",
+      "delivery": "response",
+      "http_statuses": [
+        413
+      ]
+    },
+    {
+      "code": "STORAGE_ERROR",
+      "delivery": "response",
+      "http_statuses": [
+        500
+      ]
+    },
+    {
+      "code": "TASK_NOT_CANCELLABLE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "TASK_NOT_FOUND",
+      "delivery": "response",
+      "http_statuses": [
+        404
+      ]
+    },
+    {
+      "code": "TASK_START_FAILED",
+      "delivery": "task",
+      "http_statuses": []
+    },
+    {
+      "code": "UNKNOWN",
+      "delivery": "task",
+      "http_statuses": []
+    },
+    {
+      "code": "UNSUPPORTED_FORMAT",
+      "delivery": "response",
+      "http_statuses": [
+        415
+      ]
+    },
+    {
+      "code": "VLM_INFERENCE_FAILED",
+      "delivery": "response",
+      "http_statuses": [
+        503
+      ]
+    },
+    {
+      "code": "VLM_NOT_AVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "XHS_CONTENT_TYPE_UNSUPPORTED",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_HOST_NOT_ALLOWED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_HTTPS_REQUIRED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_INVALID_REDIRECT",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_LINK_INVALID",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_LINK_NOT_FOUND",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_CANDIDATE_NOT_FOUND",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_HOST_NOT_ALLOWED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_HTTPS_REQUIRED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_IMPORT_DISABLED",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_INVALID",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_INVALID_REDIRECT",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_TOO_LARGE",
+      "delivery": "response",
+      "http_statuses": [
+        413
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_TOO_MANY_REDIRECTS",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_TYPE_UNSUPPORTED",
+      "delivery": "response",
+      "http_statuses": [
+        415
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_UNAVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_MEDIA_URL_INVALID",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_METADATA_UNAVAILABLE",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_MULTIPLE_LINKS",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_NOTE_PATH_UNSUPPORTED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "XHS_PAGE_TOO_LARGE",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_PARSER_VERSION_MISMATCH",
+      "delivery": "response",
+      "http_statuses": [
+        409
+      ]
+    },
+    {
+      "code": "XHS_SHORT_LINK_UNRESOLVED",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_TOO_MANY_REDIRECTS",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_UNSAFE_ADDRESS",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    }
+  ],
+  "api_version": "v1",
+  "cli_error_codes": [
+    {
+      "code": "ANALYSIS_NOT_AVAILABLE",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "CONTENT_REMOVAL_ACKNOWLEDGEMENT_REQUIRED",
+      "exit_codes": [
+        4
+      ]
+    },
+    {
+      "code": "DOCUMENT_ACKNOWLEDGEMENT_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "DOCUMENT_ACKNOWLEDGEMENT_REQUIRED",
+      "exit_codes": [
+        4
+      ]
+    },
+    {
+      "code": "DOCUMENT_CANDIDATE_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "DOCUMENT_CANDIDATE_REQUIRED",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "DOCUMENT_INPUT_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "DOCUMENT_PLAN_INTEGRITY_FAILED",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "DOCUMENT_PLAN_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "DOCUMENT_PLAN_KIND_MISMATCH",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "DOCUMENT_PLAN_STALE",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "DOCUMENT_RESOURCE_LIMIT",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "IMAGE_ACKNOWLEDGEMENT_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "IMAGE_ACKNOWLEDGEMENT_REQUIRED",
+      "exit_codes": [
+        4
+      ]
+    },
+    {
+      "code": "IMAGE_ANIMATION_UNSUPPORTED",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "IMAGE_INPUT_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "IMAGE_PLAN_INTEGRITY_FAILED",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "IMAGE_PLAN_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "IMAGE_PLAN_STALE",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "IMAGE_RADIUS_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "IMAGE_REGION_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "IMAGE_RESOURCE_LIMIT",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "INPUT_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "INPUT_NOT_FOUND",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "INVALID_DOCX",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "INVALID_IMAGE",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "INVALID_PDF",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "INVALID_USAGE",
+      "exit_codes": [
+        2
+      ]
+    },
+    {
+      "code": "OUTPUT_EXISTS",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "OUTPUT_INVALID",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "OUTPUT_OVERWRITES_INPUT",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "OUTPUT_WRITE_FAILED",
+      "exit_codes": [
+        5
+      ]
+    },
+    {
+      "code": "PASSWORD_REQUIRED",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "PREVIEW_NOT_AVAILABLE",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "PREVIEW_STALE",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "PROCESSING_FAILED",
+      "exit_codes": [
+        5
+      ]
+    },
+    {
+      "code": "RASTERIZATION_ACKNOWLEDGEMENT_REQUIRED",
+      "exit_codes": [
+        4
+      ]
+    },
+    {
+      "code": "RESOURCE_LIMIT",
+      "exit_codes": [
+        3
+      ]
+    },
+    {
+      "code": "UNKNOWN_COMMAND",
+      "exit_codes": [
+        2
+      ]
+    },
+    {
+      "code": "WATERMARK_TEXT_INVALID",
+      "exit_codes": [
+        3
+      ]
+    }
+  ],
+  "contract_version": 1
+}
