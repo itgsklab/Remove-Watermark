@@ -12,8 +12,8 @@
   "revision": "7c218beaf0bb87874785f32b582f640134fc1c09",
   "runtime_dependencies": [
     "transformers==5.10.4",
-    "torch==2.7.1",
-    "torchvision==0.22.1",
+    "torch==2.13.0",
+    "torchvision==0.28.0",
     "safetensors==0.6.2"
   ],
   "schema_version": 1,

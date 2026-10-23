@@ -1,0 +1,596 @@
+{
+  "schema_version": 1,
+  "benchmark": "wmrm-box-guided-mask-refinement",
+  "evaluation_kind": "model",
+  "refiner": {
+    "id": "florence2-confirmed-sam2-hiera-tiny-box-refiner-multimask-text-contrast-v1",
+    "model_id": "microsoft/Florence-2-base + facebook/sam2-hiera-tiny",
+    "model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac + 7c218beaf0bb87874785f32b582f640134fc1c09",
+    "prompt_version": "watermark-candidate-iou-or-contained-detection-v1 + candidate-box-highest-predicted-iou-text-contrast-v1",
+    "device": "cpu",
+    "is_model_output": true,
+    "automatic_download": false,
+    "runtime": {
+      "architecture": "arm64",
+      "candidate_box_clipping": true,
+      "checkpoint_load_issues": 0,
+      "device": "cpu",
+      "kind": "local-transformers-sam2",
+      "mask_selection": "highest-iou",
+      "multimask_output": true,
+      "platform": "darwin",
+      "runtime_model_class": "Sam2Model",
+      "source_config_model_type": "sam2_video",
+      "text_contrast_augmentation": true,
+      "text_contrast_policy": {
+        "gaussian_blur_radius": 1.5,
+        "minimum_box_aspect_ratio": 5.0,
+        "minimum_channel_delta": 20
+      },
+      "torch_version": "2.13.0",
+      "transformers_version": "5.10.4"
+    },
+    "candidate_gate": {
+      "kind": "florence2-candidate-iou-or-contained-detection-confirmation",
+      "match_strategy": "iou-or-contained-detection",
+      "iou_threshold": 0.5,
+      "detection_containment_threshold": 0.9,
+      "min_detection_area_ratio": 0.15,
+      "detector_id": "florence-2-local-open-vocabulary",
+      "detector_model_id": "microsoft/Florence-2-base",
+      "detector_model_revision": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac",
+      "prompt": "watermark",
+      "true_positive": 8,
+      "true_negative": 8,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "samples": [
+        {
+          "sample_id": "confirmation-fourth-pia07882-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.178929,
+          "best_detection_containment": 0.178929,
+          "best_detection_area_ratio": 5.588814,
+          "decision_reason": "no_match",
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia07882-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.269379,
+          "best_detection_containment": 1.0,
+          "best_detection_area_ratio": 0.269379,
+          "decision_reason": "contained_detection",
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia15691-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "best_detection_containment": 0.0,
+          "best_detection_area_ratio": 0.0,
+          "decision_reason": "no_match",
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia15691-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.681654,
+          "best_detection_containment": 0.681654,
+          "best_detection_area_ratio": 1.46702,
+          "decision_reason": "iou",
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia24921-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "best_detection_containment": 0.0,
+          "best_detection_area_ratio": 0.123176,
+          "decision_reason": "no_match",
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia24921-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.88099,
+          "best_detection_containment": 1.0,
+          "best_detection_area_ratio": 1.135086,
+          "decision_reason": "iou",
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia02210-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "best_detection_containment": 0.0,
+          "best_detection_area_ratio": 0.839077,
+          "decision_reason": "no_match",
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia02210-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.73371,
+          "best_detection_containment": 0.73371,
+          "best_detection_area_ratio": 1.362936,
+          "decision_reason": "iou",
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia02215-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "best_detection_containment": 0.0,
+          "best_detection_area_ratio": 0.0,
+          "decision_reason": "no_match",
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia02215-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.845994,
+          "best_detection_containment": 0.845994,
+          "best_detection_area_ratio": 1.182042,
+          "decision_reason": "iou",
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia18182-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "best_detection_containment": 0.0,
+          "best_detection_area_ratio": 0.0,
+          "decision_reason": "no_match",
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia18182-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.709253,
+          "best_detection_containment": 0.709253,
+          "best_detection_area_ratio": 1.409934,
+          "decision_reason": "iou",
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia00346-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "best_detection_containment": 0.0,
+          "best_detection_area_ratio": 0.0,
+          "decision_reason": "no_match",
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia00346-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.845994,
+          "best_detection_containment": 0.845994,
+          "best_detection_area_ratio": 1.182042,
+          "decision_reason": "iou",
+          "outcome": "true_positive"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia01481-negative",
+          "expected": "reject",
+          "decision": "reject",
+          "best_iou": 0.0,
+          "best_detection_containment": 0.0,
+          "best_detection_area_ratio": 2.796607,
+          "decision_reason": "no_match",
+          "outcome": "true_negative"
+        },
+        {
+          "sample_id": "confirmation-fourth-pia01481-positive",
+          "expected": "accept",
+          "decision": "accept",
+          "best_iou": 0.706577,
+          "best_detection_containment": 0.706577,
+          "best_detection_area_ratio": 1.415275,
+          "decision_reason": "iou",
+          "outcome": "true_positive"
+        }
+      ]
+    }
+  },
+  "thresholds": {
+    "minimum_iou": 0.75,
+    "minimum_precision": 0.8,
+    "minimum_recall": 0.8,
+    "minimum_correction_reduction": 0.25,
+    "maximum_outside_candidate_pixels": 0,
+    "minimum_sample_count": 16,
+    "minimum_negative_count": 8,
+    "minimum_category_count": 4,
+    "minimum_timing_count": 6
+  },
+  "summary": {
+    "sample_count": 16,
+    "positive_count": 8,
+    "negative_count": 8,
+    "category_count": 4,
+    "true_positive_pixels": 56766,
+    "false_positive_pixels": 5364,
+    "false_negative_pixels": 289,
+    "candidate_correction_pixels": 78625,
+    "refined_correction_pixels": 5653,
+    "outside_candidate_pixels": 0,
+    "precision": 0.913665,
+    "recall": 0.994935,
+    "iou": 0.909435,
+    "correction_reduction": 0.928102,
+    "timing_evidence_count": 0,
+    "metric_gate": "pass",
+    "evidence_gate": "pass",
+    "timing_gate": "fail",
+    "release_claim_allowed": false
+  },
+  "workflow_timing": {
+    "count": 0,
+    "manual_mean": null,
+    "box_mean": null,
+    "refined_mean": null
+  },
+  "samples": [
+    {
+      "sample_id": "confirmation-fourth-pia07882-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 886.126,
+        "peak_memory_mb": 1172.859
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia07882-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10911,
+      "true_positive_pixels": 10908,
+      "false_positive_pixels": 3,
+      "false_negative_pixels": 92,
+      "outside_candidate_pixels": 0,
+      "iou": 0.991366,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 95,
+      "correction_reduction": 0.301471,
+      "runtime": {
+        "duration_ms": 816.841,
+        "peak_memory_mb": 1412.906
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia15691-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 895.738,
+        "peak_memory_mb": 1459.844
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia15691-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3290,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4394,
+      "true_positive_pixels": 3278,
+      "false_positive_pixels": 1116,
+      "false_negative_pixels": 12,
+      "outside_candidate_pixels": 0,
+      "iou": 0.743985,
+      "candidate_correction_pixels": 2534,
+      "refined_correction_pixels": 1128,
+      "correction_reduction": 0.554854,
+      "runtime": {
+        "duration_ms": 971.989,
+        "peak_memory_mb": 1469.312
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia24921-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 1000.257,
+        "peak_memory_mb": 1472.984
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia24921-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10941,
+      "true_positive_pixels": 10940,
+      "false_positive_pixels": 1,
+      "false_negative_pixels": 60,
+      "outside_candidate_pixels": 0,
+      "iou": 0.994455,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 61,
+      "correction_reduction": 0.551471,
+      "runtime": {
+        "duration_ms": 990.063,
+        "peak_memory_mb": 1504.281
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia02210-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 966.345,
+        "peak_memory_mb": 1515.656
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia02210-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3232,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 5113,
+      "true_positive_pixels": 3200,
+      "false_positive_pixels": 1913,
+      "false_negative_pixels": 32,
+      "outside_candidate_pixels": 0,
+      "iou": 0.621963,
+      "candidate_correction_pixels": 2592,
+      "refined_correction_pixels": 1945,
+      "correction_reduction": 0.249614,
+      "runtime": {
+        "duration_ms": 982.435,
+        "peak_memory_mb": 1521.0
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia02215-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 851.569,
+        "peak_memory_mb": 1530.891
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia02215-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10983,
+      "true_positive_pixels": 10982,
+      "false_positive_pixels": 1,
+      "false_negative_pixels": 18,
+      "outside_candidate_pixels": 0,
+      "iou": 0.998273,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 19,
+      "correction_reduction": 0.860294,
+      "runtime": {
+        "duration_ms": 940.22,
+        "peak_memory_mb": 1538.891
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia18182-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 994.693,
+        "peak_memory_mb": 1539.344
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia18182-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3290,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4312,
+      "true_positive_pixels": 3278,
+      "false_positive_pixels": 1034,
+      "false_negative_pixels": 12,
+      "outside_candidate_pixels": 0,
+      "iou": 0.758094,
+      "candidate_correction_pixels": 2534,
+      "refined_correction_pixels": 1046,
+      "correction_reduction": 0.587214,
+      "runtime": {
+        "duration_ms": 1070.608,
+        "peak_memory_mb": 1548.469
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia00346-negative",
+      "kind": "negative",
+      "category": "clean_corner_badge_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 11136,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 982.876,
+        "peak_memory_mb": 1560.859
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia00346-positive",
+      "kind": "positive",
+      "category": "corner_badge",
+      "expected_pixels": 11000,
+      "candidate_pixels": 11136,
+      "predicted_pixels": 10978,
+      "true_positive_pixels": 10978,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 22,
+      "outside_candidate_pixels": 0,
+      "iou": 0.998,
+      "candidate_correction_pixels": 136,
+      "refined_correction_pixels": 22,
+      "correction_reduction": 0.838235,
+      "runtime": {
+        "duration_ms": 890.128,
+        "peak_memory_mb": 1567.984
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia01481-negative",
+      "kind": "negative",
+      "category": "clean_translucent_text_context",
+      "expected_pixels": 0,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 0,
+      "true_positive_pixels": 0,
+      "false_positive_pixels": 0,
+      "false_negative_pixels": 0,
+      "outside_candidate_pixels": 0,
+      "iou": 1.0,
+      "candidate_correction_pixels": 5824,
+      "refined_correction_pixels": 0,
+      "correction_reduction": 1.0,
+      "runtime": {
+        "duration_ms": 928.37,
+        "peak_memory_mb": 1568.547
+      },
+      "workflow_seconds": null
+    },
+    {
+      "sample_id": "confirmation-fourth-pia01481-positive",
+      "kind": "positive",
+      "category": "translucent_text",
+      "expected_pixels": 3243,
+      "candidate_pixels": 5824,
+      "predicted_pixels": 4498,
+      "true_positive_pixels": 3202,
+      "false_positive_pixels": 1296,
+      "false_negative_pixels": 41,
+      "outside_candidate_pixels": 0,
+      "iou": 0.705442,
+      "candidate_correction_pixels": 2581,
+      "refined_correction_pixels": 1337,
+      "correction_reduction": 0.481984,
+      "runtime": {
+        "duration_ms": 1043.759,
+        "peak_memory_mb": 1571.656
+      },
+      "workflow_seconds": null
+    }
+  ],
+  "corpus": {
+    "kind": "provenance_photo_pairs",
+    "provenance_gate": "pass",
+    "pair_count": 8,
+    "source_count": 8,
+    "contains_user_data": false
+  }
+}

@@ -341,6 +341,32 @@ make mask-refinement-confirmation-fourth-gate-cpu
 
 确认指标已经通过，但人工计时证据仍为空，`release_claim_allowed=false`，Web 产品行为不变。
 
+## PyTorch 2.13 安全升级复核
+
+2026 年 10 月的依赖审计要求评测环境停止使用 PyTorch 2.7.1。项目按
+[PyTorch 官方版本对应关系](https://pytorch.org/get-started/previous-versions/)，将隔离评测环境
+升级为 `torch==2.13.0` 与 `torchvision==0.28.0`，并保持
+Transformers、模型 revision、Safetensors 权重、Florence-2 输出、候选门禁和蒙版策略不变。
+该环境仍只用于离线评测，不进入 Web 发行依赖。
+
+在第四确认集上重新执行 CPU 与 MPS 推理后，两种设备得到相同的汇总指标：
+
+| 设备 | 候选 Precision | 候选 Recall | 像素 Precision | 像素 Recall | 像素 IoU | 指标门禁 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| MPS | 1.000 | 1.000 | 0.914 | 0.995 | 0.909 | 通过 |
+| CPU | 1.000 | 1.000 | 0.914 | 0.995 | 0.909 | 通过 |
+
+CPU 与旧运行时相比只有 201 个蒙版像素变化；MPS 因运行时内核变化有 17,811 个像素变化，
+因此本次复核不声称与旧输出字节等价。两者仍满足既定精度、召回、IoU、候选外像素和证据
+门禁。完整报告见：
+
+- [`mask-refinement-confirmation-fourth-pytorch-2.13-mps.json`](benchmarks/mask-refinement-confirmation-fourth-pytorch-2.13-mps.json) 与 [`mask-refinement-confirmation-fourth-pytorch-2.13-mps.md`](benchmarks/mask-refinement-confirmation-fourth-pytorch-2.13-mps.md)；
+- [`mask-refinement-confirmation-fourth-pytorch-2.13-cpu.json`](benchmarks/mask-refinement-confirmation-fourth-pytorch-2.13-cpu.json) 与 [`mask-refinement-confirmation-fourth-pytorch-2.13-cpu.md`](benchmarks/mask-refinement-confirmation-fourth-pytorch-2.13-cpu.md)。
+
+已经开始的人工盲测会话继续绑定升级前冻结的 MPS 预测摘要，不能在采集中途替换初始蒙版。
+这次安全复核不会重写已有会话或人工结果；新运行时也仍缺少 CUDA 外部设备证据，
+`release_claim_allowed=false`。
+
 ## 人工盲测协议冻结
 
 在收集人工数据前，项目固定了 `wmrm-mask-refinement-human-timing-v1` 协议及门禁。协议从
