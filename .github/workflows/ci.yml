@@ -113,9 +113,10 @@ jobs:
       - name: Install locked frontend dependencies
         working-directory: frontend
         run: npm ci
-      - name: Install Chromium runtime
+      - name: Install pinned Chromium runtime
+        timeout-minutes: 5
         working-directory: frontend
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
       - name: Run DOCX, PDF and image browser workflows
         working-directory: frontend
         run: npm run e2e
