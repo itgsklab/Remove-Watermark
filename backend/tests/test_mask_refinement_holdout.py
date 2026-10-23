@@ -1,4 +1,5 @@
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -11,8 +12,16 @@ DEVELOPMENT = FIXTURES / "vlm_localization" / "mask-refinement-photo-manifest.js
 
 
 def test_holdout_builder_is_reproducible_disjoint_and_audited(tmp_path: Path) -> None:
-    subprocess.run([sys.executable, str(HOLDOUT / "build_corpus.py")], check=True)
-    holdout = json.loads((HOLDOUT / "manifest.json").read_text())
+    generated_root = tmp_path / "fixtures"
+    generated = generated_root / HOLDOUT.name
+    shutil.copytree(HOLDOUT, generated)
+    source = FIXTURES / f"{HOLDOUT.name}_sources"
+    shutil.copytree(source, generated_root / source.name)
+    development_copy = generated_root / DEVELOPMENT.relative_to(FIXTURES)
+    development_copy.parent.mkdir(parents=True)
+    shutil.copy2(DEVELOPMENT, development_copy)
+    subprocess.run([sys.executable, str(generated / "build_corpus.py")], check=True)
+    holdout = json.loads((generated / "manifest.json").read_text())
     development = json.loads(DEVELOPMENT.read_text())
 
     holdout_sources = {sample["source_group"] for sample in holdout["samples"]}
@@ -28,8 +37,8 @@ def test_holdout_builder_is_reproducible_disjoint_and_audited(tmp_path: Path) ->
     assert holdout_digests.isdisjoint(development_digests)
 
     report = run_mask_refinement_benchmark(
-        HOLDOUT / "manifest.json",
-        HOLDOUT / "contract-predictions.json",
+        generated / "manifest.json",
+        generated / "contract-predictions.json",
         report_json=tmp_path / "report.json",
         report_markdown=tmp_path / "report.md",
         min_sample_count=16,

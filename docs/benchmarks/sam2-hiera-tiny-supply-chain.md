@@ -7,7 +7,7 @@ Review status: **approved_for_evaluation_only**
 Allowed files: 5
 Total bytes: 155848852
 Weight format: `safetensors`
-Runtime dependencies: `transformers==5.10.4`, `torch==2.7.1`, `torchvision==0.22.1`, `safetensors==0.6.2`
+Runtime dependencies: `transformers==5.10.4`, `torch==2.13.0`, `torchvision==0.28.0`, `safetensors==0.6.2`
 
 Policy gate: **pass**
 License gate: **pass**

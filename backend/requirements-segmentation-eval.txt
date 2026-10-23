@@ -31,8 +31,8 @@ setuptools==84.0.0
 shellingham==1.5.4
 sympy==1.14.0
 tokenizers==0.22.2
-torch==2.7.1
-torchvision==0.22.1
+torch==2.13.0
+torchvision==0.28.0
 tqdm==4.70.1
 transformers==5.10.4
 typer==0.27.3

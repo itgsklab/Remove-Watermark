@@ -1,4 +1,5 @@
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -12,8 +13,17 @@ FIRST_HOLDOUT = FIXTURES / "mask_refinement_holdout" / "manifest.json"
 
 
 def test_confirmation_builder_is_reproducible_disjoint_and_audited(tmp_path: Path) -> None:
-    subprocess.run([sys.executable, str(CONFIRMATION / "build_corpus.py")], check=True)
-    confirmation = json.loads((CONFIRMATION / "manifest.json").read_text())
+    generated_root = tmp_path / "fixtures"
+    generated = generated_root / CONFIRMATION.name
+    shutil.copytree(CONFIRMATION, generated)
+    source = FIXTURES / f"{CONFIRMATION.name}_sources"
+    shutil.copytree(source, generated_root / source.name)
+    for manifest in (DEVELOPMENT, FIRST_HOLDOUT):
+        manifest_copy = generated_root / manifest.relative_to(FIXTURES)
+        manifest_copy.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(manifest, manifest_copy)
+    subprocess.run([sys.executable, str(generated / "build_corpus.py")], check=True)
+    confirmation = json.loads((generated / "manifest.json").read_text())
     development = json.loads(DEVELOPMENT.read_text())
     first_holdout = json.loads(FIRST_HOLDOUT.read_text())
 
@@ -32,8 +42,8 @@ def test_confirmation_builder_is_reproducible_disjoint_and_audited(tmp_path: Pat
     assert confirmation_digests.isdisjoint(prior_digests)
 
     report = run_mask_refinement_benchmark(
-        CONFIRMATION / "manifest.json",
-        CONFIRMATION / "contract-predictions.json",
+        generated / "manifest.json",
+        generated / "contract-predictions.json",
         report_json=tmp_path / "report.json",
         report_markdown=tmp_path / "report.md",
         min_sample_count=16,
