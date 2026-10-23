@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import tempfile
 import threading
 import time
 from pathlib import Path
@@ -247,11 +249,25 @@ class TimingSessionStore:
         return result
 
     def _write_results(self, result: dict[str, Any]) -> None:
-        temporary = self.results_path.with_suffix(self.results_path.suffix + ".tmp")
-        temporary.write_text(
-            json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        payload = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+        descriptor, temporary_name = tempfile.mkstemp(
+            dir=self.results_path.parent,
+            prefix=f".{self.results_path.name}.",
+            suffix=".tmp",
         )
-        temporary.replace(self.results_path)
+        temporary = Path(temporary_name)
+        try:
+            temporary.chmod(0o600)
+            with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+                descriptor = -1
+                handle.write(payload)
+                handle.flush()
+                os.fsync(handle.fileno())
+            temporary.replace(self.results_path)
+        finally:
+            if descriptor >= 0:
+                os.close(descriptor)
+            temporary.unlink(missing_ok=True)
 
 
 def create_timing_ui_app(store: TimingSessionStore) -> FastAPI:

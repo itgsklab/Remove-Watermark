@@ -1,6 +1,7 @@
 import hashlib
 import json
 import shutil
+import stat
 from pathlib import Path
 
 import pytest
@@ -137,6 +138,28 @@ def test_ui_persists_each_trial_and_resumes_to_completion(tmp_path: Path) -> Non
     assert all(row["status"] == "completed" for row in payload["trials"])
     assert all(row["total_seconds"] > 0 for row in payload["trials"])
     assert resumed.state()["finished"] is True
+
+
+def test_ui_keeps_atomic_timing_results_private(tmp_path: Path) -> None:
+    store = _store(tmp_path)
+    client = TestClient(create_timing_ui_app(store))
+    state = client.get("/api/state").json()
+    task_id = state["task"]["task_id"]
+
+    store.results_path.chmod(0o600)
+    assert client.post(f"/api/tasks/{task_id}/start").status_code == 200
+    response = client.post(
+        f"/api/tasks/{task_id}/complete",
+        json={
+            "status": "completed",
+            "correction_seconds": 0,
+            "edit_actions": 0,
+            "failure_reason": None,
+        },
+    )
+
+    assert response.status_code == 200
+    assert stat.S_IMODE(store.results_path.stat().st_mode) == 0o600
 
 
 def test_ui_rejects_out_of_order_submission_and_missing_failure_reason(
