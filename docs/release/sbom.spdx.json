@@ -10,7 +10,7 @@
   "documentDescribes": [
     "SPDXRef-Package-Remove-Watermark"
   ],
-  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/c0db9a19aed221c901cf53bfe64f1ab0cd41327357865af2a2b9d57d0bfe0069",
+  "documentNamespace": "https://github.com/itgsklab/Remove-Watermark/sbom/0185eb381f1cb4f28f4e333b1d549b04c51e0d87fc0b6f63a040287f9c594409",
   "name": "Remove Watermark release-input SBOM",
   "packages": [
     {
@@ -367,14 +367,14 @@
       "versionInfo": "2024.8.26"
     },
     {
-      "SPDXID": "SPDXRef-Package-Python-pillow-9ead7a38c3",
+      "SPDXID": "SPDXRef-Package-Python-pillow-10d5e453b7",
       "comment": "Ecosystem: Python; usage: runtime; direct: yes",
       "copyrightText": "NOASSERTION",
       "downloadLocation": "NOASSERTION",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:pypi/pillow@12.3.0",
+          "referenceLocator": "pkg:pypi/pillow@13.0.0",
           "referenceType": "purl"
         }
       ],
@@ -383,7 +383,7 @@
       "licenseDeclared": "NOASSERTION",
       "name": "pillow",
       "primaryPackagePurpose": "LIBRARY",
-      "versionInfo": "12.3.0"
+      "versionInfo": "13.0.0"
     },
     {
       "SPDXID": "SPDXRef-Package-Python-pydantic-0d604cbc6e",
@@ -3846,7 +3846,7 @@
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Package-Python-pillow-9ead7a38c3",
+      "relatedSpdxElement": "SPDXRef-Package-Python-pillow-10d5e453b7",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-Package-Remove-Watermark"
     },

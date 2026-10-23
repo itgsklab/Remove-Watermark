@@ -4,7 +4,7 @@ This file is generated from the pinned Python packaging constraints and npm lock
 It records release inputs; it is not a legal opinion or a substitute for license review.
 Regenerate it with `make release-metadata` and verify it with `make release-metadata-check`.
 
-- Input digest: `c0db9a19aed221c901cf53bfe64f1ab0cd41327357865af2a2b9d57d0bfe0069`
+- Input digest: `0185eb381f1cb4f28f4e333b1d549b04c51e0d87fc0b6f63a040287f9c594409`
 - Python packages: 36
 - npm packages: 159
 - Vendored components: 1
@@ -30,7 +30,7 @@ Regenerate it with `make release-metadata` and verify it with `make release-meta
 | Python | `opencv-python-headless` | `5.0.0.93` | runtime | yes | — |
 | Python | `packaging` | `26.3` | locked transitive | no | — |
 | Python | `pefile` | `2024.8.26` | locked transitive | no | sys_platform == "win32" |
-| Python | `pillow` | `12.3.0` | runtime | yes | — |
+| Python | `pillow` | `13.0.0` | runtime | yes | — |
 | Python | `pydantic` | `2.13.5` | locked transitive | no | — |
 | Python | `pydantic-core` | `2.46.5` | locked transitive | no | — |
 | Python | `pydantic-settings` | `2.15.0` | runtime | yes | — |
