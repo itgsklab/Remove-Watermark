@@ -1,5 +1,4 @@
 import hashlib
-import math
 from collections.abc import Callable
 from concurrent.futures import CancelledError
 from pathlib import Path
@@ -9,6 +8,8 @@ import cv2
 import numpy as np
 from PIL import Image, ImageOps
 
+from wmrm.adapters.images.masks import rasterize_image_mask
+
 
 def inpaint_image(
     source_path: Path,
@@ -17,6 +18,7 @@ def inpaint_image(
     radius: int,
     cancelled: Callable[[], bool] | None = None,
     protected_regions: list[dict[str, Any]] | None = None,
+    polygons: list[dict[str, Any]] | None = None,
 ) -> dict[str, int | str]:
     should_cancel = cancelled or (lambda: False)
     _check_cancelled(should_cancel)
@@ -31,23 +33,7 @@ def inpaint_image(
 
     original = np.asarray(normalized, dtype=np.uint8).copy()
     height, width = original.shape[:2]
-    mask = np.zeros((height, width), dtype=np.uint8)
-    for region in regions:
-        x0 = max(0, math.floor(float(region["x0"])))
-        y0 = max(0, math.floor(float(region["y0"])))
-        x1 = min(width, math.ceil(float(region["x1"])))
-        y1 = min(height, math.ceil(float(region["y1"])))
-        if x0 >= x1 or y0 >= y1:
-            raise ValueError("蒙版区域为空或超出图片范围。")
-        mask[y0:y1, x0:x1] = 255
-    for region in protected_regions or []:
-        x0 = max(0, math.floor(float(region["x0"])))
-        y0 = max(0, math.floor(float(region["y0"])))
-        x1 = min(width, math.ceil(float(region["x1"])))
-        y1 = min(height, math.ceil(float(region["y1"])))
-        if x0 >= x1 or y0 >= y1:
-            raise ValueError("保护区域为空或超出图片范围。")
-        mask[y0:y1, x0:x1] = 0
+    mask = rasterize_image_mask(width, height, regions, polygons, protected_regions)
     if not np.any(mask):
         raise ValueError("保护区不能覆盖全部蒙版。")
 
@@ -78,7 +64,8 @@ def inpaint_image(
         raise ValueError("输出图片在蒙版外发生了像素变化。")
 
     return {
-        "removed_count": len(regions),
+        "removed_count": len(regions) + len(polygons or []),
+        "polygon_count": len(polygons or []),
         "protected_count": len(protected_regions or []),
         "masked_pixels": int(np.count_nonzero(mask)),
         "changed_pixels": int(np.count_nonzero(changed)),

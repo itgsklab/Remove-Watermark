@@ -275,6 +275,16 @@ class ImageMaskRegion(BaseModel):
     transform_id: str = Field(min_length=1, max_length=64)
 
 
+class ImageMaskPoint(BaseModel):
+    x: float
+    y: float
+
+
+class ImageMaskPolygon(BaseModel):
+    points: list[ImageMaskPoint] = Field(min_length=3, max_length=64)
+    transform_id: str = Field(min_length=1, max_length=64)
+
+
 class VlmSuggestionRequest(BaseModel):
     asset_id: str
     analysis_id: str
@@ -298,7 +308,8 @@ class VlmSuggestionResponse(BaseModel):
 class PreviewImageMasksRequest(BaseModel):
     asset_id: str
     analysis_id: str
-    regions: list[ImageMaskRegion] = Field(min_length=1, max_length=100)
+    regions: list[ImageMaskRegion] = Field(default_factory=list, max_length=100)
+    polygons: list[ImageMaskPolygon] = Field(default_factory=list, max_length=32)
     protected_regions: list[ImageMaskRegion] = Field(default_factory=list, max_length=100)
 
 
@@ -337,6 +348,7 @@ class ImageMaskPreviewResponse(BaseModel):
     valid: bool
     executable: bool
     regions: list[ImageMaskRegion]
+    polygons: list[ImageMaskPolygon] = Field(default_factory=list)
     protected_regions: list[ImageMaskRegion] = Field(default_factory=list)
     covered_pixels: float = Field(gt=0)
     coverage_ratio: float = Field(gt=0, le=1)
@@ -385,7 +397,8 @@ class ValidateImagePlanRequest(BaseModel):
     asset_id: str
     asset_sha256: str
     analysis_id: str
-    regions: list[ImageMaskRegion] = Field(min_length=1, max_length=100)
+    regions: list[ImageMaskRegion] = Field(default_factory=list, max_length=100)
+    polygons: list[ImageMaskPolygon] = Field(default_factory=list, max_length=32)
     protected_regions: list[ImageMaskRegion] = Field(default_factory=list, max_length=100)
     radius: int = Field(default=3, ge=1, le=10)
     acknowledged_warnings: list[str] = Field(default_factory=list)
@@ -398,6 +411,7 @@ class ImagePlanResponse(BaseModel):
     analysis_id: str
     strategy: Literal["opencv_telea"] = "opencv_telea"
     regions: list[ImageMaskRegion]
+    polygons: list[ImageMaskPolygon] = Field(default_factory=list)
     protected_regions: list[ImageMaskRegion] = Field(default_factory=list)
     radius: int
     warnings: list[PlanWarning]

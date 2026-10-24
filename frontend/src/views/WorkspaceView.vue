@@ -15,6 +15,7 @@ import {
   suggestImageMasks,
   type Analysis,
   type ImageMaskPreview,
+  type ImageMaskPolygon,
   type ImageMaskRegion,
   type PlanWarning,
   type ProcessingTask,
@@ -58,9 +59,11 @@ const ocrDiagnosticsError = ref('')
 const confirmedRasterization = ref(false)
 interface ImageMaskDraft {
   regions: ImageMaskRegion[]
+  polygons: ImageMaskPolygon[]
   protectedRegions: ImageMaskRegion[]
 }
 const imageMasks = ref<ImageMaskRegion[]>([])
+const imagePolygons = ref<ImageMaskPolygon[]>([])
 const imageProtectedRegions = ref<ImageMaskRegion[]>([])
 const imageMaskPast = ref<ImageMaskDraft[]>([])
 const imageMaskFuture = ref<ImageMaskDraft[]>([])
@@ -271,12 +274,12 @@ function clearAnalysis() {
   resetImageMasks()
 }
 
-function updateImageDraft(regions: ImageMaskRegion[], protectedRegions: ImageMaskRegion[]) {
-  if (regions.length > 100 || protectedRegions.length > 100) {
+function updateImageDraft(regions: ImageMaskRegion[], polygons: ImageMaskPolygon[], protectedRegions: ImageMaskRegion[]) {
+  if (regions.length > 100 || polygons.length > 32 || protectedRegions.length > 100) {
     reportImageMaskLimit()
     return
   }
-  const next = cloneImageDraft({ regions, protectedRegions })
+  const next = cloneImageDraft({ regions, polygons, protectedRegions })
   if (sameImageDraft(currentImageDraft(), next)) return
   imageMaskPast.value.push(cloneImageDraft(currentImageDraft()))
   if (imageMaskPast.value.length > imageMaskHistoryLimit) imageMaskPast.value.shift()
@@ -305,6 +308,7 @@ function redoImageMasks() {
 
 function resetImageMasks() {
   imageMasks.value = []
+  imagePolygons.value = []
   imageProtectedRegions.value = []
   imageMaskPast.value = []
   imageMaskFuture.value = []
@@ -318,12 +322,16 @@ function clearImageMaskPreview() {
 }
 
 function currentImageDraft(): ImageMaskDraft {
-  return { regions: imageMasks.value, protectedRegions: imageProtectedRegions.value }
+  return { regions: imageMasks.value, polygons: imagePolygons.value, protectedRegions: imageProtectedRegions.value }
 }
 
 function cloneImageDraft(draft: ImageMaskDraft): ImageMaskDraft {
   return {
     regions: draft.regions.map(region => ({ ...region })),
+    polygons: draft.polygons.map(polygon => ({
+      ...polygon,
+      points: polygon.points.map(point => ({ ...point })),
+    })),
     protectedRegions: draft.protectedRegions.map(region => ({ ...region })),
   }
 }
@@ -331,6 +339,7 @@ function cloneImageDraft(draft: ImageMaskDraft): ImageMaskDraft {
 function applyImageDraft(draft: ImageMaskDraft) {
   const copy = cloneImageDraft(draft)
   imageMasks.value = copy.regions
+  imagePolygons.value = copy.polygons
   imageProtectedRegions.value = copy.protectedRegions
 }
 
@@ -348,11 +357,12 @@ function sameImageRegions(left: ImageMaskRegion[], right: ImageMaskRegion[]) {
 
 function sameImageDraft(left: ImageMaskDraft, right: ImageMaskDraft) {
   return sameImageRegions(left.regions, right.regions)
+    && JSON.stringify(left.polygons) === JSON.stringify(right.polygons)
     && sameImageRegions(left.protectedRegions, right.protectedRegions)
 }
 
 function reportImageMaskLimit() {
-  message.value = '一个图片草稿最多包含 100 个蒙版片段和 100 个保护区片段。'
+  message.value = '一个图片草稿最多包含 100 个矩形蒙版、32 个多边形和 100 个保护区片段。'
 }
 
 async function requestVlmSuggestions() {
@@ -364,7 +374,7 @@ async function requestVlmSuggestions() {
     const result = await suggestImageMasks(analysis.value)
     vlmWarnings.value = result.warnings
     if (result.status === 'suggested') {
-      updateImageDraft(result.regions, [])
+      updateImageDraft(result.regions, [], [])
       message.value = `本地模型提出 ${result.regions.length} 个候选区域。请逐个检查、调整并验证蒙版。`
     } else if (result.status === 'photo_gate_rejected') {
       message.value = '图片未通过照片场景门禁，模型没有运行；请继续手工框选。'
@@ -379,13 +389,14 @@ async function requestVlmSuggestions() {
 }
 
 async function previewImageMaskRisk() {
-  if (!analysis.value || imageMasks.value.length === 0) return
+  if (!analysis.value || imageMasks.value.length + imagePolygons.value.length === 0) return
   busy.value = true
   message.value = ''
   try {
     imageMaskPreview.value = await previewImageMasks(
       analysis.value,
       imageMasks.value,
+      imagePolygons.value,
       imageProtectedRegions.value,
     )
     const risk = complexityLabels[imageMaskPreview.value.complexity.level]
@@ -408,6 +419,7 @@ async function processImage() {
     const plan = await validateImagePlan(
       analysis.value,
       imageMasks.value,
+      imagePolygons.value,
       imageProtectedRegions.value,
       imageRadius.value,
       confirmedImageWarnings.value,
@@ -756,6 +768,7 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         :asset-id="assetId"
         :metadata="analysis.image_metadata"
         :regions="imageMasks"
+        :polygons="imagePolygons"
         :protected-regions="imageProtectedRegions"
         :can-undo="canUndoImageMasks"
         :can-redo="canRedoImageMasks"
@@ -765,8 +778,8 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
         @limit-reached="reportImageMaskLimit"
       />
       <div class="process-actions">
-        <button :disabled="busy || imageMasks.length === 0" @click="previewImageMaskRisk">
-          {{ busy ? '正在验证…' : `验证蒙版草稿（${imageMasks.length} 个蒙版，${imageProtectedRegions.length} 个保护区）` }}
+        <button :disabled="busy || imageMasks.length + imagePolygons.length === 0" @click="previewImageMaskRisk">
+          {{ busy ? '正在验证…' : `验证蒙版草稿（${imageMasks.length} 个矩形，${imagePolygons.length} 个多边形，${imageProtectedRegions.length} 个保护区）` }}
         </button>
         <p>先验证坐标和覆盖面积，再生成新的 PNG 副本。</p>
       </div>

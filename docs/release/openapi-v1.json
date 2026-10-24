@@ -714,6 +714,49 @@
         "title": "ImageComplexityResponse",
         "type": "object"
       },
+      "ImageMaskPoint": {
+        "properties": {
+          "x": {
+            "title": "X",
+            "type": "number"
+          },
+          "y": {
+            "title": "Y",
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ],
+        "title": "ImageMaskPoint",
+        "type": "object"
+      },
+      "ImageMaskPolygon": {
+        "properties": {
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskPoint"
+            },
+            "maxItems": 64,
+            "minItems": 3,
+            "title": "Points",
+            "type": "array"
+          },
+          "transform_id": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Transform Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "points",
+          "transform_id"
+        ],
+        "title": "ImageMaskPolygon",
+        "type": "object"
+      },
       "ImageMaskPreviewResponse": {
         "properties": {
           "analysis_id": {
@@ -741,6 +784,13 @@
           "executable": {
             "title": "Executable",
             "type": "boolean"
+          },
+          "polygons": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskPolygon"
+            },
+            "title": "Polygons",
+            "type": "array"
           },
           "protected_regions": {
             "items": {
@@ -932,6 +982,13 @@
             "default": "png",
             "title": "Output Kind",
             "type": "string"
+          },
+          "polygons": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskPolygon"
+            },
+            "title": "Polygons",
+            "type": "array"
           },
           "protected_regions": {
             "items": {
@@ -1407,6 +1464,14 @@
             "title": "Asset Id",
             "type": "string"
           },
+          "polygons": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskPolygon"
+            },
+            "maxItems": 32,
+            "title": "Polygons",
+            "type": "array"
+          },
           "protected_regions": {
             "items": {
               "$ref": "#/components/schemas/ImageMaskRegion"
@@ -1420,15 +1485,13 @@
               "$ref": "#/components/schemas/ImageMaskRegion"
             },
             "maxItems": 100,
-            "minItems": 1,
             "title": "Regions",
             "type": "array"
           }
         },
         "required": [
           "asset_id",
-          "analysis_id",
-          "regions"
+          "analysis_id"
         ],
         "title": "PreviewImageMasksRequest",
         "type": "object"
@@ -2429,6 +2492,14 @@
             "title": "Asset Sha256",
             "type": "string"
           },
+          "polygons": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskPolygon"
+            },
+            "maxItems": 32,
+            "title": "Polygons",
+            "type": "array"
+          },
           "protected_regions": {
             "items": {
               "$ref": "#/components/schemas/ImageMaskRegion"
@@ -2449,7 +2520,6 @@
               "$ref": "#/components/schemas/ImageMaskRegion"
             },
             "maxItems": 100,
-            "minItems": 1,
             "title": "Regions",
             "type": "array"
           }
@@ -2457,8 +2527,7 @@
         "required": [
           "asset_id",
           "asset_sha256",
-          "analysis_id",
-          "regions"
+          "analysis_id"
         ],
         "title": "ValidateImagePlanRequest",
         "type": "object"

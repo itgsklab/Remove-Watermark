@@ -1,21 +1,22 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { ImageMaskRegion, ImageMetadata } from '@/api/client'
+import type { ImageMaskPolygon, ImageMaskRegion, ImageMetadata } from '@/api/client'
 
-type EditorTool = 'rectangle' | 'brush' | 'eraser' | 'protect'
+type EditorTool = 'rectangle' | 'polygon' | 'brush' | 'eraser' | 'protect'
 type Point = { x: number; y: number }
 
 const props = defineProps<{
   assetId: string
   metadata: ImageMetadata
   regions: ImageMaskRegion[]
+  polygons: ImageMaskPolygon[]
   protectedRegions: ImageMaskRegion[]
   canUndo: boolean
   canRedo: boolean
 }>()
 
 const emit = defineEmits<{
-  'update:draft': [regions: ImageMaskRegion[], protectedRegions: ImageMaskRegion[]]
+  'update:draft': [regions: ImageMaskRegion[], polygons: ImageMaskPolygon[], protectedRegions: ImageMaskRegion[]]
   undo: []
   redo: []
   'limit-reached': []
@@ -33,6 +34,7 @@ const start = ref<Point | null>(null)
 const end = ref<Point | null>(null)
 const lastPoint = ref<Point | null>(null)
 const draftRegions = ref<ImageMaskRegion[]>([])
+const polygonPoints = ref<Point[]>([])
 const dragging = ref(false)
 
 const sourceUrl = computed(() => `/api/v1/assets/${encodeURIComponent(props.assetId)}/content`)
@@ -48,6 +50,7 @@ const rectangleDraft = computed(() => {
 })
 const instruction = computed(() => ({
   rectangle: '拖拽矩形覆盖规则水印。',
+  polygon: '依次点击水印边界顶点，至少三个点后按 Enter 或点击完成。',
   brush: '沿水印涂抹；一次笔画会生成若干连续蒙版片段。',
   eraser: '擦过蒙版即可删除触碰到的整个片段。',
   protect: '涂抹需要保留的内容；保护区会从最终修复蒙版中扣除。',
@@ -69,6 +72,14 @@ function begin(event: PointerEvent) {
   editorElement.value?.focus()
   const selected = point(event)
   if (!selected) return
+  if (tool.value === 'polygon') {
+    const rounded = roundPoint(selected)
+    const previous = polygonPoints.value.at(-1)
+    if (!previous || Math.hypot(previous.x - rounded.x, previous.y - rounded.y) >= 2) {
+      polygonPoints.value.push(rounded)
+    }
+    return
+  }
   start.value = selected
   end.value = selected
   lastPoint.value = selected
@@ -89,6 +100,7 @@ function move(event: PointerEvent) {
 }
 
 function finish(event: PointerEvent) {
+  if (tool.value === 'polygon') return
   if (!dragging.value || !start.value) return
   const selected = point(event)
   if (selected) {
@@ -100,15 +112,18 @@ function finish(event: PointerEvent) {
   if (tool.value === 'rectangle') {
     const region = rectangleDraft.value
     if (region && region.x1 - region.x0 >= 2 && region.y1 - region.y0 >= 2) {
-      appendWithLimit([...props.regions, region], props.protectedRegions)
+      appendWithLimit([...props.regions, region], props.polygons, props.protectedRegions)
     }
   } else if (tool.value === 'brush') {
-    appendWithLimit([...props.regions, ...draftRegions.value], props.protectedRegions)
+    appendWithLimit([...props.regions, ...draftRegions.value], props.polygons, props.protectedRegions)
   } else if (tool.value === 'protect') {
-    appendWithLimit(props.regions, [...props.protectedRegions, ...draftRegions.value])
+    appendWithLimit(props.regions, props.polygons, [...props.protectedRegions, ...draftRegions.value])
   } else {
     const remaining = props.regions.filter(region => !draftRegions.value.some(stamp => intersects(region, stamp)))
-    emit('update:draft', remaining, props.protectedRegions)
+    const remainingPolygons = props.polygons.filter(polygon => (
+      !draftRegions.value.some(stamp => polygonTouchesRegion(polygon, stamp))
+    ))
+    emit('update:draft', remaining, remainingPolygons, props.protectedRegions)
   }
   resetGesture()
 }
@@ -134,6 +149,7 @@ function resetGesture() {
 
 function selectTool(next: EditorTool) {
   resetGesture()
+  polygonPoints.value = []
   tool.value = next
   if (next === 'protect') protectionVisible.value = true
   else maskVisible.value = true
@@ -174,26 +190,50 @@ function compactStroke(regions: ImageMaskRegion[]) {
   return compacted
 }
 
-function appendWithLimit(regions: ImageMaskRegion[], protectedRegions: ImageMaskRegion[]) {
-  if (regions.length > 100 || protectedRegions.length > 100) {
+function appendWithLimit(regions: ImageMaskRegion[], polygons: ImageMaskPolygon[], protectedRegions: ImageMaskRegion[]) {
+  if (regions.length > 100 || polygons.length > 32 || protectedRegions.length > 100) {
     emit('limit-reached')
     return
   }
-  emit('update:draft', regions, protectedRegions)
+  emit('update:draft', regions, polygons, protectedRegions)
+}
+
+function completePolygon() {
+  if (polygonPoints.value.length < 3) return
+  const polygon: ImageMaskPolygon = {
+    points: polygonPoints.value.map(roundPoint),
+    transform_id: props.metadata.transform_id,
+  }
+  appendWithLimit(props.regions, [...props.polygons, polygon], props.protectedRegions)
+  polygonPoints.value = []
 }
 
 function removeMask(index: number) {
-  emit('update:draft', props.regions.filter((_, itemIndex) => itemIndex !== index), props.protectedRegions)
+  emit('update:draft', props.regions.filter((_, itemIndex) => itemIndex !== index), props.polygons, props.protectedRegions)
+}
+
+function removePolygon(index: number) {
+  emit('update:draft', props.regions, props.polygons.filter((_, itemIndex) => itemIndex !== index), props.protectedRegions)
 }
 
 function removeProtection(index: number) {
-  emit('update:draft', props.regions, props.protectedRegions.filter((_, itemIndex) => itemIndex !== index))
+  emit('update:draft', props.regions, props.polygons, props.protectedRegions.filter((_, itemIndex) => itemIndex !== index))
 }
 
-function clearMasks() { emit('update:draft', [], props.protectedRegions) }
-function clearProtections() { emit('update:draft', props.regions, []) }
+function clearMasks() { emit('update:draft', [], [], props.protectedRegions) }
+function clearProtections() { emit('update:draft', props.regions, props.polygons, []) }
 
 function handleKeydown(event: KeyboardEvent) {
+  if (tool.value === 'polygon' && event.key === 'Enter' && polygonPoints.value.length >= 3) {
+    event.preventDefault()
+    completePolygon()
+    return
+  }
+  if (tool.value === 'polygon' && event.key === 'Escape' && polygonPoints.value.length) {
+    event.preventDefault()
+    polygonPoints.value = []
+    return
+  }
   const modifier = event.metaKey || event.ctrlKey
   if (!modifier) return
   if (event.key.toLowerCase() === 'z') {
@@ -221,6 +261,25 @@ function roundRegion(region: ImageMaskRegion): ImageMaskRegion {
   return { ...region, x0: Number(region.x0.toFixed(2)), y0: Number(region.y0.toFixed(2)), x1: Number(region.x1.toFixed(2)), y1: Number(region.y1.toFixed(2)) }
 }
 
+function roundPoint(selected: Point): Point {
+  return { x: Number(selected.x.toFixed(2)), y: Number(selected.y.toFixed(2)) }
+}
+
+function polygonPointsAttribute(polygon: ImageMaskPolygon | { points: Point[] }) {
+  return polygon.points.map(item => `${item.x},${item.y}`).join(' ')
+}
+
+function polygonTouchesRegion(polygon: ImageMaskPolygon, region: ImageMaskRegion) {
+  const bounds = {
+    x0: Math.min(...polygon.points.map(item => item.x)),
+    y0: Math.min(...polygon.points.map(item => item.y)),
+    x1: Math.max(...polygon.points.map(item => item.x)),
+    y1: Math.max(...polygon.points.map(item => item.y)),
+    transform_id: polygon.transform_id,
+  }
+  return intersects(bounds, region)
+}
+
 function intersects(first: ImageMaskRegion, second: ImageMaskRegion) {
   return Math.min(first.x1, second.x1) > Math.max(first.x0, second.x0)
     && Math.min(first.y1, second.y1) > Math.max(first.y0, second.y0)
@@ -231,20 +290,28 @@ function intersects(first: ImageMaskRegion, second: ImageMaskRegion) {
   <div ref="editorElement" class="image-mask-editor" tabindex="0" aria-label="图片蒙版编辑器" @keydown="handleKeydown">
     <div class="image-editor-tools" role="toolbar" aria-label="蒙版绘制工具">
       <button type="button" :aria-pressed="tool === 'rectangle'" @click="selectTool('rectangle')">矩形</button>
+      <button type="button" :aria-pressed="tool === 'polygon'" @click="selectTool('polygon')">多边形</button>
       <button type="button" :aria-pressed="tool === 'brush'" @click="selectTool('brush')">画笔</button>
       <button type="button" :aria-pressed="tool === 'eraser'" @click="selectTool('eraser')">橡皮</button>
       <button type="button" :aria-pressed="tool === 'protect'" @click="selectTool('protect')">保护区</button>
-      <label v-if="tool !== 'rectangle'" class="brush-size-control">笔刷 {{ brushSize }} px <input v-model.number="brushSize" type="range" min="4" max="80" step="2" /></label>
+      <button v-if="tool === 'polygon'" type="button" :disabled="polygonPoints.length < 3" @click="completePolygon">完成多边形</button>
+      <button v-if="tool === 'polygon'" type="button" :disabled="polygonPoints.length === 0" @click="polygonPoints = []">取消绘制</button>
+      <label v-if="tool === 'brush' || tool === 'eraser' || tool === 'protect'" class="brush-size-control">笔刷 {{ brushSize }} px <input v-model.number="brushSize" type="range" min="4" max="80" step="2" /></label>
       <button type="button" class="visibility-button" :aria-pressed="maskVisible" @click="maskVisible = !maskVisible">{{ maskVisible ? '隐藏蒙版' : '显示蒙版' }}</button>
       <button type="button" class="visibility-button" :aria-pressed="protectionVisible" @click="protectionVisible = !protectionVisible">{{ protectionVisible ? '隐藏保护区' : '显示保护区' }}</button>
     </div>
-    <p class="hint">{{ instruction }} 蒙版与保护区各最多 100 个片段。</p>
+    <p class="hint">{{ instruction }} 最多 100 个矩形、32 个多边形和 100 个保护区片段。</p>
     <p v-if="loading" class="hint">正在加载图片预览…</p>
     <p v-if="error" class="warning">{{ error }}</p>
     <div class="image-mask-canvas" :class="[{ loading }, `tool-${tool}`]">
       <img ref="imageElement" :src="sourceUrl" alt="待编辑水印蒙版的原始图片" draggable="false" @load="loading = false" @error="loading = false; error = '图片预览加载失败。'" @pointerdown="begin" @pointermove="move" @pointerup="finish" @pointercancel="cancel" />
       <template v-if="maskVisible">
         <div v-for="(region, index) in regions" :key="`mask-${index}-${region.x0}-${region.y0}`" class="image-mask-region" :style="regionStyle(region)"><span>{{ index + 1 }}</span></div>
+        <svg class="image-polygon-layer" :viewBox="`0 0 ${metadata.display_width} ${metadata.display_height}`" preserveAspectRatio="none" aria-hidden="true">
+          <polygon v-for="(polygon, index) in polygons" :key="`polygon-${index}`" :points="polygonPointsAttribute(polygon)" class="image-mask-polygon" />
+          <polyline v-if="polygonPoints.length" :points="polygonPointsAttribute({ points: polygonPoints })" class="image-mask-polygon draft" />
+          <circle v-for="(item, index) in polygonPoints" :key="`polygon-point-${index}`" :cx="item.x" :cy="item.y" r="3" class="polygon-point" />
+        </svg>
       </template>
       <template v-if="protectionVisible">
         <div v-for="(region, index) in protectedRegions" :key="`protected-${index}-${region.x0}-${region.y0}`" class="image-protected-region" :style="regionStyle(region)"><span>P{{ index + 1 }}</span></div>
@@ -257,12 +324,13 @@ function intersects(first: ImageMaskRegion, second: ImageMaskRegion) {
       <div class="image-mask-actions">
         <button class="secondary-button" type="button" :disabled="!canUndo" @click="emit('undo')">撤销</button>
         <button class="secondary-button" type="button" :disabled="!canRedo" @click="emit('redo')">重做</button>
-        <button class="secondary-button" type="button" :disabled="!regions.length" @click="clearMasks">清空蒙版</button>
+        <button class="secondary-button" type="button" :disabled="!regions.length && !polygons.length" @click="clearMasks">清空蒙版</button>
         <button class="secondary-button" type="button" :disabled="!protectedRegions.length" @click="clearProtections">清空保护区</button>
       </div>
     </div>
-    <div v-if="regions.length || protectedRegions.length" class="mask-region-lists">
+    <div v-if="regions.length || polygons.length || protectedRegions.length" class="mask-region-lists">
       <section v-if="regions.length"><h3>修复蒙版 · {{ regions.length }}</h3><ol class="mask-region-list"><li v-for="(region, index) in regions" :key="`mask-list-${index}`"><span>区域 {{ index + 1 }}：{{ region.x0.toFixed(1) }}, {{ region.y0.toFixed(1) }} → {{ region.x1.toFixed(1) }}, {{ region.y1.toFixed(1) }}</span><button class="secondary-button" type="button" @click="removeMask(index)">移除</button></li></ol></section>
+      <section v-if="polygons.length"><h3>多边形蒙版 · {{ polygons.length }}</h3><ol class="mask-region-list"><li v-for="(polygon, index) in polygons" :key="`polygon-list-${index}`"><span>多边形 {{ index + 1 }}：{{ polygon.points.length }} 个顶点</span><button class="secondary-button" type="button" @click="removePolygon(index)">移除</button></li></ol></section>
       <section v-if="protectedRegions.length"><h3>保护区 · {{ protectedRegions.length }}</h3><ol class="mask-region-list protected-list"><li v-for="(region, index) in protectedRegions" :key="`protected-list-${index}`"><span>保护 {{ index + 1 }}：{{ region.x0.toFixed(1) }}, {{ region.y0.toFixed(1) }} → {{ region.x1.toFixed(1) }}, {{ region.y1.toFixed(1) }}</span><button class="secondary-button" type="button" @click="removeProtection(index)">移除</button></li></ol></section>
     </div>
   </div>
@@ -282,9 +350,14 @@ function intersects(first: ImageMaskRegion, second: ImageMaskRegion) {
 .image-mask-canvas.loading { min-height: 240px; opacity: .55; }
 .image-mask-canvas img { display: block; width: 100%; height: auto; cursor: crosshair; user-select: none; }
 .image-mask-canvas.tool-brush img { cursor: cell; }
+.image-mask-canvas.tool-polygon img { cursor: crosshair; }
 .image-mask-canvas.tool-eraser img { cursor: not-allowed; }
 .image-mask-canvas.tool-protect img { cursor: copy; }
 .image-mask-region, .image-protected-region, .image-eraser-region { position: absolute; box-sizing: border-box; pointer-events: none; }
+.image-polygon-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.image-mask-polygon { fill: rgba(210, 72, 50, .22); stroke: #d24832; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.image-mask-polygon.draft { fill: none; stroke-dasharray: 7 5; }
+.polygon-point { fill: #fff; stroke: #b73524; stroke-width: 2; vector-effect: non-scaling-stroke; }
 .image-mask-region { border: 2px solid #d24832; background: rgba(210, 72, 50, .22); }
 .image-protected-region { border: 2px solid #16786b; background: rgba(22, 120, 107, .2); }
 .image-eraser-region { border: 2px dashed #313936; background: rgba(255, 255, 255, .55); }

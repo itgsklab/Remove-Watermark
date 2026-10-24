@@ -15,17 +15,25 @@ The editor uses top-left-origin display pixels after applying EXIF orientation:
 - all values must remain within `display_width × display_height`;
 - every region carries the server-issued `transform_id`.
 
-The Vue editor provides rectangle, brush, eraser and protected-area tools. Brush and protected-area
-strokes are represented as continuous, reviewable rectangle fragments; the eraser removes every
-mask fragment it touches. Mask and protection overlays can be hidden independently without changing
+The Vue editor provides rectangle, polygon, brush, eraser and protected-area tools. Polygon masks
+contain 3–64 explicit display-pixel vertices and are closed only after the user confirms them with
+the toolbar or Enter key. Brush and protected-area strokes are represented as continuous, reviewable
+rectangle fragments; the eraser removes every mask object it touches. Mask and protection overlays can be hidden independently without changing
 the draft. Manual additions, removals, clearing and accepted local-model suggestions share one
 undo/redo history. The toolbar exposes both actions; while the editor has focus,
 `Command/Ctrl+Z` undoes and `Shift+Command/Ctrl+Z` (or `Ctrl+Y`) redoes. History is limited to 50
 states, resets when a new analysis starts and cannot restore masks from another asset. A draft may
-contain at most 100 mask fragments and 100 protected fragments. Every data edit invalidates the
+contain at most 100 rectangle mask fragments, 32 polygons and 100 protected fragments. Every data edit invalidates the
 previous risk preview and its confirmations; visibility toggles do not mutate the plan.
 
-`POST /api/v1/image-masks/preview` rejects stale transforms, non-finite values, empty rectangles and out-of-bounds regions. It calculates the exact union area of all mask rectangles and subtracts the union of protected rectangles, so overlaps are not counted twice. A plan whose protected regions remove every repair pixel is rejected. Covering more than 25% of the effective mask requires explicit acknowledgement in the processing plan.
+`POST /api/v1/image-masks/preview` rejects stale transforms, non-finite values, empty rectangles,
+degenerate polygons and out-of-bounds coordinates. Preview and processing share the same rasterizer:
+it unions rectangles and filled polygons, then subtracts protected rectangles, so overlaps are not
+counted twice and the reported pixel count matches the effective OpenCV mask. A plan whose protected
+regions remove every repair pixel is rejected. Covering more than 25% of the effective mask requires
+explicit acknowledgement in the processing plan. Complexity and low-contrast checks use each
+polygon's bounding rectangle as a conservative context window; the repair mask itself keeps the
+exact polygon boundary.
 
 The same preview measures the pixels around each mask and returns an explainable complexity assessment. It reports normalized texture, edge-density, periodicity and long-structure scores for every region. The selected pixels are excluded from feature extraction, so the watermark itself does not inflate the assessment. Smooth backgrounds are marked `low`; moderate texture is marked `review`; repeated patterns, dense detail or long crossing edges are marked `high`. High-complexity plans require explicit acknowledgement before a task can be created.
 
@@ -38,7 +46,7 @@ The preview also evaluates selection risk derived from the mobile benchmark. A c
 Before accepting the artifact, the worker:
 
 - applies the recorded EXIF display orientation;
-- subtracts protected rectangles from the rasterized repair mask;
+- fills explicit polygons and subtracts protected rectangles from the rasterized repair mask;
 - decodes the output again as a single-frame PNG;
 - verifies the output dimensions;
 - compares every pixel outside the effective mask, including protected regions, with the normalized source;

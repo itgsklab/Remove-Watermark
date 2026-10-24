@@ -5,6 +5,7 @@ from dataclasses import asdict
 from sqlalchemy.orm import Session
 
 from wmrm.adapters.images.complexity import ImageComplexityInspector
+from wmrm.adapters.images.masks import rasterize_image_mask
 from wmrm.adapters.images.selection_risk import (
     LARGE_SELECTION_THRESHOLD,
     ImageSelectionRiskInspector,
@@ -13,6 +14,7 @@ from wmrm.api.schemas import (
     AnalysisResponse,
     ImageComplexityResponse,
     ImageMaskPreviewResponse,
+    ImageMaskRegion,
     ImageRegionComplexity,
     ImageRegionSelectionRisk,
     ImageSelectionRiskResponse,
@@ -40,11 +42,12 @@ class ImageMaskService:
         analysis = AnalysisResponse.model_validate(json.loads(record.result_json))
         metadata = analysis.image_metadata
         if analysis.preset != "image" or metadata is None:
-            raise AssetError(
-                "IMAGE_MASK_NOT_AVAILABLE", "蒙版预览需要图片检查结果。", 409
-            )
+            raise AssetError("IMAGE_MASK_NOT_AVAILABLE", "蒙版预览需要图片检查结果。", 409)
         if analysis.asset_id != asset.id or analysis.asset_sha256 != asset.sha256:
             raise AssetError("PLAN_STALE", "图片检查结果已经失效，请重新检查。", 409)
+
+        if not request.regions and not request.polygons:
+            raise AssetError("INVALID_MASK", "请至少添加一个矩形或多边形蒙版。", 422)
 
         for region in [*request.regions, *request.protected_regions]:
             values = (region.x0, region.y0, region.x1, region.y1)
@@ -65,59 +68,74 @@ class ImageMaskService:
                     409,
                 )
 
-        covered_pixels = rectangle_difference_area(
-            request.regions, request.protected_regions
-        )
+        for polygon in request.polygons:
+            values = [coordinate for point in polygon.points for coordinate in (point.x, point.y)]
+            if not all(math.isfinite(value) for value in values):
+                raise AssetError("INVALID_MASK", "多边形坐标必须是有限数字。", 422)
+            if polygon.transform_id != metadata.transform_id or any(
+                point.x < 0
+                or point.y < 0
+                or point.x > metadata.display_width
+                or point.y > metadata.display_height
+                for point in polygon.points
+            ):
+                raise AssetError(
+                    "PLAN_STALE",
+                    "多边形坐标或图片方向已经失效，请重新检查并绘制。",
+                    409,
+                )
+            if _polygon_area(polygon.points) < 1:
+                raise AssetError("INVALID_MASK", "多边形至少需要三个不共线的顶点。", 422)
+
+        try:
+            mask = rasterize_image_mask(
+                metadata.display_width,
+                metadata.display_height,
+                request.regions,
+                request.polygons,
+                request.protected_regions,
+            )
+        except ValueError as exc:
+            raise AssetError("INVALID_MASK", str(exc), 422) from exc
+        covered_pixels = float(mask.astype(bool).sum())
         if covered_pixels <= 0:
             raise AssetError(
                 "EMPTY_EFFECTIVE_MASK",
                 "保护区不能覆盖全部蒙版，请保留至少一个需要修复的像素区域。",
                 422,
             )
-        coverage_ratio = covered_pixels / (
-            metadata.display_width * metadata.display_height
-        )
-        assessments = self.complexity.inspect(self.assets.path_for(asset), request.regions)
+        coverage_ratio = covered_pixels / (metadata.display_width * metadata.display_height)
+        assessment_regions = [
+            *request.regions,
+            *(_polygon_bounds(item) for item in request.polygons),
+        ]
+        assessments = self.complexity.inspect(self.assets.path_for(asset), assessment_regions)
         risk_order = {"low": 0, "review": 1, "high": 2}
-        complexity_level = max(
-            (item.risk for item in assessments), key=risk_order.__getitem__
-        )
+        complexity_level = max((item.risk for item in assessments), key=risk_order.__getitem__)
         complexity = ImageComplexityResponse(
             level=complexity_level,
             regions=[ImageRegionComplexity(**asdict(item)) for item in assessments],
         )
         selection_assessments = self.selection_risk.inspect(
-            self.assets.path_for(asset), request.regions
+            self.assets.path_for(asset), assessment_regions
         )
         large_selection = coverage_ratio >= LARGE_SELECTION_THRESHOLD
         low_contrast = any(item.low_contrast for item in selection_assessments)
         selection_risk = ImageSelectionRiskResponse(
             level="review" if large_selection or low_contrast else "normal",
             large_selection=large_selection,
-            regions=[
-                ImageRegionSelectionRisk(**asdict(item))
-                for item in selection_assessments
-            ],
+            regions=[ImageRegionSelectionRisk(**asdict(item)) for item in selection_assessments],
         )
         requires_acknowledgement = (
-            large_selection
-            or low_contrast
-            or metadata.animated
-            or complexity_level == "high"
+            large_selection or low_contrast or metadata.animated or complexity_level == "high"
         )
-        warnings = [
-            "蒙版预览只验证计划修复的像素区域；创建处理任务后才会生成新图片。"
-        ]
+        warnings = ["蒙版预览只验证计划修复的像素区域；创建处理任务后才会生成新图片。"]
         if request.protected_regions:
-            warnings.append(
-                f"已从最终修复蒙版中排除 {len(request.protected_regions)} 个保护区域。"
-            )
+            warnings.append(f"已从最终修复蒙版中排除 {len(request.protected_regions)} 个保护区域。")
         if coverage_ratio > 0.25:
             warnings.append("蒙版覆盖超过图片面积的 25%，后续修复可能明显改变主体内容。")
         elif large_selection:
-            warnings.append(
-                "蒙版覆盖达到图片面积的 10%；移动端基准显示大选区需要逐图对比结果。"
-            )
+            warnings.append("蒙版覆盖达到图片面积的 10%；移动端基准显示大选区需要逐图对比结果。")
         if low_contrast:
             warnings.append(
                 "检测到低对比度选区，可能包含半透明水印；"
@@ -135,6 +153,7 @@ class ImageMaskService:
             valid=True,
             executable=not metadata.animated,
             regions=request.regions,
+            polygons=request.polygons,
             protected_regions=request.protected_regions,
             covered_pixels=covered_pixels,
             coverage_ratio=coverage_ratio,
@@ -143,6 +162,29 @@ class ImageMaskService:
             requires_acknowledgement=requires_acknowledgement,
             warnings=warnings,
         )
+
+
+def _polygon_area(points) -> float:
+    return (
+        abs(
+            sum(
+                point.x * points[(index + 1) % len(points)].y
+                - points[(index + 1) % len(points)].x * point.y
+                for index, point in enumerate(points)
+            )
+        )
+        / 2
+    )
+
+
+def _polygon_bounds(polygon) -> ImageMaskRegion:
+    return ImageMaskRegion(
+        x0=min(point.x for point in polygon.points),
+        y0=min(point.y for point in polygon.points),
+        x1=max(point.x for point in polygon.points),
+        y1=max(point.y for point in polygon.points),
+        transform_id=polygon.transform_id,
+    )
 
 
 def rectangle_union_area(regions) -> float:
@@ -169,30 +211,18 @@ def rectangle_difference_area(regions, protected_regions) -> float:
         for item in protected_regions
     ]
     xs = sorted(
-        {
-            coordinate
-            for x0, _, x1, _ in [*rectangles, *protected]
-            for coordinate in (x0, x1)
-        }
+        {coordinate for x0, _, x1, _ in [*rectangles, *protected] for coordinate in (x0, x1)}
     )
     area = 0.0
     for left, right in zip(xs, xs[1:], strict=False):
         if right <= left:
             continue
-        intervals = sorted(
-            (y0, y1)
-            for x0, y0, x1, y1 in rectangles
-            if x0 < right and x1 > left
-        )
+        intervals = sorted((y0, y1) for x0, y0, x1, y1 in rectangles if x0 < right and x1 > left)
         mask_intervals = _merge_intervals(intervals)
         if not mask_intervals:
             continue
         protected_intervals = _merge_intervals(
-            sorted(
-                (y0, y1)
-                for x0, y0, x1, y1 in protected
-                if x0 < right and x1 > left
-            )
+            sorted((y0, y1) for x0, y0, x1, y1 in protected if x0 < right and x1 > left)
         )
         covered_y = sum(end - start for start, end in mask_intervals)
         covered_y -= _interval_intersection_length(mask_intervals, protected_intervals)

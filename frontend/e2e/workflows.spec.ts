@@ -178,6 +178,14 @@ test('image mask workflow repairs selected pixels and downloads report', async (
   await expect(page.locator('.image-mask-region')).toHaveCount(0)
   await page.getByRole('button', { name: '显示蒙版' }).click()
 
+  await page.getByRole('button', { name: '多边形', exact: true }).click()
+  await page.mouse.click(bounds.x + bounds.width * 0.58, bounds.y + bounds.height * 0.65)
+  await page.mouse.click(bounds.x + bounds.width * 0.72, bounds.y + bounds.height * 0.62)
+  await page.mouse.click(bounds.x + bounds.width * 0.66, bounds.y + bounds.height * 0.78)
+  await page.getByRole('button', { name: '完成多边形' }).click()
+  await expect(page.getByRole('heading', { name: '多边形蒙版 · 1' })).toBeVisible()
+  await expect(page.locator('.image-mask-polygon').first()).toBeVisible()
+
   await page.getByRole('button', { name: '画笔', exact: true }).click()
   await page.mouse.move(bounds.x + bounds.width * 0.72, bounds.y + bounds.height * 0.3)
   await page.mouse.down()
@@ -203,7 +211,7 @@ test('image mask workflow repairs selected pixels and downloads report', async (
   await expect(page.getByRole('heading', { name: '保护区 · 1' })).toHaveCount(0)
   await page.getByRole('button', { name: '重做', exact: true }).click()
   await expect(page.getByRole('heading', { name: '保护区 · 1' })).toBeVisible()
-  await page.getByRole('button', { name: '验证蒙版草稿（1 个蒙版，1 个保护区）' }).click()
+  await page.getByRole('button', { name: '验证蒙版草稿（1 个矩形，1 个多边形，1 个保护区）' }).click()
   await expect(page.getByRole('heading', { name: /背景复杂度/ })).toBeVisible()
   await page.getByRole('button', { name: '使用 OpenCV 生成修复副本' }).click()
 
@@ -211,6 +219,7 @@ test('image mask workflow repairs selected pixels and downloads report', async (
   const report = await downloadReport(page)
   expect(report.input.kind).toBe('png')
   expect(report.processing.kind).toBe('image_inpaint')
+  expect(report.processing.selected_target_count).toBe(2)
   expect(report.processing.radius).toBe(3)
   expect(report.processing.protected_target_count).toBe(1)
   await expectResultDownload(page, /-cleaned\.png$/)

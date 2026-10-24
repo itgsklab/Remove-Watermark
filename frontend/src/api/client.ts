@@ -33,6 +33,7 @@ export type RedactionRegion = ResponseSchema<'RedactionRegionRequest'>
 export type RedactionPreview = ResponseSchema<'RedactionPreviewResponse'>
 export type RedactionPlan = ResponseSchema<'RedactionPlanResponse'>
 export type ImageMaskRegion = ResponseSchema<'ImageMaskRegion'>
+export type ImageMaskPolygon = ResponseSchema<'ImageMaskPolygon'>
 export type VlmSuggestion = ResponseSchema<'VlmSuggestionResponse'>
 export type ImageMaskPreview = ResponseSchema<'ImageMaskPreviewResponse'>
 export type ImagePlan = ResponseSchema<'ImagePlanResponse'>
@@ -113,6 +114,7 @@ export async function createAnalysis(
 export async function previewImageMasks(
   analysis: Analysis,
   regions: ImageMaskRegion[],
+  polygons: ImageMaskPolygon[],
   protectedRegions: ImageMaskRegion[] = [],
 ): Promise<ImageMaskPreview> {
   return parse<ImageMaskPreview>(await fetch('/api/v1/image-masks/preview', {
@@ -122,6 +124,7 @@ export async function previewImageMasks(
       asset_id: analysis.asset_id,
       analysis_id: analysis.id,
       regions,
+      polygons,
       protected_regions: protectedRegions,
     }),
   }))
@@ -159,6 +162,7 @@ export async function validatePlan(
 export async function validateImagePlan(
   analysis: Analysis,
   regions: ImageMaskRegion[],
+  polygons: ImageMaskPolygon[],
   protectedRegions: ImageMaskRegion[],
   radius: number,
   acknowledgedWarnings: string[],
@@ -171,6 +175,7 @@ export async function validateImagePlan(
       asset_sha256: analysis.asset_sha256,
       analysis_id: analysis.id,
       regions,
+      polygons,
       protected_regions: protectedRegions,
       radius,
       acknowledged_warnings: acknowledgedWarnings,

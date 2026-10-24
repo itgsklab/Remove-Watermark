@@ -185,6 +185,7 @@ class TaskService:
                     "preview_path": str(self.artifact_root / task_id / "preview"),
                     "candidates": payload.get("candidates", []),
                     "regions": payload.get("regions", []),
+                    "polygons": payload.get("polygons", []),
                     "protected_regions": payload.get("protected_regions", []),
                     "radius": payload.get("radius", 3),
                     "dpi": payload.get("dpi", 144),
@@ -504,7 +505,7 @@ class TaskService:
         warning_codes = _warning_codes(plan)
         selected_target_count = len(
             payload.get("regions", payload.get("candidates", []))
-        )
+        ) + len(payload.get("polygons", []))
         error = None
         if record.error_json:
             error_payload = json.loads(record.error_json)
