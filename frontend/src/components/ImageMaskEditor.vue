@@ -2,8 +2,9 @@
 import { computed, ref } from 'vue'
 import type { ImageMaskPolygon, ImageMaskRegion, ImageMetadata } from '@/api/client'
 
-type EditorTool = 'rectangle' | 'polygon' | 'brush' | 'eraser' | 'protect'
+type EditorTool = 'rectangle' | 'polygon' | 'edit-polygon' | 'brush' | 'eraser' | 'protect'
 type Point = { x: number; y: number }
+type VertexDrag = { polygonIndex: number; pointIndex: number }
 
 const props = defineProps<{
   assetId: string
@@ -23,6 +24,7 @@ const emit = defineEmits<{
 }>()
 
 const editorElement = ref<HTMLDivElement | null>(null)
+const canvasElement = ref<HTMLDivElement | null>(null)
 const imageElement = ref<HTMLImageElement | null>(null)
 const loading = ref(true)
 const error = ref('')
@@ -35,9 +37,18 @@ const end = ref<Point | null>(null)
 const lastPoint = ref<Point | null>(null)
 const draftRegions = ref<ImageMaskRegion[]>([])
 const polygonPoints = ref<Point[]>([])
+const editedPolygon = ref<ImageMaskPolygon | null>(null)
+const vertexDrag = ref<VertexDrag | null>(null)
+const editMessage = ref('')
 const dragging = ref(false)
 
 const sourceUrl = computed(() => `/api/v1/assets/${encodeURIComponent(props.assetId)}/content`)
+const displayedPolygons = computed(() => props.polygons.map((polygon, index) => (
+  vertexDrag.value?.polygonIndex === index && editedPolygon.value ? editedPolygon.value : polygon
+)))
+const polygonHandleRadius = computed(() => (
+  Math.max(1.5, Math.min(props.metadata.display_width, props.metadata.display_height) * 0.012)
+))
 const rectangleDraft = computed(() => {
   if (tool.value !== 'rectangle' || !start.value || !end.value) return null
   return roundRegion({
@@ -51,6 +62,7 @@ const rectangleDraft = computed(() => {
 const instruction = computed(() => ({
   rectangle: '拖拽矩形覆盖规则水印。',
   polygon: '依次点击水印边界顶点，至少三个点后按 Enter 或点击完成。',
+  'edit-polygon': '拖动多边形顶点调整边界；聚焦顶点后也可用方向键微调。',
   brush: '沿水印涂抹；一次笔画会生成若干连续蒙版片段。',
   eraser: '擦过蒙版即可删除触碰到的整个片段。',
   protect: '涂抹需要保留的内容；保护区会从最终修复蒙版中扣除。',
@@ -72,6 +84,7 @@ function begin(event: PointerEvent) {
   editorElement.value?.focus()
   const selected = point(event)
   if (!selected) return
+  if (tool.value === 'edit-polygon') return
   if (tool.value === 'polygon') {
     const rounded = roundPoint(selected)
     const previous = polygonPoints.value.at(-1)
@@ -85,10 +98,16 @@ function begin(event: PointerEvent) {
   lastPoint.value = selected
   draftRegions.value = tool.value === 'rectangle' ? [] : [brushStamp(selected)]
   dragging.value = true
-  imageElement.value?.setPointerCapture(event.pointerId)
+  canvasElement.value?.setPointerCapture(event.pointerId)
 }
 
 function move(event: PointerEvent) {
+  if (vertexDrag.value && editedPolygon.value) {
+    const selected = point(event)
+    if (!selected) return
+    editedPolygon.value.points[vertexDrag.value.pointIndex] = roundPoint(selected)
+    return
+  }
   if (!dragging.value) return
   const selected = point(event)
   if (!selected) return
@@ -100,6 +119,10 @@ function move(event: PointerEvent) {
 }
 
 function finish(event: PointerEvent) {
+  if (vertexDrag.value) {
+    finishVertexDrag(event)
+    return
+  }
   if (tool.value === 'polygon') return
   if (!dragging.value || !start.value) return
   const selected = point(event)
@@ -129,14 +152,19 @@ function finish(event: PointerEvent) {
 }
 
 function cancel(event: PointerEvent) {
+  if (vertexDrag.value) {
+    releasePointer(event)
+    resetVertexDrag()
+    return
+  }
   releasePointer(event)
   resetGesture()
 }
 
 function releasePointer(event: PointerEvent) {
   dragging.value = false
-  const image = imageElement.value
-  if (image?.hasPointerCapture(event.pointerId)) image.releasePointerCapture(event.pointerId)
+  const canvas = canvasElement.value
+  if (canvas?.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId)
 }
 
 function resetGesture() {
@@ -149,10 +177,80 @@ function resetGesture() {
 
 function selectTool(next: EditorTool) {
   resetGesture()
+  resetVertexDrag()
+  editMessage.value = ''
   polygonPoints.value = []
   tool.value = next
   if (next === 'protect') protectionVisible.value = true
   else maskVisible.value = true
+}
+
+function beginVertexDrag(event: PointerEvent, polygonIndex: number, pointIndex: number) {
+  if (tool.value !== 'edit-polygon') return
+  const polygon = props.polygons[polygonIndex]
+  if (!polygon) return
+  event.preventDefault()
+  editorElement.value?.focus()
+  vertexDrag.value = { polygonIndex, pointIndex }
+  editedPolygon.value = clonePolygon(polygon)
+  editMessage.value = ''
+  dragging.value = true
+  canvasElement.value?.setPointerCapture(event.pointerId)
+}
+
+function finishVertexDrag(event: PointerEvent) {
+  const active = vertexDrag.value
+  const polygon = editedPolygon.value
+  const selected = point(event)
+  if (active && polygon && selected) polygon.points[active.pointIndex] = roundPoint(selected)
+  releasePointer(event)
+  if (!active || !polygon) return resetVertexDrag()
+  if (polygonArea(polygon.points) < 1) {
+    editMessage.value = '本次调整会让多边形退化，已恢复原顶点。'
+    resetVertexDrag()
+    return
+  }
+  const polygons = props.polygons.map((item, index) => (
+    index === active.polygonIndex ? clonePolygon(polygon) : item
+  ))
+  resetVertexDrag()
+  emit('update:draft', props.regions, polygons, props.protectedRegions)
+}
+
+function resetVertexDrag() {
+  vertexDrag.value = null
+  editedPolygon.value = null
+  dragging.value = false
+}
+
+function nudgePolygonPoint(event: KeyboardEvent, polygonIndex: number, pointIndex: number) {
+  if (tool.value !== 'edit-polygon') return
+  const movement = {
+    ArrowLeft: { x: -1, y: 0 },
+    ArrowRight: { x: 1, y: 0 },
+    ArrowUp: { x: 0, y: -1 },
+    ArrowDown: { x: 0, y: 1 },
+  }[event.key]
+  if (!movement) return
+  const source = props.polygons[polygonIndex]
+  if (!source) return
+  event.preventDefault()
+  const step = event.shiftKey ? 10 : 1
+  const polygon = clonePolygon(source)
+  const current = polygon.points[pointIndex]
+  if (!current) return
+  polygon.points[pointIndex] = roundPoint({
+    x: Math.max(0, Math.min(props.metadata.display_width, current.x + movement.x * step)),
+    y: Math.max(0, Math.min(props.metadata.display_height, current.y + movement.y * step)),
+  })
+  if (polygonArea(polygon.points) < 1) {
+    editMessage.value = '该方向会让多边形退化，顶点未移动。'
+    return
+  }
+  editMessage.value = ''
+  emit('update:draft', props.regions, props.polygons.map((item, index) => (
+    index === polygonIndex ? polygon : item
+  )), props.protectedRegions)
 }
 
 function appendStroke(from: Point, to: Point) {
@@ -265,6 +363,21 @@ function roundPoint(selected: Point): Point {
   return { x: Number(selected.x.toFixed(2)), y: Number(selected.y.toFixed(2)) }
 }
 
+function clonePolygon(polygon: ImageMaskPolygon): ImageMaskPolygon {
+  return {
+    ...polygon,
+    points: polygon.points.map(item => ({ ...item })),
+  }
+}
+
+function polygonArea(points: readonly Point[]) {
+  return Math.abs(points.reduce((total, item, index) => {
+    const next = points[(index + 1) % points.length]
+    if (!next) return total
+    return total + item.x * next.y - next.x * item.y
+  }, 0)) / 2
+}
+
 function polygonPointsAttribute(polygon: ImageMaskPolygon | { points: Point[] }) {
   return polygon.points.map(item => `${item.x},${item.y}`).join(' ')
 }
@@ -291,6 +404,7 @@ function intersects(first: ImageMaskRegion, second: ImageMaskRegion) {
     <div class="image-editor-tools" role="toolbar" aria-label="蒙版绘制工具">
       <button type="button" :aria-pressed="tool === 'rectangle'" @click="selectTool('rectangle')">矩形</button>
       <button type="button" :aria-pressed="tool === 'polygon'" @click="selectTool('polygon')">多边形</button>
+      <button type="button" :aria-pressed="tool === 'edit-polygon'" :disabled="polygons.length === 0" @click="selectTool('edit-polygon')">编辑顶点</button>
       <button type="button" :aria-pressed="tool === 'brush'" @click="selectTool('brush')">画笔</button>
       <button type="button" :aria-pressed="tool === 'eraser'" @click="selectTool('eraser')">橡皮</button>
       <button type="button" :aria-pressed="tool === 'protect'" @click="selectTool('protect')">保护区</button>
@@ -301,16 +415,33 @@ function intersects(first: ImageMaskRegion, second: ImageMaskRegion) {
       <button type="button" class="visibility-button" :aria-pressed="protectionVisible" @click="protectionVisible = !protectionVisible">{{ protectionVisible ? '隐藏保护区' : '显示保护区' }}</button>
     </div>
     <p class="hint">{{ instruction }} 最多 100 个矩形、32 个多边形和 100 个保护区片段。</p>
+    <p v-if="editMessage" class="warning" role="status">{{ editMessage }}</p>
     <p v-if="loading" class="hint">正在加载图片预览…</p>
     <p v-if="error" class="warning">{{ error }}</p>
-    <div class="image-mask-canvas" :class="[{ loading }, `tool-${tool}`]">
-      <img ref="imageElement" :src="sourceUrl" alt="待编辑水印蒙版的原始图片" draggable="false" @load="loading = false" @error="loading = false; error = '图片预览加载失败。'" @pointerdown="begin" @pointermove="move" @pointerup="finish" @pointercancel="cancel" />
+    <div ref="canvasElement" class="image-mask-canvas" :class="[{ loading }, `tool-${tool}`]" @pointerdown="begin" @pointermove="move" @pointerup="finish" @pointercancel="cancel">
+      <img ref="imageElement" :src="sourceUrl" alt="待编辑水印蒙版的原始图片" draggable="false" @load="loading = false" @error="loading = false; error = '图片预览加载失败。'" />
       <template v-if="maskVisible">
         <div v-for="(region, index) in regions" :key="`mask-${index}-${region.x0}-${region.y0}`" class="image-mask-region" :style="regionStyle(region)"><span>{{ index + 1 }}</span></div>
-        <svg class="image-polygon-layer" :viewBox="`0 0 ${metadata.display_width} ${metadata.display_height}`" preserveAspectRatio="none" aria-hidden="true">
-          <polygon v-for="(polygon, index) in polygons" :key="`polygon-${index}`" :points="polygonPointsAttribute(polygon)" class="image-mask-polygon" />
+        <svg class="image-polygon-layer" :class="{ editing: tool === 'edit-polygon' }" :viewBox="`0 0 ${metadata.display_width} ${metadata.display_height}`" preserveAspectRatio="none" role="group" aria-label="多边形蒙版顶点">
+          <template v-for="(polygon, polygonIndex) in displayedPolygons" :key="`polygon-${polygonIndex}`">
+            <polygon :points="polygonPointsAttribute(polygon)" class="image-mask-polygon" :class="{ active: vertexDrag?.polygonIndex === polygonIndex }" />
+            <circle
+              v-for="(item, pointIndex) in polygon.points"
+              v-show="tool === 'edit-polygon'"
+              :key="`polygon-${polygonIndex}-point-${pointIndex}`"
+              :cx="item.x"
+              :cy="item.y"
+              :r="polygonHandleRadius"
+              class="polygon-edit-handle"
+              tabindex="0"
+              role="button"
+              :aria-label="`多边形 ${polygonIndex + 1} 顶点 ${pointIndex + 1}`"
+              @pointerdown.stop="beginVertexDrag($event, polygonIndex, pointIndex)"
+              @keydown="nudgePolygonPoint($event, polygonIndex, pointIndex)"
+            />
+          </template>
           <polyline v-if="polygonPoints.length" :points="polygonPointsAttribute({ points: polygonPoints })" class="image-mask-polygon draft" />
-          <circle v-for="(item, index) in polygonPoints" :key="`polygon-point-${index}`" :cx="item.x" :cy="item.y" r="3" class="polygon-point" />
+          <circle v-for="(item, index) in polygonPoints" :key="`polygon-point-${index}`" :cx="item.x" :cy="item.y" :r="polygonHandleRadius" class="polygon-point" />
         </svg>
       </template>
       <template v-if="protectionVisible">
@@ -351,13 +482,19 @@ function intersects(first: ImageMaskRegion, second: ImageMaskRegion) {
 .image-mask-canvas img { display: block; width: 100%; height: auto; cursor: crosshair; user-select: none; }
 .image-mask-canvas.tool-brush img { cursor: cell; }
 .image-mask-canvas.tool-polygon img { cursor: crosshair; }
+.image-mask-canvas.tool-edit-polygon img { cursor: default; }
 .image-mask-canvas.tool-eraser img { cursor: not-allowed; }
 .image-mask-canvas.tool-protect img { cursor: copy; }
 .image-mask-region, .image-protected-region, .image-eraser-region { position: absolute; box-sizing: border-box; pointer-events: none; }
 .image-polygon-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.image-polygon-layer.editing { pointer-events: auto; }
 .image-mask-polygon { fill: rgba(210, 72, 50, .22); stroke: #d24832; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.image-mask-polygon.active { fill: rgba(210, 72, 50, .3); stroke-width: 3; }
 .image-mask-polygon.draft { fill: none; stroke-dasharray: 7 5; }
 .polygon-point { fill: #fff; stroke: #b73524; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.polygon-edit-handle { fill: #fff; stroke: #b73524; stroke-width: 2; vector-effect: non-scaling-stroke; cursor: grab; pointer-events: all; }
+.polygon-edit-handle:active { cursor: grabbing; }
+.polygon-edit-handle:focus { outline: none; fill: #ffecb5; stroke: #7b281e; stroke-width: 3; }
 .image-mask-region { border: 2px solid #d24832; background: rgba(210, 72, 50, .22); }
 .image-protected-region { border: 2px solid #16786b; background: rgba(22, 120, 107, .2); }
 .image-eraser-region { border: 2px dashed #313936; background: rgba(255, 255, 255, .55); }

@@ -17,7 +17,10 @@ The editor uses top-left-origin display pixels after applying EXIF orientation:
 
 The Vue editor provides rectangle, polygon, brush, eraser and protected-area tools. Polygon masks
 contain 3–64 explicit display-pixel vertices and are closed only after the user confirms them with
-the toolbar or Enter key. Brush and protected-area strokes are represented as continuous, reviewable
+the toolbar or Enter key. Completed polygons expose an edit mode: users can drag individual vertices
+or focus a vertex and move it with the arrow keys (`Shift` uses a 10-pixel step). Coordinates remain
+clamped to the display image, degenerate edits are rejected, and one pointer drag becomes one history
+entry. Brush and protected-area strokes are represented as continuous, reviewable
 rectangle fragments; the eraser removes every mask object it touches. Mask and protection overlays can be hidden independently without changing
 the draft. Manual additions, removals, clearing and accepted local-model suggestions share one
 undo/redo history. The toolbar exposes both actions; while the editor has focus,
