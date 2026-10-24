@@ -1,6 +1,7 @@
 from io import BytesIO
 from time import monotonic, sleep
 
+import cv2
 import numpy as np
 import pytest
 from fastapi.testclient import TestClient
@@ -162,9 +163,7 @@ def test_image_mask_preview_validates_bounds_and_union_area(client: TestClient) 
         json={
             "asset_id": uploaded["id"],
             "analysis_id": analysis["id"],
-            "regions": [
-                {"x0": 0, "y0": 0, "x1": 101, "y1": 20, "transform_id": transform_id}
-            ],
+            "regions": [{"x0": 0, "y0": 0, "x1": 101, "y1": 20, "transform_id": transform_id}],
         },
     )
     assert invalid.status_code == 409
@@ -197,6 +196,52 @@ def test_image_mask_preview_counts_rasterized_fractional_pixels(client: TestClie
     )
     assert response.status_code == 200
     assert response.json()["covered_pixels"] == 4
+
+
+def test_image_mask_preview_rasterizes_polygon_and_rejects_invalid_geometry(
+    client: TestClient,
+) -> None:
+    uploaded = client.post(
+        "/api/v1/assets", files={"file": ("polygon.png", make_image("PNG"))}
+    ).json()
+    analysis = client.post(
+        "/api/v1/analyses",
+        json={"asset_id": uploaded["id"], "preset": "image"},
+    ).json()
+    transform_id = analysis["image_metadata"]["transform_id"]
+    payload = {
+        "asset_id": uploaded["id"],
+        "analysis_id": analysis["id"],
+        "polygons": [
+            {
+                "points": [
+                    {"x": 10, "y": 10},
+                    {"x": 30, "y": 10},
+                    {"x": 20, "y": 30},
+                ],
+                "transform_id": transform_id,
+            }
+        ],
+        "protected_regions": [
+            {"x0": 10, "y0": 10, "x1": 15, "y1": 15, "transform_id": transform_id}
+        ],
+    }
+
+    response = client.post("/api/v1/image-masks/preview", json=payload)
+
+    assert response.status_code == 200
+    assert response.json()["regions"] == []
+    assert response.json()["polygons"] == payload["polygons"]
+    assert response.json()["covered_pixels"] == 210
+
+    payload["polygons"][0]["points"] = [
+        {"x": 10, "y": 10},
+        {"x": 20, "y": 20},
+        {"x": 30, "y": 30},
+    ]
+    invalid = client.post("/api/v1/image-masks/preview", json=payload)
+    assert invalid.status_code == 422
+    assert invalid.json()["error"]["code"] == "INVALID_MASK"
 
 
 def test_image_analysis_rejects_corrupt_payload(client: TestClient) -> None:
@@ -261,9 +306,7 @@ def test_image_plan_runs_opencv_and_preserves_pixels_outside_mask(
     client: TestClient,
 ) -> None:
     source_bytes = make_watermarked_png()
-    uploaded = client.post(
-        "/api/v1/assets", files={"file": ("watermark.png", source_bytes)}
-    ).json()
+    uploaded = client.post("/api/v1/assets", files={"file": ("watermark.png", source_bytes)}).json()
     analysis = client.post(
         "/api/v1/analyses",
         json={"asset_id": uploaded["id"], "preset": "image"},
@@ -334,6 +377,75 @@ def test_image_plan_runs_opencv_and_preserves_pixels_outside_mask(
     assert np.any(result[mask] != source[mask])
 
 
+def test_polygon_image_plan_preserves_pixels_outside_exact_polygon(
+    client: TestClient,
+) -> None:
+    source_bytes = make_watermarked_png()
+    uploaded = client.post(
+        "/api/v1/assets", files={"file": ("polygon-watermark.png", source_bytes)}
+    ).json()
+    analysis = client.post(
+        "/api/v1/analyses",
+        json={"asset_id": uploaded["id"], "preset": "image"},
+    ).json()
+    polygon = {
+        "points": [
+            {"x": 25, "y": 20},
+            {"x": 55, "y": 20},
+            {"x": 55, "y": 35},
+            {"x": 25, "y": 35},
+        ],
+        "transform_id": analysis["image_metadata"]["transform_id"],
+    }
+    planned = client.post(
+        "/api/v1/image-plans/validate",
+        json={
+            "asset_id": uploaded["id"],
+            "asset_sha256": uploaded["sha256"],
+            "analysis_id": analysis["id"],
+            "polygons": [polygon],
+            "radius": 3,
+        },
+    )
+    assert planned.status_code == 200
+    plan_payload = planned.json()
+    if not plan_payload["valid"]:
+        confirmed = client.post(
+            "/api/v1/image-plans/validate",
+            json={
+                "asset_id": uploaded["id"],
+                "asset_sha256": uploaded["sha256"],
+                "analysis_id": analysis["id"],
+                "polygons": [polygon],
+                "radius": 3,
+                "acknowledged_warnings": [
+                    warning["code"]
+                    for warning in plan_payload["warnings"]
+                    if warning["requires_acknowledgement"]
+                ],
+            },
+        )
+        plan_payload = confirmed.json()
+    assert plan_payload["valid"] is True
+    assert plan_payload["polygons"] == [polygon]
+
+    task = client.post("/api/v1/tasks", json={"plan_id": plan_payload["id"]}).json()
+    deadline = monotonic() + 15
+    while task["status"] in {"queued", "running"} and monotonic() < deadline:
+        sleep(0.02)
+        task = client.get(f"/api/v1/tasks/{task['id']}").json()
+
+    assert task["status"] == "succeeded", task
+    assert client.get(task["report_url"]).json()["processing"]["selected_target_count"] == 1
+    downloaded = client.get(task["artifacts"][0]["download_url"])
+    source = np.asarray(Image.open(BytesIO(source_bytes)).convert("RGB"))
+    result = np.asarray(Image.open(BytesIO(downloaded.content)).convert("RGB"))
+    mask = np.zeros(source.shape[:2], dtype=np.uint8)
+    cv2.fillPoly(mask, [np.asarray([[25, 20], [55, 20], [55, 35], [25, 35]])], 255)
+    assert np.array_equal(result[mask == 0], source[mask == 0])
+    assert np.any(result[mask != 0] != source[mask != 0])
+
+
 def test_image_mask_preview_subtracts_protected_regions(client: TestClient) -> None:
     uploaded = client.post(
         "/api/v1/assets", files={"file": ("protected.png", make_image("PNG"))}
@@ -346,12 +458,8 @@ def test_image_mask_preview_subtracts_protected_regions(client: TestClient) -> N
     payload = {
         "asset_id": uploaded["id"],
         "analysis_id": analysis["id"],
-        "regions": [
-            {"x0": 0, "y0": 0, "x1": 20, "y1": 20, "transform_id": transform_id}
-        ],
-        "protected_regions": [
-            {"x0": 5, "y0": 5, "x1": 15, "y1": 15, "transform_id": transform_id}
-        ],
+        "regions": [{"x0": 0, "y0": 0, "x1": 20, "y1": 20, "transform_id": transform_id}],
+        "protected_regions": [{"x0": 5, "y0": 5, "x1": 15, "y1": 15, "transform_id": transform_id}],
     }
 
     preview = client.post("/api/v1/image-masks/preview", json=payload)
@@ -439,8 +547,7 @@ def test_low_contrast_image_plan_requires_explicit_acknowledgement(
     unconfirmed = client.post("/api/v1/image-plans/validate", json=payload).json()
     assert unconfirmed["valid"] is False
     assert any(
-        warning["code"] == "IMAGE_LOW_CONTRAST_SELECTION"
-        for warning in unconfirmed["warnings"]
+        warning["code"] == "IMAGE_LOW_CONTRAST_SELECTION" for warning in unconfirmed["warnings"]
     )
 
     payload["acknowledged_warnings"] = ["IMAGE_LOW_CONTRAST_SELECTION"]
@@ -479,13 +586,9 @@ def test_complex_image_plan_requires_explicit_acknowledgement(client: TestClient
 
     unconfirmed = client.post("/api/v1/image-plans/validate", json=payload).json()
     assert unconfirmed["valid"] is False
+    assert any(warning["code"] == "IMAGE_COMPLEXITY_HIGH" for warning in unconfirmed["warnings"])
     assert any(
-        warning["code"] == "IMAGE_COMPLEXITY_HIGH"
-        for warning in unconfirmed["warnings"]
-    )
-    assert any(
-        warning["code"] == "IMAGE_MASK_OVER_10_PERCENT"
-        for warning in unconfirmed["warnings"]
+        warning["code"] == "IMAGE_MASK_OVER_10_PERCENT" for warning in unconfirmed["warnings"]
     )
 
     payload["acknowledged_warnings"] = [

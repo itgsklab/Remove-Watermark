@@ -629,6 +629,20 @@ export interface components {
             /** Regions */
             readonly regions: readonly components["schemas"]["ImageRegionComplexity"][];
         };
+        /** ImageMaskPoint */
+        readonly ImageMaskPoint: {
+            /** X */
+            readonly x: number;
+            /** Y */
+            readonly y: number;
+        };
+        /** ImageMaskPolygon */
+        readonly ImageMaskPolygon: {
+            /** Points */
+            readonly points: readonly components["schemas"]["ImageMaskPoint"][];
+            /** Transform Id */
+            readonly transform_id: string;
+        };
         /** ImageMaskPreviewResponse */
         readonly ImageMaskPreviewResponse: {
             /** Analysis Id */
@@ -642,6 +656,8 @@ export interface components {
             readonly covered_pixels: number;
             /** Executable */
             readonly executable: boolean;
+            /** Polygons */
+            readonly polygons?: readonly components["schemas"]["ImageMaskPolygon"][];
             /** Protected Regions */
             readonly protected_regions?: readonly components["schemas"]["ImageMaskRegion"][];
             /** Regions */
@@ -711,6 +727,8 @@ export interface components {
              * @constant
              */
             readonly output_kind: "png";
+            /** Polygons */
+            readonly polygons?: readonly components["schemas"]["ImageMaskPolygon"][];
             /** Protected Regions */
             readonly protected_regions?: readonly components["schemas"]["ImageMaskRegion"][];
             /** Radius */
@@ -901,10 +919,12 @@ export interface components {
             readonly analysis_id: string;
             /** Asset Id */
             readonly asset_id: string;
+            /** Polygons */
+            readonly polygons?: readonly components["schemas"]["ImageMaskPolygon"][];
             /** Protected Regions */
             readonly protected_regions?: readonly components["schemas"]["ImageMaskRegion"][];
             /** Regions */
-            readonly regions: readonly components["schemas"]["ImageMaskRegion"][];
+            readonly regions?: readonly components["schemas"]["ImageMaskRegion"][];
         };
         /** PreviewRedactionsRequest */
         readonly PreviewRedactionsRequest: {
@@ -1242,6 +1262,8 @@ export interface components {
             readonly asset_id: string;
             /** Asset Sha256 */
             readonly asset_sha256: string;
+            /** Polygons */
+            readonly polygons?: readonly components["schemas"]["ImageMaskPolygon"][];
             /** Protected Regions */
             readonly protected_regions?: readonly components["schemas"]["ImageMaskRegion"][];
             /**
@@ -1250,7 +1272,7 @@ export interface components {
              */
             readonly radius: number;
             /** Regions */
-            readonly regions: readonly components["schemas"]["ImageMaskRegion"][];
+            readonly regions?: readonly components["schemas"]["ImageMaskRegion"][];
         };
         /** ValidatePlanRequest */
         readonly ValidatePlanRequest: {
