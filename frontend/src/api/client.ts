@@ -50,6 +50,12 @@ async function parse<T>(response: Response): Promise<T> {
   throw new ApiError(payload.error, response.status)
 }
 
+async function parseBlob(response: Response): Promise<Blob> {
+  if (response.ok) return response.blob()
+  const payload = await response.json() as { error: ApiErrorBody }
+  throw new ApiError(payload.error, response.status)
+}
+
 export async function getCapabilities(): Promise<Capabilities> {
   return parse<Capabilities>(await fetch('/api/v1/capabilities'))
 }
@@ -126,6 +132,27 @@ export async function previewImageMasks(
       regions,
       polygons,
       protected_regions: protectedRegions,
+    }),
+  }))
+}
+
+export async function renderImageMaskPreview(
+  analysis: Analysis,
+  regions: ImageMaskRegion[],
+  polygons: ImageMaskPolygon[],
+  protectedRegions: ImageMaskRegion[],
+  radius: number,
+): Promise<Blob> {
+  return parseBlob(await fetch('/api/v1/image-masks/render-preview', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      asset_id: analysis.asset_id,
+      analysis_id: analysis.id,
+      regions,
+      polygons,
+      protected_regions: protectedRegions,
+      radius,
     }),
   }))
 }

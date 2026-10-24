@@ -313,6 +313,10 @@ class PreviewImageMasksRequest(BaseModel):
     protected_regions: list[ImageMaskRegion] = Field(default_factory=list, max_length=100)
 
 
+class RenderImageMaskPreviewRequest(PreviewImageMasksRequest):
+    radius: int = Field(ge=1, le=10)
+
+
 class ImageRegionComplexity(BaseModel):
     region_index: int = Field(ge=0)
     risk: Literal["low", "review", "high"]

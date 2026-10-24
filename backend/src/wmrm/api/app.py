@@ -42,6 +42,7 @@ from wmrm.api.schemas import (
     PreviewRedactionsRequest,
     RedactionPlanResponse,
     RedactionPreviewResponse,
+    RenderImageMaskPreviewRequest,
     RuntimeDiagnosticsResponse,
     TaskReport,
     TaskResponse,
@@ -462,6 +463,25 @@ def create_app(
         session: Annotated[Session, Depends(get_session)],
     ) -> ImageMaskPreviewResponse:
         return image_masks.preview(session, request)
+
+    @app.post(
+        "/api/v1/image-masks/render-preview",
+        response_class=Response,
+        responses={200: {"content": {"image/png": {}}}},
+    )
+    def render_image_mask_preview(
+        request: RenderImageMaskPreviewRequest,
+        session: Annotated[Session, Depends(get_session)],
+    ) -> Response:
+        return Response(
+            content=image_masks.render_preview(session, request),
+            media_type="image/png",
+            headers={
+                "Cache-Control": "no-store",
+                "Content-Disposition": 'inline; filename="image-mask-preview.png"',
+                "X-Content-Type-Options": "nosniff",
+            },
+        )
 
     @app.post("/api/v1/image-suggestions/vlm", response_model=VlmSuggestionResponse)
     def suggest_image_masks(
