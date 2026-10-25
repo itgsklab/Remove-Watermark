@@ -27,6 +27,8 @@ def inpaint_image(
         if int(getattr(source, "n_frames", 1)) != 1:
             raise ValueError("OpenCV 基础修复仅支持静态图片。")
         source.load()
+        source_exif_present = bool(source.getexif())
+        source_icc_profile_present = bool(source.info.get("icc_profile"))
         display = ImageOps.exif_transpose(source)
         has_alpha = "A" in display.getbands() or "transparency" in display.info
         normalized = display.convert("RGBA" if has_alpha else "RGB")
@@ -55,6 +57,10 @@ def inpaint_image(
     with Image.open(output_path) as result_image:
         if result_image.format != "PNG" or result_image.size != (width, height):
             raise ValueError("输出图片格式或尺寸校验失败。")
+        output_exif_present = bool(result_image.getexif())
+        output_icc_profile_present = bool(result_image.info.get("icc_profile"))
+        if output_exif_present or output_icc_profile_present:
+            raise ValueError("输出图片仍包含 EXIF 或 ICC 元数据。")
         result_image.load()
         decoded = np.asarray(result_image.convert(output_mode), dtype=np.uint8)
 
@@ -70,6 +76,15 @@ def inpaint_image(
         "masked_pixels": int(np.count_nonzero(mask)),
         "changed_pixels": int(np.count_nonzero(changed)),
         "outside_changed_pixels": outside_changed,
+        "engine": "opencv_telea",
+        "radius": radius,
+        "output_format": "PNG",
+        "dimensions_match": True,
+        "source_exif_present": source_exif_present,
+        "source_icc_profile_present": source_icc_profile_present,
+        "output_exif_present": output_exif_present,
+        "output_icc_profile_present": output_icc_profile_present,
+        "metadata_verified_clean": True,
         "width": width,
         "height": height,
         "size_bytes": output_path.stat().st_size,

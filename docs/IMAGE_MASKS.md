@@ -70,6 +70,12 @@ Before accepting the artifact, the worker:
 
 The PNG output intentionally omits EXIF, ICC and other source metadata. Alpha channels are repaired inside the mask with the same algorithm and remain byte-identical outside it.
 
+The downloadable task report records the deterministic `opencv_telea` engine and radius; rectangle,
+polygon and protected-region counts; effective mask pixels and coverage; changed pixels and the
+outside-mask validation; decoded PNG dimensions; and the source/output EXIF and ICC states used to
+verify the fresh PNG. Reports for tasks completed before this evidence was persisted remain readable
+and leave the new image-only sections empty.
+
 ## Current boundary
 
 The source image is served through the controlled asset-content endpoint and remains unchanged. Animated WebP files can be inspected, but cannot enter processing until per-frame mask behavior is defined.

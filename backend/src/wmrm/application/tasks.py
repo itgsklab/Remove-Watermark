@@ -25,6 +25,9 @@ from wmrm.api.schemas import (
     TaskReportArtifact,
     TaskReportComparison,
     TaskReportError,
+    TaskReportImageMaskSummary,
+    TaskReportImageMetadataRemoval,
+    TaskReportImagePixelValidation,
     TaskReportInput,
     TaskReportPdfPage,
     TaskReportProcessing,
@@ -326,10 +329,37 @@ class TaskService:
                         for image in preview["images"]
                     )
                     session.add_all(artifacts)
-                    record.result_json = json.dumps(
-                        {"pdf_pages": result.get("page_reports", [])},
-                        ensure_ascii=False,
-                    )
+                    result_payload: dict[str, Any] = {
+                        "pdf_pages": result.get("page_reports", [])
+                    }
+                    if is_image:
+                        result_payload["image_processing"] = {
+                            "engine": result["engine"],
+                            "radius": result["radius"],
+                            "rectangle_count": result["removed_count"]
+                            - result["polygon_count"],
+                            "polygon_count": result["polygon_count"],
+                            "protected_region_count": result["protected_count"],
+                            "masked_pixels": result["masked_pixels"],
+                            "changed_pixels": result["changed_pixels"],
+                            "outside_changed_pixels": result["outside_changed_pixels"],
+                            "width": result["width"],
+                            "height": result["height"],
+                            "output_format": result["output_format"],
+                            "dimensions_match": result["dimensions_match"],
+                            "source_exif_present": result["source_exif_present"],
+                            "source_icc_profile_present": result[
+                                "source_icc_profile_present"
+                            ],
+                            "output_exif_present": result["output_exif_present"],
+                            "output_icc_profile_present": result[
+                                "output_icc_profile_present"
+                            ],
+                            "metadata_verified_clean": result[
+                                "metadata_verified_clean"
+                            ],
+                        }
+                    record.result_json = json.dumps(result_payload, ensure_ascii=False)
                     record.status = "succeeded"
                     record.stage = (
                         (
@@ -503,6 +533,7 @@ class TaskService:
         )
         comparison = self._comparison(record, plan, artifact_responses)
         warning_codes = _warning_codes(plan)
+        image_processing = _image_processing(record)
         selected_target_count = len(
             payload.get("regions", payload.get("candidates", []))
         ) + len(payload.get("polygons", []))
@@ -533,7 +564,16 @@ class TaskService:
                 selected_target_count=selected_target_count,
                 protected_target_count=len(payload.get("protected_regions", [])),
                 warning_codes=warning_codes,
-                radius=_optional_int(payload.get("radius")),
+                engine=(
+                    str(image_processing["engine"])
+                    if image_processing is not None
+                    else None
+                ),
+                radius=_optional_int(
+                    image_processing.get("radius")
+                    if image_processing is not None
+                    else payload.get("radius")
+                ),
                 dpi=_optional_int(payload.get("dpi")),
                 ocr_languages=(
                     str(payload["ocr_languages"])
@@ -541,6 +581,9 @@ class TaskService:
                     else None
                 ),
                 pdf_pages=_pdf_page_reports(record),
+                image_mask=_image_mask_summary(image_processing),
+                image_pixel_validation=_image_pixel_validation(image_processing),
+                image_metadata_removal=_image_metadata_removal(image_processing),
             ),
             artifacts=[
                 TaskReportArtifact(
@@ -696,6 +739,66 @@ def _pdf_page_reports(record: TaskRecord) -> list[TaskReportPdfPage]:
         return [TaskReportPdfPage.model_validate(item) for item in reports]
     except (json.JSONDecodeError, TypeError, ValueError):
         return []
+
+
+def _image_processing(record: TaskRecord) -> dict[str, Any] | None:
+    if not record.result_json:
+        return None
+    try:
+        payload = json.loads(record.result_json)
+        value = payload.get("image_processing")
+        return value if isinstance(value, dict) else None
+    except (json.JSONDecodeError, TypeError):
+        return None
+
+
+def _image_mask_summary(
+    processing: dict[str, Any] | None,
+) -> TaskReportImageMaskSummary | None:
+    if processing is None:
+        return None
+    image_pixels = int(processing["width"]) * int(processing["height"])
+    masked_pixels = int(processing["masked_pixels"])
+    return TaskReportImageMaskSummary(
+        rectangle_count=int(processing["rectangle_count"]),
+        polygon_count=int(processing["polygon_count"]),
+        protected_region_count=int(processing["protected_region_count"]),
+        effective_masked_pixels=masked_pixels,
+        image_pixels=image_pixels,
+        coverage_ratio=masked_pixels / image_pixels,
+    )
+
+
+def _image_pixel_validation(
+    processing: dict[str, Any] | None,
+) -> TaskReportImagePixelValidation | None:
+    if processing is None:
+        return None
+    outside_changed = int(processing["outside_changed_pixels"])
+    return TaskReportImagePixelValidation(
+        output_format=str(processing["output_format"]),
+        width=int(processing["width"]),
+        height=int(processing["height"]),
+        changed_pixels=int(processing["changed_pixels"]),
+        outside_mask_changed_pixels=outside_changed,
+        dimensions_match=bool(processing["dimensions_match"]),
+        outside_mask_unchanged=outside_changed == 0,
+    )
+
+
+def _image_metadata_removal(
+    processing: dict[str, Any] | None,
+) -> TaskReportImageMetadataRemoval | None:
+    if processing is None:
+        return None
+    return TaskReportImageMetadataRemoval(
+        policy="fresh_png_without_metadata",
+        source_exif_present=bool(processing["source_exif_present"]),
+        source_icc_profile_present=bool(processing["source_icc_profile_present"]),
+        output_exif_present=bool(processing["output_exif_present"]),
+        output_icc_profile_present=bool(processing["output_icc_profile_present"]),
+        verified_clean=bool(processing["metadata_verified_clean"]),
+    )
 
 
 def _warning_codes(plan: PlanRecord | None) -> list[str]:
