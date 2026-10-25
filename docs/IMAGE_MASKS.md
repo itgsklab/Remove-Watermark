@@ -29,6 +29,12 @@ states, resets when a new analysis starts and cannot restore masks from another 
 contain at most 100 rectangle mask fragments, 32 polygons and 100 protected fragments. Every data edit invalidates the
 previous risk preview and its confirmations; visibility toggles do not mutate the plan.
 
+The image viewport supports 100%–400% zoom in 50% steps. A dedicated pan tool scrolls the enlarged
+image without changing the draft, and reset returns to the complete-image view. Rectangles, brush
+strokes, protected regions and polygon vertices continue to derive coordinates from the rendered
+image bounds, so editing after zoom and pan remains in original display-pixel space rather than
+viewport space.
+
 `POST /api/v1/image-masks/preview` rejects stale transforms, non-finite values, empty rectangles,
 degenerate polygons and out-of-bounds coordinates. Preview and processing share the same rasterizer:
 it unions rectangles and filled polygons, then subtracts protected rectangles, so overlaps are not

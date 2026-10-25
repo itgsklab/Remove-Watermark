@@ -156,6 +156,83 @@ test('general PDF redaction workflow confirms overlap and downloads report', asy
   expect(browserErrors).toEqual([])
 })
 
+test('image editor keeps source coordinates after zoom and pan', async ({ page }) => {
+  await upload(page, 'browser-watermark.png')
+  await page.getByRole('button', { name: '检查图片并编辑蒙版' }).click()
+  const image = page.locator('.image-mask-canvas img')
+  await expect(image).toBeVisible()
+  await expect.poll(() => image.evaluate(element => (element as HTMLImageElement).complete)).toBe(true)
+  await image.scrollIntoViewIfNeeded()
+  const viewport = page.getByLabel('可缩放图片视口')
+  await expect(page.getByLabel('当前缩放比例')).toHaveText('100%')
+  await page.getByRole('button', { name: '放大图片' }).click()
+  await page.getByRole('button', { name: '放大图片' }).click()
+  await expect(page.getByLabel('当前缩放比例')).toHaveText('200%')
+  await page.getByRole('button', { name: '平移', exact: true }).click()
+  await expect(page.getByRole('button', { name: '平移', exact: true })).toHaveAttribute('aria-pressed', 'true')
+  await viewport.scrollIntoViewIfNeeded()
+  let viewportBounds = await viewport.boundingBox()
+  expect(viewportBounds).not.toBeNull()
+  if (!viewportBounds) throw new Error('Image viewport has no layout bounds.')
+  const scrollBeforePan = await viewport.evaluate(element => ({
+    left: element.scrollLeft,
+    top: element.scrollTop,
+  }))
+  await page.mouse.move(viewportBounds.x + viewportBounds.width * 0.65, viewportBounds.y + viewportBounds.height * 0.65)
+  await page.mouse.down()
+  await page.mouse.move(viewportBounds.x + viewportBounds.width * 0.4, viewportBounds.y + viewportBounds.height * 0.4)
+  await page.mouse.up()
+  const scrollAfterPan = await viewport.evaluate(element => ({
+    left: element.scrollLeft,
+    top: element.scrollTop,
+  }))
+  expect(scrollAfterPan.left).toBeGreaterThan(scrollBeforePan.left)
+  expect(scrollAfterPan.top).toBeGreaterThan(scrollBeforePan.top)
+
+  await page.getByRole('button', { name: '矩形', exact: true }).click()
+  await viewport.scrollIntoViewIfNeeded()
+  viewportBounds = await viewport.boundingBox()
+  expect(viewportBounds).not.toBeNull()
+  if (!viewportBounds) throw new Error('Image viewport has no layout bounds after selecting rectangle.')
+  let bounds = await image.boundingBox()
+  expect(bounds).not.toBeNull()
+  if (!bounds) throw new Error('Image editor has no layout bounds.')
+  const naturalSize = await image.evaluate(element => ({
+    width: (element as HTMLImageElement).naturalWidth,
+    height: (element as HTMLImageElement).naturalHeight,
+  }))
+  const selection = {
+    x0: viewportBounds.x + viewportBounds.width * 0.28,
+    y0: viewportBounds.y + viewportBounds.height * 0.28,
+    x1: viewportBounds.x + viewportBounds.width * 0.56,
+    y1: viewportBounds.y + viewportBounds.height * 0.56,
+  }
+  const expectedRegion = {
+    x0: (selection.x0 - bounds.x) / bounds.width * naturalSize.width,
+    y0: (selection.y0 - bounds.y) / bounds.height * naturalSize.height,
+    x1: (selection.x1 - bounds.x) / bounds.width * naturalSize.width,
+    y1: (selection.y1 - bounds.y) / bounds.height * naturalSize.height,
+  }
+  await page.mouse.move(selection.x0, selection.y0)
+  await page.mouse.down()
+  await page.mouse.move(selection.x1, selection.y1)
+  await page.mouse.up()
+
+  const firstRegion = page.getByText(/区域 1：/)
+  await expect(firstRegion).toBeVisible()
+  const coordinates = (await firstRegion.innerText()).match(/[\d.]+/g)?.map(Number)
+  expect(coordinates).toHaveLength(5)
+  expect(coordinates?.[1]).toBeCloseTo(expectedRegion.x0, 0)
+  expect(coordinates?.[2]).toBeCloseTo(expectedRegion.y0, 0)
+  expect(coordinates?.[3]).toBeCloseTo(expectedRegion.x1, 0)
+  expect(coordinates?.[4]).toBeCloseTo(expectedRegion.y1, 0)
+  const coordinatesBeforeReset = await firstRegion.innerText()
+  await page.getByRole('button', { name: '复位视图' }).click()
+  await expect(page.getByLabel('当前缩放比例')).toHaveText('100%')
+  await expect(page.getByRole('button', { name: '平移', exact: true })).toBeDisabled()
+  await expect(firstRegion).toHaveText(coordinatesBeforeReset)
+})
+
 test('image mask workflow repairs selected pixels and downloads report', async ({ page }) => {
   const browserErrors = watchBrowserErrors(page)
   await upload(page, 'browser-watermark.png')
