@@ -231,6 +231,7 @@ test('image mask workflow repairs selected pixels and downloads report', async (
   await expect(page.getByRole('heading', { name: '保护区 · 1' })).toBeVisible()
   await page.getByRole('button', { name: '验证蒙版草稿（1 个矩形，1 个多边形，1 个保护区）' }).click()
   await expect(page.getByRole('heading', { name: /背景复杂度/ })).toBeVisible()
+  await expect(page.getByText('下一步建议', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: '比较修复半径效果' }).click()
   const radiusPreviewPanel = page.getByRole('region', { name: '修复半径效果对比' })
   await expect(radiusPreviewPanel).toBeVisible()

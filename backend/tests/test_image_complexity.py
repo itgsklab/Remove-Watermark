@@ -20,6 +20,8 @@ def test_complexity_preflight_matches_synthetic_benchmark(tmp_path) -> None:
     assert risks["stripes"] == "high"
     assert risks["structure"] == "high"
     assert risks["texture"] == "high"
+    assert risks["portrait"] == "high"
+    assert risks["typography"] == "high"
 
 
 def test_complexity_preflight_reports_explainable_scores(tmp_path) -> None:

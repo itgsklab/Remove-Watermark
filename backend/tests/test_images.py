@@ -646,6 +646,8 @@ def test_complex_image_plan_requires_explicit_acknowledgement(client: TestClient
     preview = client.post("/api/v1/image-masks/preview", json=payload).json()
     assert preview["complexity"]["level"] == "high"
     assert preview["requires_acknowledgement"] is True
+    assert any("建议重新调整选区" in warning for warning in preview["warnings"])
+    assert any("人物五官、文字和连续边缘" in warning for warning in preview["warnings"])
 
     unconfirmed = client.post("/api/v1/image-plans/validate", json=payload).json()
     assert unconfirmed["valid"] is False

@@ -7,18 +7,18 @@
   "versions": {
     "opencv": "5.0.0",
     "numpy": "2.5.3",
-    "pillow": "12.3.0"
+    "pillow": "13.0.0"
   },
   "summary": {
-    "scenario_count": 5,
-    "mean_masked_mae": 23.6191,
-    "mean_improvement_percent": 61.86,
-    "outside_pixel_integrity_cases": 5,
+    "scenario_count": 7,
+    "mean_masked_mae": 23.909,
+    "mean_improvement_percent": 62.92,
+    "outside_pixel_integrity_cases": 7,
     "grades": {
       "excellent": 2,
       "good": 0,
-      "review": 1,
-      "poor": 2
+      "review": 2,
+      "poor": 3
     },
     "recommendation": "Keep OpenCV Telea as the lightweight baseline for small masks on simple backgrounds; require visual review for structured or textured regions."
   },
@@ -45,6 +45,8 @@
       },
       "processing": {
         "removed_count": 1,
+        "polygon_count": 0,
+        "protected_count": 0,
         "masked_pixels": 4416,
         "changed_pixels": 4413,
         "outside_changed_pixels": 0,
@@ -76,6 +78,8 @@
       },
       "processing": {
         "removed_count": 1,
+        "polygon_count": 0,
+        "protected_count": 0,
         "masked_pixels": 4416,
         "changed_pixels": 4416,
         "outside_changed_pixels": 0,
@@ -107,6 +111,8 @@
       },
       "processing": {
         "removed_count": 1,
+        "polygon_count": 0,
+        "protected_count": 0,
         "masked_pixels": 4416,
         "changed_pixels": 4416,
         "outside_changed_pixels": 0,
@@ -138,6 +144,8 @@
       },
       "processing": {
         "removed_count": 1,
+        "polygon_count": 0,
+        "protected_count": 0,
         "masked_pixels": 4416,
         "changed_pixels": 4412,
         "outside_changed_pixels": 0,
@@ -169,6 +177,8 @@
       },
       "processing": {
         "removed_count": 1,
+        "polygon_count": 0,
+        "protected_count": 0,
         "masked_pixels": 4416,
         "changed_pixels": 4416,
         "outside_changed_pixels": 0,
@@ -176,6 +186,72 @@
         "height": 160,
         "size_bytes": 107656,
         "sha256": "2ec27a1fda7aa60f79f49903f6fa3098a31f793c0728429865c14bdaef9f27c1"
+      }
+    },
+    {
+      "case_id": "portrait",
+      "label": "人物面部轮廓",
+      "artifacts": {
+        "clean": "portrait/clean.png",
+        "watermarked": "portrait/watermarked.png",
+        "mask": "portrait/mask.png",
+        "result": "portrait/result.png"
+      },
+      "metrics": {
+        "input_masked_mae": 64.6347,
+        "masked_mae": 33.889,
+        "masked_rmse": 57.8673,
+        "masked_psnr_db": 12.8821,
+        "boundary_mae": 24.818,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 1.0,
+        "improvement_percent": 47.57,
+        "grade": "poor"
+      },
+      "processing": {
+        "removed_count": 1,
+        "polygon_count": 0,
+        "protected_count": 0,
+        "masked_pixels": 4416,
+        "changed_pixels": 4416,
+        "outside_changed_pixels": 0,
+        "width": 256,
+        "height": 160,
+        "size_bytes": 6226,
+        "sha256": "3951c33fa908ca0a43e04292402518bb397f3e94931c3d79dc70279df10c96e0"
+      }
+    },
+    {
+      "case_id": "typography",
+      "label": "文字与基线",
+      "artifacts": {
+        "clean": "typography/clean.png",
+        "watermarked": "typography/watermarked.png",
+        "mask": "typography/mask.png",
+        "result": "typography/result.png"
+      },
+      "metrics": {
+        "input_masked_mae": 93.6751,
+        "masked_mae": 15.3783,
+        "masked_rmse": 42.9237,
+        "masked_psnr_db": 15.4769,
+        "boundary_mae": 3.8266,
+        "outside_mae": 0.0,
+        "changed_mask_ratio": 0.9991,
+        "improvement_percent": 83.58,
+        "grade": "review"
+      },
+      "processing": {
+        "removed_count": 1,
+        "polygon_count": 0,
+        "protected_count": 0,
+        "masked_pixels": 4416,
+        "changed_pixels": 4412,
+        "outside_changed_pixels": 0,
+        "width": 256,
+        "height": 160,
+        "size_bytes": 8516,
+        "sha256": "2433609c732a81cab984cc375984c27f30da93eae64c796753d974b8403e33c4"
       }
     }
   ]
