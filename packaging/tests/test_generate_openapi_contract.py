@@ -20,9 +20,10 @@ def test_contract_is_deterministic_and_versioned() -> None:
     assert first == second
     assert first["openapi"] == "3.1.0"
     assert first["info"]["version"] == "0.1.0"
-    assert len(first["paths"]) == 22
+    assert len(first["paths"]) == 23
     assert all(path.startswith("/api/v1/") for path in first["paths"])
     assert "/api/v1/image-suggestions/vlm" in first["paths"]
+    assert "/api/v1/image-masks/render-preview" in first["paths"]
     assert not any("timing" in path for path in first["paths"])
 
 
