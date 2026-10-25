@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import {
   ApiError,
@@ -12,6 +12,7 @@ import {
   getTask,
   previewImageMasks,
   previewRedactions,
+  renderImageMaskPreview,
   suggestImageMasks,
   type Analysis,
   type ImageMaskPreview,
@@ -62,6 +63,10 @@ interface ImageMaskDraft {
   polygons: ImageMaskPolygon[]
   protectedRegions: ImageMaskRegion[]
 }
+interface ImageRadiusPreview {
+  radius: number
+  url: string
+}
 const imageMasks = ref<ImageMaskRegion[]>([])
 const imagePolygons = ref<ImageMaskPolygon[]>([])
 const imageProtectedRegions = ref<ImageMaskRegion[]>([])
@@ -69,6 +74,8 @@ const imageMaskPast = ref<ImageMaskDraft[]>([])
 const imageMaskFuture = ref<ImageMaskDraft[]>([])
 const imageMaskPreview = ref<ImageMaskPreview | null>(null)
 const imageRadius = ref(3)
+const imageRadiusPreviews = ref<ImageRadiusPreview[]>([])
+const imagePreviewBusy = ref(false)
 const imagePlanWarnings = ref<PlanWarning[]>([])
 const confirmedImageWarnings = ref<string[]>([])
 const vlmBusy = ref(false)
@@ -112,6 +119,7 @@ const complexityLabels = {
   review: '建议复核',
   high: '高风险',
 } as const
+let imagePreviewRequestId = 0
 
 onMounted(async () => {
   try {
@@ -126,6 +134,8 @@ onMounted(async () => {
   }
   if (isCodeCvPdf.value) await loadOcrDiagnostics()
 })
+
+onBeforeUnmount(() => clearImageRadiusPreviews())
 
 async function loadOcrDiagnostics() {
   ocrDiagnosticsError.value = ''
@@ -319,6 +329,14 @@ function clearImageMaskPreview() {
   imageMaskPreview.value = null
   imagePlanWarnings.value = []
   confirmedImageWarnings.value = []
+  clearImageRadiusPreviews()
+}
+
+function clearImageRadiusPreviews() {
+  imagePreviewRequestId += 1
+  for (const preview of imageRadiusPreviews.value) URL.revokeObjectURL(preview.url)
+  imageRadiusPreviews.value = []
+  imagePreviewBusy.value = false
 }
 
 function currentImageDraft(): ImageMaskDraft {
@@ -408,6 +426,42 @@ async function previewImageMaskRisk() {
     message.value = error instanceof ApiError ? error.message : '无法验证图片蒙版。'
   } finally {
     busy.value = false
+  }
+}
+
+async function compareImageRadii() {
+  if (!analysis.value || !imageMaskPreview.value?.executable) return
+  const requestId = ++imagePreviewRequestId
+  imagePreviewBusy.value = true
+  message.value = ''
+  const requestedRadius = Number(imageRadius.value)
+  const selectedRadius = Number.isFinite(requestedRadius)
+    ? Math.max(1, Math.min(10, Math.round(requestedRadius)))
+    : 3
+  const radii = [...new Set([1, selectedRadius, 7])].sort((left, right) => left - right)
+  try {
+    const rendered = await Promise.all(radii.map(async radius => ({
+      radius,
+      blob: await renderImageMaskPreview(
+        analysis.value!,
+        imageMasks.value,
+        imagePolygons.value,
+        imageProtectedRegions.value,
+        radius,
+      ),
+    })))
+    if (requestId !== imagePreviewRequestId) return
+    for (const preview of imageRadiusPreviews.value) URL.revokeObjectURL(preview.url)
+    imageRadiusPreviews.value = rendered.map(item => ({
+      radius: item.radius,
+      url: URL.createObjectURL(item.blob),
+    }))
+    message.value = `已生成 ${rendered.length} 个临时效果预览；请选择更合适的修复半径。`
+  } catch (error) {
+    if (requestId !== imagePreviewRequestId) return
+    message.value = error instanceof ApiError ? error.message : '无法生成修复半径对比预览。'
+  } finally {
+    if (requestId === imagePreviewRequestId) imagePreviewBusy.value = false
   }
 }
 
@@ -853,7 +907,35 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
             <input id="image-radius" v-model.number="imageRadius" type="number" min="1" max="10" />
           </label>
           <p class="hint">建议从 3 开始；细小水印可用 1–3，较粗边缘可提高到 5–7。</p>
+          <button class="secondary-button" :disabled="busy || imagePreviewBusy" @click="compareImageRadii">
+            {{ imagePreviewBusy ? '正在生成对比…' : '比较修复半径效果' }}
+          </button>
         </div>
+        <section v-if="imageRadiusPreviews.length" class="radius-preview-panel" aria-label="修复半径效果对比">
+          <div class="complexity-heading">
+            <div>
+              <p class="eyebrow">处理前效果预览</p>
+              <h3>选择修复半径</h3>
+            </div>
+            <span class="complexity-badge">临时生成</span>
+          </div>
+          <p class="hint">预览使用当前蒙版在内存中生成，不会保存结果文件；点击图片即可选用该半径。</p>
+          <div class="radius-preview-grid">
+            <button
+              v-for="preview in imageRadiusPreviews"
+              :key="preview.radius"
+              type="button"
+              class="radius-preview-card"
+              :class="{ selected: imageRadius === preview.radius }"
+              :aria-pressed="imageRadius === preview.radius"
+              :aria-label="`选用修复半径 ${preview.radius}`"
+              @click="imageRadius = preview.radius"
+            >
+              <img :src="preview.url" :alt="`修复半径 ${preview.radius} 的临时效果预览`" />
+              <span>半径 {{ preview.radius }}{{ imageRadius === preview.radius ? ' · 当前选择' : '' }}</span>
+            </button>
+          </div>
+        </section>
         <template v-for="warning in imagePlanWarnings" :key="warning.code">
           <label v-if="warning.requires_acknowledgement" class="risk-confirm">
             <input
@@ -867,7 +949,7 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
           <p v-else class="warning">{{ warning.message }}</p>
         </template>
         <div v-if="imageMaskPreview.executable" class="process-actions">
-          <button :disabled="busy" @click="processImage">
+          <button :disabled="busy || imagePreviewBusy" @click="processImage">
             {{ busy ? '正在处理…' : '使用 OpenCV 生成修复副本' }}
           </button>
           <p>结果使用无损 PNG、移除 EXIF/ICC 元数据，并验证蒙版外像素没有变化。</p>

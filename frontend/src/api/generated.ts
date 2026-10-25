@@ -175,6 +175,23 @@ export interface paths {
         readonly patch?: never;
         readonly trace?: never;
     };
+    readonly "/api/v1/image-masks/render-preview": {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly get?: never;
+        readonly put?: never;
+        /** Render Image Mask Preview */
+        readonly post: operations["render_image_mask_preview_api_v1_image_masks_render_preview_post"];
+        readonly delete?: never;
+        readonly options?: never;
+        readonly head?: never;
+        readonly patch?: never;
+        readonly trace?: never;
+    };
     readonly "/api/v1/image-plans/validate": {
         readonly parameters: {
             readonly query?: never;
@@ -1041,6 +1058,21 @@ export interface components {
             /** Y1 */
             readonly y1: number;
         };
+        /** RenderImageMaskPreviewRequest */
+        readonly RenderImageMaskPreviewRequest: {
+            /** Analysis Id */
+            readonly analysis_id: string;
+            /** Asset Id */
+            readonly asset_id: string;
+            /** Polygons */
+            readonly polygons?: readonly components["schemas"]["ImageMaskPolygon"][];
+            /** Protected Regions */
+            readonly protected_regions?: readonly components["schemas"]["ImageMaskRegion"][];
+            /** Radius */
+            readonly radius: number;
+            /** Regions */
+            readonly regions?: readonly components["schemas"]["ImageMaskRegion"][];
+        };
         /** RuntimeDiagnosticsResponse */
         readonly RuntimeDiagnosticsResponse: {
             readonly ocr: components["schemas"]["OcrRuntimeDiagnostic"];
@@ -1763,6 +1795,39 @@ export interface operations {
                 };
                 content: {
                     readonly "application/json": components["schemas"]["ImageMaskPreviewResponse"];
+                };
+            };
+            /** @description Validation Error */
+            readonly 422: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    readonly render_image_mask_preview_api_v1_image_masks_render_preview_post: {
+        readonly parameters: {
+            readonly query?: never;
+            readonly header?: never;
+            readonly path?: never;
+            readonly cookie?: never;
+        };
+        readonly requestBody: {
+            readonly content: {
+                readonly "application/json": components["schemas"]["RenderImageMaskPreviewRequest"];
+            };
+        };
+        readonly responses: {
+            /** @description Successful Response */
+            readonly 200: {
+                headers: {
+                    readonly [name: string]: unknown;
+                };
+                content: {
+                    readonly "image/png": unknown;
                 };
             };
             /** @description Validation Error */

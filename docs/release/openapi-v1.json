@@ -1814,6 +1814,55 @@
         "title": "RedactionRegionRequest",
         "type": "object"
       },
+      "RenderImageMaskPreviewRequest": {
+        "properties": {
+          "analysis_id": {
+            "title": "Analysis Id",
+            "type": "string"
+          },
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "polygons": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskPolygon"
+            },
+            "maxItems": 32,
+            "title": "Polygons",
+            "type": "array"
+          },
+          "protected_regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "maxItems": 100,
+            "title": "Protected Regions",
+            "type": "array"
+          },
+          "radius": {
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Radius",
+            "type": "integer"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/ImageMaskRegion"
+            },
+            "maxItems": 100,
+            "title": "Regions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "asset_id",
+          "analysis_id",
+          "radius"
+        ],
+        "title": "RenderImageMaskPreviewRequest",
+        "type": "object"
+      },
       "RuntimeDiagnosticsResponse": {
         "properties": {
           "ocr": {
@@ -3415,6 +3464,40 @@
           }
         },
         "summary": "Preview Image Masks"
+      }
+    },
+    "/api/v1/image-masks/render-preview": {
+      "post": {
+        "operationId": "render_image_mask_preview_api_v1_image_masks_render_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenderImageMaskPreviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {}
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Render Image Mask Preview"
       }
     },
     "/api/v1/image-plans/validate": {

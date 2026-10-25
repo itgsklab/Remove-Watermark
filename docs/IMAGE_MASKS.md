@@ -42,6 +42,13 @@ The same preview measures the pixels around each mask and returns an explainable
 
 The preview also evaluates selection risk derived from the mobile benchmark. A combined mask covering at least 10% of the image requires acknowledgement. For every region, the service compares mean luminance inside the selection with a nearby context ring; a normalized difference below 4% is treated as a low-contrast selection that may contain a translucent watermark and also requires acknowledgement. This is a conservative heuristic rather than an opacity detector. The Vue workspace displays the measured difference, reason and large-selection state before plan creation.
 
+After validation, `POST /api/v1/image-masks/render-preview` can render a temporary PNG with the
+same normalized source, exact mask rasterizer and Telea implementation used by processing. The Vue
+workspace compares radius 1, the current radius and radius 7 (deduplicated), and selecting a card
+updates the plan radius. Preview bytes use `no-store`, are exposed only through browser object URLs
+and are revoked when the draft changes or the workspace closes; they are not added to the asset or
+artifact stores.
+
 ## OpenCV baseline
 
 `POST /api/v1/image-plans/validate` persists a static-image plan using OpenCV's Telea algorithm and a radius from 1 to 10 pixels. The task runs in the same isolated worker system as document jobs and always writes a new PNG artifact. The source file is never overwritten.

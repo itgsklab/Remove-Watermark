@@ -244,6 +244,57 @@ def test_image_mask_preview_rasterizes_polygon_and_rejects_invalid_geometry(
     assert invalid.json()["error"]["code"] == "INVALID_MASK"
 
 
+def test_image_mask_render_preview_compares_radii_without_changing_outside_mask(
+    client: TestClient,
+) -> None:
+    source_bytes = make_watermarked_png()
+    uploaded = client.post(
+        "/api/v1/assets", files={"file": ("preview.png", source_bytes)}
+    ).json()
+    analysis = client.post(
+        "/api/v1/analyses",
+        json={"asset_id": uploaded["id"], "preset": "image"},
+    ).json()
+    payload = {
+        "asset_id": uploaded["id"],
+        "analysis_id": analysis["id"],
+        "regions": [
+            {
+                "x0": 25,
+                "y0": 20,
+                "x1": 55,
+                "y1": 35,
+                "transform_id": analysis["image_metadata"]["transform_id"],
+            }
+        ],
+    }
+
+    small = client.post(
+        "/api/v1/image-masks/render-preview", json={**payload, "radius": 1}
+    )
+    large = client.post(
+        "/api/v1/image-masks/render-preview", json={**payload, "radius": 7}
+    )
+
+    assert small.status_code == large.status_code == 200
+    assert small.headers["content-type"] == "image/png"
+    assert small.headers["cache-control"] == "no-store"
+    assert small.headers["x-content-type-options"] == "nosniff"
+    source = np.asarray(Image.open(BytesIO(source_bytes)).convert("RGB"))
+    small_pixels = np.asarray(Image.open(BytesIO(small.content)).convert("RGB"))
+    large_pixels = np.asarray(Image.open(BytesIO(large.content)).convert("RGB"))
+    mask = np.zeros(source.shape[:2], dtype=bool)
+    mask[20:35, 25:55] = True
+    assert np.array_equal(small_pixels[~mask], source[~mask])
+    assert np.array_equal(large_pixels[~mask], source[~mask])
+    assert np.any(small_pixels[mask] != large_pixels[mask])
+
+    invalid = client.post(
+        "/api/v1/image-masks/render-preview", json={**payload, "radius": 0}
+    )
+    assert invalid.status_code == 422
+
+
 def test_image_analysis_rejects_corrupt_payload(client: TestClient) -> None:
     uploaded = client.post(
         "/api/v1/assets",
@@ -289,6 +340,18 @@ def test_animated_image_is_inspected_but_mask_requires_review(client: TestClient
     ).json()
     assert preview["requires_acknowledgement"] is True
     assert any("逐帧蒙版" in warning for warning in preview["warnings"])
+
+    rendered = client.post(
+        "/api/v1/image-masks/render-preview",
+        json={
+            "asset_id": uploaded["id"],
+            "analysis_id": analysis["id"],
+            "regions": preview["regions"],
+            "radius": 3,
+        },
+    )
+    assert rendered.status_code == 409
+    assert rendered.json()["error"]["code"] == "IMAGE_MASK_NOT_AVAILABLE"
 
 
 def test_image_inspector_enforces_pixel_limits(tmp_path) -> None:

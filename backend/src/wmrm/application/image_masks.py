@@ -1,10 +1,13 @@
 import json
 import math
 from dataclasses import asdict
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from sqlalchemy.orm import Session
 
 from wmrm.adapters.images.complexity import ImageComplexityInspector
+from wmrm.adapters.images.inpaint import inpaint_image
 from wmrm.adapters.images.masks import rasterize_image_mask
 from wmrm.adapters.images.selection_risk import (
     LARGE_SELECTION_THRESHOLD,
@@ -19,6 +22,7 @@ from wmrm.api.schemas import (
     ImageRegionSelectionRisk,
     ImageSelectionRiskResponse,
     PreviewImageMasksRequest,
+    RenderImageMaskPreviewRequest,
 )
 from wmrm.application.assets import AssetError, AssetService
 from wmrm.persistence.database import AnalysisRecord
@@ -162,6 +166,27 @@ class ImageMaskService:
             requires_acknowledgement=requires_acknowledgement,
             warnings=warnings,
         )
+
+    def render_preview(self, session: Session, request: RenderImageMaskPreviewRequest) -> bytes:
+        validation = self.preview(session, request)
+        if not validation.executable:
+            raise AssetError(
+                "IMAGE_MASK_NOT_AVAILABLE",
+                "当前图片不能生成修复效果预览。",
+                409,
+            )
+        asset = self.assets.get(session, request.asset_id)
+        with TemporaryDirectory(prefix="wmrm-image-preview-") as directory:
+            output_path = Path(directory) / "preview.png"
+            inpaint_image(
+                self.assets.path_for(asset),
+                output_path,
+                request.regions,
+                request.radius,
+                protected_regions=request.protected_regions,
+                polygons=request.polygons,
+            )
+            return output_path.read_bytes()
 
 
 def _polygon_area(points) -> float:
