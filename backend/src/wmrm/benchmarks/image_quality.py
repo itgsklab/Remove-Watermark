@@ -34,6 +34,8 @@ def generate_cases(seed: int = 20260928) -> list[BenchmarkCase]:
         ("stripes", "周期条纹", _stripes()),
         ("structure", "跨蒙版结构线", _structure()),
         ("texture", "固定随机纹理", _texture(rng)),
+        ("portrait", "人物面部轮廓", _portrait()),
+        ("typography", "文字与基线", _typography()),
     ]
     return [_make_case(case_id, label, clean) for case_id, label, clean in clean_images]
 
@@ -163,6 +165,31 @@ def _texture(rng: np.random.Generator) -> np.ndarray:
     smooth = cv2.GaussianBlur(noise, (0, 0), 2.2)
     detail = cv2.addWeighted(noise, 0.35, smooth, 0.65, 0)
     return detail.astype(np.uint8)
+
+
+def _portrait() -> np.ndarray:
+    """Generate a synthetic portrait-like scene without using a real person's data."""
+    image = Image.new("RGB", (WIDTH, HEIGHT), (105, 139, 154))
+    draw = ImageDraw.Draw(image)
+    draw.ellipse((70, 10, 186, 150), fill=(62, 45, 42))
+    draw.ellipse((82, 20, 174, 148), fill=(207, 155, 120))
+    draw.polygon(((82, 58), (92, 20), (132, 8), (176, 44), (164, 31), (150, 46)), fill=(62, 45, 42))
+    draw.ellipse((102, 62, 116, 72), fill=(46, 40, 42))
+    draw.ellipse((142, 62, 156, 72), fill=(46, 40, 42))
+    draw.line((128, 70, 123, 96, 135, 96), fill=(139, 83, 70), width=3)
+    draw.arc((105, 82, 153, 124), 25, 155, fill=(126, 49, 53), width=4)
+    return np.asarray(image, dtype=np.uint8)
+
+
+def _typography() -> np.ndarray:
+    image = Image.new("RGB", (WIDTH, HEIGHT), (242, 239, 228))
+    draw = ImageDraw.Draw(image)
+    draw.text((16, 25), "REMOVE WATERMARK", fill=(31, 55, 48), stroke_width=1)
+    draw.text((28, 66), "KEEP TEXT SHARP", fill=(137, 54, 42), stroke_width=1)
+    draw.text((18, 108), "STRUCTURED CONTENT", fill=(43, 59, 91), stroke_width=1)
+    draw.line((14, 49, 240, 49), fill=(31, 55, 48), width=2)
+    draw.line((14, 92, 240, 92), fill=(137, 54, 42), width=2)
+    return np.asarray(image, dtype=np.uint8)
 
 
 def calculate_metrics(

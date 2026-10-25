@@ -119,6 +119,32 @@ const complexityLabels = {
   review: '建议复核',
   high: '高风险',
 } as const
+const imageRepairGuidance = computed(() => {
+  const preview = imageMaskPreview.value
+  if (!preview) return null
+  if (preview.complexity.level === 'high') {
+    return {
+      level: 'high',
+      title: '建议先重新调整选区',
+      summary: '当前背景包含难以连续重建的结构。缩小蒙版，避免覆盖人物五官、文字笔画或贯穿边缘，再重新验证。',
+      actions: ['把一个大选区拆成多个紧贴水印的小选区', '使用保护区排除正文、五官和连续轮廓', '调整后比较多个修复半径并放大检查边界'],
+    }
+  }
+  if (preview.complexity.level === 'review' || preview.selection_risk.level === 'review') {
+    return {
+      level: 'review',
+      title: '建议比较预览后再处理',
+      summary: '当前选区存在纹理、低对比度或面积风险。先比较修复半径，并重点检查边缘与主体细节。',
+      actions: ['优先从半径 1–3 开始比较', '确认蒙版没有覆盖需要保留的内容'],
+    }
+  }
+  return {
+    level: 'low',
+    title: '适合进行轻量修复预览',
+    summary: '周围背景较平滑；仍建议先查看临时预览，再生成最终副本。',
+    actions: [],
+  }
+})
 let imagePreviewRequestId = 0
 
 onMounted(async () => {
@@ -900,6 +926,19 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
           </article>
           <p class="complexity-note">分数用于修复前风险提示，不代表最终画质评分；高风险区域需要确认后才能处理。</p>
         </section>
+        <aside
+          v-if="imageRepairGuidance"
+          class="repair-guidance"
+          :class="`guidance-${imageRepairGuidance.level}`"
+          aria-live="polite"
+        >
+          <p class="eyebrow">下一步建议</p>
+          <h3>{{ imageRepairGuidance.title }}</h3>
+          <p>{{ imageRepairGuidance.summary }}</p>
+          <ul v-if="imageRepairGuidance.actions.length">
+            <li v-for="action in imageRepairGuidance.actions" :key="action">{{ action }}</li>
+          </ul>
+        </aside>
         <p v-for="warning in imageMaskPreview.warnings" :key="warning" class="warning">{{ warning }}</p>
         <div v-if="imageMaskPreview.executable" class="image-process-options">
           <label for="image-radius">

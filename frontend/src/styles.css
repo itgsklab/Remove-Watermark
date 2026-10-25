@@ -192,6 +192,13 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .complexity-region dd { margin: 3px 0 0; font-size: .9rem; font-weight: 700; }
 .complexity-region p, .complexity-note { margin: 6px 0 0; color: #536057; font-size: .82rem; line-height: 1.5; }
 .complexity-note { padding-top: 10px; border-top: 1px solid rgba(83, 96, 87, .18); }
+.repair-guidance { margin-top: 16px; padding: 16px 18px; border: 1px solid #b9cfc3; border-left-width: 5px; border-radius: 12px; background: #f6f9f5; }
+.repair-guidance h3 { margin: 4px 0 7px; font-size: 1rem; }
+.repair-guidance p { margin: 5px 0; color: #536057; line-height: 1.55; }
+.repair-guidance ul { margin: 10px 0 0; padding-left: 20px; color: #536057; }
+.repair-guidance li + li { margin-top: 5px; }
+.repair-guidance.guidance-review { border-color: #dfbd7f; background: #fff9ed; }
+.repair-guidance.guidance-high { border-color: #cf7468; background: #fff3f1; }
 .image-process-options { display: flex; align-items: end; gap: 16px; margin-top: 18px; }
 .image-process-options label { display: grid; gap: 6px; color: #536057; font-size: .82rem; }
 .image-process-options input { width: 90px; padding: 9px 10px; border: 1px solid #c8d0c8; border-radius: 9px; background: white; color: inherit; }

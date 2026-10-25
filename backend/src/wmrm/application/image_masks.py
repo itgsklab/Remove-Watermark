@@ -150,7 +150,10 @@ class ImageMaskService:
         if complexity_level == "review":
             warnings.append("检测到一定背景纹理；处理完成后请放大检查蒙版边界。")
         elif complexity_level == "high":
-            warnings.append("检测到周期纹理、密集细节或贯穿结构线，OpenCV 修复可能产生明显伪影。")
+            warnings.append(
+                "检测到周期纹理、密集细节或贯穿结构线，OpenCV 修复可能产生明显伪影；"
+                "建议重新调整选区，缩小蒙版并用保护区避开人物五官、文字和连续边缘。"
+            )
         return ImageMaskPreviewResponse(
             asset_id=asset.id,
             analysis_id=analysis.id,
