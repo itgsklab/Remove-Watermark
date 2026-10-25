@@ -2244,6 +2244,138 @@
         "title": "TaskReportError",
         "type": "object"
       },
+      "TaskReportImageMaskSummary": {
+        "properties": {
+          "coverage_ratio": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Coverage Ratio",
+            "type": "number"
+          },
+          "effective_masked_pixels": {
+            "minimum": 0.0,
+            "title": "Effective Masked Pixels",
+            "type": "integer"
+          },
+          "image_pixels": {
+            "exclusiveMinimum": 0.0,
+            "title": "Image Pixels",
+            "type": "integer"
+          },
+          "polygon_count": {
+            "minimum": 0.0,
+            "title": "Polygon Count",
+            "type": "integer"
+          },
+          "protected_region_count": {
+            "minimum": 0.0,
+            "title": "Protected Region Count",
+            "type": "integer"
+          },
+          "rectangle_count": {
+            "minimum": 0.0,
+            "title": "Rectangle Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rectangle_count",
+          "polygon_count",
+          "protected_region_count",
+          "effective_masked_pixels",
+          "image_pixels",
+          "coverage_ratio"
+        ],
+        "title": "TaskReportImageMaskSummary",
+        "type": "object"
+      },
+      "TaskReportImageMetadataRemoval": {
+        "properties": {
+          "output_exif_present": {
+            "title": "Output Exif Present",
+            "type": "boolean"
+          },
+          "output_icc_profile_present": {
+            "title": "Output Icc Profile Present",
+            "type": "boolean"
+          },
+          "policy": {
+            "const": "fresh_png_without_metadata",
+            "title": "Policy",
+            "type": "string"
+          },
+          "source_exif_present": {
+            "title": "Source Exif Present",
+            "type": "boolean"
+          },
+          "source_icc_profile_present": {
+            "title": "Source Icc Profile Present",
+            "type": "boolean"
+          },
+          "verified_clean": {
+            "title": "Verified Clean",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "policy",
+          "source_exif_present",
+          "source_icc_profile_present",
+          "output_exif_present",
+          "output_icc_profile_present",
+          "verified_clean"
+        ],
+        "title": "TaskReportImageMetadataRemoval",
+        "type": "object"
+      },
+      "TaskReportImagePixelValidation": {
+        "properties": {
+          "changed_pixels": {
+            "minimum": 0.0,
+            "title": "Changed Pixels",
+            "type": "integer"
+          },
+          "dimensions_match": {
+            "title": "Dimensions Match",
+            "type": "boolean"
+          },
+          "height": {
+            "exclusiveMinimum": 0.0,
+            "title": "Height",
+            "type": "integer"
+          },
+          "output_format": {
+            "const": "PNG",
+            "title": "Output Format",
+            "type": "string"
+          },
+          "outside_mask_changed_pixels": {
+            "minimum": 0.0,
+            "title": "Outside Mask Changed Pixels",
+            "type": "integer"
+          },
+          "outside_mask_unchanged": {
+            "title": "Outside Mask Unchanged",
+            "type": "boolean"
+          },
+          "width": {
+            "exclusiveMinimum": 0.0,
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "output_format",
+          "width",
+          "height",
+          "changed_pixels",
+          "outside_mask_changed_pixels",
+          "dimensions_match",
+          "outside_mask_unchanged"
+        ],
+        "title": "TaskReportImagePixelValidation",
+        "type": "object"
+      },
       "TaskReportInput": {
         "properties": {
           "asset_id": {
@@ -2355,6 +2487,47 @@
               }
             ],
             "title": "Dpi"
+          },
+          "engine": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Engine"
+          },
+          "image_mask": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskReportImageMaskSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "image_metadata_removal": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskReportImageMetadataRemoval"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "image_pixel_validation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskReportImagePixelValidation"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "kind": {
             "title": "Kind",

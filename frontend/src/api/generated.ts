@@ -1190,6 +1190,59 @@ export interface components {
             /** Code */
             readonly code: string;
         };
+        /** TaskReportImageMaskSummary */
+        readonly TaskReportImageMaskSummary: {
+            /** Coverage Ratio */
+            readonly coverage_ratio: number;
+            /** Effective Masked Pixels */
+            readonly effective_masked_pixels: number;
+            /** Image Pixels */
+            readonly image_pixels: number;
+            /** Polygon Count */
+            readonly polygon_count: number;
+            /** Protected Region Count */
+            readonly protected_region_count: number;
+            /** Rectangle Count */
+            readonly rectangle_count: number;
+        };
+        /** TaskReportImageMetadataRemoval */
+        readonly TaskReportImageMetadataRemoval: {
+            /** Output Exif Present */
+            readonly output_exif_present: boolean;
+            /** Output Icc Profile Present */
+            readonly output_icc_profile_present: boolean;
+            /**
+             * Policy
+             * @constant
+             */
+            readonly policy: "fresh_png_without_metadata";
+            /** Source Exif Present */
+            readonly source_exif_present: boolean;
+            /** Source Icc Profile Present */
+            readonly source_icc_profile_present: boolean;
+            /** Verified Clean */
+            readonly verified_clean: boolean;
+        };
+        /** TaskReportImagePixelValidation */
+        readonly TaskReportImagePixelValidation: {
+            /** Changed Pixels */
+            readonly changed_pixels: number;
+            /** Dimensions Match */
+            readonly dimensions_match: boolean;
+            /** Height */
+            readonly height: number;
+            /**
+             * Output Format
+             * @constant
+             */
+            readonly output_format: "PNG";
+            /** Outside Mask Changed Pixels */
+            readonly outside_mask_changed_pixels: number;
+            /** Outside Mask Unchanged */
+            readonly outside_mask_unchanged: boolean;
+            /** Width */
+            readonly width: number;
+        };
         /** TaskReportInput */
         readonly TaskReportInput: {
             /** Asset Id */
@@ -1228,6 +1281,11 @@ export interface components {
         readonly TaskReportProcessing: {
             /** Dpi */
             readonly dpi?: number | null;
+            /** Engine */
+            readonly engine?: string | null;
+            readonly image_mask?: components["schemas"]["TaskReportImageMaskSummary"] | null;
+            readonly image_metadata_removal?: components["schemas"]["TaskReportImageMetadataRemoval"] | null;
+            readonly image_pixel_validation?: components["schemas"]["TaskReportImagePixelValidation"] | null;
             /** Kind */
             readonly kind: string;
             /** Ocr Languages */

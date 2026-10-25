@@ -506,16 +506,48 @@ class TaskReportPdfPage(BaseModel):
     ] | None = None
 
 
+class TaskReportImageMaskSummary(BaseModel):
+    rectangle_count: int = Field(ge=0)
+    polygon_count: int = Field(ge=0)
+    protected_region_count: int = Field(ge=0)
+    effective_masked_pixels: int = Field(ge=0)
+    image_pixels: int = Field(gt=0)
+    coverage_ratio: float = Field(ge=0, le=1)
+
+
+class TaskReportImagePixelValidation(BaseModel):
+    output_format: Literal["PNG"]
+    width: int = Field(gt=0)
+    height: int = Field(gt=0)
+    changed_pixels: int = Field(ge=0)
+    outside_mask_changed_pixels: int = Field(ge=0)
+    dimensions_match: bool
+    outside_mask_unchanged: bool
+
+
+class TaskReportImageMetadataRemoval(BaseModel):
+    policy: Literal["fresh_png_without_metadata"]
+    source_exif_present: bool
+    source_icc_profile_present: bool
+    output_exif_present: bool
+    output_icc_profile_present: bool
+    verified_clean: bool
+
+
 class TaskReportProcessing(BaseModel):
     kind: str
     output_kind: str
     selected_target_count: int = Field(ge=0)
     protected_target_count: int = Field(default=0, ge=0)
     warning_codes: list[str] = Field(default_factory=list)
+    engine: str | None = None
     radius: int | None = None
     dpi: int | None = None
     ocr_languages: str | None = None
     pdf_pages: list[TaskReportPdfPage] = Field(default_factory=list)
+    image_mask: TaskReportImageMaskSummary | None = None
+    image_pixel_validation: TaskReportImagePixelValidation | None = None
+    image_metadata_removal: TaskReportImageMetadataRemoval | None = None
 
 
 class TaskReportArtifact(BaseModel):

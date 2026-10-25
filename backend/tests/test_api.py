@@ -318,14 +318,18 @@ def test_validates_plan_and_generates_clean_docx_copy(client: TestClient) -> Non
     assert report["processing"] == {
         "kind": "object_removal",
         "output_kind": "docx",
-            "selected_target_count": 1,
-            "protected_target_count": 0,
+        "selected_target_count": 1,
+        "protected_target_count": 0,
         "warning_codes": [],
+        "engine": None,
         "radius": None,
-            "dpi": None,
-            "ocr_languages": None,
-            "pdf_pages": [],
-        }
+        "dpi": None,
+        "ocr_languages": None,
+        "pdf_pages": [],
+        "image_mask": None,
+        "image_pixel_validation": None,
+        "image_metadata_removal": None,
+    }
     assert len(report["artifacts"]) == 1
     assert report["artifacts"][0]["role"] == "output"
     assert report["comparison"] == {

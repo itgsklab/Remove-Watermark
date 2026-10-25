@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import pytest
 from fastapi.testclient import TestClient
-from PIL import Image, ImageDraw
+from PIL import Image, ImageCms, ImageDraw
 
 from wmrm.adapters.images.metadata import ImageInspector
 from wmrm.application.assets import AssetError
@@ -45,11 +45,19 @@ def make_animated_webp() -> bytes:
     return output.getvalue()
 
 
-def make_watermarked_png() -> bytes:
+def make_watermarked_png(*, with_metadata: bool = False) -> bytes:
     output = BytesIO()
     image = Image.new("RGB", (80, 60), "#d2b48c")
     ImageDraw.Draw(image).rectangle((25, 20, 54, 34), fill="#332211")
-    image.save(output, format="PNG")
+    arguments = {}
+    if with_metadata:
+        exif = Image.Exif()
+        exif[315] = "wmrm-test"
+        arguments["exif"] = exif
+        arguments["icc_profile"] = ImageCms.ImageCmsProfile(
+            ImageCms.createProfile("sRGB")
+        ).tobytes()
+    image.save(output, format="PNG", **arguments)
     return output.getvalue()
 
 
@@ -368,7 +376,7 @@ def test_image_inspector_enforces_pixel_limits(tmp_path) -> None:
 def test_image_plan_runs_opencv_and_preserves_pixels_outside_mask(
     client: TestClient,
 ) -> None:
-    source_bytes = make_watermarked_png()
+    source_bytes = make_watermarked_png(with_metadata=True)
     uploaded = client.post("/api/v1/assets", files={"file": ("watermark.png", source_bytes)}).json()
     analysis = client.post(
         "/api/v1/analyses",
@@ -424,7 +432,35 @@ def test_image_plan_runs_opencv_and_preserves_pixels_outside_mask(
     assert report["processing"]["output_kind"] == "png"
     assert report["processing"]["selected_target_count"] == 1
     assert report["processing"]["protected_target_count"] == 1
+    assert report["processing"]["engine"] == "opencv_telea"
     assert report["processing"]["radius"] == 3
+    assert report["processing"]["image_mask"] == {
+        "rectangle_count": 1,
+        "polygon_count": 0,
+        "protected_region_count": 1,
+        "effective_masked_pixels": 380,
+        "image_pixels": 4800,
+        "coverage_ratio": pytest.approx(380 / 4800),
+    }
+    pixel_validation = report["processing"]["image_pixel_validation"]
+    assert pixel_validation == {
+        "output_format": "PNG",
+        "width": 80,
+        "height": 60,
+        "changed_pixels": pixel_validation["changed_pixels"],
+        "outside_mask_changed_pixels": 0,
+        "dimensions_match": True,
+        "outside_mask_unchanged": True,
+    }
+    assert pixel_validation["changed_pixels"] > 0
+    assert report["processing"]["image_metadata_removal"] == {
+        "policy": "fresh_png_without_metadata",
+        "source_exif_present": True,
+        "source_icc_profile_present": True,
+        "output_exif_present": False,
+        "output_icc_profile_present": False,
+        "verified_clean": True,
+    }
     assert report["comparison"] is None
     downloaded = client.get(artifact["download_url"])
     assert downloaded.status_code == 200
