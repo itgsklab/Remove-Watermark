@@ -10,7 +10,6 @@ from wmrm.adapters.pdf.pymupdf_redaction import (
     redact_pdf_regions,
 )
 from wmrm.adapters.pdf.raster_inpaint import (
-    PdfRasterInpaintError,
     _parse_tesseract_tsv,
     probe_tesseract,
     raster_inpaint_pdf_regions,
@@ -151,24 +150,39 @@ def test_raster_inpaint_preserves_rotated_page_geometry(tmp_path: Path) -> None:
     assert "KEEP-ME" in text
 
 
-def test_raster_inpaint_rejects_offset_cropbox(tmp_path: Path) -> None:
+def test_raster_inpaint_preserves_offset_cropbox_on_rotated_page(tmp_path: Path) -> None:
     if not probe_pymupdf().available:
         pytest.skip("PyMuPDF runtime dependency is not installed")
     source = tmp_path / "source.pdf"
     source.write_bytes(_fixture_pdf())
     cropped = tmp_path / "cropped.pdf"
     writer = PdfWriter(clone_from=PdfReader(str(source)))
-    writer.pages[0].cropbox.lower_left = (10, 20)
+    page = writer.pages[0]
+    page.cropbox.lower_left = (10, 30)
+    page.cropbox.upper_right = (602, 760)
+    page.rotate(90)
     with cropped.open("wb") as output:
         writer.write(output)
 
-    with pytest.raises(PdfRasterInpaintError, match="crop box"):
-        raster_inpaint_pdf_regions(
-            cropped,
-            tmp_path / "result.pdf",
-            [{"page_number": 1, "x0": 1, "y0": 1, "x1": 10, "y1": 10}],
-            license_mode="agpl",
-        )
+    result = tmp_path / "result.pdf"
+    report = raster_inpaint_pdf_regions(
+        cropped,
+        result,
+        [{"page_number": 1, "x0": 80, "y0": 650, "x1": 235, "y1": 705}],
+        license_mode="agpl",
+        dpi=96,
+    )
+
+    output = PdfReader(str(result), strict=True)
+    page = output.pages[0]
+    text = page.extract_text() or ""
+    assert tuple(float(value) for value in page.mediabox) == (0.0, 0.0, 612.0, 792.0)
+    assert tuple(float(value) for value in page.cropbox) == (10.0, 30.0, 602.0, 760.0)
+    assert int(page.get("/Rotate", 0)) == 90
+    assert "REMOVE-ME" not in text
+    assert "KEEP-ME" in text
+    assert report["rasterized_pages"] == [1]
+    assert report["source_text_pages"] == [1]
 
 
 def test_tesseract_tsv_coordinates_are_mapped_to_pdf_points() -> None:

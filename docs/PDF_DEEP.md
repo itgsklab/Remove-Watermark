@@ -17,7 +17,8 @@ separate PDF object. The workflow remains local and always writes a new PDF.
 7. If a selected page has no source words and Tesseract is available, OCR TSV word boxes are mapped
    back into PDF points and inserted as the hidden searchable layer.
 8. The result is reopened strictly and checked for encryption, page count, crop-box size and page
-   rotation before it becomes downloadable.
+   rotation before it becomes downloadable. Selected pages retain their original MediaBox, CropBox
+   origin and rotation, including offset crop boxes.
 
 The downloadable task report records every selected page separately. Each entry states whether the
 searchable words came from the source text layer or OCR, whether OCR was skipped, succeeded, disabled,
@@ -44,8 +45,6 @@ latest local evidence is stored in `docs/benchmarks/pdf-ocr-probe.{json,md}`.
 
 ## Current limits
 
-- Deep repair supports crop boxes whose lower-left origin is `(0, 0)`. Offset crop boxes are rejected
-  before editing and should use object-level redaction.
 - Selected pages become lossless PNG backgrounds. Their links, annotations, forms, optional-content
   groups and editable vector objects are not retained.
 - OpenCV Telea is intended for relatively small masks. Structured or large backgrounds still require
