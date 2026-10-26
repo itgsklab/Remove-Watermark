@@ -63,8 +63,9 @@ All notable changes to this project are documented in this file. The format foll
   network feature gates and local VLM readiness, backed by a read-only diagnostics endpoint.
 - Undoable image-mask editing for manual rectangles, removals, clearing and local-model suggestions,
   with redo support, a 50-step history and an explicit 100-region draft limit.
-- Read-only DOCX DrawingML image candidate detection with relationship evidence, browser-safe
-  embedded previews, explicit unsupported-format warnings and no automatic deletion path.
+- DOCX DrawingML image candidate detection with relationship evidence, browser-safe embedded
+  previews and explicitly confirmed selective removal that preserves shared media and relationships;
+  unsupported formats and external relationships remain read-only or rejected.
 - Multi-page, multi-region PDF plan drafts with per-page overlays, removable regions, aggregate
   overlap review and one-task execution for up to 100 rectangles.
 - Playwright Chromium end-to-end coverage for the complete DOCX, general-PDF and image Web

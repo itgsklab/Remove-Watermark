@@ -696,7 +696,7 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
           maxlength="200"
           placeholder="例如 DRAFT、草稿"
         />
-        <p class="hint">同时扫描 DrawingML 嵌入图片；图片候选只供预览和复核，当前不会删除。</p>
+        <p class="hint">同时扫描 DrawingML 嵌入图片；可安全预览的内部图片经人工确认后可从输出副本删除。</p>
         <button :disabled="busy" @click="inspect">{{ busy ? '正在扫描…' : '开始扫描' }}</button>
       </template>
       <template v-else-if="isCodeCvPdf">
@@ -750,7 +750,7 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
       <div>
         <figure v-if="candidate.preview_url" class="candidate-image-preview">
           <img :src="candidate.preview_url" :alt="`${candidate.content || 'DrawingML 图片'}候选预览`" />
-          <figcaption>DOCX 内嵌图片只读预览</figcaption>
+          <figcaption>DOCX 内嵌图片处理前预览</figcaption>
         </figure>
         <label v-if="canProcess && candidate.allowed_strategies.includes('object')" class="candidate-select">
           <input

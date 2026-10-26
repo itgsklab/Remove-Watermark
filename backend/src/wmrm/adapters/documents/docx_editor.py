@@ -12,7 +12,15 @@ from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile
 from defusedxml.common import DefusedXmlException
 from defusedxml.ElementTree import fromstring
 
-from wmrm.adapters.documents.docx import VML
+from wmrm.adapters.documents.docx import (
+    VML,
+    _attribute_by_local_name,
+    _drawing_metadata,
+    _drawing_style,
+    _image_relationships,
+    _local_name,
+    _relationship_part_name,
+)
 
 
 class DocxEditError(Exception):
@@ -59,12 +67,32 @@ def remove_docx_candidates(
                 if part_candidates:
                     root = _parse_xml(data)
                     shapes = list(root.iter(f"{{{VML}}}shape"))
-                    selected_shapes: list[Element] = []
+                    drawings = [
+                        element
+                        for element in root.iter()
+                        if _local_name(element.tag) in {"anchor", "inline"}
+                    ]
+                    selected_elements: list[Element] = []
                     parents = {child: parent for parent in root.iter() for child in parent}
                     for candidate in part_candidates:
                         locator = candidate["source_locator"]
-                        index = locator["shape_index"]
-                        if index >= len(shapes):
+                        if locator.get("drawing_index") is not None:
+                            drawing = _validated_drawing(
+                                source,
+                                names,
+                                info.filename,
+                                drawings,
+                                candidate,
+                            )
+                            container = parents.get(drawing)
+                            if container is None or _local_name(container.tag) != "drawing":
+                                raise DocxEditError(
+                                    "DrawingML 图片没有可删除的绘图容器。"
+                                )
+                            selected_elements.append(container)
+                            continue
+                        index = locator.get("shape_index")
+                        if index is None or index >= len(shapes):
                             raise DocxEditError("水印形状位置已经变化，请重新扫描。")
                         shape = shapes[index]
                         if (
@@ -73,12 +101,14 @@ def remove_docx_candidates(
                             or _shape_text(shape) != candidate.get("content")
                         ):
                             raise DocxEditError("水印形状内容已经变化，请重新扫描。")
-                        selected_shapes.append(shape)
-                    for shape in selected_shapes:
-                        parent = parents.get(shape)
+                        selected_elements.append(shape)
+                    if len(set(selected_elements)) != len(selected_elements):
+                        raise DocxEditError("处理计划重复引用了同一个 DOCX 对象。")
+                    for element in selected_elements:
+                        parent = parents.get(element)
                         if parent is None:
-                            raise DocxEditError("水印形状没有可删除的父节点。")
-                        parent.remove(shape)
+                            raise DocxEditError("水印对象没有可删除的父节点。")
+                        parent.remove(element)
                     data = tostring(
                         root,
                         encoding="UTF-8",
@@ -110,6 +140,46 @@ def remove_docx_candidates(
         "size_bytes": output_path.stat().st_size,
         "removed_count": len(candidates),
     }
+
+
+def _validated_drawing(
+    package: ZipFile,
+    names: set[str],
+    part_name: str,
+    drawings: list[Element],
+    candidate: dict,
+) -> Element:
+    locator = candidate["source_locator"]
+    index = locator["drawing_index"]
+    if index >= len(drawings):
+        raise DocxEditError("DrawingML 图片位置已经变化，请重新扫描。")
+    drawing = drawings[index]
+    blip = next(
+        (element for element in drawing.iter() if _local_name(element.tag) == "blip"),
+        None,
+    )
+    relationship_id = _attribute_by_local_name(blip, "embed")
+    expected_relationship_id = locator.get("relationship_id")
+    if not relationship_id or relationship_id != expected_relationship_id:
+        raise DocxEditError("DrawingML 图片关系已经变化，请重新扫描。")
+    relationships, _ = _image_relationships(
+        package,
+        names,
+        part_name,
+        _relationship_part_name(part_name),
+    )
+    media_part_name = relationships.get(relationship_id)
+    if not media_part_name or media_part_name != locator.get("media_part_name"):
+        raise DocxEditError("DrawingML 图片资源已经变化，请重新扫描。")
+    media_sha256 = hashlib.sha256(package.read(media_part_name)).hexdigest()
+    if media_sha256 != locator.get("media_sha256"):
+        raise DocxEditError("DrawingML 图片内容已经变化，请重新扫描。")
+    if (
+        (_drawing_metadata(drawing) or "嵌入图片") != candidate.get("content")
+        or _drawing_style(drawing) != candidate.get("style")
+    ):
+        raise DocxEditError("DrawingML 图片属性已经变化，请重新扫描。")
+    return drawing
 
 
 def _raise_if_cancelled(should_cancel: Callable[[], bool] | None) -> None:
