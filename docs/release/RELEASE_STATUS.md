@@ -29,6 +29,7 @@ are not release assets.
 | Workflow | Stable v0.1.0 | Current main | Scope | Detailed boundary |
 | --- | --- | --- | --- | --- |
 | Word DOCX VML 文字水印 | 支持 | 支持 | 检查并选择性删除页眉、页脚中的 VML textpath 文字形状。 | [Docx Compatibility](/docs/DOCX_COMPATIBILITY.md) |
+| Word DOCX DrawingML 图片水印 | 不可用 | 支持 | 安全预览内部嵌入图片，经明确确认后选择性删除页眉、页脚中的 DrawingML 对象。 | [Docx Compatibility](/docs/DOCX_COMPATIBILITY.md) |
 | CodeCV PDF 平铺水印 | 实验性 | 实验性 | 按完整内容流操作签名检查并删除用户确认的平铺图案序列。 | [Codecv Pdf](/docs/CODECV_PDF.md) |
 | 通用 PDF 区域删除 | 支持 | 支持 | 预览区域重叠风险后执行对象级物理 redaction。 | [General Pdf](/docs/GENERAL_PDF.md) |
 | PDF Deep 栅格修复 | 支持 | 支持 | 栅格化选中页面、修复蒙版区域并重建可选文字层。 | [Pdf Deep](/docs/PDF_DEEP.md) |
@@ -45,8 +46,8 @@ and evaluation-only capabilities must not be presented as general compatibility 
 ## Known limitations
 
 - **全部工作流：** 项目提供本机回环地址上的 Vue Web 页面和 Python 服务，不提供原生桌面 App、云服务或多用户部署。
-- **Word DOCX VML 文字水印：** 只删除页眉、页脚中的 VML textpath；DrawingML 图片只读，正文背景、正文形状、外部图片关系和旧版 .doc 不处理。
-- **Word DOCX VML 文字水印：** 自动化矩阵主要使用生成的 OOXML 结构；不能据此宣称兼容 Microsoft Word、WPS 或 LibreOffice 的全部版本和模板。
+- **Word DOCX VML 文字水印、Word DOCX DrawingML 图片水印：** 只处理页眉、页脚中的 VML textpath 和可安全预览的内部 DrawingML 图片；正文背景、正文形状、外部图片关系、不支持预览的图片格式和旧版 .doc 不处理。
+- **Word DOCX VML 文字水印、Word DOCX DrawingML 图片水印：** 自动化矩阵主要使用生成的 OOXML 结构；不能据此宣称兼容 Microsoft Word、WPS 或 LibreOffice 的全部版本和模板。
 - **CodeCV PDF 平铺水印：** 公开仓库没有来源许可完整的多版本 CodeCV 真实导出语料，因此此预设保持实验性；未匹配不表示文件中没有水印。
 - **通用 PDF 区域删除：** 对象级区域删除会永久移除相交文字、图片像素、矢量图和链接，复杂页面可能需要缩小选区后重新检查。
 - **PDF Deep 栅格修复：** Deep 模式会栅格化选中页面且不保留其链接、表单和矢量对象；缺少文字层且未启用可用 OCR 时，页面不会保持可搜索。

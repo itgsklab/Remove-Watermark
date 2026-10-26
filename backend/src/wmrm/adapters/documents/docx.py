@@ -250,7 +250,7 @@ class DocxInspector:
                     media_part_name=media_part_name,
                     media_sha256=media_sha256,
                     preview_media_type=preview_media_type,
-                    allowed_strategies=(),
+                    allowed_strategies=("object",) if preview_media_type else (),
                 )
             )
         return results, warnings

@@ -30,6 +30,14 @@
       "summary": "检查并选择性删除页眉、页脚中的 VML textpath 文字形状。"
     },
     {
+      "id": "docx-drawingml",
+      "name": "Word DOCX DrawingML 图片水印",
+      "stable": "unavailable",
+      "main": "supported",
+      "documentation": "docs/DOCX_COMPATIBILITY.md",
+      "summary": "安全预览内部嵌入图片，经明确确认后选择性删除页眉、页脚中的 DrawingML 对象。"
+    },
+    {
       "id": "codecv-pdf",
       "name": "CodeCV PDF 平铺水印",
       "stable": "experimental",
@@ -94,12 +102,12 @@
     },
     {
       "id": "docx-structure",
-      "applies_to": ["docx-vml"],
-      "statement": "只删除页眉、页脚中的 VML textpath；DrawingML 图片只读，正文背景、正文形状、外部图片关系和旧版 .doc 不处理。"
+      "applies_to": ["docx-vml", "docx-drawingml"],
+      "statement": "只处理页眉、页脚中的 VML textpath 和可安全预览的内部 DrawingML 图片；正文背景、正文形状、外部图片关系、不支持预览的图片格式和旧版 .doc 不处理。"
     },
     {
       "id": "docx-real-corpus",
-      "applies_to": ["docx-vml"],
+      "applies_to": ["docx-vml", "docx-drawingml"],
       "statement": "自动化矩阵主要使用生成的 OOXML 结构；不能据此宣称兼容 Microsoft Word、WPS 或 LibreOffice 的全部版本和模板。"
     },
     {
