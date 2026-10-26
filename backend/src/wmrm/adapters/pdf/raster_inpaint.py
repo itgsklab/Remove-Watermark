@@ -110,14 +110,8 @@ def raster_inpaint_pdf_regions(
         if before.is_encrypted:
             raise PdfRasterInpaintError("PDF 已加密，无法处理。")
         before_geometry = [_page_geometry(page) for page in before.pages]
+        before_boxes = [_page_boxes(page) for page in before.pages]
         grouped = _validate_and_group(regions, before_geometry)
-        for page_number in grouped:
-            cropbox = before.pages[page_number - 1].cropbox
-            if float(cropbox.left) != 0 or float(cropbox.bottom) != 0:
-                raise PdfRasterInpaintError(
-                    "PDF deep 暂不处理 crop box 原点偏移的页面，请改用对象级区域删除。"
-                )
-
         source = pymupdf.open(str(source_path))
         output = pymupdf.open()
         changed_pages: list[int] = []
@@ -196,7 +190,13 @@ def raster_inpaint_pdf_regions(
                     Image.fromarray(repaired, mode="RGB").save(
                         image_stream, format="PNG", compress_level=6
                     )
-                    rebuilt = output.new_page(width=width, height=height)
+                    media_box = page.mediabox
+                    crop_box = page.cropbox
+                    rebuilt = output.new_page(
+                        width=float(media_box.width), height=float(media_box.height)
+                    )
+                    rebuilt.set_mediabox(media_box)
+                    rebuilt.set_cropbox(crop_box)
                     rebuilt.insert_image(rebuilt.rect, stream=image_stream.getvalue())
                     page_word_count = _insert_hidden_words(rebuilt, words)
                     inserted_word_count += page_word_count
@@ -238,6 +238,8 @@ def raster_inpaint_pdf_regions(
             raise PdfRasterInpaintError("输出 PDF 的加密状态或页数发生异常变化。")
         if [_page_geometry(page) for page in result.pages] != before_geometry:
             raise PdfRasterInpaintError("输出 PDF 的页面尺寸或旋转发生变化。")
+        if [_page_boxes(page) for page in result.pages] != before_boxes:
+            raise PdfRasterInpaintError("输出 PDF 的 MediaBox 或 CropBox 发生变化。")
         return {
             "backend": "pymupdf-opencv",
             "backend_version": backend.version,
@@ -297,6 +299,13 @@ def _source_words(
             )
         )
     return words
+
+
+def _page_boxes(page: Any) -> tuple[tuple[float, ...], tuple[float, ...]]:
+    return (
+        tuple(float(value) for value in page.mediabox),
+        tuple(float(value) for value in page.cropbox),
+    )
 
 
 def _pixel_mask(
