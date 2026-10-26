@@ -39,6 +39,7 @@ class ReleaseDocumentationTests(unittest.TestCase):
             {row["id"] for row in payload["workflows"]},
             {
                 "docx-vml",
+                "docx-drawingml",
                 "codecv-pdf",
                 "general-pdf",
                 "pdf-deep",
