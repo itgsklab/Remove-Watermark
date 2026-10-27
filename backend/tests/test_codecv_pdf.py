@@ -17,6 +17,7 @@ def make_pdf(
     *,
     codecv_signature: bool = True,
     include_pattern_resource: bool = True,
+    pattern_resource_only: bool = False,
     encrypted: bool = False,
 ) -> bytes:
     writer = PdfWriter()
@@ -37,7 +38,7 @@ def make_pdf(
     )
     body_text = b"BT /F1 12 Tf 72 720 Td (Resume body) Tj ET\n"
 
-    if codecv_signature:
+    if codecv_signature or pattern_resource_only:
         pattern = DecodedStreamObject()
         pattern.set_data(b"0.92 g 0 0 30 30 re f\n")
         pattern.update(
@@ -59,6 +60,7 @@ def make_pdf(
             resources[NameObject("/Pattern")] = DictionaryObject(
                 {NameObject("/Watermark1"): pattern_ref}
             )
+    if codecv_signature:
         content_data = body_text + (
             b"/Pattern CS /Pattern cs /Watermark1 SCN /Watermark1 scn "
             b"0 0 612 792 re f\n"
@@ -98,6 +100,16 @@ def test_codecv_inspector_matches_operation_signature(client: TestClient) -> Non
     analysis = response.json()
     assert analysis["preset"] == "codecv"
     assert analysis["match_status"] == "matched"
+    assert analysis["codecv_diagnostics"] == {
+        "rule_version": "codecv-pattern-fill-v1",
+        "pages_scanned": 1,
+        "pages_with_pattern_resources": 1,
+        "pattern_resource_count": 1,
+        "tiling_pattern_resource_count": 1,
+        "complete_signature_count": 1,
+        "confirmed_signature_count": 1,
+        "ambiguous_signature_count": 0,
+    }
     assert analysis["inspected_parts"] == ["page:1"]
     assert len(analysis["candidates"]) == 1
     candidate = analysis["candidates"][0]
@@ -112,7 +124,10 @@ def test_codecv_inspector_matches_operation_signature(client: TestClient) -> Non
 
 
 def test_codecv_inspector_does_not_match_ordinary_page_fill(client: TestClient) -> None:
-    asset = upload_pdf(client, make_pdf(codecv_signature=False))
+    asset = upload_pdf(
+        client,
+        make_pdf(codecv_signature=False, pattern_resource_only=True),
+    )
 
     response = client.post(
         "/api/v1/analyses",
@@ -120,8 +135,13 @@ def test_codecv_inspector_does_not_match_ordinary_page_fill(client: TestClient) 
     )
 
     assert response.status_code == 201
-    assert response.json()["match_status"] == "not_found"
-    assert response.json()["candidates"] == []
+    analysis = response.json()
+    assert analysis["match_status"] == "not_found"
+    assert analysis["candidates"] == []
+    assert analysis["codecv_diagnostics"]["complete_signature_count"] == 0
+    assert analysis["codecv_diagnostics"]["pages_with_pattern_resources"] == 1
+    assert analysis["codecv_diagnostics"]["pattern_resource_count"] == 1
+    assert analysis["codecv_diagnostics"]["tiling_pattern_resource_count"] == 1
 
 
 def test_codecv_inspector_marks_unresolved_pattern_for_review(client: TestClient) -> None:
@@ -133,8 +153,12 @@ def test_codecv_inspector_marks_unresolved_pattern_for_review(client: TestClient
     )
 
     assert response.status_code == 201
-    assert response.json()["match_status"] == "needs_review"
-    assert response.json()["candidates"][0]["classification"] == "ambiguous"
+    analysis = response.json()
+    assert analysis["match_status"] == "needs_review"
+    assert analysis["candidates"][0]["classification"] == "ambiguous"
+    assert analysis["codecv_diagnostics"]["complete_signature_count"] == 1
+    assert analysis["codecv_diagnostics"]["confirmed_signature_count"] == 0
+    assert analysis["codecv_diagnostics"]["ambiguous_signature_count"] == 1
 
 
 def test_pdf_analysis_requires_explicit_codecv_preset(client: TestClient) -> None:

@@ -6,6 +6,15 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 import pymupdf
 from PIL import Image, ImageDraw
+from pypdf import PdfWriter
+from pypdf.generic import (
+    ArrayObject,
+    DecodedStreamObject,
+    DictionaryObject,
+    FloatObject,
+    NameObject,
+    NumberObject,
+)
 
 OUTPUT = Path(__file__).resolve().parent / ".generated"
 
@@ -14,6 +23,7 @@ def main() -> None:
     OUTPUT.mkdir(parents=True, exist_ok=True)
     (OUTPUT / "browser-watermark.docx").write_bytes(_docx())
     _write_pdf(OUTPUT / "browser-watermark.pdf")
+    (OUTPUT / "browser-codecv.pdf").write_bytes(_codecv_pdf())
     _write_image(OUTPUT / "browser-watermark.png")
 
 
@@ -105,6 +115,44 @@ def _write_pdf(path: Path) -> None:
     document.set_metadata({"title": "Generated browser PDF fixture"})
     document.save(path)
     document.close()
+
+
+def _codecv_pdf() -> bytes:
+    writer = PdfWriter()
+    page = writer.add_blank_page(width=612, height=792)
+    pattern = DecodedStreamObject()
+    pattern.set_data(b"0.92 g 0 0 30 30 re f\n")
+    pattern.update(
+        {
+            NameObject("/Type"): NameObject("/Pattern"),
+            NameObject("/PatternType"): NumberObject(1),
+            NameObject("/PaintType"): NumberObject(1),
+            NameObject("/TilingType"): NumberObject(1),
+            NameObject("/BBox"): ArrayObject(
+                [FloatObject(0), FloatObject(0), FloatObject(30), FloatObject(30)]
+            ),
+            NameObject("/XStep"): FloatObject(30),
+            NameObject("/YStep"): FloatObject(30),
+            NameObject("/Resources"): DictionaryObject(),
+        }
+    )
+    pattern_ref = writer._add_object(pattern)
+    page[NameObject("/Resources")] = DictionaryObject(
+        {
+            NameObject("/Pattern"): DictionaryObject(
+                {NameObject("/Watermark1"): pattern_ref}
+            )
+        }
+    )
+    content = DecodedStreamObject()
+    content.set_data(
+        b"/Pattern CS /Pattern cs /Watermark1 SCN /Watermark1 scn "
+        b"0 0 612 792 re f\n"
+    )
+    page[NameObject("/Contents")] = writer._add_object(content)
+    output = BytesIO()
+    writer.write(output)
+    return output.getvalue()
 
 
 def _write_image(path: Path) -> None:

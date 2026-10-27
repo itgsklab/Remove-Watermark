@@ -31,6 +31,18 @@ The public reference repository contains the script and documentation but no PDF
 - A complete sequence without a resolvable tiling pattern is marked ambiguous.
 - A scan with no match reports `not_found`; it does not claim the document has no watermark.
 
+## Privacy-safe compatibility diagnostics
+
+Every CodeCV analysis returns a fixed `codecv_diagnostics` object and shows the same aggregate
+statistics in the Web interface. It records the detector rule version, pages scanned, pages with
+Pattern resources, total Pattern and tiling-pattern resource counts, and complete, confirmed and
+ambiguous signature counts. The copy action produces only these counts plus `match_status`.
+
+The diagnostic does not include the uploaded file name, local path, extracted resume text, resource
+names, PDF object numbers or object contents. It helps distinguish “no Pattern resources”, “Pattern
+resources but no complete signature” and “complete signature that needs resource review” without
+turning a private resume into public compatibility evidence.
+
 ## Editing and validation
 
 The editor rechecks every selected page, operation index and resource name against the source digest locked into the plan. It removes only the matched operation slice and leaves the pattern resource dictionary intact, which avoids deleting unrelated uses of the same resource.
@@ -71,4 +83,4 @@ The probe sets `review_required: true`. Review ownership or permission, template
 
 Run `make codecv-real-corpus`. This command uses `--require-real`, so generated fixtures alone cannot produce a passing real-export report.
 
-The preset still needs provenance-cleared CodeCV exports from multiple template versions before it can move beyond experimental status. Until then, the UI exposes the structural evidence and requires the user to select candidates explicitly.
+The preset still needs provenance-cleared CodeCV exports from multiple template versions before it can move beyond experimental status. Until then, the UI exposes the structural evidence, privacy-safe aggregate diagnostics and requires the user to select candidates explicitly.

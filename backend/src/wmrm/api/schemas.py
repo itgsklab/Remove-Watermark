@@ -201,6 +201,17 @@ class CandidateResponse(BaseModel):
     preview_media_type: Literal["image/png", "image/jpeg", "image/gif", "image/webp"] | None = None
 
 
+class CodeCvDiagnosticsResponse(BaseModel):
+    rule_version: Literal["codecv-pattern-fill-v1"]
+    pages_scanned: int = Field(ge=0)
+    pages_with_pattern_resources: int = Field(ge=0)
+    pattern_resource_count: int = Field(ge=0)
+    tiling_pattern_resource_count: int = Field(ge=0)
+    complete_signature_count: int = Field(ge=0)
+    confirmed_signature_count: int = Field(ge=0)
+    ambiguous_signature_count: int = Field(ge=0)
+
+
 class AnalysisResponse(BaseModel):
     id: str
     asset_id: str
@@ -214,6 +225,7 @@ class AnalysisResponse(BaseModel):
     pdf_pages: list[PdfPageGeometry] = Field(default_factory=list)
     protected_content: list[ProtectedContentResponse] = Field(default_factory=list)
     image_metadata: ImageMetadataResponse | None = None
+    codecv_diagnostics: CodeCvDiagnosticsResponse | None = None
 
 
 class RedactionRegionRequest(BaseModel):

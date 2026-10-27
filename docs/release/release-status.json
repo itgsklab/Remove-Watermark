@@ -43,7 +43,7 @@
       "stable": "experimental",
       "main": "experimental",
       "documentation": "docs/CODECV_PDF.md",
-      "summary": "按完整内容流操作签名检查并删除用户确认的平铺图案序列。"
+      "summary": "显示脱敏结构诊断，并按完整内容流操作签名检查和删除用户确认的平铺图案序列。"
     },
     {
       "id": "general-pdf",

@@ -126,6 +126,26 @@ test('DOCX watermark workflow reaches verified result and report', async ({ page
   expect(browserErrors).toEqual([])
 })
 
+test('CodeCV scan shows privacy-safe compatibility diagnostics', async ({ page }) => {
+  const browserErrors = watchBrowserErrors(page)
+  await upload(page, 'browser-codecv.pdf')
+
+  await page.getByRole('button', { name: '扫描 CodeCV 结构' }).click()
+  await expect(page.getByRole('heading', { name: 'CodeCV 结构匹配统计' })).toBeVisible()
+  const diagnostics = page.locator('.codecv-diagnostics')
+  await expect(diagnostics).toContainText('扫描页数1')
+  await expect(diagnostics).toContainText('含 Pattern 的页面1')
+  await expect(diagnostics).toContainText('完整操作签名1')
+  await expect(diagnostics).toContainText('已确认 / 待复核1 / 0')
+  await expect(diagnostics).toContainText('codecv-pattern-fill-v1')
+  await expect(diagnostics).not.toContainText('browser-codecv.pdf')
+  await expect(diagnostics).not.toContainText('/Watermark1')
+
+  await page.getByRole('button', { name: '复制诊断' }).click()
+  await expect(page.getByText(/已复制脱敏诊断|浏览器未允许复制/)).toBeVisible()
+  expect(browserErrors).toEqual([])
+})
+
 test('general PDF redaction workflow confirms overlap and downloads report', async ({ page }) => {
   const browserErrors = watchBrowserErrors(page)
   await upload(page, 'browser-watermark.pdf')
