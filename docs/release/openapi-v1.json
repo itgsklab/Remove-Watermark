@@ -18,6 +18,16 @@
             "title": "Candidates",
             "type": "array"
           },
+          "codecv_diagnostics": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CodeCvDiagnosticsResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -482,6 +492,62 @@
           "strategies"
         ],
         "title": "CapabilityItem",
+        "type": "object"
+      },
+      "CodeCvDiagnosticsResponse": {
+        "properties": {
+          "ambiguous_signature_count": {
+            "minimum": 0.0,
+            "title": "Ambiguous Signature Count",
+            "type": "integer"
+          },
+          "complete_signature_count": {
+            "minimum": 0.0,
+            "title": "Complete Signature Count",
+            "type": "integer"
+          },
+          "confirmed_signature_count": {
+            "minimum": 0.0,
+            "title": "Confirmed Signature Count",
+            "type": "integer"
+          },
+          "pages_scanned": {
+            "minimum": 0.0,
+            "title": "Pages Scanned",
+            "type": "integer"
+          },
+          "pages_with_pattern_resources": {
+            "minimum": 0.0,
+            "title": "Pages With Pattern Resources",
+            "type": "integer"
+          },
+          "pattern_resource_count": {
+            "minimum": 0.0,
+            "title": "Pattern Resource Count",
+            "type": "integer"
+          },
+          "rule_version": {
+            "const": "codecv-pattern-fill-v1",
+            "title": "Rule Version",
+            "type": "string"
+          },
+          "tiling_pattern_resource_count": {
+            "minimum": 0.0,
+            "title": "Tiling Pattern Resource Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rule_version",
+          "pages_scanned",
+          "pages_with_pattern_resources",
+          "pattern_resource_count",
+          "tiling_pattern_resource_count",
+          "complete_signature_count",
+          "confirmed_signature_count",
+          "ambiguous_signature_count"
+        ],
+        "title": "CodeCvDiagnosticsResponse",
         "type": "object"
       },
       "ComparisonPage": {

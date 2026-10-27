@@ -97,6 +97,16 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .analysis-results { margin-top: 42px; }
 .section-heading { display: flex; justify-content: space-between; align-items: end; margin-bottom: 16px; }
 .section-heading h2 { margin: 4px 0 0; font-size: 2rem; }
+.codecv-diagnostics { margin-bottom: 16px; box-shadow: none; }
+.codecv-diagnostics-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.codecv-diagnostics-heading h3 { margin: 4px 0 7px; font-size: 1.25rem; }
+.codecv-diagnostics-heading p { max-width: 700px; margin: 0; color: #536057; line-height: 1.55; }
+.codecv-diagnostics-heading button { flex: 0 0 auto; }
+.codecv-diagnostics-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 18px 0 0; }
+.codecv-diagnostics-grid div { padding: 10px 12px; border-radius: 10px; background: #f1f4ef; }
+.codecv-diagnostics-grid dt { color: #738078; font-size: .74rem; }
+.codecv-diagnostics-grid dd { margin: 4px 0 0; font-size: 1rem; font-weight: 700; }
+.codecv-rule-version { margin: 12px 0 0; color: #738078; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .76rem; }
 .candidate-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .6fr); gap: 24px; background: #fbfcf8; border: 1px solid #d9ded5; border-radius: 16px; padding: 20px; margin-bottom: 12px; }
 .candidate-card h3 { margin: 10px 0 6px; font-size: 1.25rem; }
 .candidate-card p { margin: 0; color: #536057; line-height: 1.55; }
@@ -292,6 +302,9 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   .pdf-strategy-options { grid-template-columns: 1fr 1fr; }
   .image-metadata-heading { grid-template-columns: 1fr; }
   .image-metadata-grid { grid-template-columns: 1fr 1fr; }
+  .codecv-diagnostics-heading { flex-direction: column; }
+  .codecv-diagnostics-heading button { width: 100%; }
+  .codecv-diagnostics-grid { grid-template-columns: 1fr 1fr; }
   .vlm-suggestion-panel { align-items: stretch; flex-direction: column; gap: 14px; }
   .vlm-suggestion-panel button { width: 100%; }
   .complexity-region dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -33,6 +33,19 @@ class CodeCvInspection:
     inspected_parts: tuple[str, ...]
     warnings: tuple[str, ...]
     match_status: str
+    diagnostics: "CodeCvDiagnostics"
+
+
+@dataclass(frozen=True, slots=True)
+class CodeCvDiagnostics:
+    rule_version: str
+    pages_scanned: int
+    pages_with_pattern_resources: int
+    pattern_resource_count: int
+    tiling_pattern_resource_count: int
+    complete_signature_count: int
+    confirmed_signature_count: int
+    ambiguous_signature_count: int
 
 
 class CodeCvPdfInspector:
@@ -57,8 +70,16 @@ class CodeCvPdfInspector:
             candidates: list[CodeCvCandidate] = []
             inspected_parts: list[str] = []
             content_bytes = 0
+            pages_with_pattern_resources = 0
+            pattern_resource_count = 0
+            tiling_pattern_resource_count = 0
             for page_number, page in enumerate(reader.pages, start=1):
                 inspected_parts.append(f"page:{page_number}")
+                page_pattern_count, page_tiling_count = self._pattern_resource_counts(page)
+                if page_pattern_count:
+                    pages_with_pattern_resources += 1
+                pattern_resource_count += page_pattern_count
+                tiling_pattern_resource_count += page_tiling_count
                 contents = page.get_contents()
                 if contents is None:
                     continue
@@ -103,6 +124,20 @@ class CodeCvPdfInspector:
             inspected_parts=tuple(inspected_parts),
             warnings=warnings,
             match_status=match_status,
+            diagnostics=CodeCvDiagnostics(
+                rule_version="codecv-pattern-fill-v1",
+                pages_scanned=len(inspected_parts),
+                pages_with_pattern_resources=pages_with_pattern_resources,
+                pattern_resource_count=pattern_resource_count,
+                tiling_pattern_resource_count=tiling_pattern_resource_count,
+                complete_signature_count=len(candidates),
+                confirmed_signature_count=sum(
+                    item.classification == "confirmed" for item in candidates
+                ),
+                ambiguous_signature_count=sum(
+                    item.classification == "ambiguous" for item in candidates
+                ),
+            ),
         )
 
     def _inspect_operations(
@@ -212,6 +247,31 @@ class CodeCvPdfInspector:
             return reference, reference.get_object()
         except (PyPdfError, AttributeError):
             return reference, None
+
+    @staticmethod
+    def _pattern_resource_counts(page: Any) -> tuple[int, int]:
+        """Return aggregate counts without exposing PDF resource names or contents."""
+        resources = page.get("/Resources")
+        try:
+            resources = resources.get_object() if resources is not None else None
+            patterns = resources.get("/Pattern") if resources else None
+            patterns = patterns.get_object() if patterns is not None else None
+        except (PyPdfError, AttributeError, TypeError, ValueError):
+            return 0, 0
+        if not patterns or not hasattr(patterns, "values"):
+            return 0, 0
+
+        resource_count = 0
+        tiling_count = 0
+        for reference in patterns.values():
+            resource_count += 1
+            try:
+                pattern = reference.get_object()
+                if int(pattern.get("/PatternType", 0)) == 1:
+                    tiling_count += 1
+            except (PyPdfError, AttributeError, TypeError, ValueError):
+                continue
+        return resource_count, tiling_count
 
     @staticmethod
     def _pattern_style(pattern: Any | None) -> str | None:

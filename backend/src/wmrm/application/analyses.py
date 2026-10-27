@@ -11,6 +11,7 @@ from wmrm.adapters.pdf.general import GeneralPdfInspector
 from wmrm.api.schemas import (
     AnalysisResponse,
     CandidateResponse,
+    CodeCvDiagnosticsResponse,
     ImageMetadataResponse,
     SourceLocator,
 )
@@ -43,6 +44,7 @@ class AnalysisService:
         asset = self.assets.get(session, asset_id)
         analysis_id = str(uuid.uuid4())
         image_metadata = None
+        codecv_diagnostics = None
         if asset.kind == "docx" and preset is None:
             inspection = self.docx_inspector.inspect(
                 self.assets.path_for(asset),
@@ -109,6 +111,17 @@ class AnalysisService:
             inspected_parts = list(inspection.inspected_parts)
             warnings = list(inspection.warnings)
             match_status = inspection.match_status
+            diagnostics = inspection.diagnostics
+            codecv_diagnostics = CodeCvDiagnosticsResponse(
+                rule_version=diagnostics.rule_version,
+                pages_scanned=diagnostics.pages_scanned,
+                pages_with_pattern_resources=diagnostics.pages_with_pattern_resources,
+                pattern_resource_count=diagnostics.pattern_resource_count,
+                tiling_pattern_resource_count=diagnostics.tiling_pattern_resource_count,
+                complete_signature_count=diagnostics.complete_signature_count,
+                confirmed_signature_count=diagnostics.confirmed_signature_count,
+                ambiguous_signature_count=diagnostics.ambiguous_signature_count,
+            )
             pdf_pages = []
             protected_content = []
         elif asset.kind == "pdf" and preset == "general":
@@ -190,6 +203,7 @@ class AnalysisService:
             pdf_pages=pdf_pages,
             protected_content=protected_content,
             image_metadata=image_metadata,
+            codecv_diagnostics=codecv_diagnostics,
         )
         session.add(
             AnalysisRecord(

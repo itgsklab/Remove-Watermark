@@ -30,7 +30,7 @@ are not release assets.
 | --- | --- | --- | --- | --- |
 | Word DOCX VML 文字水印 | 支持 | 支持 | 检查并选择性删除页眉、页脚中的 VML textpath 文字形状。 | [Docx Compatibility](/docs/DOCX_COMPATIBILITY.md) |
 | Word DOCX DrawingML 图片水印 | 不可用 | 支持 | 安全预览内部嵌入图片，经明确确认后选择性删除页眉、页脚中的 DrawingML 对象。 | [Docx Compatibility](/docs/DOCX_COMPATIBILITY.md) |
-| CodeCV PDF 平铺水印 | 实验性 | 实验性 | 按完整内容流操作签名检查并删除用户确认的平铺图案序列。 | [Codecv Pdf](/docs/CODECV_PDF.md) |
+| CodeCV PDF 平铺水印 | 实验性 | 实验性 | 显示脱敏结构诊断，并按完整内容流操作签名检查和删除用户确认的平铺图案序列。 | [Codecv Pdf](/docs/CODECV_PDF.md) |
 | 通用 PDF 区域删除 | 支持 | 支持 | 预览区域重叠风险后执行对象级物理 redaction。 | [General Pdf](/docs/GENERAL_PDF.md) |
 | PDF Deep 栅格修复 | 支持 | 支持 | 栅格化选中页面、修复蒙版区域并重建可选文字层。 | [Pdf Deep](/docs/PDF_DEEP.md) |
 | PNG、JPEG、WebP 静态图片 | 支持 | 支持 | 审阅蒙版和风险后使用 OpenCV Telea 生成 PNG 副本。 | [Image Masks](/docs/IMAGE_MASKS.md) |

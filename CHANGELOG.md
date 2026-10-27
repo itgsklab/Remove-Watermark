@@ -7,6 +7,9 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- Privacy-safe CodeCV compatibility diagnostics in the Web analysis response and interface,
+  covering aggregate Pattern resources and complete, confirmed and ambiguous signature counts
+  without exposing resume text, file paths, resource names or PDF object contents.
 - A machine-checked public release-status contract and generated support/limitations matrix that
   separates the packaged `v0.1.0` surface from unreleased `main`, experimental capabilities and
   evaluation-only work.

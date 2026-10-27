@@ -409,6 +409,7 @@ export interface components {
             readonly asset_sha256: string;
             /** Candidates */
             readonly candidates: readonly components["schemas"]["CandidateResponse"][];
+            readonly codecv_diagnostics?: components["schemas"]["CodeCvDiagnosticsResponse"] | null;
             /** Id */
             readonly id: string;
             readonly image_metadata?: components["schemas"]["ImageMetadataResponse"] | null;
@@ -566,6 +567,28 @@ export interface components {
             readonly status: "available" | "planned" | "experimental";
             /** Strategies */
             readonly strategies: readonly string[];
+        };
+        /** CodeCvDiagnosticsResponse */
+        readonly CodeCvDiagnosticsResponse: {
+            /** Ambiguous Signature Count */
+            readonly ambiguous_signature_count: number;
+            /** Complete Signature Count */
+            readonly complete_signature_count: number;
+            /** Confirmed Signature Count */
+            readonly confirmed_signature_count: number;
+            /** Pages Scanned */
+            readonly pages_scanned: number;
+            /** Pages With Pattern Resources */
+            readonly pages_with_pattern_resources: number;
+            /** Pattern Resource Count */
+            readonly pattern_resource_count: number;
+            /**
+             * Rule Version
+             * @constant
+             */
+            readonly rule_version: "codecv-pattern-fill-v1";
+            /** Tiling Pattern Resource Count */
+            readonly tiling_pattern_resource_count: number;
         };
         /** ComparisonPage */
         readonly ComparisonPage: {

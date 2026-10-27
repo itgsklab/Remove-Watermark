@@ -38,6 +38,7 @@ const watermarkText = ref('')
 const pdfPreset = ref<'codecv' | 'general'>('codecv')
 const busy = ref(false)
 const message = ref('')
+const codeCvDiagnosticCopyState = ref('')
 const selectedCandidates = ref<string[]>([])
 const confirmedAmbiguous = ref<string[]>([])
 const planWarnings = ref<PlanWarning[]>([])
@@ -113,6 +114,14 @@ const installedOcrLanguages = computed(() => runtimeDiagnostics.value?.ocr.langu
 const ocrSelectionValid = computed(() => (
   !pdfOcrEnabled.value || pdfOcrLanguages.value.length > 0
 ))
+const codeCvDiagnosticPayload = computed(() => {
+  if (!analysis.value?.codecv_diagnostics || analysis.value.preset !== 'codecv') return ''
+  return JSON.stringify({
+    schema_version: 1,
+    match_status: analysis.value.match_status,
+    ...analysis.value.codecv_diagnostics,
+  }, null, 2)
+})
 
 const complexityLabels = {
   low: '低风险',
@@ -187,6 +196,7 @@ async function inspect() {
   if (!canInspect.value) return
   busy.value = true
   message.value = ''
+  codeCvDiagnosticCopyState.value = ''
   try {
     analysis.value = await createAnalysis(
       assetId.value,
@@ -304,10 +314,21 @@ function clearAnalysis() {
   analysis.value = null
   selectedCandidates.value = []
   message.value = ''
+  codeCvDiagnosticCopyState.value = ''
   redactionPreview.value = null
   redactionRegions.value = []
   confirmedRedactionOverlap.value = false
   resetImageMasks()
+}
+
+async function copyCodeCvDiagnostics() {
+  if (!codeCvDiagnosticPayload.value) return
+  try {
+    await navigator.clipboard.writeText(codeCvDiagnosticPayload.value)
+    codeCvDiagnosticCopyState.value = '已复制脱敏诊断。'
+  } catch {
+    codeCvDiagnosticCopyState.value = '浏览器未允许复制，请手动记录下方统计。'
+  }
 }
 
 function updateImageDraft(regions: ImageMaskRegion[], polygons: ImageMaskPolygon[], protectedRegions: ImageMaskRegion[]) {
@@ -746,6 +767,30 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
       </div>
       <span>{{ analysis.inspected_parts.length }} 个已检查位置</span>
     </div>
+    <section
+      v-if="analysis.preset === 'codecv' && analysis.codecv_diagnostics"
+      class="panel codecv-diagnostics"
+      aria-labelledby="codecv-diagnostics-title"
+    >
+      <div class="codecv-diagnostics-heading">
+        <div>
+          <p class="eyebrow">脱敏兼容诊断</p>
+          <h3 id="codecv-diagnostics-title">CodeCV 结构匹配统计</h3>
+          <p>只包含规则版本和聚合数量，不包含简历正文、文件名、路径、资源名或 PDF 对象内容。</p>
+        </div>
+        <button class="secondary-button" type="button" @click="copyCodeCvDiagnostics">复制诊断</button>
+      </div>
+      <dl class="codecv-diagnostics-grid">
+        <div><dt>扫描页数</dt><dd>{{ analysis.codecv_diagnostics.pages_scanned }}</dd></div>
+        <div><dt>含 Pattern 的页面</dt><dd>{{ analysis.codecv_diagnostics.pages_with_pattern_resources }}</dd></div>
+        <div><dt>Pattern 资源</dt><dd>{{ analysis.codecv_diagnostics.pattern_resource_count }}</dd></div>
+        <div><dt>Tiling Pattern</dt><dd>{{ analysis.codecv_diagnostics.tiling_pattern_resource_count }}</dd></div>
+        <div><dt>完整操作签名</dt><dd>{{ analysis.codecv_diagnostics.complete_signature_count }}</dd></div>
+        <div><dt>已确认 / 待复核</dt><dd>{{ analysis.codecv_diagnostics.confirmed_signature_count }} / {{ analysis.codecv_diagnostics.ambiguous_signature_count }}</dd></div>
+      </dl>
+      <p class="codecv-rule-version">规则 {{ analysis.codecv_diagnostics.rule_version }}</p>
+      <p v-if="codeCvDiagnosticCopyState" class="hint" role="status">{{ codeCvDiagnosticCopyState }}</p>
+    </section>
     <article v-for="candidate in analysis.candidates" :key="candidate.candidate_id" class="candidate-card">
       <div>
         <figure v-if="candidate.preview_url" class="candidate-image-preview">
