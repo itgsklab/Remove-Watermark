@@ -7,6 +7,9 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A reusable workspace task outcome panel with accessible progress, duration, warning count,
+  centralized cancellation, terminal failure/cancellation reporting, result downloads and visual
+  comparisons shared by DOCX, CodeCV, general-PDF and image workflows.
 - End-to-end PDF digital-signature safeguards for CodeCV cleanup, general region removal and Deep
   repair, including structured detection, required Web/CLI/API acknowledgement and task-report
   evidence that the generated copy invalidates existing signature verification.
