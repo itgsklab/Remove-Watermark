@@ -403,6 +403,11 @@ async function upload(page: Page, name: string) {
 
 async function expectCompleted(page: Page) {
   await expect(page.getByText('处理完成', { exact: true })).toBeVisible({ timeout: 60_000 })
+  await expect(page.getByRole('progressbar', { name: '任务进度' })).toHaveAttribute(
+    'aria-valuenow',
+    '100',
+  )
+  await expect(page.getByText('已完成', { exact: true })).toBeVisible()
   await expect(page.getByRole('link', { name: '下载处理报告' })).toBeVisible()
 }
 
