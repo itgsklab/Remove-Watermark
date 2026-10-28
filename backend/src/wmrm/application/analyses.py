@@ -45,6 +45,7 @@ class AnalysisService:
         analysis_id = str(uuid.uuid4())
         image_metadata = None
         codecv_diagnostics = None
+        pdf_has_digital_signatures = False
         if asset.kind == "docx" and preset is None:
             inspection = self.docx_inspector.inspect(
                 self.assets.path_for(asset),
@@ -124,6 +125,7 @@ class AnalysisService:
             )
             pdf_pages = []
             protected_content = []
+            pdf_has_digital_signatures = inspection.has_digital_signatures
         elif asset.kind == "pdf" and preset == "general":
             inspection = self.general_pdf_inspector.inspect(
                 self.assets.path_for(asset), asset.sha256, watermark_text
@@ -155,6 +157,7 @@ class AnalysisService:
             match_status = inspection.match_status
             pdf_pages = list(inspection.pdf_pages)
             protected_content = list(inspection.protected_content)
+            pdf_has_digital_signatures = inspection.has_digital_signatures
         elif asset.kind in {"png", "jpeg", "webp"} and preset == "image":
             inspection = self.image_inspector.inspect(
                 self.assets.path_for(asset), asset.sha256, asset.kind
@@ -204,6 +207,7 @@ class AnalysisService:
             protected_content=protected_content,
             image_metadata=image_metadata,
             codecv_diagnostics=codecv_diagnostics,
+            pdf_has_digital_signatures=pdf_has_digital_signatures,
         )
         session.add(
             AnalysisRecord(

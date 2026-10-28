@@ -8,6 +8,7 @@ from pypdf import PdfReader
 from pypdf.errors import PyPdfError
 from pypdf.generic import ContentStream, IndirectObject, NameObject
 
+from wmrm.adapters.pdf.signatures import has_digital_signatures
 from wmrm.application.assets import AssetError
 
 
@@ -34,6 +35,7 @@ class CodeCvInspection:
     warnings: tuple[str, ...]
     match_status: str
     diagnostics: "CodeCvDiagnostics"
+    has_digital_signatures: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -119,6 +121,9 @@ class CodeCvPdfInspector:
                 "没有匹配 CodeCV 平铺水印操作签名；这不代表 PDF 中不存在其他类型水印。",
             )
             match_status = "not_found"
+        signature_present = has_digital_signatures(reader)
+        if signature_present:
+            warnings += ("PDF 包含数字签名；生成新文件会使现有签名验证失效。",)
         return CodeCvInspection(
             candidates=tuple(candidates),
             inspected_parts=tuple(inspected_parts),
@@ -138,6 +143,7 @@ class CodeCvPdfInspector:
                     item.classification == "ambiguous" for item in candidates
                 ),
             ),
+            has_digital_signatures=signature_present,
         )
 
     def _inspect_operations(

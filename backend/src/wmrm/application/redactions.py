@@ -99,12 +99,18 @@ class RedactionService:
             warnings.append(backend.reason or "PyMuPDF 区域删除后端不可用。")
         if overlap_count:
             warnings.insert(0, f"所选区域与 {overlap_count} 个正文或交互对象相交。")
+        if analysis.pdf_has_digital_signatures:
+            warnings.insert(
+                0,
+                "原 PDF 包含数字签名；任何新副本都会使现有签名验证失效。",
+            )
         return RedactionPreviewResponse(
             asset_id=asset.id,
             analysis_id=analysis.id,
             valid=True,
             executable=backend.available,
             requires_acknowledgement=overlap_count > 0,
+            digital_signature_present=analysis.pdf_has_digital_signatures,
             regions=previews,
             warnings=warnings,
         )

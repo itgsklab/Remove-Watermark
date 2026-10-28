@@ -126,7 +126,7 @@ test('DOCX watermark workflow reaches verified result and report', async ({ page
   expect(browserErrors).toEqual([])
 })
 
-test('CodeCV scan shows privacy-safe compatibility diagnostics', async ({ page }) => {
+test('CodeCV scan protects signed input and produces a privacy-safe report', async ({ page }) => {
   const browserErrors = watchBrowserErrors(page)
   await upload(page, 'browser-codecv.pdf')
 
@@ -143,6 +143,22 @@ test('CodeCV scan shows privacy-safe compatibility diagnostics', async ({ page }
 
   await page.getByRole('button', { name: '复制诊断' }).click()
   await expect(page.getByText(/已复制脱敏诊断|浏览器未允许复制/)).toBeVisible()
+  await page.getByLabel('选择此候选').check()
+  const signatureConfirmation = page.getByLabel(
+    /现有数字签名将在 CodeCV 清理副本中失效/,
+  )
+  await expect(signatureConfirmation).toBeVisible()
+  const processButton = page.getByRole('button', { name: /生成无水印 PDF副本/ })
+  await expect(processButton).toBeDisabled()
+  await signatureConfirmation.check()
+  await processButton.click()
+
+  await expectCompleted(page)
+  const report = await downloadReport(page)
+  expect(report.input.kind).toBe('pdf')
+  expect(report.processing.kind).toBe('object_removal')
+  expect(report.processing.warning_codes).toContain('PDF_DIGITAL_SIGNATURE_INVALIDATION')
+  await expectResultDownload(page, /-cleaned\.pdf$/)
   expect(browserErrors).toEqual([])
 })
 
@@ -166,6 +182,10 @@ test('general PDF redaction workflow confirms overlap and downloads report', asy
   const overlapConfirmation = page.getByLabel(/我已核对相交对象/)
   await expect(overlapConfirmation).toBeVisible()
   await overlapConfirmation.check()
+  const signatureConfirmation = page.getByLabel(/现有数字签名将在新副本中失效/)
+  await expect(signatureConfirmation).toBeVisible()
+  await expect(page.getByRole('button', { name: '生成区域删除后的 PDF 副本' })).toBeDisabled()
+  await signatureConfirmation.check()
   await page.getByRole('button', { name: '生成区域删除后的 PDF 副本' }).click()
 
   await expectCompleted(page)
@@ -174,6 +194,7 @@ test('general PDF redaction workflow confirms overlap and downloads report', asy
   expect(report.processing.kind).toBe('pdf_redaction')
   expect(report.processing.selected_target_count).toBe(2)
   expect(report.processing.warning_codes).toContain('PDF_REDACTION_OVERLAP')
+  expect(report.processing.warning_codes).toContain('PDF_DIGITAL_SIGNATURE_INVALIDATION')
   await expectResultDownload(page, /-cleaned\.pdf$/)
   expect(browserErrors).toEqual([])
 })

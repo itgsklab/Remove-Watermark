@@ -121,6 +121,15 @@
       "statement": "对象级区域删除会永久移除相交文字、图片像素、矢量图和链接，复杂页面可能需要缩小选区后重新检查。"
     },
     {
+      "id": "pdf-signature-invalidation",
+      "applies_to": [
+        "codecv-pdf",
+        "general-pdf",
+        "pdf-deep"
+      ],
+      "statement": "检测到现有数字签名时，处理前必须明确确认；生成的新副本不会保留原签名的有效验证状态。"
+    },
+    {
       "id": "pdf-deep-loss",
       "applies_to": ["pdf-deep"],
       "statement": "Deep 模式会栅格化选中页面且不保留其链接、表单和矢量对象；缺少文字层且未启用可用 OCR 时，页面不会保持可搜索。"

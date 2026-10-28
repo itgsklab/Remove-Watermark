@@ -50,6 +50,7 @@ and evaluation-only capabilities must not be presented as general compatibility 
 - **Word DOCX VML 文字水印、Word DOCX DrawingML 图片水印：** 自动化矩阵主要使用生成的 OOXML 结构；不能据此宣称兼容 Microsoft Word、WPS 或 LibreOffice 的全部版本和模板。
 - **CodeCV PDF 平铺水印：** 公开仓库没有来源许可完整的多版本 CodeCV 真实导出语料，因此此预设保持实验性；未匹配不表示文件中没有水印。
 - **通用 PDF 区域删除：** 对象级区域删除会永久移除相交文字、图片像素、矢量图和链接，复杂页面可能需要缩小选区后重新检查。
+- **CodeCV PDF 平铺水印、通用 PDF 区域删除、PDF Deep 栅格修复：** 检测到现有数字签名时，处理前必须明确确认；生成的新副本不会保留原签名的有效验证状态。
 - **PDF Deep 栅格修复：** Deep 模式会栅格化选中页面且不保留其链接、表单和矢量对象；缺少文字层且未启用可用 OCR 时，页面不会保持可搜索。
 - **PNG、JPEG、WebP 静态图片：** Telea 修复结果取决于蒙版和背景复杂度，可能产生纹理或结构伪影；动态图仅支持检查，输出统一为移除原元数据的 PNG。
 - **小红书公开分享链接：** 只读取无需登录的公开 HTML 元数据，不处理视频、Cookie 或非公开接口，也不保证候选为原图、完整图集或长期可用。

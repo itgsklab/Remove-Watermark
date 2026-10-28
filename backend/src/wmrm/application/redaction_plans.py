@@ -69,6 +69,16 @@ class RedactionPlanService:
                     requires_acknowledgement=False,
                 )
             ]
+        if preview.digital_signature_present:
+            warnings.append(
+                PlanWarning(
+                    code="PDF_DIGITAL_SIGNATURE_INVALIDATION",
+                    message=(
+                        "原 PDF 包含数字签名；生成区域删除或栅格修复副本后，"
+                        "现有签名验证将失效。"
+                    ),
+                )
+            )
         if overlap_count:
             warnings.append(
                 PlanWarning(

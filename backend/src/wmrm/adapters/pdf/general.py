@@ -9,6 +9,7 @@ from pypdf import PdfReader, Transformation
 from pypdf.errors import PyPdfError
 from pypdf.generic import ContentStream, IndirectObject, NameObject
 
+from wmrm.adapters.pdf.signatures import has_digital_signatures
 from wmrm.application.assets import AssetError
 
 WATERMARK_WORDS = {"watermark", "draft", "confidential", "sample", "水印", "草稿", "机密"}
@@ -41,6 +42,7 @@ class GeneralPdfInspection:
     match_status: str
     pdf_pages: tuple[dict[str, Any], ...]
     protected_content: tuple[dict[str, Any], ...]
+    has_digital_signatures: bool
 
 
 @dataclass(slots=True)
@@ -210,7 +212,8 @@ class GeneralPdfInspector:
                 warnings.append(
                     "部分 Form XObject 因循环引用或递归层级限制未能完全展开。"
                 )
-            if self._has_signatures(reader):
+            has_signatures = has_digital_signatures(reader)
+            if has_signatures:
                 warnings.append("PDF 包含数字签名字段；生成新文件通常会使现有签名失效。")
             reviewable = [item for item in candidates if item.classification != "content"]
             return GeneralPdfInspection(
@@ -220,6 +223,7 @@ class GeneralPdfInspector:
                 match_status="needs_review" if reviewable else "not_found",
                 pdf_pages=tuple(pdf_pages),
                 protected_content=tuple(protected_content),
+                has_digital_signatures=has_signatures,
             )
         except AssetError:
             raise
@@ -741,14 +745,6 @@ class GeneralPdfInspector:
                 )
             )
         return results
-
-    @staticmethod
-    def _has_signatures(reader: PdfReader) -> bool:
-        root = reader.trailer.get("/Root")
-        form = root.get("/AcroForm") if root else None
-        fields = form.get("/Fields", []) if form else []
-        return any(str(reference.get_object().get("/FT", "")) == "/Sig" for reference in fields)
-
 
 def _resolve_resource(resources: Any, name: str) -> tuple[Any | None, Any | None]:
     if not resources:

@@ -226,6 +226,7 @@ class AnalysisResponse(BaseModel):
     protected_content: list[ProtectedContentResponse] = Field(default_factory=list)
     image_metadata: ImageMetadataResponse | None = None
     codecv_diagnostics: CodeCvDiagnosticsResponse | None = None
+    pdf_has_digital_signatures: bool = False
 
 
 class RedactionRegionRequest(BaseModel):
@@ -262,6 +263,7 @@ class RedactionPreviewResponse(BaseModel):
     valid: bool
     requires_acknowledgement: bool
     executable: bool
+    digital_signature_present: bool = False
     regions: list[RedactionRegionPreview]
     warnings: list[str]
 

@@ -46,6 +46,16 @@ class PlanService:
 
         selected = []
         warnings: list[PlanWarning] = []
+        if asset.kind == "pdf" and analysis.pdf_has_digital_signatures:
+            warnings.append(
+                PlanWarning(
+                    code="PDF_DIGITAL_SIGNATURE_INVALIDATION",
+                    message=(
+                        "原 PDF 包含数字签名；生成 CodeCV 清理副本后，"
+                        "现有签名验证将失效。"
+                    ),
+                )
+            )
         for operation in request.operations:
             candidate = candidate_by_id.get(operation.candidate_id)
             if candidate is None:

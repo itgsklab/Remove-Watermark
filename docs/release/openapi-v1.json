@@ -65,6 +65,11 @@
             ],
             "title": "Match Status"
           },
+          "pdf_has_digital_signatures": {
+            "default": false,
+            "title": "Pdf Has Digital Signatures",
+            "type": "boolean"
+          },
           "pdf_pages": {
             "items": {
               "$ref": "#/components/schemas/PdfPageGeometry"
@@ -1779,6 +1784,11 @@
           "asset_id": {
             "title": "Asset Id",
             "type": "string"
+          },
+          "digital_signature_present": {
+            "default": false,
+            "title": "Digital Signature Present",
+            "type": "boolean"
           },
           "executable": {
             "title": "Executable",
