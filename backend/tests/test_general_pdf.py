@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import (
     ArrayObject,
+    ByteStringObject,
     DecodedStreamObject,
     DictionaryObject,
     FloatObject,
@@ -19,7 +20,11 @@ from wmrm.benchmarks.pdf_redaction_probe import _fixture_pdf
 
 
 def make_general_pdf(
-    *, pages: int = 2, repeated_text: str = "DRAFT", crop_origin: bool = False
+    *,
+    pages: int = 2,
+    repeated_text: str = "DRAFT",
+    crop_origin: bool = False,
+    digitally_signed: bool = False,
 ) -> bytes:
     writer = PdfWriter()
     font = DictionaryObject(
@@ -109,6 +114,28 @@ def make_general_pdf(
         )
         writer._root_object[NameObject("/OCProperties")] = DictionaryObject(
             {NameObject("/OCGs"): ArrayObject([writer._add_object(ocg)])}
+        )
+    if digitally_signed:
+        signature = DictionaryObject(
+            {
+                NameObject("/Type"): NameObject("/Sig"),
+                NameObject("/Filter"): NameObject("/Adobe.PPKLite"),
+                NameObject("/SubFilter"): NameObject("/adbe.pkcs7.detached"),
+                NameObject("/ByteRange"): ArrayObject(
+                    [NumberObject(0), NumberObject(0), NumberObject(0), NumberObject(0)]
+                ),
+                NameObject("/Contents"): ByteStringObject(b"test-signature-placeholder"),
+            }
+        )
+        signature_field = DictionaryObject(
+            {
+                NameObject("/FT"): NameObject("/Sig"),
+                NameObject("/T"): TextStringObject("Approval"),
+                NameObject("/V"): writer._add_object(signature),
+            }
+        )
+        writer._root_object[NameObject("/AcroForm")] = DictionaryObject(
+            {NameObject("/Fields"): ArrayObject([writer._add_object(signature_field)])}
         )
     output = BytesIO()
     writer.write(output)
@@ -351,11 +378,13 @@ def test_redaction_preview_reports_protected_content_overlap(client: TestClient)
 
 
 def test_general_pdf_redaction_plan_executes_in_worker(client: TestClient) -> None:
-    asset = upload(client, make_general_pdf(pages=1))
+    asset = upload(client, make_general_pdf(pages=1, digitally_signed=True))
     analysis = client.post(
         "/api/v1/analyses",
         json={"asset_id": asset["id"], "preset": "general"},
     ).json()
+    assert analysis["pdf_has_digital_signatures"] is True
+    assert any("数字签名" in warning for warning in analysis["warnings"])
     region = {
         "page_number": 1,
         "x0": 190,
@@ -375,9 +404,18 @@ def test_general_pdf_redaction_plan_executes_in_worker(client: TestClient) -> No
     review = client.post("/api/v1/redaction-plans/validate", json=payload)
     assert review.status_code == 200
     assert review.json()["valid"] is False
-    assert review.json()["warnings"][1]["code"] == "PDF_REDACTION_OVERLAP"
+    assert [warning["code"] for warning in review.json()["warnings"]] == [
+        "PDF_REDACTION_IRREVERSIBLE",
+        "PDF_DIGITAL_SIGNATURE_INVALIDATION",
+        "PDF_REDACTION_OVERLAP",
+    ]
 
     payload["acknowledged_warnings"] = ["PDF_REDACTION_OVERLAP"]
+    signature_review = client.post("/api/v1/redaction-plans/validate", json=payload)
+    assert signature_review.status_code == 200
+    assert signature_review.json()["valid"] is False
+
+    payload["acknowledged_warnings"].append("PDF_DIGITAL_SIGNATURE_INVALIDATION")
     plan = client.post("/api/v1/redaction-plans/validate", json=payload)
     assert plan.status_code == 200
     assert plan.json()["valid"] is True
@@ -395,6 +433,7 @@ def test_general_pdf_redaction_plan_executes_in_worker(client: TestClient) -> No
     assert task["comparison"]["removed_count"] == 1
     assert task["comparison"]["changed_parts"] == ["page:1"]
     assert task["warning_codes"] == [
+        "PDF_DIGITAL_SIGNATURE_INVALIDATION",
         "PDF_REDACTION_IRREVERSIBLE",
         "PDF_REDACTION_OVERLAP",
     ]

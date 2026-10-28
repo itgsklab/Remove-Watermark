@@ -7,6 +7,9 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- End-to-end PDF digital-signature safeguards for CodeCV cleanup, general region removal and Deep
+  repair, including structured detection, required Web/CLI/API acknowledgement and task-report
+  evidence that the generated copy invalidates existing signature verification.
 - Privacy-safe CodeCV compatibility diagnostics in the Web analysis response and interface,
   covering aggregate Pattern resources and complete, confirmed and ambiguous signature counts
   without exposing resume text, file paths, resource names or PDF object contents.

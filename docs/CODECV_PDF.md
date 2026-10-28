@@ -30,6 +30,9 @@ The public reference repository contains the script and documentation but no PDF
 - A partial sequence does not become a candidate.
 - A complete sequence without a resolvable tiling pattern is marked ambiguous.
 - A scan with no match reports `not_found`; it does not claim the document has no watermark.
+- Existing PDF signature fields are reported before planning. The Web and CLI both require an
+  explicit `PDF_DIGITAL_SIGNATURE_INVALIDATION` acknowledgement because writing the cleaned copy
+  invalidates the source document's existing signature verification.
 
 ## Privacy-safe compatibility diagnostics
 

@@ -5,11 +5,13 @@ from fastapi.testclient import TestClient
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import (
     ArrayObject,
+    ByteStringObject,
     DecodedStreamObject,
     DictionaryObject,
     FloatObject,
     NameObject,
     NumberObject,
+    TextStringObject,
 )
 
 
@@ -19,6 +21,7 @@ def make_pdf(
     include_pattern_resource: bool = True,
     pattern_resource_only: bool = False,
     encrypted: bool = False,
+    digitally_signed: bool = False,
 ) -> bytes:
     writer = PdfWriter()
     page = writer.add_blank_page(width=612, height=792)
@@ -72,6 +75,30 @@ def make_pdf(
     content.set_data(content_data)
     page[NameObject("/Resources")] = resources
     page[NameObject("/Contents")] = writer._add_object(content)
+    if digitally_signed:
+        signature = DictionaryObject(
+            {
+                NameObject("/Type"): NameObject("/Sig"),
+                NameObject("/Filter"): NameObject("/Adobe.PPKLite"),
+                NameObject("/SubFilter"): NameObject("/adbe.pkcs7.detached"),
+                NameObject("/Contents"): ByteStringObject(b"test-signature"),
+                NameObject("/M"): TextStringObject("D:20260101000000Z"),
+            }
+        )
+        signature_field = DictionaryObject(
+            {
+                NameObject("/FT"): NameObject("/Sig"),
+                NameObject("/T"): TextStringObject("Approval"),
+                NameObject("/V"): writer._add_object(signature),
+            }
+        )
+        writer._root_object[NameObject("/AcroForm")] = DictionaryObject(
+            {
+                NameObject("/Fields"): ArrayObject(
+                    [writer._add_object(signature_field)]
+                )
+            }
+        )
     if encrypted:
         writer.encrypt("secret")
     output = BytesIO()
@@ -195,12 +222,14 @@ def test_codecv_inspector_rejects_truncated_pdf(client: TestClient) -> None:
 
 
 def test_codecv_plan_generates_valid_clean_pdf_copy(client: TestClient) -> None:
-    source_bytes = make_pdf()
+    source_bytes = make_pdf(digitally_signed=True)
     asset = upload_pdf(client, source_bytes)
     analysis = client.post(
         "/api/v1/analyses",
         json={"asset_id": asset["id"], "preset": "codecv"},
     ).json()
+    assert analysis["pdf_has_digital_signatures"] is True
+    assert any("数字签名" in warning for warning in analysis["warnings"])
     candidate_id = analysis["candidates"][0]["candidate_id"]
 
     planned = client.post(
@@ -210,6 +239,22 @@ def test_codecv_plan_generates_valid_clean_pdf_copy(client: TestClient) -> None:
             "asset_sha256": asset["sha256"],
             "analysis_id": analysis["id"],
             "operations": [{"candidate_id": candidate_id, "strategy": "object"}],
+        },
+    )
+    assert planned.status_code == 200
+    assert planned.json()["valid"] is False
+    assert planned.json()["warnings"][0]["code"] == (
+        "PDF_DIGITAL_SIGNATURE_INVALIDATION"
+    )
+
+    planned = client.post(
+        "/api/v1/plans/validate",
+        json={
+            "asset_id": asset["id"],
+            "asset_sha256": asset["sha256"],
+            "analysis_id": analysis["id"],
+            "operations": [{"candidate_id": candidate_id, "strategy": "object"}],
+            "acknowledged_warnings": ["PDF_DIGITAL_SIGNATURE_INVALIDATION"],
         },
     )
     assert planned.status_code == 200
@@ -227,6 +272,7 @@ def test_codecv_plan_generates_valid_clean_pdf_copy(client: TestClient) -> None:
     assert task["status"] == "succeeded", task
     assert task["comparison"]["removed_count"] == 1
     assert task["comparison"]["changed_parts"] == ["page:1"]
+    assert task["warning_codes"] == ["PDF_DIGITAL_SIGNATURE_INVALIDATION"]
     artifact = next(item for item in task["artifacts"] if item["role"] == "output")
     assert artifact["media_type"] == "application/pdf"
     downloaded = client.get(artifact["download_url"])

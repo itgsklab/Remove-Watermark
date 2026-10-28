@@ -51,6 +51,7 @@ const redactionX1 = ref(100)
 const redactionY1 = ref(100)
 const redactionRegions = ref<RedactionRegion[]>([])
 const confirmedRedactionOverlap = ref(false)
+const confirmedSignatureInvalidation = ref(false)
 const pdfRegionStrategy = ref<'pymupdf_redaction' | 'raster_inpaint'>('pymupdf_redaction')
 const pdfDeepDpi = ref(144)
 const pdfDeepRadius = ref(3)
@@ -212,6 +213,7 @@ async function inspect() {
     redactionPreview.value = null
     redactionRegions.value = []
     confirmedRedactionOverlap.value = false
+    confirmedSignatureInvalidation.value = false
     confirmedRasterization.value = false
     resetImageMasks()
     vlmWarnings.value = []
@@ -251,6 +253,9 @@ async function processSelection() {
     const acknowledgements = confirmedAmbiguous.value.map(
       candidateId => `AMBIGUOUS_CANDIDATE:${candidateId}`,
     )
+    if (confirmedSignatureInvalidation.value) {
+      acknowledgements.push('PDF_DIGITAL_SIGNATURE_INVALIDATION')
+    }
     const plan = await validatePlan(
       analysis.value,
       selectedCandidates.value,
@@ -318,6 +323,7 @@ function clearAnalysis() {
   redactionPreview.value = null
   redactionRegions.value = []
   confirmedRedactionOverlap.value = false
+  confirmedSignatureInvalidation.value = false
   resetImageMasks()
 }
 
@@ -556,6 +562,7 @@ function useVisualRegion(region: {
 function clearRedactionDraft() {
   redactionPreview.value = null
   confirmedRedactionOverlap.value = false
+  confirmedSignatureInvalidation.value = false
   confirmedRasterization.value = false
 }
 
@@ -627,6 +634,7 @@ async function previewRedactionRisk() {
       pdfRegionStrategy.value,
     )
     confirmedRedactionOverlap.value = false
+    confirmedSignatureInvalidation.value = false
     const count = redactionOverlapCount.value
     message.value = count
       ? `${redactionRegions.value.length} 个区域与 ${count} 个正文或交互对象相交，请检查下方风险。`
@@ -650,6 +658,9 @@ async function processRedaction() {
   try {
     const acknowledgements: string[] = []
     if (confirmedRedactionOverlap.value) acknowledgements.push('PDF_REDACTION_OVERLAP')
+    if (confirmedSignatureInvalidation.value) {
+      acknowledgements.push('PDF_DIGITAL_SIGNATURE_INVALIDATION')
+    }
     if (confirmedRasterization.value) acknowledgements.push('PDF_RASTERIZATION')
     const plan = await validateRedactionPlan(analysis.value, regions, acknowledgements, {
       strategy: pdfRegionStrategy.value,
@@ -1186,13 +1197,17 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
             ? '我已核对相交对象，确认在输出副本中栅格修复该区域'
             : '我已核对相交对象，确认从输出副本中物理删除该区域内容' }}
         </label>
+        <label v-if="redactionPreview.digital_signature_present" class="risk-confirm signature-confirm">
+          <input v-model="confirmedSignatureInvalidation" type="checkbox" :disabled="busy" />
+          我知道原 PDF 的现有数字签名将在新副本中失效，并确认继续处理
+        </label>
         <label v-if="pdfRegionStrategy === 'raster_inpaint'" class="risk-confirm">
           <input v-model="confirmedRasterization" type="checkbox" :disabled="busy" />
           我确认所选页面将栅格化，链接、表单和矢量对象不会保留，并会检查输出文字层
         </label>
         <div v-if="redactionPreview.executable" class="process-actions">
           <button
-            :disabled="busy || !ocrSelectionValid || (redactionPreview.requires_acknowledgement && !confirmedRedactionOverlap) || (pdfRegionStrategy === 'raster_inpaint' && !confirmedRasterization)"
+            :disabled="busy || !ocrSelectionValid || (redactionPreview.requires_acknowledgement && !confirmedRedactionOverlap) || (redactionPreview.digital_signature_present && !confirmedSignatureInvalidation) || (pdfRegionStrategy === 'raster_inpaint' && !confirmedRasterization)"
             @click="processRedaction"
           >{{ busy ? '正在处理…' : pdfRegionStrategy === 'raster_inpaint' ? '生成栅格修复 PDF 副本' : '生成区域删除后的 PDF 副本' }}</button>
           <p>使用 AGPL 版 PyMuPDF；只生成新副本，不覆盖原文件。</p>
@@ -1206,7 +1221,14 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
       </template>
     </section>
     <div v-if="canProcess && hasObjectCandidates" class="process-actions">
-      <button :disabled="busy || selectedCandidates.length === 0" @click="processSelection">
+      <label v-if="analysis?.pdf_has_digital_signatures" class="risk-confirm signature-confirm">
+        <input v-model="confirmedSignatureInvalidation" type="checkbox" :disabled="busy" />
+        我知道原 PDF 的现有数字签名将在 CodeCV 清理副本中失效，并确认继续处理
+      </label>
+      <button
+        :disabled="busy || selectedCandidates.length === 0 || (analysis?.pdf_has_digital_signatures && !confirmedSignatureInvalidation)"
+        @click="processSelection"
+      >
         {{ busy ? '正在处理…' : `生成无水印${isCodeCvPdf ? ' PDF' : ''}副本（已选 ${selectedCandidates.length} 项）` }}
       </button>
       <p>仅生成新文件，上传的原始文件不会被覆盖。</p>

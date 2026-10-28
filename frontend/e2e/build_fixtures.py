@@ -6,14 +6,16 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 import pymupdf
 from PIL import Image, ImageDraw
-from pypdf import PdfWriter
+from pypdf import PdfReader, PdfWriter
 from pypdf.generic import (
     ArrayObject,
+    ByteStringObject,
     DecodedStreamObject,
     DictionaryObject,
     FloatObject,
     NameObject,
     NumberObject,
+    TextStringObject,
 )
 
 OUTPUT = Path(__file__).resolve().parent / ".generated"
@@ -23,7 +25,9 @@ def main() -> None:
     OUTPUT.mkdir(parents=True, exist_ok=True)
     (OUTPUT / "browser-watermark.docx").write_bytes(_docx())
     _write_pdf(OUTPUT / "browser-watermark.pdf")
-    (OUTPUT / "browser-codecv.pdf").write_bytes(_codecv_pdf())
+    codecv_path = OUTPUT / "browser-codecv.pdf"
+    codecv_path.write_bytes(_codecv_pdf())
+    _add_test_signature(codecv_path)
     _write_image(OUTPUT / "browser-watermark.png")
 
 
@@ -115,6 +119,37 @@ def _write_pdf(path: Path) -> None:
     document.set_metadata({"title": "Generated browser PDF fixture"})
     document.save(path)
     document.close()
+    _add_test_signature(path)
+
+
+def _add_test_signature(path: Path) -> None:
+    source = PdfReader(BytesIO(path.read_bytes()), strict=True)
+    writer = PdfWriter()
+    writer.clone_document_from_reader(source)
+    signature = DictionaryObject(
+        {
+            NameObject("/Type"): NameObject("/Sig"),
+            NameObject("/Filter"): NameObject("/Adobe.PPKLite"),
+            NameObject("/SubFilter"): NameObject("/adbe.pkcs7.detached"),
+            NameObject("/ByteRange"): ArrayObject(
+                [NumberObject(0), NumberObject(0), NumberObject(0), NumberObject(0)]
+            ),
+            NameObject("/Contents"): ByteStringObject(b"browser-test-signature"),
+        }
+    )
+    signature_field = DictionaryObject(
+        {
+            NameObject("/FT"): NameObject("/Sig"),
+            NameObject("/T"): TextStringObject("Browser approval"),
+            NameObject("/V"): writer._add_object(signature),
+        }
+    )
+    writer._root_object[NameObject("/AcroForm")] = DictionaryObject(
+        {NameObject("/Fields"): ArrayObject([writer._add_object(signature_field)])}
+    )
+    output = BytesIO()
+    writer.write(output)
+    path.write_bytes(output.getvalue())
 
 
 def _codecv_pdf() -> bytes:

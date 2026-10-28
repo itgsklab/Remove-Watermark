@@ -552,13 +552,25 @@ def test_codecv_plan_then_apply_removes_pattern_and_preserves_text(
     source = tmp_path / "resume.pdf"
     plan_path = tmp_path / "codecv-plan.json"
     output = tmp_path / "cleaned.pdf"
-    source.write_bytes(make_codecv_pdf())
+    source.write_bytes(make_codecv_pdf(digitally_signed=True))
 
     planned_code, planned_stdout, planned_stderr = run_cli(
         ["codecv-plan", str(source), str(plan_path), "--json"]
     )
     planned = json.loads(planned_stdout)["result"]
     candidate_id = planned["candidates"][0]["candidate_id"]
+    warning_code = "PDF_DIGITAL_SIGNATURE_INVALIDATION"
+    rejected_code, rejected_stdout, rejected_stderr = run_cli(
+        [
+            "codecv-apply",
+            str(source),
+            str(plan_path),
+            str(output),
+            "--candidate",
+            candidate_id,
+            "--json",
+        ]
+    )
     applied_code, applied_stdout, applied_stderr = run_cli(
         [
             "codecv-apply",
@@ -567,6 +579,8 @@ def test_codecv_plan_then_apply_removes_pattern_and_preserves_text(
             str(output),
             "--candidate",
             candidate_id,
+            "--acknowledge",
+            warning_code,
             "--json",
         ]
     )
@@ -579,6 +593,12 @@ def test_codecv_plan_then_apply_removes_pattern_and_preserves_text(
     assert planned_code == ExitCode.SUCCESS
     assert planned_stderr == ""
     assert planned["match_status"] == "matched"
+    assert planned["warnings"][0]["code"] == warning_code
+    assert rejected_code == ExitCode.ACKNOWLEDGEMENT_REQUIRED
+    assert rejected_stdout == ""
+    assert json.loads(rejected_stderr)["error"]["code"] == (
+        "DOCUMENT_ACKNOWLEDGEMENT_REQUIRED"
+    )
     assert applied_code == ExitCode.SUCCESS
     assert applied_stderr == ""
     assert applied["result"]["removed_count"] == 1

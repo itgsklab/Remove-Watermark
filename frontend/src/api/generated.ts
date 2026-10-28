@@ -417,6 +417,11 @@ export interface components {
             readonly inspected_parts: readonly string[];
             /** Match Status */
             readonly match_status?: ("matched" | "needs_review" | "not_found") | null;
+            /**
+             * Pdf Has Digital Signatures
+             * @default false
+             */
+            readonly pdf_has_digital_signatures: boolean;
             /** Pdf Pages */
             readonly pdf_pages?: readonly components["schemas"]["PdfPageGeometry"][];
             /** Preset */
@@ -1049,6 +1054,11 @@ export interface components {
             readonly analysis_id: string;
             /** Asset Id */
             readonly asset_id: string;
+            /**
+             * Digital Signature Present
+             * @default false
+             */
+            readonly digital_signature_present: boolean;
             /** Executable */
             readonly executable: boolean;
             /** Regions */

@@ -47,6 +47,7 @@ def create_candidate_plan(
     settings: Settings | None = None,
 ) -> CandidatePlanFile:
     config = settings or Settings()
+    has_digital_signatures = False
     if watermark_text is not None:
         watermark_text = watermark_text.strip()
         if not watermark_text or len(watermark_text) > 200:
@@ -129,6 +130,7 @@ def create_candidate_plan(
             scan_warnings = list(inspection.warnings)
             match_status = inspection.match_status
             kind = "codecv_object_removal"
+            has_digital_signatures = inspection.has_digital_signatures
     except CandidatePlanFileError:
         raise
     except AssetError as exc:
@@ -147,6 +149,17 @@ def create_candidate_plan(
         for item in candidates
         if item.classification == "ambiguous" and "object" in item.allowed_strategies
     ]
+    if plan_kind == "codecv" and has_digital_signatures:
+        warnings.insert(
+            0,
+            PlanWarning(
+                code="PDF_DIGITAL_SIGNATURE_INVALIDATION",
+                message=(
+                    "The source PDF contains a digital signature; applying this plan "
+                    "will invalidate the existing signature verification."
+                ),
+            ),
+        )
     payload = {
         "schema_version": 1,
         "kind": kind,
@@ -233,6 +246,11 @@ def select_candidates(
         for item in selected
         if item.classification == "ambiguous"
     }
+    required.update(
+        warning.code
+        for warning in plan.warnings
+        if warning.candidate_id is None and warning.requires_acknowledgement
+    )
     acknowledged = set(acknowledged_warnings)
     unknown = sorted(acknowledged - required)
     if unknown:
