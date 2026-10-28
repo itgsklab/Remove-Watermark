@@ -28,6 +28,7 @@ import {
   validateRedactionPlan,
 } from '@/api/client'
 import { useWorkspaceStore } from '@/stores/workspace'
+import CandidateList from '@/components/CandidateList.vue'
 import ImageMaskEditor from '@/components/ImageMaskEditor.vue'
 import PdfRegionEditor from '@/components/PdfRegionEditor.vue'
 import TaskOutcomePanel from '@/components/TaskOutcomePanel.vue'
@@ -300,17 +301,6 @@ async function requestCancellation() {
   } catch (error) {
     message.value = error instanceof ApiError ? error.message : '无法取消任务。'
   }
-}
-
-function classificationLabel(candidate: Analysis['candidates'][number]) {
-  if (candidate.kind === 'image' && candidate.allowed_strategies.length === 0) {
-    return '图片待复核 · 只读'
-  }
-  if (candidate.classification === 'confirmed') {
-    return analysis.value?.preset === 'general' ? '结构明确' : '与目标匹配'
-  }
-  if (candidate.classification === 'ambiguous') return '需要复核'
-  return '正常内容'
 }
 
 function clearAnalysis() {
@@ -678,12 +668,6 @@ async function processRedaction() {
   }
 }
 
-function sourceLabel(candidate: Analysis['candidates'][number]) {
-  const locator = candidate.source_locator
-  if (locator.part_name) return locator.part_name
-  if (locator.page_numbers.length) return `第 ${locator.page_numbers.join('、')} 页`
-  return '未知来源'
-}
 </script>
 
 <template>
@@ -800,70 +784,16 @@ function sourceLabel(candidate: Analysis['candidates'][number]) {
       <p class="codecv-rule-version">规则 {{ analysis.codecv_diagnostics.rule_version }}</p>
       <p v-if="codeCvDiagnosticCopyState" class="hint" role="status">{{ codeCvDiagnosticCopyState }}</p>
     </section>
-    <article v-for="candidate in analysis.candidates" :key="candidate.candidate_id" class="candidate-card">
-      <div>
-        <figure v-if="candidate.preview_url" class="candidate-image-preview">
-          <img :src="candidate.preview_url" :alt="`${candidate.content || 'DrawingML 图片'}候选预览`" />
-          <figcaption>DOCX 内嵌图片处理前预览</figcaption>
-        </figure>
-        <label v-if="canProcess && candidate.allowed_strategies.includes('object')" class="candidate-select">
-          <input
-            v-model="selectedCandidates"
-            type="checkbox"
-            :value="candidate.candidate_id"
-            :disabled="busy || candidate.classification === 'content'"
-          />
-          选择此候选
-        </label>
-        <span :class="['candidate-state', candidate.classification]">
-          {{ classificationLabel(candidate) }}
-        </span>
-        <h3>{{ candidate.content || '无法读取文字' }}</h3>
-        <p>{{ candidate.evidence }}</p>
-        <label
-          v-if="candidate.classification === 'ambiguous' && selectedCandidates.includes(candidate.candidate_id)"
-          class="risk-confirm"
-        >
-          <input
-            v-model="confirmedAmbiguous"
-            type="checkbox"
-            :value="candidate.candidate_id"
-            :disabled="busy"
-          />
-          我已核对该对象，确认将它从输出副本中删除
-        </label>
-      </div>
-      <dl>
-        <dt>来源</dt><dd>{{ sourceLabel(candidate) }}</dd>
-        <template v-if="candidate.source_locator.shape_id">
-          <dt>形状 ID</dt><dd>{{ candidate.source_locator.shape_id }}</dd>
-        </template>
-        <template v-if="candidate.source_locator.drawing_index !== null">
-          <dt>绘图序号</dt><dd>{{ candidate.source_locator.drawing_index + 1 }}</dd>
-          <dt>图片关系</dt><dd>{{ candidate.source_locator.relationship_id }}</dd>
-          <dt>内嵌资源</dt><dd>{{ candidate.source_locator.media_part_name }}</dd>
-        </template>
-        <template v-if="candidate.source_locator.resource_name">
-          <dt>图案资源</dt><dd>{{ candidate.source_locator.resource_name }}</dd>
-          <dt>PDF 对象</dt><dd>{{ candidate.source_locator.object_number ?? '直接对象' }}</dd>
-        </template>
-        <template v-if="candidate.source_locator.annotation_index !== null">
-          <dt>注释序号</dt><dd>{{ candidate.source_locator.annotation_index + 1 }}</dd>
-        </template>
-        <template v-if="candidate.region">
-          <dt>PDF 区域</dt>
-          <dd>
-            {{ candidate.region.approximate ? '约 ' : '' }}
-            {{ candidate.region.x0.toFixed(1) }}, {{ candidate.region.y0.toFixed(1) }} →
-            {{ candidate.region.x1.toFixed(1) }}, {{ candidate.region.y1.toFixed(1) }}
-          </dd>
-        </template>
-        <template v-if="candidate.overlaps_protected_content">
-          <dt>重叠风险</dt><dd>可能覆盖正文，禁止自动处理</dd>
-        </template>
-        <dt>允许策略</dt><dd>{{ candidate.allowed_strategies.join(' · ') || '只读检查' }}</dd>
-      </dl>
-    </article>
+    <CandidateList
+      :candidates="analysis.candidates"
+      :preset="analysis.preset"
+      :can-process="canProcess"
+      :busy="busy"
+      :selected-candidate-ids="selectedCandidates"
+      :confirmed-candidate-ids="confirmedAmbiguous"
+      @update:selected-candidate-ids="selectedCandidates = $event"
+      @update:confirmed-candidate-ids="confirmedAmbiguous = $event"
+    />
     <p v-if="analysis.preset !== 'image' && analysis.candidates.length === 0" class="panel empty-candidates">没有候选。此结果不证明文档不存在其他类型水印。</p>
     <p v-for="warning in analysis.warnings" :key="warning" class="warning">{{ warning }}</p>
     <p v-for="warning in planWarnings" :key="warning.code" class="warning">{{ warning.message }}</p>
