@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A reusable candidate-list component for DOCX and PDF analyses, centralizing preview, evidence,
+  source location, selection and acknowledgement behavior while preserving read-only candidates.
 - A reusable workspace task outcome panel with accessible progress, duration, warning count,
   centralized cancellation, terminal failure/cancellation reporting, result downloads and visual
   comparisons shared by DOCX, CodeCV, general-PDF and image workflows.
