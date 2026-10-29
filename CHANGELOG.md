@@ -110,6 +110,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Changed
 
+- Move image-mask drafts and their bounded undo/redo history into a reusable Vue composable, and
+  isolate image preview, suggestion and processing API orchestration from the workspace view.
 - Refresh the supported Vue build toolchain within its current major versions and regenerate the
   release dependency inventory and SPDX SBOM.
 - Replace internal capability strategy labels on the home page with user-facing Chinese workflow
