@@ -110,6 +110,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Changed
 
+- Move general-PDF region drafts, OCR diagnostics, risk previews and processing-plan orchestration
+  into a reusable Vue composable while keeping shared task polling in the workspace view.
 - Move image-mask drafts and their bounded undo/redo history into a reusable Vue composable, and
   isolate image preview, suggestion and processing API orchestration from the workspace view.
 - Refresh the supported Vue build toolchain within its current major versions and regenerate the
