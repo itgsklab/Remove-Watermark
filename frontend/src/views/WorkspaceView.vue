@@ -30,7 +30,7 @@ import {
 import { useWorkspaceStore } from '@/stores/workspace'
 import CandidateList from '@/components/CandidateList.vue'
 import ImageMaskEditor from '@/components/ImageMaskEditor.vue'
-import PdfRegionEditor from '@/components/PdfRegionEditor.vue'
+import PdfStrategyPanel from '@/components/PdfStrategyPanel.vue'
 import TaskOutcomePanel from '@/components/TaskOutcomePanel.vue'
 
 const route = useRoute()
@@ -103,9 +103,6 @@ const redactionOverlapCount = computed(() => redactionPreview.value?.regions.red
   (total, region) => total + region.overlaps.length,
   0,
 ) ?? 0)
-const redactionDraftPageCount = computed(() => new Set(
-  redactionRegions.value.map(region => region.page_number),
-).size)
 const canUndoImageMasks = computed(() => imageMaskPast.value.length > 0)
 const canRedoImageMasks = computed(() => imageMaskFuture.value.length > 0)
 const imageMaskHistoryLimit = 50
@@ -979,163 +976,38 @@ async function processRedaction() {
         </div>
       </template>
     </section>
-    <section v-if="analysis.preset === 'general' && analysis.pdf_pages.length" class="panel redaction-panel">
-      <div>
-        <p class="eyebrow">PDF 区域处理</p>
-        <h2>框选水印并选择处理方式</h2>
-        <p>对象级删除适合普通 PDF；栅格修复适合无法单独删除的合成水印。</p>
-      </div>
-      <div class="pdf-strategy-options">
-        <label for="pdf-region-strategy">
-          处理方式
-          <select id="pdf-region-strategy" v-model="pdfRegionStrategy" @change="clearRedactionDraft">
-            <option value="pymupdf_redaction">对象级区域删除（保留页面结构）</option>
-            <option value="raster_inpaint">Deep 栅格修复（OpenCV + 可搜索文字层）</option>
-          </select>
-        </label>
-        <template v-if="pdfRegionStrategy === 'raster_inpaint'">
-          <label>
-            渲染 DPI
-            <input v-model.number="pdfDeepDpi" type="number" min="96" max="300" step="12" @input="clearRedactionDraft" />
-          </label>
-          <label>
-            修复半径
-            <input v-model.number="pdfDeepRadius" type="number" min="1" max="10" @input="clearRedactionDraft" />
-          </label>
-        </template>
-      </div>
-      <section v-if="pdfRegionStrategy === 'raster_inpaint'" class="pdf-ocr-panel">
-        <div>
-          <p class="eyebrow">可搜索文字层</p>
-          <h3>Tesseract OCR</h3>
-          <p v-if="runtimeDiagnostics">{{ runtimeDiagnostics.ocr.message }}</p>
-          <p v-else>{{ ocrDiagnosticsError || '正在读取已安装语言包…' }}</p>
-        </div>
-        <label class="pdf-ocr-toggle">
-          <input
-            v-model="pdfOcrEnabled"
-            type="checkbox"
-            :disabled="!ocrRuntimeReady"
-            @change="clearRedactionDraft"
-          />
-          为没有原始文字层的页面执行 OCR
-        </label>
-        <label v-if="pdfOcrEnabled" for="pdf-ocr-languages" class="pdf-ocr-languages">
-          已安装语言包（可多选）
-          <select
-            id="pdf-ocr-languages"
-            v-model="pdfOcrLanguages"
-            multiple
-            :size="Math.min(6, Math.max(3, installedOcrLanguages.length))"
-            @change="clearRedactionDraft"
-          >
-            <option v-for="language in installedOcrLanguages" :key="language" :value="language">
-              {{ language }}
-            </option>
-          </select>
-        </label>
-        <p v-if="pdfOcrEnabled && !ocrSelectionValid" class="warning">
-          请至少选择一个语言包；按住 Command 或 Ctrl 可以多选。
-        </p>
-        <p v-else-if="pdfOcrEnabled" class="hint">
-          当前组合：{{ pdfOcrLanguages.join('+') }}。按住 Command 或 Ctrl 可以多选。
-        </p>
-        <p v-else class="hint">OCR 已关闭；原本没有文字层的页面会在报告中标记为不可搜索。</p>
-      </section>
-      <p v-if="pdfRegionStrategy === 'raster_inpaint'" class="hint">
-        只栅格化被选中的页面；蒙版外原始文字会作为隐藏文字层回灌。图片型页面仅在本机安装 Tesseract 时执行 OCR。
-      </p>
-      <PdfRegionEditor
-        v-if="selectedPdfPage"
-        :asset-id="assetId"
-        :page="selectedPdfPage"
-        :regions="redactionRegions"
-        @select="useVisualRegion"
-      />
-      <div class="redaction-fields">
-        <label for="pdf-redaction-page">
-          页面
-          <select id="pdf-redaction-page" v-model.number="redactionPage" @change="clearRedactionDraft">
-            <option v-for="page in analysis.pdf_pages" :key="page.page_number" :value="page.page_number">
-              第 {{ page.page_number }} 页（{{ page.width.toFixed(0) }} × {{ page.height.toFixed(0) }}）
-            </option>
-          </select>
-        </label>
-        <label>X0 <input v-model.number="redactionX0" type="number" min="0" step="0.1" @input="clearRedactionDraft" /></label>
-        <label>Y0 <input v-model.number="redactionY0" type="number" min="0" step="0.1" @input="clearRedactionDraft" /></label>
-        <label>X1 <input v-model.number="redactionX1" type="number" min="0" step="0.1" @input="clearRedactionDraft" /></label>
-        <label>Y1 <input v-model.number="redactionY1" type="number" min="0" step="0.1" @input="clearRedactionDraft" /></label>
-      </div>
-      <div class="process-actions">
-        <button :disabled="busy" @click="addRedactionRegion">加入计划草稿</button>
-        <button
-          class="secondary-button"
-          :disabled="busy || redactionRegions.length === 0"
-          @click="previewRedactionRisk"
-        >
-          {{ busy ? '正在分析…' : `检查 ${redactionRegions.length} 个区域的重叠风险` }}
-        </button>
-        <p>可切换页面继续框选，一个计划最多包含 100 个区域。</p>
-      </div>
-      <section v-if="redactionRegions.length" class="redaction-draft" aria-label="PDF 区域计划草稿">
-        <div class="redaction-draft-heading">
-          <div>
-            <p class="eyebrow">计划草稿</p>
-            <h3>{{ redactionRegions.length }} 个区域 · {{ redactionDraftPageCount }} 页</h3>
-          </div>
-        </div>
-        <ol>
-          <li v-for="(region, index) in redactionRegions" :key="`${region.page_number}-${index}`">
-            <span>
-              第 {{ region.page_number }} 页 ·
-              {{ region.x0.toFixed(1) }}, {{ region.y0.toFixed(1) }} →
-              {{ region.x1.toFixed(1) }}, {{ region.y1.toFixed(1) }}
-            </span>
-            <button
-              class="text-button"
-              :disabled="busy"
-              :aria-label="`移除第 ${index + 1} 个 PDF 区域`"
-              @click="removeRedactionRegion(index)"
-            >移除</button>
-          </li>
-        </ol>
-      </section>
-      <template v-if="redactionPreview">
-        <div v-if="redactionOverlapCount" class="overlap-list">
-          <h3>相交对象</h3>
-          <template v-for="(region, regionIndex) in redactionPreview.regions" :key="regionIndex">
-            <h4 v-if="region.overlaps.length">区域 {{ regionIndex + 1 }} · 第 {{ region.region.page_number }} 页</h4>
-            <ul v-if="region.overlaps.length">
-              <li v-for="item in region.overlaps" :key="`${regionIndex}-${item.content_id}`">
-                <strong>{{ item.kind }}</strong> · {{ item.summary }} · 相交面积 {{ item.intersection_area.toFixed(1) }}
-              </li>
-            </ul>
-          </template>
-        </div>
-        <p v-for="warning in redactionPreview.warnings" :key="warning" class="warning">{{ warning }}</p>
-        <label v-if="redactionPreview.requires_acknowledgement" class="risk-confirm">
-          <input v-model="confirmedRedactionOverlap" type="checkbox" :disabled="busy" />
-          {{ pdfRegionStrategy === 'raster_inpaint'
-            ? '我已核对相交对象，确认在输出副本中栅格修复该区域'
-            : '我已核对相交对象，确认从输出副本中物理删除该区域内容' }}
-        </label>
-        <label v-if="redactionPreview.digital_signature_present" class="risk-confirm signature-confirm">
-          <input v-model="confirmedSignatureInvalidation" type="checkbox" :disabled="busy" />
-          我知道原 PDF 的现有数字签名将在新副本中失效，并确认继续处理
-        </label>
-        <label v-if="pdfRegionStrategy === 'raster_inpaint'" class="risk-confirm">
-          <input v-model="confirmedRasterization" type="checkbox" :disabled="busy" />
-          我确认所选页面将栅格化，链接、表单和矢量对象不会保留，并会检查输出文字层
-        </label>
-        <div v-if="redactionPreview.executable" class="process-actions">
-          <button
-            :disabled="busy || !ocrSelectionValid || (redactionPreview.requires_acknowledgement && !confirmedRedactionOverlap) || (redactionPreview.digital_signature_present && !confirmedSignatureInvalidation) || (pdfRegionStrategy === 'raster_inpaint' && !confirmedRasterization)"
-            @click="processRedaction"
-          >{{ busy ? '正在处理…' : pdfRegionStrategy === 'raster_inpaint' ? '生成栅格修复 PDF 副本' : '生成区域删除后的 PDF 副本' }}</button>
-          <p>使用 AGPL 版 PyMuPDF；只生成新副本，不覆盖原文件。</p>
-        </div>
-      </template>
-    </section>
+    <PdfStrategyPanel
+      v-if="analysis.preset === 'general' && analysis.pdf_pages.length"
+      v-model:strategy="pdfRegionStrategy"
+      v-model:dpi="pdfDeepDpi"
+      v-model:radius="pdfDeepRadius"
+      v-model:ocr-enabled="pdfOcrEnabled"
+      v-model:ocr-languages="pdfOcrLanguages"
+      v-model:page="redactionPage"
+      v-model:x0="redactionX0"
+      v-model:y0="redactionY0"
+      v-model:x1="redactionX1"
+      v-model:y1="redactionY1"
+      v-model:confirmed-overlap="confirmedRedactionOverlap"
+      v-model:confirmed-signature="confirmedSignatureInvalidation"
+      v-model:confirmed-rasterization="confirmedRasterization"
+      :asset-id="assetId"
+      :pages="analysis.pdf_pages"
+      :regions="redactionRegions"
+      :preview="redactionPreview"
+      :runtime-diagnostics="runtimeDiagnostics"
+      :ocr-diagnostics-error="ocrDiagnosticsError"
+      :ocr-runtime-ready="ocrRuntimeReady"
+      :installed-ocr-languages="installedOcrLanguages"
+      :ocr-selection-valid="ocrSelectionValid"
+      :busy="busy"
+      @clear-draft="clearRedactionDraft"
+      @select="useVisualRegion"
+      @add-region="addRedactionRegion"
+      @preview="previewRedactionRisk"
+      @remove-region="removeRedactionRegion"
+      @process="processRedaction"
+    />
     <div v-if="canProcess && hasObjectCandidates" class="process-actions">
       <label v-if="analysis?.pdf_has_digital_signatures" class="risk-confirm signature-confirm">
         <input v-model="confirmedSignatureInvalidation" type="checkbox" :disabled="busy" />

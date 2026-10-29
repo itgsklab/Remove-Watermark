@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A reusable general-PDF strategy panel that centralizes object removal, Deep raster repair, OCR
+  language selection, multi-page region drafts, overlap review and destructive-change confirmations.
 - A reusable candidate-list component for DOCX and PDF analyses, centralizing preview, evidence,
   source location, selection and acknowledgement behavior while preserving read-only candidates.
 - A reusable workspace task outcome panel with accessible progress, duration, warning count,
