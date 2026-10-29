@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A reusable image-workflow panel that centralizes mask editing, local-model suggestions, risk
+  evidence, repair guidance, radius previews and required warning acknowledgements.
 - A reusable general-PDF strategy panel that centralizes object removal, Deep raster repair, OCR
   language selection, multi-page region drafts, overlap review and destructive-change confirmations.
 - A reusable candidate-list component for DOCX and PDF analyses, centralizing preview, evidence,
