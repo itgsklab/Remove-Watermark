@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import {
   ApiError,
@@ -10,20 +10,13 @@ import {
   getCapabilities,
   getRuntimeDiagnostics,
   getTask,
-  previewImageMasks,
   previewRedactions,
-  renderImageMaskPreview,
-  suggestImageMasks,
   type Analysis,
-  type ImageMaskPreview,
-  type ImageMaskPolygon,
-  type ImageMaskRegion,
   type PlanWarning,
   type ProcessingTask,
   type RedactionPreview,
   type RedactionRegion,
   type RuntimeDiagnostics,
-  validateImagePlan,
   validatePlan,
   validateRedactionPlan,
 } from '@/api/client'
@@ -32,6 +25,7 @@ import CandidateList from '@/components/CandidateList.vue'
 import ImageWorkflowPanel from '@/components/ImageWorkflowPanel.vue'
 import PdfStrategyPanel from '@/components/PdfStrategyPanel.vue'
 import TaskOutcomePanel from '@/components/TaskOutcomePanel.vue'
+import { useImageWorkflow } from '@/composables/useImageWorkflow'
 
 const route = useRoute()
 const store = useWorkspaceStore()
@@ -62,28 +56,6 @@ const pdfOcrEnabled = ref(false)
 const pdfOcrLanguages = ref<string[]>([])
 const ocrDiagnosticsError = ref('')
 const confirmedRasterization = ref(false)
-interface ImageMaskDraft {
-  regions: ImageMaskRegion[]
-  polygons: ImageMaskPolygon[]
-  protectedRegions: ImageMaskRegion[]
-}
-interface ImageRadiusPreview {
-  radius: number
-  url: string
-}
-const imageMasks = ref<ImageMaskRegion[]>([])
-const imagePolygons = ref<ImageMaskPolygon[]>([])
-const imageProtectedRegions = ref<ImageMaskRegion[]>([])
-const imageMaskPast = ref<ImageMaskDraft[]>([])
-const imageMaskFuture = ref<ImageMaskDraft[]>([])
-const imageMaskPreview = ref<ImageMaskPreview | null>(null)
-const imageRadius = ref(3)
-const imageRadiusPreviews = ref<ImageRadiusPreview[]>([])
-const imagePreviewBusy = ref(false)
-const imagePlanWarnings = ref<PlanWarning[]>([])
-const confirmedImageWarnings = ref<string[]>([])
-const vlmBusy = ref(false)
-const vlmWarnings = ref<string[]>([])
 const assetId = computed(() => String(route.params.assetId))
 const sourceSha256 = computed(() => store.currentAsset?.sha256 || '')
 const isDocx = computed(() => store.currentAsset?.kind === 'docx')
@@ -103,9 +75,6 @@ const redactionOverlapCount = computed(() => redactionPreview.value?.regions.red
   (total, region) => total + region.overlaps.length,
   0,
 ) ?? 0)
-const canUndoImageMasks = computed(() => imageMaskPast.value.length > 0)
-const canRedoImageMasks = computed(() => imageMaskFuture.value.length > 0)
-const imageMaskHistoryLimit = 50
 const ocrRuntimeReady = computed(() => runtimeDiagnostics.value?.ocr.status === 'ready')
 const installedOcrLanguages = computed(() => runtimeDiagnostics.value?.ocr.languages || [])
 const ocrSelectionValid = computed(() => (
@@ -120,12 +89,36 @@ const codeCvDiagnosticPayload = computed(() => {
   }, null, 2)
 })
 
-const complexityLabels = {
-  low: '低风险',
-  review: '建议复核',
-  high: '高风险',
-} as const
-let imagePreviewRequestId = 0
+const {
+  imageMasks,
+  imagePolygons,
+  imageProtectedRegions,
+  canUndoImageMasks,
+  canRedoImageMasks,
+  imageMaskPreview,
+  imageRadius,
+  imageRadiusPreviews,
+  imagePreviewBusy,
+  imagePlanWarnings,
+  confirmedImageWarnings,
+  vlmBusy,
+  vlmWarnings,
+  updateImageDraft,
+  undoImageMasks,
+  redoImageMasks,
+  resetImageMasks,
+  reportImageMaskLimit,
+  requestVlmSuggestions,
+  previewImageMaskRisk,
+  compareImageRadii,
+  processImage,
+} = useImageWorkflow({
+  analysis,
+  busy,
+  message,
+  vlmAvailable: () => store.capabilities?.vlm_localization.available || false,
+  runTask: waitForTask,
+})
 
 onMounted(async () => {
   try {
@@ -140,8 +133,6 @@ onMounted(async () => {
   }
   if (isCodeCvPdf.value) await loadOcrDiagnostics()
 })
-
-onBeforeUnmount(() => clearImageRadiusPreviews())
 
 async function loadOcrDiagnostics() {
   ocrDiagnosticsError.value = ''
@@ -186,7 +177,6 @@ async function inspect() {
     confirmedSignatureInvalidation.value = false
     confirmedRasterization.value = false
     resetImageMasks()
-    vlmWarnings.value = []
     const firstPage = analysis.value.pdf_pages[0]
     if (analysis.value.preset === 'general' && firstPage) {
       redactionPage.value = firstPage.page_number
@@ -293,213 +283,6 @@ async function copyCodeCvDiagnostics() {
     codeCvDiagnosticCopyState.value = '已复制脱敏诊断。'
   } catch {
     codeCvDiagnosticCopyState.value = '浏览器未允许复制，请手动记录下方统计。'
-  }
-}
-
-function updateImageDraft(regions: ImageMaskRegion[], polygons: ImageMaskPolygon[], protectedRegions: ImageMaskRegion[]) {
-  if (regions.length > 100 || polygons.length > 32 || protectedRegions.length > 100) {
-    reportImageMaskLimit()
-    return
-  }
-  const next = cloneImageDraft({ regions, polygons, protectedRegions })
-  if (sameImageDraft(currentImageDraft(), next)) return
-  imageMaskPast.value.push(cloneImageDraft(currentImageDraft()))
-  if (imageMaskPast.value.length > imageMaskHistoryLimit) imageMaskPast.value.shift()
-  imageMaskFuture.value = []
-  applyImageDraft(next)
-  clearImageMaskPreview()
-}
-
-function undoImageMasks() {
-  const previous = imageMaskPast.value.pop()
-  if (!previous) return
-  imageMaskFuture.value.push(cloneImageDraft(currentImageDraft()))
-  applyImageDraft(previous)
-  clearImageMaskPreview()
-  message.value = `已撤销编辑，当前有 ${imageMasks.value.length} 个蒙版、${imageProtectedRegions.value.length} 个保护区。`
-}
-
-function redoImageMasks() {
-  const next = imageMaskFuture.value.pop()
-  if (!next) return
-  imageMaskPast.value.push(cloneImageDraft(currentImageDraft()))
-  applyImageDraft(next)
-  clearImageMaskPreview()
-  message.value = `已重做编辑，当前有 ${imageMasks.value.length} 个蒙版、${imageProtectedRegions.value.length} 个保护区。`
-}
-
-function resetImageMasks() {
-  imageMasks.value = []
-  imagePolygons.value = []
-  imageProtectedRegions.value = []
-  imageMaskPast.value = []
-  imageMaskFuture.value = []
-  clearImageMaskPreview()
-}
-
-function clearImageMaskPreview() {
-  imageMaskPreview.value = null
-  imagePlanWarnings.value = []
-  confirmedImageWarnings.value = []
-  clearImageRadiusPreviews()
-}
-
-function clearImageRadiusPreviews() {
-  imagePreviewRequestId += 1
-  for (const preview of imageRadiusPreviews.value) URL.revokeObjectURL(preview.url)
-  imageRadiusPreviews.value = []
-  imagePreviewBusy.value = false
-}
-
-function currentImageDraft(): ImageMaskDraft {
-  return { regions: imageMasks.value, polygons: imagePolygons.value, protectedRegions: imageProtectedRegions.value }
-}
-
-function cloneImageDraft(draft: ImageMaskDraft): ImageMaskDraft {
-  return {
-    regions: draft.regions.map(region => ({ ...region })),
-    polygons: draft.polygons.map(polygon => ({
-      ...polygon,
-      points: polygon.points.map(point => ({ ...point })),
-    })),
-    protectedRegions: draft.protectedRegions.map(region => ({ ...region })),
-  }
-}
-
-function applyImageDraft(draft: ImageMaskDraft) {
-  const copy = cloneImageDraft(draft)
-  imageMasks.value = copy.regions
-  imagePolygons.value = copy.polygons
-  imageProtectedRegions.value = copy.protectedRegions
-}
-
-function sameImageRegions(left: ImageMaskRegion[], right: ImageMaskRegion[]) {
-  return left.length === right.length && left.every((region, index) => {
-    const other = right[index]
-    return other !== undefined
-      && region.x0 === other.x0
-      && region.y0 === other.y0
-      && region.x1 === other.x1
-      && region.y1 === other.y1
-      && region.transform_id === other.transform_id
-  })
-}
-
-function sameImageDraft(left: ImageMaskDraft, right: ImageMaskDraft) {
-  return sameImageRegions(left.regions, right.regions)
-    && JSON.stringify(left.polygons) === JSON.stringify(right.polygons)
-    && sameImageRegions(left.protectedRegions, right.protectedRegions)
-}
-
-function reportImageMaskLimit() {
-  message.value = '一个图片草稿最多包含 100 个矩形蒙版、32 个多边形和 100 个保护区片段。'
-}
-
-async function requestVlmSuggestions() {
-  if (!analysis.value || !store.capabilities?.vlm_localization.available) return
-  vlmBusy.value = true
-  message.value = ''
-  vlmWarnings.value = []
-  try {
-    const result = await suggestImageMasks(analysis.value)
-    vlmWarnings.value = result.warnings
-    if (result.status === 'suggested') {
-      updateImageDraft(result.regions, [], [])
-      message.value = `本地模型提出 ${result.regions.length} 个候选区域。请逐个检查、调整并验证蒙版。`
-    } else if (result.status === 'photo_gate_rejected') {
-      message.value = '图片未通过照片场景门禁，模型没有运行；请继续手工框选。'
-    } else {
-      message.value = '本地模型没有提出候选区域；请继续手工框选。'
-    }
-  } catch (error) {
-    message.value = error instanceof ApiError ? error.message : '本地模型候选建议失败，请继续手工框选。'
-  } finally {
-    vlmBusy.value = false
-  }
-}
-
-async function previewImageMaskRisk() {
-  if (!analysis.value || imageMasks.value.length + imagePolygons.value.length === 0) return
-  busy.value = true
-  message.value = ''
-  try {
-    imageMaskPreview.value = await previewImageMasks(
-      analysis.value,
-      imageMasks.value,
-      imagePolygons.value,
-      imageProtectedRegions.value,
-    )
-    const risk = complexityLabels[imageMaskPreview.value.complexity.level]
-    const selection = imageMaskPreview.value.selection_risk.level === 'review'
-      ? '，选区需要确认'
-      : ''
-    message.value = `蒙版草稿有效，覆盖图片面积的 ${(imageMaskPreview.value.coverage_ratio * 100).toFixed(2)}%，背景复杂度为${risk}${selection}。`
-  } catch (error) {
-    message.value = error instanceof ApiError ? error.message : '无法验证图片蒙版。'
-  } finally {
-    busy.value = false
-  }
-}
-
-async function compareImageRadii() {
-  if (!analysis.value || !imageMaskPreview.value?.executable) return
-  const requestId = ++imagePreviewRequestId
-  imagePreviewBusy.value = true
-  message.value = ''
-  const requestedRadius = Number(imageRadius.value)
-  const selectedRadius = Number.isFinite(requestedRadius)
-    ? Math.max(1, Math.min(10, Math.round(requestedRadius)))
-    : 3
-  const radii = [...new Set([1, selectedRadius, 7])].sort((left, right) => left - right)
-  try {
-    const rendered = await Promise.all(radii.map(async radius => ({
-      radius,
-      blob: await renderImageMaskPreview(
-        analysis.value!,
-        imageMasks.value,
-        imagePolygons.value,
-        imageProtectedRegions.value,
-        radius,
-      ),
-    })))
-    if (requestId !== imagePreviewRequestId) return
-    for (const preview of imageRadiusPreviews.value) URL.revokeObjectURL(preview.url)
-    imageRadiusPreviews.value = rendered.map(item => ({
-      radius: item.radius,
-      url: URL.createObjectURL(item.blob),
-    }))
-    message.value = `已生成 ${rendered.length} 个临时效果预览；请选择更合适的修复半径。`
-  } catch (error) {
-    if (requestId !== imagePreviewRequestId) return
-    message.value = error instanceof ApiError ? error.message : '无法生成修复半径对比预览。'
-  } finally {
-    if (requestId === imagePreviewRequestId) imagePreviewBusy.value = false
-  }
-}
-
-async function processImage() {
-  if (!analysis.value || !imageMaskPreview.value?.executable) return
-  busy.value = true
-  message.value = ''
-  try {
-    const plan = await validateImagePlan(
-      analysis.value,
-      imageMasks.value,
-      imagePolygons.value,
-      imageProtectedRegions.value,
-      imageRadius.value,
-      confirmedImageWarnings.value,
-    )
-    imagePlanWarnings.value = plan.warnings
-    if (!plan.valid || !plan.id) {
-      message.value = '请确认所有高风险提示后再执行图片修复。'
-      return
-    }
-    await waitForTask(await createTask(plan.id))
-  } catch (error) {
-    message.value = error instanceof ApiError ? error.message : '创建图片修复任务失败。'
-  } finally {
-    busy.value = false
   }
 }
 
