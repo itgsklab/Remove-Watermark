@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A reusable workspace inspection panel that centralizes file metadata, source previews and
+  format-specific scan controls while preserving the existing DOCX, PDF and image workflows.
 - A reusable image-workflow panel that centralizes mask editing, local-model suggestions, risk
   evidence, repair guidance, radius previews and required warning acknowledgements.
 - A reusable general-PDF strategy panel that centralizes object removal, Deep raster repair, OCR
