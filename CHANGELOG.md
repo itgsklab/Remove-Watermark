@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A reusable analysis-summary panel that centralizes result headings, inspected-location counts and
+  privacy-safe CodeCV compatibility diagnostics with clipboard feedback.
 - A reusable workspace inspection panel that centralizes file metadata, source previews and
   format-specific scan controls while preserving the existing DOCX, PDF and image workflows.
 - A reusable image-workflow panel that centralizes mask editing, local-model suggestions, risk
