@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A reusable workspace-bootstrap workflow for capability discovery, asset loading, PDF diagnostics
+  initialization and stale-response protection when route parameters change.
 - A reusable workspace-analysis workflow for file-kind routing, scan requests, outcome messages and
   analysis cleanup across DOCX, CodeCV/general PDF and image inputs.
 - A reusable task-execution workflow for polling, timeout feedback, cancellation and terminal status

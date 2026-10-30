@@ -126,6 +126,35 @@ test('DOCX watermark workflow reaches verified result and report', async ({ page
   expect(browserErrors).toEqual([])
 })
 
+test('workspace route changes replace the asset and clear the previous analysis', async ({ page }) => {
+  const browserErrors = watchBrowserErrors(page)
+  const docx = await uploadViaApi(page, 'browser-watermark.docx')
+  const image = await uploadViaApi(page, 'browser-watermark.png')
+
+  await page.goto(`/workspace/${docx.id}`)
+  await expect(page.getByRole('heading', { name: 'browser-watermark.docx' })).toBeVisible()
+  await page.getByLabel('目标文字（可选）').fill('DRAFT')
+  await page.getByRole('button', { name: '开始扫描' }).click()
+  await expect(page.getByRole('heading', { name: 'DRAFT', exact: true })).toBeVisible()
+
+  await page.evaluate(async assetId => {
+    const container = document.querySelector('#app') as HTMLElement & {
+      __vue_app__?: {
+        config: { globalProperties: { $router: { push: (path: string) => Promise<void> } } }
+      }
+    }
+    const router = container.__vue_app__?.config.globalProperties.$router
+    if (!router) throw new Error('Vue Router is unavailable.')
+    await router.push(`/workspace/${assetId}`)
+  }, image.id)
+
+  await expect(page).toHaveURL(new RegExp(`/workspace/${image.id}$`))
+  await expect(page.getByRole('heading', { name: 'browser-watermark.png' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '检查图片并编辑蒙版' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'DRAFT', exact: true })).toHaveCount(0)
+  expect(browserErrors).toEqual([])
+})
+
 test('CodeCV scan protects signed input and produces a privacy-safe report', async ({ page }) => {
   const browserErrors = watchBrowserErrors(page)
   await upload(page, 'browser-codecv.pdf')
@@ -399,6 +428,22 @@ async function upload(page: Page, name: string) {
   await page.getByRole('button', { name: '上传并检查' }).click()
   await expect(page).toHaveURL(/\/workspace\/[0-9a-f-]+$/)
   await expect(page.getByRole('heading', { name })).toBeVisible()
+}
+
+async function uploadViaApi(page: Page, name: string): Promise<{ id: string }> {
+  const response = await page.request.post('/api/v1/assets', {
+    multipart: {
+      file: {
+        name,
+        mimeType: name.endsWith('.docx')
+          ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+          : 'image/png',
+        buffer: await readFile(fixture(name)),
+      },
+    },
+  })
+  expect(response.ok()).toBe(true)
+  return response.json() as Promise<{ id: string }>
 }
 
 async function expectCompleted(page: Page) {
