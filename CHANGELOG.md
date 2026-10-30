@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A reusable object-candidate workflow and action panel for DOCX and CodeCV selection, ambiguous
+  candidate acknowledgements, digital-signature confirmation, plan validation and task creation.
 - A reusable analysis-summary panel that centralizes result headings, inspected-location counts and
   privacy-safe CodeCV compatibility diagnostics with clipboard feedback.
 - A reusable workspace inspection panel that centralizes file metadata, source previews and
