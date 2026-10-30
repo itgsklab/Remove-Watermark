@@ -5,23 +5,22 @@ import {
   ApiError,
   cancelTask,
   createAnalysis,
-  createTask,
   getAsset,
   getCapabilities,
   getTask,
   type Analysis,
-  type PlanWarning,
   type ProcessingTask,
-  validatePlan,
 } from '@/api/client'
 import { useWorkspaceStore } from '@/stores/workspace'
 import AnalysisSummaryPanel from '@/components/AnalysisSummaryPanel.vue'
 import CandidateList from '@/components/CandidateList.vue'
 import ImageWorkflowPanel from '@/components/ImageWorkflowPanel.vue'
+import ObjectCandidateActions from '@/components/ObjectCandidateActions.vue'
 import PdfStrategyPanel from '@/components/PdfStrategyPanel.vue'
 import TaskOutcomePanel from '@/components/TaskOutcomePanel.vue'
 import WorkspaceInspectionPanel from '@/components/WorkspaceInspectionPanel.vue'
 import { useImageWorkflow } from '@/composables/useImageWorkflow'
+import { useObjectCandidateWorkflow } from '@/composables/useObjectCandidateWorkflow'
 import { usePdfRedactionWorkflow } from '@/composables/usePdfRedactionWorkflow'
 
 const route = useRoute()
@@ -31,9 +30,6 @@ const watermarkText = ref('')
 const pdfPreset = ref<'codecv' | 'general'>('codecv')
 const busy = ref(false)
 const message = ref('')
-const selectedCandidates = ref<string[]>([])
-const confirmedAmbiguous = ref<string[]>([])
-const planWarnings = ref<PlanWarning[]>([])
 const task = ref<ProcessingTask | null>(null)
 const assetId = computed(() => String(route.params.assetId))
 const sourceSha256 = computed(() => store.currentAsset?.sha256 || '')
@@ -41,12 +37,6 @@ const isDocx = computed(() => store.currentAsset?.kind === 'docx')
 const isCodeCvPdf = computed(() => store.currentAsset?.kind === 'pdf')
 const isImage = computed(() => ['png', 'jpeg', 'webp'].includes(store.currentAsset?.kind || ''))
 const canInspect = computed(() => isDocx.value || isCodeCvPdf.value || isImage.value)
-const canProcess = computed(() => (
-  isDocx.value || (isCodeCvPdf.value && analysis.value?.preset === 'codecv')
-))
-const hasObjectCandidates = computed(() => analysis.value?.candidates.some(
-  candidate => candidate.allowed_strategies.includes('object'),
-) ?? false)
 
 const {
   redactionPreview,
@@ -81,6 +71,23 @@ const {
   analysis,
   busy,
   message,
+  runTask: waitForTask,
+})
+
+const {
+  selectedCandidates,
+  confirmedAmbiguous,
+  planWarnings,
+  canProcess,
+  hasObjectCandidates,
+  resetObjectCandidates,
+  processSelection,
+} = useObjectCandidateWorkflow({
+  analysis,
+  busy,
+  message,
+  confirmedSignatureInvalidation,
+  canProcess: () => isDocx.value || (isCodeCvPdf.value && analysis.value?.preset === 'codecv'),
   runTask: waitForTask,
 })
 
@@ -139,11 +146,7 @@ async function inspect() {
       watermarkText.value.trim() || null,
       isCodeCvPdf.value ? pdfPreset.value : isImage.value ? 'image' : null,
     )
-    selectedCandidates.value = analysis.value.candidates
-      .filter(candidate => candidate.classification === 'confirmed')
-      .map(candidate => candidate.candidate_id)
-    confirmedAmbiguous.value = []
-    planWarnings.value = []
+    resetObjectCandidates(analysis.value)
     task.value = null
     resetPdfRedaction(analysis.value)
     resetImageMasks()
@@ -161,36 +164,6 @@ async function inspect() {
     }
   } catch (error) {
     message.value = error instanceof ApiError ? error.message : '扫描失败。'
-  } finally {
-    busy.value = false
-  }
-}
-
-async function processSelection() {
-  if (!analysis.value || selectedCandidates.value.length === 0) return
-  busy.value = true
-  message.value = ''
-  planWarnings.value = []
-  try {
-    const acknowledgements = confirmedAmbiguous.value.map(
-      candidateId => `AMBIGUOUS_CANDIDATE:${candidateId}`,
-    )
-    if (confirmedSignatureInvalidation.value) {
-      acknowledgements.push('PDF_DIGITAL_SIGNATURE_INVALIDATION')
-    }
-    const plan = await validatePlan(
-      analysis.value,
-      selectedCandidates.value,
-      acknowledgements,
-    )
-    planWarnings.value = plan.warnings
-    if (!plan.valid || !plan.id) {
-      message.value = '请确认所有需要复核的候选后再执行。'
-      return
-    }
-    await waitForTask(await createTask(plan.id))
-  } catch (error) {
-    message.value = error instanceof ApiError ? error.message : '创建处理任务失败。'
   } finally {
     busy.value = false
   }
@@ -228,7 +201,7 @@ async function requestCancellation() {
 
 function clearAnalysis() {
   analysis.value = null
-  selectedCandidates.value = []
+  resetObjectCandidates()
   message.value = ''
   resetPdfRedaction()
   resetImageMasks()
@@ -326,19 +299,15 @@ function clearAnalysis() {
       @remove-region="removeRedactionRegion"
       @process="processRedaction"
     />
-    <div v-if="canProcess && hasObjectCandidates" class="process-actions">
-      <label v-if="analysis?.pdf_has_digital_signatures" class="risk-confirm signature-confirm">
-        <input v-model="confirmedSignatureInvalidation" type="checkbox" :disabled="busy" />
-        我知道原 PDF 的现有数字签名将在 CodeCV 清理副本中失效，并确认继续处理
-      </label>
-      <button
-        :disabled="busy || selectedCandidates.length === 0 || (analysis?.pdf_has_digital_signatures && !confirmedSignatureInvalidation)"
-        @click="processSelection"
-      >
-        {{ busy ? '正在处理…' : `生成无水印${isCodeCvPdf ? ' PDF' : ''}副本（已选 ${selectedCandidates.length} 项）` }}
-      </button>
-      <p>仅生成新文件，上传的原始文件不会被覆盖。</p>
-    </div>
+    <ObjectCandidateActions
+      v-if="canProcess && hasObjectCandidates"
+      v-model:confirmed-signature="confirmedSignatureInvalidation"
+      :busy="busy"
+      :selected-count="selectedCandidates.length"
+      :is-pdf="isCodeCvPdf"
+      :pdf-has-digital-signatures="analysis.pdf_has_digital_signatures"
+      @process="processSelection"
+    />
     <TaskOutcomePanel
       v-if="task"
       :task="task"
