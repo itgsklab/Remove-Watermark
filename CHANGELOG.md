@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- A reusable task-execution workflow for polling, timeout feedback, cancellation and terminal status
+  messages, including safe invalidation when a workspace analysis is replaced or cleared.
 - A reusable object-candidate workflow and action panel for DOCX and CodeCV selection, ambiguous
   candidate acknowledgements, digital-signature confirmation, plan validation and task creation.
 - A reusable analysis-summary panel that centralizes result headings, inspected-location counts and

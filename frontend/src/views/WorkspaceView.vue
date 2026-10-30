@@ -3,13 +3,10 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import {
   ApiError,
-  cancelTask,
   createAnalysis,
   getAsset,
   getCapabilities,
-  getTask,
   type Analysis,
-  type ProcessingTask,
 } from '@/api/client'
 import { useWorkspaceStore } from '@/stores/workspace'
 import AnalysisSummaryPanel from '@/components/AnalysisSummaryPanel.vue'
@@ -22,6 +19,7 @@ import WorkspaceInspectionPanel from '@/components/WorkspaceInspectionPanel.vue'
 import { useImageWorkflow } from '@/composables/useImageWorkflow'
 import { useObjectCandidateWorkflow } from '@/composables/useObjectCandidateWorkflow'
 import { usePdfRedactionWorkflow } from '@/composables/usePdfRedactionWorkflow'
+import { useTaskExecution } from '@/composables/useTaskExecution'
 
 const route = useRoute()
 const store = useWorkspaceStore()
@@ -30,13 +28,19 @@ const watermarkText = ref('')
 const pdfPreset = ref<'codecv' | 'general'>('codecv')
 const busy = ref(false)
 const message = ref('')
-const task = ref<ProcessingTask | null>(null)
 const assetId = computed(() => String(route.params.assetId))
 const sourceSha256 = computed(() => store.currentAsset?.sha256 || '')
 const isDocx = computed(() => store.currentAsset?.kind === 'docx')
 const isCodeCvPdf = computed(() => store.currentAsset?.kind === 'pdf')
 const isImage = computed(() => ['png', 'jpeg', 'webp'].includes(store.currentAsset?.kind || ''))
 const canInspect = computed(() => isDocx.value || isCodeCvPdf.value || isImage.value)
+
+const {
+  task,
+  resetTask,
+  runTask: waitForTask,
+  requestCancellation,
+} = useTaskExecution({ message })
 
 const {
   redactionPreview,
@@ -147,7 +151,7 @@ async function inspect() {
       isCodeCvPdf.value ? pdfPreset.value : isImage.value ? 'image' : null,
     )
     resetObjectCandidates(analysis.value)
-    task.value = null
+    resetTask()
     resetPdfRedaction(analysis.value)
     resetImageMasks()
     if (analysis.value.preset === 'image' && analysis.value.image_metadata) {
@@ -169,38 +173,9 @@ async function inspect() {
   }
 }
 
-async function waitForTask(created: ProcessingTask) {
-  task.value = created
-  message.value = task.value.stage
-  const deadline = Date.now() + 60_000
-  while (['queued', 'running', 'cancelling'].includes(task.value.status)) {
-    if (Date.now() > deadline) {
-      message.value = '任务仍在后台运行，可以稍后刷新任务状态。'
-      return
-    }
-    await new Promise(resolve => window.setTimeout(resolve, 400))
-    task.value = await getTask(task.value.id)
-    message.value = task.value.stage
-  }
-  if (task.value.status === 'failed') {
-    message.value = task.value.error?.message || '处理失败。'
-  } else if (task.value.status === 'cancelled') {
-    message.value = '任务已取消，未保留未验证的输出文件。'
-  }
-}
-
-async function requestCancellation() {
-  if (!task.value || !['queued', 'running'].includes(task.value.status)) return
-  try {
-    task.value = await cancelTask(task.value.id)
-    message.value = task.value.stage
-  } catch (error) {
-    message.value = error instanceof ApiError ? error.message : '无法取消任务。'
-  }
-}
-
 function clearAnalysis() {
   analysis.value = null
+  resetTask()
   resetObjectCandidates()
   message.value = ''
   resetPdfRedaction()
