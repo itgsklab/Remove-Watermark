@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import {
-  ApiError,
-  getAsset,
-  getCapabilities,
-} from '@/api/client'
 import { useWorkspaceStore } from '@/stores/workspace'
 import AnalysisSummaryPanel from '@/components/AnalysisSummaryPanel.vue'
 import CandidateList from '@/components/CandidateList.vue'
@@ -19,6 +14,7 @@ import { useObjectCandidateWorkflow } from '@/composables/useObjectCandidateWork
 import { usePdfRedactionWorkflow } from '@/composables/usePdfRedactionWorkflow'
 import { useTaskExecution } from '@/composables/useTaskExecution'
 import { useWorkspaceAnalysis } from '@/composables/useWorkspaceAnalysis'
+import { useWorkspaceBootstrap } from '@/composables/useWorkspaceBootstrap'
 
 const route = useRoute()
 const store = useWorkspaceStore()
@@ -141,20 +137,13 @@ watch(analysis, nextAnalysis => {
   resetImageMasks()
 })
 
-onMounted(async () => {
-  try {
-    if (!store.capabilities) {
-      store.capabilities = await getCapabilities()
-    }
-    if (store.currentAsset?.id !== assetId.value) {
-      store.currentAsset = await getAsset(assetId.value)
-    }
-  } catch (error) {
-    message.value = error instanceof ApiError ? error.message : '无法读取文件信息。'
-  }
-  if (isCodeCvPdf.value) await loadOcrDiagnostics()
+useWorkspaceBootstrap({
+  assetId,
+  message,
+  store,
+  loadPdfDiagnostics: loadOcrDiagnostics,
+  resetWorkspace: clearAnalysis,
 })
-
 </script>
 
 <template>
