@@ -25,6 +25,10 @@ from wmrm.adapters.pdf.pymupdf_redaction import (
     _validate_and_group,
     probe_pymupdf,
 )
+from wmrm.adapters.pdf.structure import (
+    compare_pdf_page_structure,
+    inspect_pdf_page_structure,
+)
 
 
 class PdfRasterInpaintError(Exception):
@@ -130,6 +134,7 @@ def raster_inpaint_pdf_regions(
                     continue
 
                 page = source[index]
+                source_structure = inspect_pdf_page_structure(page)
                 original_rotation = int(page.rotation) % 360
                 page.set_rotation(0)
                 try:
@@ -218,6 +223,11 @@ def raster_inpaint_pdf_regions(
                             "word_count": page_word_count,
                             "searchable": page_word_count > 0,
                             "unsearchable_reason": unsearchable_reason,
+                            "processing_mode": "raster_inpaint",
+                            "structure": compare_pdf_page_structure(
+                                source_structure,
+                                inspect_pdf_page_structure(rebuilt),
+                            ),
                         }
                     )
                     rebuilt.set_rotation(original_rotation)

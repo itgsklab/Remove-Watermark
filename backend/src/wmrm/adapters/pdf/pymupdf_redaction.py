@@ -11,6 +11,11 @@ from typing import Any, Literal
 from pypdf import PdfReader
 from pypdf.errors import PyPdfError
 
+from wmrm.adapters.pdf.structure import (
+    compare_pdf_page_structure,
+    inspect_pdf_page_structure,
+)
+
 LicenseMode = Literal["agpl", "commercial"]
 
 
@@ -84,6 +89,10 @@ def redact_pdf_regions(
             if document.needs_pass:
                 raise PdfRedactionError("PDF 已加密，无法处理。")
             changed_pages: list[int] = []
+            source_structure = {
+                page_number: inspect_pdf_page_structure(document[page_number - 1])
+                for page_number in grouped
+            }
             for page_number, page_regions in sorted(grouped.items()):
                 _raise_if_cancelled(should_cancel)
                 page = document[page_number - 1]
@@ -117,6 +126,22 @@ def redact_pdf_regions(
         if [_page_geometry(page) for page in result.pages] != before_geometry:
             raise PdfRedactionError("输出 PDF 的页面尺寸或旋转发生变化。")
 
+        output_document = pymupdf.open(str(output_path))
+        try:
+            page_reports = [
+                {
+                    "page_number": page_number,
+                    "processing_mode": "object_redaction",
+                    "structure": compare_pdf_page_structure(
+                        source_structure[page_number],
+                        inspect_pdf_page_structure(output_document[page_number - 1]),
+                    ),
+                }
+                for page_number in changed_pages
+            ]
+        finally:
+            output_document.close()
+
         return {
             "backend": "pymupdf",
             "backend_version": status.version,
@@ -124,6 +149,7 @@ def redact_pdf_regions(
             "region_count": len(regions),
             "removed_count": len(regions),
             "changed_pages": changed_pages,
+            "page_reports": page_reports,
             "size_bytes": output_path.stat().st_size,
             "sha256": hashlib.sha256(output_path.read_bytes()).hexdigest(),
         }

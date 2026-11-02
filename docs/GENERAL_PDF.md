@@ -42,4 +42,11 @@ The current UI renders pages with PDF.js and converts drag selections back to cr
 
 PDF.js is dynamically imported only when the visual editor is opened, keeping the initial application bundle separate from the PDF parser and worker. A reviewed multi-page draft can enter one persisted PyMuPDF redaction plan; any inventoried overlap and any detected digital signature require explicit acknowledgement before the isolated worker generates a new PDF.
 
+The downloadable task report records privacy-safe source and output counts for searchable words,
+links, form fields, annotations and vector graphics on every processed page. Status values describe
+count evidence (`count_unchanged`, `count_reduced`, `removed`, `created` or `unavailable`); equal
+counts do not claim that the underlying PDF objects are byte-identical. Deep raster repair normally
+reports interactive and vector structures as removed because the selected page is rebuilt from a
+raster image plus an optional hidden text layer.
+
 Object deletion will only be enabled for additional structures after each locator can be revalidated and output preservation has regression coverage.

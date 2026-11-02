@@ -14,8 +14,53 @@ from wmrm.adapters.pdf.raster_inpaint import (
     probe_tesseract,
     raster_inpaint_pdf_regions,
 )
+from wmrm.adapters.pdf.structure import compare_pdf_page_structure
 from wmrm.benchmarks.pdf_ocr_probe import run_probe as run_pdf_ocr_probe
 from wmrm.benchmarks.pdf_redaction_probe import _fixture_pdf, run_probe
+
+
+def test_pdf_structure_comparison_uses_count_evidence_without_identity_claims() -> None:
+    compared = compare_pdf_page_structure(
+        {
+            "searchable_words": 4,
+            "links": 1,
+            "form_fields": 0,
+            "annotations": 2,
+            "vector_graphics": None,
+        },
+        {
+            "searchable_words": 3,
+            "links": 1,
+            "form_fields": 0,
+            "annotations": 0,
+            "vector_graphics": None,
+        },
+    )
+
+    assert compared["searchable_words"]["status"] == "count_reduced"
+    assert compared["links"]["status"] == "count_unchanged"
+    assert compared["form_fields"]["status"] == "absent"
+    assert compared["annotations"]["status"] == "removed"
+    assert compared["vector_graphics"]["status"] == "unavailable"
+
+
+def _assert_raster_page_report(
+    report: dict[str, object], expected: dict[str, object]
+) -> None:
+    page_reports = report["page_reports"]
+    assert isinstance(page_reports, list) and len(page_reports) == 1
+    page_report = page_reports[0]
+    assert isinstance(page_report, dict)
+    assert page_report["processing_mode"] == "raster_inpaint"
+    assert set(page_report["structure"]) == {
+        "searchable_words",
+        "links",
+        "form_fields",
+        "annotations",
+        "vector_graphics",
+    }
+    for key, value in expected.items():
+        assert page_report[key] == value
 
 
 def test_redaction_rejects_unknown_license_mode(tmp_path: Path) -> None:
@@ -109,7 +154,8 @@ def test_raster_inpaint_rebuilds_searchable_text_without_masked_word(tmp_path: P
     assert report["source_text_pages"] == [1]
     assert report["unsearchable_pages"] == []
     assert report["inserted_word_count"] == 1
-    assert report["page_reports"] == [
+    _assert_raster_page_report(
+        report,
         {
             "page_number": 1,
             "text_source": "source_text",
@@ -117,8 +163,8 @@ def test_raster_inpaint_rebuilds_searchable_text_without_masked_word(tmp_path: P
             "word_count": 1,
             "searchable": True,
             "unsearchable_reason": None,
-        }
-    ]
+        },
+    )
 
 
 def test_raster_inpaint_preserves_rotated_page_geometry(tmp_path: Path) -> None:
@@ -253,7 +299,8 @@ def test_raster_inpaint_uses_tesseract_for_image_only_page(
 
     assert report["ocr_pages"] == [1]
     assert report["unsearchable_pages"] == []
-    assert report["page_reports"] == [
+    _assert_raster_page_report(
+        report,
         {
             "page_number": 1,
             "text_source": "ocr",
@@ -261,8 +308,8 @@ def test_raster_inpaint_uses_tesseract_for_image_only_page(
             "word_count": 1,
             "searchable": True,
             "unsearchable_reason": None,
-        }
-    ]
+        },
+    )
     assert "OCR-WORD" in (PdfReader(str(result)).pages[0].extract_text() or "")
 
 
@@ -284,7 +331,8 @@ def test_raster_inpaint_reports_disabled_ocr_for_image_only_page(tmp_path: Path)
         ocr_languages=None,
     )
 
-    assert report["page_reports"] == [
+    _assert_raster_page_report(
+        report,
         {
             "page_number": 1,
             "text_source": "none",
@@ -292,8 +340,8 @@ def test_raster_inpaint_reports_disabled_ocr_for_image_only_page(tmp_path: Path)
             "word_count": 0,
             "searchable": False,
             "unsearchable_reason": "ocr_disabled",
-        }
-    ]
+        },
+    )
 
 
 def test_raster_inpaint_reports_failed_ocr_without_failing_task(
@@ -322,7 +370,8 @@ def test_raster_inpaint_reports_failed_ocr_without_failing_task(
         ocr_languages="eng",
     )
 
-    assert report["page_reports"] == [
+    _assert_raster_page_report(
+        report,
         {
             "page_number": 1,
             "text_source": "none",
@@ -330,8 +379,8 @@ def test_raster_inpaint_reports_failed_ocr_without_failing_task(
             "word_count": 0,
             "searchable": False,
             "unsearchable_reason": "ocr_failed",
-        }
-    ]
+        },
+    )
 
 
 def test_real_tesseract_pdf_ocr_probe() -> None:

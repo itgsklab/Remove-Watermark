@@ -15,8 +15,24 @@ from pypdf.generic import (
 )
 from test_codecv_pdf import make_pdf as make_pattern_pdf
 
-from wmrm.api.schemas import OcrRuntimeDiagnostic
+from wmrm.api.schemas import OcrRuntimeDiagnostic, TaskReportPdfPage
 from wmrm.benchmarks.pdf_redaction_probe import _fixture_pdf
+
+
+def test_pdf_page_report_keeps_legacy_ocr_evidence_compatible() -> None:
+    report = TaskReportPdfPage.model_validate(
+        {
+            "page_number": 1,
+            "text_source": "source_text",
+            "ocr_status": "not_needed",
+            "word_count": 3,
+            "searchable": True,
+            "unsearchable_reason": None,
+        }
+    )
+
+    assert report.processing_mode is None
+    assert report.structure is None
 
 
 def make_general_pdf(
@@ -444,6 +460,14 @@ def test_general_pdf_redaction_plan_executes_in_worker(client: TestClient) -> No
     assert report["processing"]["selected_target_count"] == 1
     assert report["processing"]["warning_codes"] == task["warning_codes"]
     assert report["comparison"]["removed_count"] == 1
+    page_report = report["processing"]["pdf_pages"][0]
+    assert page_report["page_number"] == 1
+    assert page_report["processing_mode"] == "object_redaction"
+    assert page_report["structure"]["searchable_words"]["status"] in {
+        "count_reduced",
+        "removed",
+    }
+    assert page_report["structure"]["links"]["status"] == "absent"
 
     artifact = next(item for item in task["artifacts"] if item["role"] == "output")
     downloaded = client.get(artifact["download_url"])
@@ -556,16 +580,18 @@ def test_general_pdf_raster_inpaint_reinjects_searchable_text(
     assert task["status"] == "succeeded", task.get("error")
     assert "栅格修复 1 个 PDF 区域并回灌文字层" in task["stage"]
     report = client.get(task["report_url"]).json()
-    assert report["processing"]["pdf_pages"] == [
-        {
-            "page_number": 1,
-            "text_source": "source_text",
-            "ocr_status": "not_needed",
-            "word_count": 1,
-            "searchable": True,
-            "unsearchable_reason": None,
-        }
-    ]
+    assert len(report["processing"]["pdf_pages"]) == 1
+    page_report = report["processing"]["pdf_pages"][0]
+    assert page_report["page_number"] == 1
+    assert page_report["processing_mode"] == "raster_inpaint"
+    assert page_report["text_source"] == "source_text"
+    assert page_report["ocr_status"] == "not_needed"
+    assert page_report["word_count"] == 1
+    assert page_report["searchable"] is True
+    assert page_report["unsearchable_reason"] is None
+    assert page_report["structure"]["searchable_words"]["status"] == "count_reduced"
+    for structure_name in ("links", "form_fields", "annotations", "vector_graphics"):
+        assert page_report["structure"][structure_name]["output_count"] == 0
 
     artifact = next(item for item in task["artifacts"] if item["role"] == "output")
     downloaded = client.get(artifact["download_url"])

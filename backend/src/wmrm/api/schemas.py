@@ -503,14 +503,37 @@ class TaskReportInput(BaseModel):
     sha256: str
 
 
+class TaskReportPdfStructureItem(BaseModel):
+    source_count: int | None = Field(default=None, ge=0)
+    output_count: int | None = Field(default=None, ge=0)
+    status: Literal[
+        "absent",
+        "count_unchanged",
+        "count_reduced",
+        "removed",
+        "created",
+        "count_increased",
+        "unavailable",
+    ]
+
+
+class TaskReportPdfStructure(BaseModel):
+    searchable_words: TaskReportPdfStructureItem
+    links: TaskReportPdfStructureItem
+    form_fields: TaskReportPdfStructureItem
+    annotations: TaskReportPdfStructureItem
+    vector_graphics: TaskReportPdfStructureItem
+
+
 class TaskReportPdfPage(BaseModel):
     page_number: int = Field(ge=1)
-    text_source: Literal["source_text", "ocr", "none"]
+    processing_mode: Literal["object_redaction", "raster_inpaint"] | None = None
+    text_source: Literal["source_text", "ocr", "none"] | None = None
     ocr_status: Literal[
         "not_needed", "succeeded", "disabled", "unavailable", "failed", "no_text"
-    ]
-    word_count: int = Field(ge=0)
-    searchable: bool
+    ] | None = None
+    word_count: int | None = Field(default=None, ge=0)
+    searchable: bool | None = None
     unsearchable_reason: Literal[
         "ocr_disabled",
         "ocr_unavailable",
@@ -518,6 +541,7 @@ class TaskReportPdfPage(BaseModel):
         "ocr_no_text",
         "text_layer_insert_failed",
     ] | None = None
+    structure: TaskReportPdfStructure | None = None
 
 
 class TaskReportImageMaskSummary(BaseModel):

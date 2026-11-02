@@ -2488,34 +2488,80 @@
       "TaskReportPdfPage": {
         "properties": {
           "ocr_status": {
-            "enum": [
-              "not_needed",
-              "succeeded",
-              "disabled",
-              "unavailable",
-              "failed",
-              "no_text"
+            "anyOf": [
+              {
+                "enum": [
+                  "not_needed",
+                  "succeeded",
+                  "disabled",
+                  "unavailable",
+                  "failed",
+                  "no_text"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ],
-            "title": "Ocr Status",
-            "type": "string"
+            "title": "Ocr Status"
           },
           "page_number": {
             "minimum": 1.0,
             "title": "Page Number",
             "type": "integer"
           },
+          "processing_mode": {
+            "anyOf": [
+              {
+                "enum": [
+                  "object_redaction",
+                  "raster_inpaint"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processing Mode"
+          },
           "searchable": {
-            "title": "Searchable",
-            "type": "boolean"
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Searchable"
+          },
+          "structure": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskReportPdfStructure"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "text_source": {
-            "enum": [
-              "source_text",
-              "ocr",
-              "none"
+            "anyOf": [
+              {
+                "enum": [
+                  "source_text",
+                  "ocr",
+                  "none"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ],
-            "title": "Text Source",
-            "type": "string"
+            "title": "Text Source"
           },
           "unsearchable_reason": {
             "anyOf": [
@@ -2536,19 +2582,96 @@
             "title": "Unsearchable Reason"
           },
           "word_count": {
-            "minimum": 0.0,
-            "title": "Word Count",
-            "type": "integer"
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Word Count"
           }
         },
         "required": [
-          "page_number",
-          "text_source",
-          "ocr_status",
-          "word_count",
-          "searchable"
+          "page_number"
         ],
         "title": "TaskReportPdfPage",
+        "type": "object"
+      },
+      "TaskReportPdfStructure": {
+        "properties": {
+          "annotations": {
+            "$ref": "#/components/schemas/TaskReportPdfStructureItem"
+          },
+          "form_fields": {
+            "$ref": "#/components/schemas/TaskReportPdfStructureItem"
+          },
+          "links": {
+            "$ref": "#/components/schemas/TaskReportPdfStructureItem"
+          },
+          "searchable_words": {
+            "$ref": "#/components/schemas/TaskReportPdfStructureItem"
+          },
+          "vector_graphics": {
+            "$ref": "#/components/schemas/TaskReportPdfStructureItem"
+          }
+        },
+        "required": [
+          "searchable_words",
+          "links",
+          "form_fields",
+          "annotations",
+          "vector_graphics"
+        ],
+        "title": "TaskReportPdfStructure",
+        "type": "object"
+      },
+      "TaskReportPdfStructureItem": {
+        "properties": {
+          "output_count": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Count"
+          },
+          "source_count": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Count"
+          },
+          "status": {
+            "enum": [
+              "absent",
+              "count_unchanged",
+              "count_reduced",
+              "removed",
+              "created",
+              "count_increased",
+              "unavailable"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "TaskReportPdfStructureItem",
         "type": "object"
       },
       "TaskReportProcessing": {

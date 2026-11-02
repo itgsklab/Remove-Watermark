@@ -1291,24 +1291,41 @@ export interface components {
         };
         /** TaskReportPdfPage */
         readonly TaskReportPdfPage: {
-            /**
-             * Ocr Status
-             * @enum {string}
-             */
-            readonly ocr_status: "not_needed" | "succeeded" | "disabled" | "unavailable" | "failed" | "no_text";
+            /** Ocr Status */
+            readonly ocr_status?: ("not_needed" | "succeeded" | "disabled" | "unavailable" | "failed" | "no_text") | null;
             /** Page Number */
             readonly page_number: number;
+            /** Processing Mode */
+            readonly processing_mode?: ("object_redaction" | "raster_inpaint") | null;
             /** Searchable */
-            readonly searchable: boolean;
-            /**
-             * Text Source
-             * @enum {string}
-             */
-            readonly text_source: "source_text" | "ocr" | "none";
+            readonly searchable?: boolean | null;
+            readonly structure?: components["schemas"]["TaskReportPdfStructure"] | null;
+            /** Text Source */
+            readonly text_source?: ("source_text" | "ocr" | "none") | null;
             /** Unsearchable Reason */
             readonly unsearchable_reason?: ("ocr_disabled" | "ocr_unavailable" | "ocr_failed" | "ocr_no_text" | "text_layer_insert_failed") | null;
             /** Word Count */
-            readonly word_count: number;
+            readonly word_count?: number | null;
+        };
+        /** TaskReportPdfStructure */
+        readonly TaskReportPdfStructure: {
+            readonly annotations: components["schemas"]["TaskReportPdfStructureItem"];
+            readonly form_fields: components["schemas"]["TaskReportPdfStructureItem"];
+            readonly links: components["schemas"]["TaskReportPdfStructureItem"];
+            readonly searchable_words: components["schemas"]["TaskReportPdfStructureItem"];
+            readonly vector_graphics: components["schemas"]["TaskReportPdfStructureItem"];
+        };
+        /** TaskReportPdfStructureItem */
+        readonly TaskReportPdfStructureItem: {
+            /** Output Count */
+            readonly output_count?: number | null;
+            /** Source Count */
+            readonly source_count?: number | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            readonly status: "absent" | "count_unchanged" | "count_reduced" | "removed" | "created" | "count_increased" | "unavailable";
         };
         /** TaskReportProcessing */
         readonly TaskReportProcessing: {
