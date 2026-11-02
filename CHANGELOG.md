@@ -7,6 +7,9 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
+- Actionable Xiaohongshu compatibility diagnostics for expired short links, changed redirect targets
+  and duplicate page-image declarations, while preserving privacy-safe candidate revalidation.
+
 - A reusable workspace-bootstrap workflow for capability discovery, asset loading, PDF diagnostics
   initialization and stale-response protection when route parameters change.
 - A reusable workspace-analysis workflow for file-kind routing, scan requests, outcome messages and

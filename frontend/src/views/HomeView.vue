@@ -106,6 +106,9 @@ const diagnosticLabels: Record<string, string> = {
   XHS_PAGE_MEDIA_MISSING: '页面没有声明公开图片候选。',
   XHS_MEDIA_DIMENSIONS_MISSING: '部分图片没有声明完整尺寸。',
   XHS_MEDIA_DIMENSIONS_INVALID: '页面包含无效的图片尺寸声明。',
+  XHS_MEDIA_DUPLICATES_COLLAPSED: '页面重复声明的图片已合并为唯一候选。',
+  XHS_SHORT_LINK_EXPIRED: '分享短链已失效，请重新复制公开分享链接。',
+  XHS_REDIRECT_TARGET_UNSUPPORTED: '分享链接跳转到了当前不支持的小红书页面。',
 }
 
 function candidateDimensions(candidate: XiaohongshuPreview['media_candidates'][number]) {

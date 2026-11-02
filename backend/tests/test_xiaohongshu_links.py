@@ -216,6 +216,40 @@ def test_rejects_redirect_outside_allowlist() -> None:
     assert error.value.code == "XHS_HOST_NOT_ALLOWED"
 
 
+@pytest.mark.parametrize("status", [404, 410])
+def test_reports_expired_short_link(status: int) -> None:
+    transport = FakeTransport([MetadataResponse(status, {"content-type": "text/html"}, b"")])
+
+    with pytest.raises(XiaohongshuLinkError) as error:
+        resolve_metadata(
+            parse_share_text("https://xhslink.com/aBcD12EF"),
+            transport,
+            timeout=2,
+            max_bytes=100_000,
+            max_redirects=3,
+        )
+
+    assert error.value.code == "XHS_SHORT_LINK_EXPIRED"
+    assert error.value.status_code == 410
+
+
+def test_reports_changed_short_link_redirect_target() -> None:
+    transport = FakeTransport(
+        [MetadataResponse(302, {"location": "https://www.xiaohongshu.com/login"}, b"")]
+    )
+
+    with pytest.raises(XiaohongshuLinkError) as error:
+        resolve_metadata(
+            parse_share_text("https://xhslink.com/aBcD12EF"),
+            transport,
+            timeout=2,
+            max_bytes=100_000,
+            max_redirects=3,
+        )
+
+    assert error.value.code == "XHS_REDIRECT_TARGET_UNSUPPORTED"
+
+
 def test_rejects_non_html_metadata_response() -> None:
     transport = FakeTransport(
         [MetadataResponse(200, {"content-type": "application/octet-stream"}, b"payload")]
@@ -352,6 +386,36 @@ def test_preview_api_resolves_with_explicit_opt_in(tmp_path: Path) -> None:
     assert set(response.json()).isdisjoint({"media_urls", "image_url", "video_url"})
 
 
+def test_preview_api_explains_expired_short_link(tmp_path: Path) -> None:
+    app = create_app(
+        Settings(
+            data_dir=tmp_path / "data",
+            docx_preview_enabled=False,
+            pdf_preview_enabled=False,
+            worker_start_method="forkserver",
+            xhs_metadata_enabled=True,
+        ),
+        xiaohongshu_transport=FakeTransport(
+            [MetadataResponse(410, {"content-type": "text/html"}, b"")]
+        ),
+    )
+
+    with TestClient(app) as api:
+        response = api.post(
+            "/api/v1/xiaohongshu/preview",
+            json={
+                "share_text": "https://xhslink.com/aBcD12EF",
+                "resolve_metadata": True,
+            },
+        )
+
+    assert response.status_code == 200
+    assert response.json()["metadata_status"] == "unavailable"
+    assert response.json()["page_structure_status"] == "unavailable"
+    assert response.json()["diagnostic_codes"] == ["XHS_SHORT_LINK_EXPIRED"]
+    assert response.json()["warnings"] == ["分享短链已失效，请从小红书重新复制公开分享链接。"]
+
+
 def test_preview_ignores_media_url_outside_xiaohongshu_cdn() -> None:
     transport = FakeTransport(
         [
@@ -422,8 +486,11 @@ def test_extracts_page_declared_gallery_and_upgrades_cdn_urls_to_https() -> None
     ] == [(1080, 1440), (720, 960)]
     assert metadata.parser_version == "xhs-html-meta-v2"
     assert metadata.page_structure_status == "matched"
-    assert metadata.diagnostic_codes == ()
-    assert metadata.warnings == ("页面提供了不受支持的图片地址，已忽略。",)
+    assert metadata.diagnostic_codes == ("XHS_MEDIA_DUPLICATES_COLLAPSED",)
+    assert metadata.warnings == (
+        "页面提供了不受支持的图片地址，已忽略。",
+        "页面重复声明了 1 个图片条目，已合并为唯一候选。",
+    )
 
 
 def test_reports_unrecognized_page_structure_without_exposing_page_content() -> None:

@@ -437,6 +437,20 @@
       ]
     },
     {
+      "code": "XHS_REDIRECT_TARGET_UNSUPPORTED",
+      "delivery": "response",
+      "http_statuses": [
+        502
+      ]
+    },
+    {
+      "code": "XHS_SHORT_LINK_EXPIRED",
+      "delivery": "response",
+      "http_statuses": [
+        410
+      ]
+    },
+    {
       "code": "XHS_SHORT_LINK_UNRESOLVED",
       "delivery": "response",
       "http_statuses": [

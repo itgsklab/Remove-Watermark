@@ -224,6 +224,7 @@ def extract_metadata(body: bytes, page_url: str) -> LinkMetadata:
     description = parser.meta.get("og:description") or parser.meta.get("description") or None
     author = parser.meta.get("author") or parser.meta.get("article:author") or None
     candidate_values: dict[str, dict[str, int | None]] = {}
+    duplicate_media_count = 0
     for declaration in parser.media:
         try:
             normalized_media = parse_page_media_url(urljoin(page_url, declaration.url))
@@ -232,6 +233,7 @@ def extract_metadata(body: bytes, page_url: str) -> LinkMetadata:
             continue
         existing = candidate_values.get(normalized_media)
         if existing is not None:
+            duplicate_media_count += 1
             existing["width"] = existing["width"] or declaration.width
             existing["height"] = existing["height"] or declaration.height
             continue
@@ -278,6 +280,9 @@ def extract_metadata(body: bytes, page_url: str) -> LinkMetadata:
             page_structure_status = "partial"
         diagnostic_codes.append("XHS_MEDIA_DIMENSIONS_INVALID")
         warnings.append("页面包含无效的图片尺寸声明，已忽略。")
+    if duplicate_media_count:
+        diagnostic_codes.append("XHS_MEDIA_DUPLICATES_COLLAPSED")
+        warnings.append(f"页面重复声明了 {duplicate_media_count} 个图片条目，已合并为唯一候选。")
     return LinkMetadata(
         canonical_url=canonical_url,
         note_id=note_id,
@@ -530,8 +535,24 @@ def resolve_metadata(
                 raise XiaohongshuLinkError(
                     "XHS_INVALID_REDIRECT", "分享链接重定向缺少目标地址。", 502
                 )
-            current = parse_url(urljoin(current, location)).request_url
+            try:
+                redirected = parse_url(urljoin(current, location))
+            except XiaohongshuLinkError as exc:
+                if exc.code == "XHS_NOTE_PATH_UNSUPPORTED":
+                    raise XiaohongshuLinkError(
+                        "XHS_REDIRECT_TARGET_UNSUPPORTED",
+                        "分享链接跳转到了当前不支持的小红书页面，请重新复制公开笔记链接。",
+                        502,
+                    ) from exc
+                raise
+            current = redirected.request_url
             continue
+        if response.status in {404, 410} and parse_url(current).kind == "short":
+            raise XiaohongshuLinkError(
+                "XHS_SHORT_LINK_EXPIRED",
+                "分享短链已失效，请从小红书重新复制公开分享链接。",
+                410,
+            )
         if response.status != 200:
             raise XiaohongshuLinkError(
                 "XHS_METADATA_UNAVAILABLE", "页面未返回可读取的元数据。", 502
