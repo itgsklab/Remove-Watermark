@@ -12,7 +12,7 @@
 
 2026 年 10 月的兼容性抽样从小红书官方 `sitemap.xml` 的四个笔记索引中各取三个页面，共 12 个公开页面。样本均返回多条 `og:image`，其中属于 `xhscdn.com` 的条目使用 HTTP 形式声明。解析器只在页面元数据入口把这类精确 CDN 域名地址升级为 HTTPS；实际网络请求、媒体跳转和导入仍只允许 HTTPS。样本地址、页面正文、查询参数和媒体文件均不进入仓库。
 
-仓库还提供 `make xiaohongshu-compatibility` 离线门禁，使用五个生成 HTML 场景核验完整图集、重复声明合并、尺寸缺失、未知结构和非允许媒体地址。生成的 [JSON](benchmarks/xiaohongshu-parser-compatibility.json) 与 [Markdown](benchmarks/xiaohongshu-parser-compatibility.md) 报告只包含场景编号和聚合解析结果，不记录分享链接、页面正文或媒体地址。该门禁用于发现解析器回归，不能代替实时公开页面抽样。
+仓库还提供 `make xiaohongshu-compatibility` 离线门禁，使用五个生成 HTML 场景核验完整图集、重复声明合并、尺寸缺失、未知结构和非允许媒体地址。生成的 [JSON](benchmarks/xiaohongshu-parser-compatibility.json) 与 [Markdown](benchmarks/xiaohongshu-parser-compatibility.md) 报告只包含场景编号和聚合解析结果，不记录分享链接、页面正文或媒体地址。`make check` 和 `make release-check` 会以只读方式拒绝过期报告。该门禁用于发现解析器回归，不能代替实时公开页面抽样。
 
 官方 Deep Link 文档给出的笔记标识形式是 `xhsdiscover://item/<note_id>`。本项目的 Web 入口当前识别以下 HTTPS 形式：
 

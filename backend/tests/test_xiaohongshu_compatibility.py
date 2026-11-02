@@ -5,10 +5,12 @@ import pytest
 
 from wmrm.benchmarks.xiaohongshu_compatibility import (
     XiaohongshuCompatibilityError,
+    check_compatibility_audit,
     run_compatibility_audit,
 )
 
 FIXTURE_ROOT = Path(__file__).parent / "fixtures" / "xiaohongshu_compatibility"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_generated_compatibility_corpus_matches_parser_contract(tmp_path: Path) -> None:
@@ -29,6 +31,34 @@ def test_generated_compatibility_corpus_matches_parser_contract(tmp_path: Path) 
     assert "Generated fixture" not in encoded
     assert "contains_live_share_links" in encoded
     assert "Status: `pass`" in (tmp_path / "report.md").read_text(encoding="utf-8")
+
+
+def test_committed_compatibility_reports_are_current() -> None:
+    report = check_compatibility_audit(
+        FIXTURE_ROOT / "manifest.json",
+        report_json=PROJECT_ROOT / "docs/benchmarks/xiaohongshu-parser-compatibility.json",
+        report_markdown=PROJECT_ROOT / "docs/benchmarks/xiaohongshu-parser-compatibility.md",
+    )
+
+    assert report["summary"]["status"] == "pass"
+
+
+def test_compatibility_check_rejects_stale_report(tmp_path: Path) -> None:
+    json_path = tmp_path / "report.json"
+    markdown_path = tmp_path / "report.md"
+    run_compatibility_audit(
+        FIXTURE_ROOT / "manifest.json",
+        report_json=json_path,
+        report_markdown=markdown_path,
+    )
+    markdown_path.write_text("stale\n", encoding="utf-8")
+
+    with pytest.raises(XiaohongshuCompatibilityError, match="report.md"):
+        check_compatibility_audit(
+            FIXTURE_ROOT / "manifest.json",
+            report_json=json_path,
+            report_markdown=markdown_path,
+        )
 
 
 def test_compatibility_corpus_reports_changed_expectation(tmp_path: Path) -> None:

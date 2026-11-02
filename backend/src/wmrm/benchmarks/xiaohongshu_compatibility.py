@@ -19,6 +19,15 @@ def run_compatibility_audit(
     report_json: Path,
     report_markdown: Path,
 ) -> dict[str, Any]:
+    report = build_compatibility_audit(manifest_path)
+    report_json.parent.mkdir(parents=True, exist_ok=True)
+    report_markdown.parent.mkdir(parents=True, exist_ok=True)
+    report_json.write_text(_json(report), encoding="utf-8")
+    report_markdown.write_text(_markdown(report), encoding="utf-8")
+    return report
+
+
+def build_compatibility_audit(manifest_path: Path) -> dict[str, Any]:
     manifest_path = manifest_path.resolve()
     manifest_bytes = manifest_path.read_bytes()
     manifest = json.loads(manifest_bytes)
@@ -53,12 +62,31 @@ def run_compatibility_audit(
         },
         "cases": results,
     }
-    report_json.parent.mkdir(parents=True, exist_ok=True)
-    report_markdown.parent.mkdir(parents=True, exist_ok=True)
-    report_json.write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
-    report_markdown.write_text(_markdown(report), encoding="utf-8")
+    return report
+
+
+def check_compatibility_audit(
+    manifest_path: Path,
+    *,
+    report_json: Path,
+    report_markdown: Path,
+) -> dict[str, Any]:
+    report = build_compatibility_audit(manifest_path)
+    expected = {
+        report_json: _json(report),
+        report_markdown: _markdown(report),
+    }
+    stale = [
+        path
+        for path, content in expected.items()
+        if not path.is_file() or path.read_text() != content
+    ]
+    if stale:
+        names = ", ".join(path.name for path in stale)
+        raise XiaohongshuCompatibilityError(
+            f"Committed compatibility report is stale: {names}. "
+            "Run `make xiaohongshu-compatibility` and review the changes."
+        )
     return report
 
 
@@ -117,6 +145,10 @@ def _required_int(payload: dict[str, Any], field: str) -> int:
     return value
 
 
+def _json(report: dict[str, Any]) -> str:
+    return json.dumps(report, ensure_ascii=False, indent=2) + "\n"
+
+
 def _markdown(report: dict[str, Any]) -> str:
     summary = report["summary"]
     rows = [
@@ -156,13 +188,21 @@ def main() -> int:
     parser.add_argument("--report-json", type=Path, required=True)
     parser.add_argument("--report-md", type=Path, required=True)
     parser.add_argument("--strict", action="store_true")
+    parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     try:
-        report = run_compatibility_audit(
-            args.manifest,
-            report_json=args.report_json,
-            report_markdown=args.report_md,
-        )
+        if args.check:
+            report = check_compatibility_audit(
+                args.manifest,
+                report_json=args.report_json,
+                report_markdown=args.report_md,
+            )
+        else:
+            report = run_compatibility_audit(
+                args.manifest,
+                report_json=args.report_json,
+                report_markdown=args.report_md,
+            )
     except (OSError, json.JSONDecodeError, XiaohongshuCompatibilityError) as error:
         parser.exit(1, f"Xiaohongshu compatibility audit rejected: {error}\n")
     if args.strict and report["summary"]["status"] != "pass":
