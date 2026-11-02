@@ -40,6 +40,11 @@ Image and Form bounds come from the current transformation matrix at the `Do` op
 
 The current UI renders pages with PDF.js and converts drag selections back to crop-box-relative PDF points. Numeric coordinates remain visible and editable for inspection. Users can add up to 100 rectangles across multiple pages to one draft, temporarily disable or remove individual rectangles and preview the enabled subset before plan creation. Disabled rectangles remain visible as dashed overlays and are excluded from both risk preview and execution. Saved rectangles remain overlaid when returning to a page. The backend reports overlap per rectangle with inventoried text, images, Forms, vector graphics, links and annotations.
 
+Before editing, the interface compares both processing strategies across page scope, searchable text,
+links, forms, annotations and vector graphics. Object redaction is presented as a structure-preserving
+choice with possible changes to intersecting objects. Deep repair is presented as a full rebuild of
+each selected page, including the loss of interactive and vector structures on that page.
+
 PDF.js is dynamically imported only when the visual editor is opened, keeping the initial application bundle separate from the PDF parser and worker. A reviewed multi-page draft can enter one persisted PyMuPDF redaction plan; any inventoried overlap and any detected digital signature require explicit acknowledgement before the isolated worker generates a new PDF.
 
 The downloadable task report records privacy-safe source and output counts for searchable words,

@@ -87,6 +87,8 @@ All notable changes to this project are documented in this file. The format foll
 - Privacy-safe per-page PDF structure evidence for object redaction and Deep repair, comparing
   searchable-word, link, form-field, annotation and vector-graphics counts before and after
   processing without claiming object identity from equal counts.
+- An execution-time PDF strategy comparison that explains page scope and expected effects on
+  searchable text, links, forms, annotations and vector graphics before a user creates a plan.
 - Installed-language selection for PDF Deep OCR, including multi-language combinations, an explicit
   OCR-off path and backend rejection of unavailable or duplicated Tesseract language packs.
 - Privacy-safe Web settings diagnostics for Tesseract version and language packs, Xiaohongshu

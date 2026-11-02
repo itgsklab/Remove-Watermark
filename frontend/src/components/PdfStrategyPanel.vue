@@ -53,6 +53,48 @@ const overlapCount = computed(() => props.preview?.regions.reduce(
   (total, region) => total + region.overlaps.length,
   0,
 ) ?? 0)
+const selectedStrategySummary = computed(() => strategy.value === 'pymupdf_redaction'
+  ? {
+      title: '当前选择：结构保留优先',
+      detail: '只处理选区内相交内容，选区外页面结构继续保留；相交对象仍需在风险预览中逐项核对。',
+    }
+  : {
+      title: '当前选择：背景修复优先',
+      detail: '所选页面会重建为修复图片和可选文字层，适合合成水印，但页面交互与矢量结构不会保留。',
+    })
+
+const strategyComparison = [
+  {
+    aspect: '处理范围',
+    object: '删除选区内相交的文字、图片或线条',
+    raster: '重建包含选区的整页',
+  },
+  {
+    aspect: '可搜索文字',
+    object: '保留选区外文字；移除选区内文字',
+    raster: '回灌选区外原文字；图片型页面可选 OCR',
+  },
+  {
+    aspect: '链接与表单',
+    object: '选区外保留；相交对象可能改变',
+    raster: '所选页面不保留',
+  },
+  {
+    aspect: '注释',
+    object: '选区外保留；相交注释可能改变',
+    raster: '所选页面不保留',
+  },
+  {
+    aspect: '矢量图形',
+    object: '只移除与选区相交的图形',
+    raster: '转为页面像素，不再保留矢量对象',
+  },
+  {
+    aspect: '适用情况',
+    object: '普通文字、图片或矢量水印',
+    raster: '无法单独删除的合成水印或复杂背景',
+  },
+]
 </script>
 
 <template>
@@ -81,6 +123,41 @@ const overlapCount = computed(() => props.preview?.regions.reduce(
         </label>
       </template>
     </div>
+    <section class="pdf-strategy-comparison" aria-labelledby="pdf-strategy-comparison-title">
+      <div class="pdf-strategy-comparison-heading">
+        <div>
+          <p class="eyebrow">执行前影响对比</p>
+          <h3 id="pdf-strategy-comparison-title">{{ selectedStrategySummary.title }}</h3>
+        </div>
+        <span :class="['strategy-badge', { destructive: strategy === 'raster_inpaint' }]">
+          {{ strategy === 'raster_inpaint' ? '整页重建' : '局部修改' }}
+        </span>
+      </div>
+      <p>{{ selectedStrategySummary.detail }}</p>
+      <div class="pdf-strategy-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">结构项目</th>
+              <th scope="col" :class="{ selected: strategy === 'pymupdf_redaction' }">
+                对象级区域删除
+              </th>
+              <th scope="col" :class="{ selected: strategy === 'raster_inpaint' }">
+                Deep 栅格修复
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in strategyComparison" :key="item.aspect">
+              <th scope="row">{{ item.aspect }}</th>
+              <td :class="{ selected: strategy === 'pymupdf_redaction' }">{{ item.object }}</td>
+              <td :class="{ selected: strategy === 'raster_inpaint' }">{{ item.raster }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">任务完成后，下载报告会逐页列出处理前后的文字、链接、表单、注释和矢量结构数量。</p>
+    </section>
     <section v-if="strategy === 'raster_inpaint'" class="pdf-ocr-panel">
       <div>
         <p class="eyebrow">可搜索文字层</p>

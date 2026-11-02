@@ -153,6 +153,19 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .pdf-strategy-options { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 10px; margin: 18px 0 10px; }
 .pdf-strategy-options label { display: grid; gap: 6px; color: #536057; font-size: .82rem; }
 .pdf-strategy-options input, .pdf-strategy-options select { width: 100%; padding: 9px 10px; border: 1px solid #c8d0c8; border-radius: 9px; background: white; color: inherit; }
+.pdf-strategy-comparison { margin: 16px 0; padding: 18px; border: 1px solid #cbd8cf; border-radius: 14px; background: #f6f9f5; }
+.pdf-strategy-comparison-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.pdf-strategy-comparison-heading h3 { margin: 4px 0 0; font-size: 1.08rem; }
+.pdf-strategy-comparison > p { margin: 9px 0 0; color: #536057; line-height: 1.55; }
+.strategy-badge { flex: 0 0 auto; padding: 5px 9px; border-radius: 999px; color: #075d3d; background: #dcefe5; font-size: .76rem; font-weight: 750; }
+.strategy-badge.destructive { color: #87550f; background: #ffebc8; }
+.pdf-strategy-table-wrap { margin-top: 15px; overflow-x: auto; border: 1px solid #d9ded5; border-radius: 11px; background: white; }
+.pdf-strategy-comparison table { width: 100%; min-width: 680px; border-collapse: collapse; font-size: .82rem; line-height: 1.45; }
+.pdf-strategy-comparison th, .pdf-strategy-comparison td { padding: 10px 12px; border-bottom: 1px solid #e3e7e1; text-align: left; vertical-align: top; }
+.pdf-strategy-comparison thead th { color: #315143; background: #f2f5f0; font-size: .78rem; }
+.pdf-strategy-comparison tbody th { width: 120px; color: #536057; font-weight: 700; }
+.pdf-strategy-comparison tr:last-child th, .pdf-strategy-comparison tr:last-child td { border-bottom: 0; }
+.pdf-strategy-comparison .selected { background: #edf7f1; }
 .pdf-ocr-panel { margin: 12px 0; padding: 16px; border: 1px solid #cbd8cf; border-radius: 12px; background: #f6f9f5; }
 .pdf-ocr-panel h3 { margin: 4px 0 6px; }
 .pdf-ocr-panel p { margin: 5px 0; color: #536057; line-height: 1.5; }
@@ -310,6 +323,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   .comparison-pair { grid-template-columns: 1fr; }
   .redaction-fields { grid-template-columns: repeat(2, 1fr); }
   .pdf-strategy-options { grid-template-columns: 1fr 1fr; }
+  .pdf-strategy-comparison-heading { flex-direction: column; gap: 10px; }
   .image-metadata-heading { grid-template-columns: 1fr; }
   .image-metadata-grid { grid-template-columns: 1fr 1fr; }
   .codecv-diagnostics-heading { flex-direction: column; }
