@@ -511,7 +511,9 @@ def main() -> int:
     run([str(python), "-I", "-c", probe], cwd=work, env=clean_env)
     cli = venv_script(environment, "wmrm")
     web = venv_script(environment, "wmrm-web")
+    xhs_compatibility = venv_script(environment, "wmrm-xiaohongshu-compatibility")
     run([str(web), "--help"], cwd=work, env=clean_env)
+    run([str(xhs_compatibility), "--help"], cwd=work, env=clean_env)
     verify_contract_surface(cli, work, clean_env, contract)
     doctor = run_cli_json(
         cli,

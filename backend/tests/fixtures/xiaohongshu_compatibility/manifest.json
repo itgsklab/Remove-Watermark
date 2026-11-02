@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "provenance": "repository_generated",
+  "privacy": {
+    "contains_user_content": false,
+    "contains_live_share_links": false,
+    "network_access_required": false
+  },
+  "cases": [
+    {
+      "id": "complete-gallery",
+      "synthetic_note_id": "fixture000000000000000001",
+      "html": "<meta property=\"og:title\" content=\"Generated fixture\"><meta property=\"og:image\" content=\"//fixture.xhscdn.com/generated/cover.jpg\"><meta property=\"og:image:width\" content=\"1080\"><meta property=\"og:image:height\" content=\"1440\"><meta property=\"og:image\" content=\"//fixture.xhscdn.com/generated/gallery.jpg\"><meta property=\"og:image:width\" content=\"720\"><meta property=\"og:image:height\" content=\"960\">",
+      "expected": {
+        "page_structure_status": "matched",
+        "candidate_count": 2,
+        "diagnostic_codes": []
+      }
+    },
+    {
+      "id": "duplicate-gallery-entry",
+      "synthetic_note_id": "fixture000000000000000002",
+      "html": "<meta property=\"og:image\" content=\"//fixture.xhscdn.com/generated/repeated.jpg\"><meta property=\"og:image:width\" content=\"1080\"><meta property=\"og:image\" content=\"//fixture.xhscdn.com/generated/repeated.jpg\"><meta property=\"og:image:height\" content=\"1440\">",
+      "expected": {
+        "page_structure_status": "matched",
+        "candidate_count": 1,
+        "diagnostic_codes": [
+          "XHS_MEDIA_DUPLICATES_COLLAPSED"
+        ]
+      }
+    },
+    {
+      "id": "missing-dimensions",
+      "synthetic_note_id": "fixture000000000000000003",
+      "html": "<meta property=\"og:image\" content=\"//fixture.xhscdn.com/generated/no-size.jpg\">",
+      "expected": {
+        "page_structure_status": "partial",
+        "candidate_count": 1,
+        "diagnostic_codes": [
+          "XHS_MEDIA_DIMENSIONS_MISSING"
+        ]
+      }
+    },
+    {
+      "id": "unrecognized-page-structure",
+      "synthetic_note_id": "fixture000000000000000004",
+      "html": "<main>Generated layout without supported metadata</main>",
+      "expected": {
+        "page_structure_status": "changed",
+        "candidate_count": 0,
+        "diagnostic_codes": [
+          "XHS_PAGE_STRUCTURE_UNRECOGNIZED"
+        ]
+      }
+    },
+    {
+      "id": "media-outside-allowlist",
+      "synthetic_note_id": "fixture000000000000000005",
+      "html": "<meta property=\"og:image\" content=\"https://invalid.example/generated.jpg\">",
+      "expected": {
+        "page_structure_status": "changed",
+        "candidate_count": 0,
+        "diagnostic_codes": [
+          "XHS_PAGE_MEDIA_UNUSABLE"
+        ]
+      }
+    }
+  ]
+}

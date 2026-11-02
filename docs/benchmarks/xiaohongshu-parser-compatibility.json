@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "audit": "wmrm-xiaohongshu-parser-compatibility",
+  "parser_version": "xhs-html-meta-v2",
+  "manifest_sha256": "75da66bd58a24f5e6189de5c435bde185943c8696fba8b91518560fd68dfeb7c",
+  "privacy": {
+    "contains_user_content": false,
+    "contains_live_share_links": false,
+    "network_access_required": false
+  },
+  "summary": {
+    "case_count": 5,
+    "matched_expectation_count": 5,
+    "mismatch_count": 0,
+    "status": "pass"
+  },
+  "cases": [
+    {
+      "id": "complete-gallery",
+      "expected": {
+        "page_structure_status": "matched",
+        "candidate_count": 2,
+        "diagnostic_codes": []
+      },
+      "actual": {
+        "page_structure_status": "matched",
+        "candidate_count": 2,
+        "diagnostic_codes": []
+      },
+      "mismatches": []
+    },
+    {
+      "id": "duplicate-gallery-entry",
+      "expected": {
+        "page_structure_status": "matched",
+        "candidate_count": 1,
+        "diagnostic_codes": [
+          "XHS_MEDIA_DUPLICATES_COLLAPSED"
+        ]
+      },
+      "actual": {
+        "page_structure_status": "matched",
+        "candidate_count": 1,
+        "diagnostic_codes": [
+          "XHS_MEDIA_DUPLICATES_COLLAPSED"
+        ]
+      },
+      "mismatches": []
+    },
+    {
+      "id": "missing-dimensions",
+      "expected": {
+        "page_structure_status": "partial",
+        "candidate_count": 1,
+        "diagnostic_codes": [
+          "XHS_MEDIA_DIMENSIONS_MISSING"
+        ]
+      },
+      "actual": {
+        "page_structure_status": "partial",
+        "candidate_count": 1,
+        "diagnostic_codes": [
+          "XHS_MEDIA_DIMENSIONS_MISSING"
+        ]
+      },
+      "mismatches": []
+    },
+    {
+      "id": "unrecognized-page-structure",
+      "expected": {
+        "page_structure_status": "changed",
+        "candidate_count": 0,
+        "diagnostic_codes": [
+          "XHS_PAGE_STRUCTURE_UNRECOGNIZED"
+        ]
+      },
+      "actual": {
+        "page_structure_status": "changed",
+        "candidate_count": 0,
+        "diagnostic_codes": [
+          "XHS_PAGE_STRUCTURE_UNRECOGNIZED"
+        ]
+      },
+      "mismatches": []
+    },
+    {
+      "id": "media-outside-allowlist",
+      "expected": {
+        "page_structure_status": "changed",
+        "candidate_count": 0,
+        "diagnostic_codes": [
+          "XHS_PAGE_MEDIA_UNUSABLE"
+        ]
+      },
+      "actual": {
+        "page_structure_status": "changed",
+        "candidate_count": 0,
+        "diagnostic_codes": [
+          "XHS_PAGE_MEDIA_UNUSABLE"
+        ]
+      },
+      "mismatches": []
+    }
+  ]
+}

@@ -9,6 +9,8 @@ All notable changes to this project are documented in this file. The format foll
 
 - Actionable Xiaohongshu compatibility diagnostics for expired short links, changed redirect targets
   and duplicate page-image declarations, while preserving privacy-safe candidate revalidation.
+- An offline Xiaohongshu parser compatibility corpus and privacy-safe report gate covering complete,
+  duplicate, partial, changed and unsafe generated page metadata without network access.
 
 - A reusable workspace-bootstrap workflow for capability discovery, asset loading, PDF diagnostics
   initialization and stale-response protection when route parameters change.
