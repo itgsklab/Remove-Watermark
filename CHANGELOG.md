@@ -89,6 +89,9 @@ All notable changes to this project are documented in this file. The format foll
   processing without claiming object identity from equal counts.
 - An execution-time PDF strategy comparison that explains page scope and expected effects on
   searchable text, links, forms, annotations and vector graphics before a user creates a plan.
+- Shared CodeCV/general-PDF security diagnostics that distinguish password-required,
+  permission-restricted and otherwise unsupported encrypted inputs without accepting passwords or
+  producing decrypted replacements.
 - Installed-language selection for PDF Deep OCR, including multi-language combinations, an explicit
   OCR-off path and backend rejection of unavailable or duplicated Tesseract language packs.
 - Privacy-safe Web settings diagnostics for Tesseract version and language packs, Xiaohongshu

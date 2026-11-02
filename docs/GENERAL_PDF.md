@@ -30,7 +30,10 @@ Image and Form bounds come from the current transformation matrix at the `Do` op
 - General candidates have an empty `allowed_strategies` list.
 - Plan validation rejects `general` analyses.
 - Region previews validate the saved page transform before calculating overlap.
-- Encrypted, malformed and over-limit PDFs use the same safety checks as CodeCV inspection.
+- Password-protected PDFs return `PASSWORD_REQUIRED`; empty-password documents whose user
+  permissions prohibit modification or extraction return `PDF_PERMISSION_RESTRICTED`; other
+  encrypted documents return `PDF_ENCRYPTION_UNSUPPORTED`. The application does not accept
+  passwords, bypass document permissions or create a decrypted replacement.
 - Existing PDF signature fields are exposed as structured inspection evidence. Region deletion and
   Deep repair require an explicit `PDF_DIGITAL_SIGNATURE_INVALIDATION` acknowledgement in both the
   interface and backend because the generated copy invalidates existing signature verification; the

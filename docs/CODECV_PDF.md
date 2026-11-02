@@ -24,7 +24,9 @@ The public reference repository contains the script and documentation but no PDF
 
 ## Safety limits
 
-- Encrypted PDFs return `PASSWORD_REQUIRED`.
+- Password-protected PDFs return `PASSWORD_REQUIRED`; permission-restricted PDFs return
+  `PDF_PERMISSION_RESTRICTED`; other encrypted inputs return `PDF_ENCRYPTION_UNSUPPORTED`.
+  The preset does not accept passwords, bypass permissions or create a decrypted replacement.
 - Malformed or truncated PDFs return `INVALID_PDF`.
 - Page count and decoded content streams have configurable limits.
 - A partial sequence does not become a candidate.

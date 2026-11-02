@@ -9,6 +9,7 @@ from pypdf import PdfReader, Transformation
 from pypdf.errors import PyPdfError
 from pypdf.generic import ContentStream, IndirectObject, NameObject
 
+from wmrm.adapters.pdf.security import reject_unsupported_pdf_security
 from wmrm.adapters.pdf.signatures import has_digital_signatures
 from wmrm.application.assets import AssetError
 
@@ -82,8 +83,7 @@ class GeneralPdfInspector:
     ) -> GeneralPdfInspection:
         try:
             reader = PdfReader(str(path), strict=False)
-            if reader.is_encrypted:
-                raise AssetError("PASSWORD_REQUIRED", "PDF 已加密，需要先移除密码保护。", 422)
+            reject_unsupported_pdf_security(reader)
             if len(reader.pages) > self.max_pages:
                 raise AssetError(
                     "RESOURCE_LIMIT", f"PDF 页数超过 {self.max_pages} 页限制。", 413

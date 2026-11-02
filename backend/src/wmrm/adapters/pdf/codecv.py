@@ -8,6 +8,7 @@ from pypdf import PdfReader
 from pypdf.errors import PyPdfError
 from pypdf.generic import ContentStream, IndirectObject, NameObject
 
+from wmrm.adapters.pdf.security import reject_unsupported_pdf_security
 from wmrm.adapters.pdf.signatures import has_digital_signatures
 from wmrm.application.assets import AssetError
 
@@ -60,8 +61,7 @@ class CodeCvPdfInspector:
     def inspect(self, path: Path, asset_sha256: str) -> CodeCvInspection:
         try:
             reader = PdfReader(str(path), strict=False)
-            if reader.is_encrypted:
-                raise AssetError("PASSWORD_REQUIRED", "PDF 已加密，需要先移除密码保护。", 422)
+            reject_unsupported_pdf_security(reader)
             if len(reader.pages) > self.max_pages:
                 raise AssetError(
                     "RESOURCE_LIMIT",

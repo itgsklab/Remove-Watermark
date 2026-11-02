@@ -155,6 +155,20 @@
       ]
     },
     {
+      "code": "PDF_ENCRYPTION_UNSUPPORTED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
+      "code": "PDF_PERMISSION_RESTRICTED",
+      "delivery": "response",
+      "http_statuses": [
+        422
+      ]
+    },
+    {
       "code": "PLAN_NOT_AVAILABLE",
       "delivery": "response",
       "http_statuses": [

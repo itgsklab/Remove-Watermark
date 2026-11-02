@@ -3,6 +3,7 @@ from time import monotonic, sleep
 
 from fastapi.testclient import TestClient
 from pypdf import PdfReader, PdfWriter
+from pypdf.constants import UserAccessPermissions
 from pypdf.generic import (
     ArrayObject,
     ByteStringObject,
@@ -226,6 +227,63 @@ def upload(client: TestClient, payload: bytes) -> dict:
     )
     assert response.status_code == 201
     return response.json()
+
+
+def encrypt_pdf(
+    payload: bytes,
+    *,
+    user_password: str,
+    permissions: UserAccessPermissions | None = None,
+) -> bytes:
+    reader = PdfReader(BytesIO(payload))
+    writer = PdfWriter()
+    writer.clone_document_from_reader(reader)
+    writer.encrypt(
+        user_password=user_password,
+        owner_password="fixture-owner-password",
+        permissions_flag=(
+            permissions if permissions is not None else UserAccessPermissions.all()
+        ),
+    )
+    output = BytesIO()
+    writer.write(output)
+    return output.getvalue()
+
+
+def test_general_pdf_distinguishes_password_and_permission_restrictions(
+    client: TestClient,
+) -> None:
+    cases = [
+        (
+            encrypt_pdf(make_general_pdf(pages=1), user_password="secret"),
+            "PASSWORD_REQUIRED",
+            "需要密码",
+        ),
+        (
+            encrypt_pdf(
+                make_general_pdf(pages=1),
+                user_password="",
+                permissions=UserAccessPermissions.PRINT,
+            ),
+            "PDF_PERMISSION_RESTRICTED",
+            "不会绕过文档权限",
+        ),
+        (
+            encrypt_pdf(make_general_pdf(pages=1), user_password=""),
+            "PDF_ENCRYPTION_UNSUPPORTED",
+            "不会生成解除加密的新副本",
+        ),
+    ]
+
+    for payload, expected_code, expected_message in cases:
+        asset = upload(client, payload)
+        response = client.post(
+            "/api/v1/analyses",
+            json={"asset_id": asset["id"], "preset": "general"},
+        )
+        assert response.status_code == 422
+        assert response.json()["error"]["code"] == expected_code
+        assert expected_message in response.json()["error"]["message"]
 
 
 def test_general_pdf_inventory_classifies_review_candidates(client: TestClient) -> None:
