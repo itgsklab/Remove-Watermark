@@ -54,6 +54,8 @@ const {
   redactionX1,
   redactionY1,
   redactionRegions,
+  activeRedactionRegions,
+  disabledRedactionRegionIndexes,
   confirmedRedactionOverlap,
   confirmedSignatureInvalidation,
   confirmedRasterization,
@@ -73,6 +75,7 @@ const {
   clearRedactionDraft,
   addRedactionRegion,
   removeRedactionRegion,
+  toggleRedactionRegion,
   previewRedactionRisk,
   processRedaction,
 } = usePdfRedactionWorkflow({
@@ -222,6 +225,8 @@ useWorkspaceBootstrap({
       :asset-id="assetId"
       :pages="analysis.pdf_pages"
       :regions="redactionRegions"
+      :active-region-count="activeRedactionRegions.length"
+      :disabled-region-indexes="disabledRedactionRegionIndexes"
       :preview="redactionPreview"
       :runtime-diagnostics="runtimeDiagnostics"
       :ocr-diagnostics-error="ocrDiagnosticsError"
@@ -234,6 +239,7 @@ useWorkspaceBootstrap({
       @add-region="addRedactionRegion"
       @preview="previewRedactionRisk"
       @remove-region="removeRedactionRegion"
+      @toggle-region="toggleRedactionRegion"
       @process="processRedaction"
     />
     <ObjectCandidateActions

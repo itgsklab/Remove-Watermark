@@ -8,6 +8,7 @@ const props = defineProps<{
   assetId: string
   page: PdfPageGeometry
   regions: RedactionRegion[]
+  disabledRegionIndexes: number[]
 }>()
 
 const emit = defineEmits<{
@@ -64,6 +65,7 @@ const draftStyles = computed(() => {
       const y1 = Math.max(rectangle[1], rectangle[3])
       return {
         index,
+        disabled: props.disabledRegionIndexes.includes(index),
         style: {
           left: `${x0 / element.width * 100}%`,
           top: `${y0 / element.height * 100}%`,
@@ -197,6 +199,7 @@ onBeforeUnmount(async () => {
         v-for="draft in draftStyles"
         :key="draft.index"
         class="pdf-draft-selection"
+        :class="{ disabled: draft.disabled }"
         :style="draft.style"
       >{{ draft.index + 1 }}</div>
       <div v-if="selectionStyle" class="pdf-selection" :style="selectionStyle" />
@@ -212,5 +215,6 @@ onBeforeUnmount(async () => {
 canvas { display: block; width: 100%; height: auto; cursor: crosshair; }
 .pdf-selection { position: absolute; border: 2px solid #d24832; background: rgba(210, 72, 50, .18); pointer-events: none; }
 .pdf-draft-selection { position: absolute; display: grid; place-items: center; border: 2px solid #166b4c; background: rgba(22, 107, 76, .18); color: #075d3d; font-size: .75rem; font-weight: 800; pointer-events: none; }
+.pdf-draft-selection.disabled { border-style: dashed; border-color: #7c8580; background: rgba(124, 133, 128, .08); color: #59615d; }
 .pdf-canvas-state { color: #536057; }
 </style>

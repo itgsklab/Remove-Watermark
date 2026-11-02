@@ -27,6 +27,7 @@ export function usePdfRedactionWorkflow(options: PdfRedactionWorkflowOptions) {
   const redactionX1 = ref(100)
   const redactionY1 = ref(100)
   const redactionRegions = ref<RedactionRegion[]>([])
+  const disabledRedactionRegionKeys = ref<string[]>([])
   const confirmedRedactionOverlap = ref(false)
   const confirmedSignatureInvalidation = ref(false)
   const confirmedRasterization = ref(false)
@@ -45,6 +46,16 @@ export function usePdfRedactionWorkflow(options: PdfRedactionWorkflowOptions) {
     (total, region) => total + region.overlaps.length,
     0,
   ) ?? 0)
+  const activeRedactionRegions = computed(() => {
+    const disabled = new Set(disabledRedactionRegionKeys.value)
+    return redactionRegions.value.filter(region => !disabled.has(redactionRegionKey(region)))
+  })
+  const disabledRedactionRegionIndexes = computed(() => {
+    const disabled = new Set(disabledRedactionRegionKeys.value)
+    return redactionRegions.value.flatMap((region, index) => (
+      disabled.has(redactionRegionKey(region)) ? [index] : []
+    ))
+  })
   const ocrRuntimeReady = computed(() => runtimeDiagnostics.value?.ocr.status === 'ready')
   const installedOcrLanguages = computed(() => runtimeDiagnostics.value?.ocr.languages || [])
   const ocrSelectionValid = computed(() => (
@@ -74,6 +85,7 @@ export function usePdfRedactionWorkflow(options: PdfRedactionWorkflowOptions) {
   function resetPdfRedaction(nextAnalysis: Analysis | null = null) {
     redactionPreview.value = null
     redactionRegions.value = []
+    disabledRedactionRegionKeys.value = []
     confirmedRedactionOverlap.value = false
     confirmedSignatureInvalidation.value = false
     confirmedRasterization.value = false
@@ -153,29 +165,49 @@ export function usePdfRedactionWorkflow(options: PdfRedactionWorkflowOptions) {
   }
 
   function removeRedactionRegion(index: number) {
-    redactionRegions.value.splice(index, 1)
+    const [removed] = redactionRegions.value.splice(index, 1)
+    if (removed) {
+      const key = redactionRegionKey(removed)
+      disabledRedactionRegionKeys.value = disabledRedactionRegionKeys.value.filter(
+        item => item !== key,
+      )
+    }
     clearRedactionDraft()
     options.message.value = redactionRegions.value.length
       ? `已移除区域，草稿还剩 ${redactionRegions.value.length} 项。`
       : 'PDF 区域计划草稿已清空。'
   }
 
+  function toggleRedactionRegion(index: number) {
+    const region = redactionRegions.value[index]
+    if (!region) return
+    const key = redactionRegionKey(region)
+    const disabled = disabledRedactionRegionKeys.value.includes(key)
+    disabledRedactionRegionKeys.value = disabled
+      ? disabledRedactionRegionKeys.value.filter(item => item !== key)
+      : [...disabledRedactionRegionKeys.value, key]
+    clearRedactionDraft()
+    options.message.value = disabled
+      ? `已启用第 ${index + 1} 个区域，当前执行 ${activeRedactionRegions.value.length} 项。`
+      : `已停用第 ${index + 1} 个区域，当前执行 ${activeRedactionRegions.value.length} 项。`
+  }
+
   async function previewRedactionRisk() {
-    if (!options.analysis.value || redactionRegions.value.length === 0) return
+    if (!options.analysis.value || activeRedactionRegions.value.length === 0) return
     options.busy.value = true
     options.message.value = ''
     try {
       redactionPreview.value = await previewRedactions(
         options.analysis.value,
-        redactionRegions.value,
+        activeRedactionRegions.value,
         pdfRegionStrategy.value,
       )
       confirmedRedactionOverlap.value = false
       confirmedSignatureInvalidation.value = false
       const count = redactionOverlapCount.value
       options.message.value = count
-        ? `${redactionRegions.value.length} 个区域与 ${count} 个正文或交互对象相交，请检查下方风险。`
-        : `${redactionRegions.value.length} 个区域未发现结构重叠；复杂 PDF 仍可能存在未列出的内容。`
+        ? `${activeRedactionRegions.value.length} 个区域与 ${count} 个正文或交互对象相交，请检查下方风险。`
+        : `${activeRedactionRegions.value.length} 个区域未发现结构重叠；复杂 PDF 仍可能存在未列出的内容。`
     } catch (error) {
       options.message.value = error instanceof ApiError ? error.message : '无法生成区域风险预览。'
     } finally {
@@ -225,6 +257,8 @@ export function usePdfRedactionWorkflow(options: PdfRedactionWorkflowOptions) {
     redactionX1,
     redactionY1,
     redactionRegions,
+    activeRedactionRegions,
+    disabledRedactionRegionIndexes,
     confirmedRedactionOverlap,
     confirmedSignatureInvalidation,
     confirmedRasterization,
@@ -244,7 +278,19 @@ export function usePdfRedactionWorkflow(options: PdfRedactionWorkflowOptions) {
     clearRedactionDraft,
     addRedactionRegion,
     removeRedactionRegion,
+    toggleRedactionRegion,
     previewRedactionRisk,
     processRedaction,
   }
+}
+
+function redactionRegionKey(region: RedactionRegion): string {
+  return [
+    region.page_number,
+    region.x0,
+    region.y0,
+    region.x1,
+    region.y1,
+    region.transform_id,
+  ].join(':')
 }

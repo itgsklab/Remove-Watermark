@@ -12,6 +12,8 @@ const props = defineProps<{
   assetId: string
   pages: Analysis['pdf_pages']
   regions: RedactionRegion[]
+  activeRegionCount: number
+  disabledRegionIndexes: number[]
   preview: RedactionPreview | null
   runtimeDiagnostics: RuntimeDiagnostics | null
   ocrDiagnosticsError: string
@@ -27,6 +29,7 @@ const emit = defineEmits<{
   addRegion: []
   preview: []
   removeRegion: [index: number]
+  toggleRegion: [index: number]
   process: []
 }>()
 
@@ -124,6 +127,7 @@ const overlapCount = computed(() => props.preview?.regions.reduce(
       :asset-id="assetId"
       :page="selectedPage"
       :regions="regions"
+      :disabled-region-indexes="disabledRegionIndexes"
       @select="emit('select', $event)"
     />
     <div class="redaction-fields">
@@ -144,10 +148,10 @@ const overlapCount = computed(() => props.preview?.regions.reduce(
       <button :disabled="busy" @click="emit('addRegion')">加入计划草稿</button>
       <button
         class="secondary-button"
-        :disabled="busy || regions.length === 0"
+        :disabled="busy || activeRegionCount === 0"
         @click="emit('preview')"
       >
-        {{ busy ? '正在分析…' : `检查 ${regions.length} 个区域的重叠风险` }}
+        {{ busy ? '正在分析…' : `检查 ${activeRegionCount} 个区域的重叠风险` }}
       </button>
       <p>可切换页面继续框选，一个计划最多包含 100 个区域。</p>
     </div>
@@ -155,11 +159,25 @@ const overlapCount = computed(() => props.preview?.regions.reduce(
       <div class="redaction-draft-heading">
         <div>
           <p class="eyebrow">计划草稿</p>
-          <h3>{{ regions.length }} 个区域 · {{ draftPageCount }} 页</h3>
+          <h3>{{ activeRegionCount }} 个启用 · {{ regions.length }} 个区域 · {{ draftPageCount }} 页</h3>
         </div>
       </div>
       <ol>
-        <li v-for="(region, index) in regions" :key="`${region.page_number}-${index}`">
+        <li
+          v-for="(region, index) in regions"
+          :key="`${region.page_number}-${index}`"
+          :class="{ disabled: disabledRegionIndexes.includes(index) }"
+        >
+          <label class="redaction-region-toggle">
+            <input
+              type="checkbox"
+              :checked="!disabledRegionIndexes.includes(index)"
+              :disabled="busy"
+              :aria-label="`${disabledRegionIndexes.includes(index) ? '启用' : '停用'}第 ${index + 1} 个 PDF 区域`"
+              @change="emit('toggleRegion', index)"
+            />
+            <span>{{ disabledRegionIndexes.includes(index) ? '已停用' : '执行' }}</span>
+          </label>
           <span>
             第 {{ region.page_number }} 页 ·
             {{ region.x0.toFixed(1) }}, {{ region.y0.toFixed(1) }} →

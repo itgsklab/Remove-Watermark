@@ -167,6 +167,9 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .redaction-draft-heading h3 { margin: 4px 0 0; }
 .redaction-draft ol { display: grid; gap: 8px; margin: 14px 0 0; padding-left: 24px; }
 .redaction-draft li { padding-left: 4px; }
+.redaction-draft li.disabled { color: #748079; }
+.redaction-region-toggle { display: inline-flex; align-items: center; gap: 5px; margin-right: 10px; font-size: .8rem; font-weight: 700; }
+.redaction-region-toggle input { width: auto; }
 .redaction-draft li::marker { color: #166b4c; font-weight: 800; }
 .redaction-draft li span { overflow-wrap: anywhere; }
 .redaction-draft .text-button { margin-left: 10px; border: 0; padding: 2px 4px; background: transparent; color: #a23b2a; font: inherit; font-size: .82rem; text-decoration: underline; }
